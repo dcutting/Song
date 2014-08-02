@@ -11,6 +11,7 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
     case SongString(String)
     case SongPair(SongExpressionLike, SongExpressionLike)
     
+    case SongLet(name: String, binding: SongExpressionLike, body: SongExpressionLike)
     case SongVariable(String)
     
     public var description: String {
@@ -25,6 +26,8 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
         case let .SongPair(first as SongExpression, second as SongExpression):
             return "(\(first), \(second))"
         
+        case let .SongLet(name, binding as SongExpression, body as SongExpression):
+            return "let (\(name) = \(binding)) { \(body) }"
         case let .SongVariable(variable):
             return "\(variable)"
         
@@ -40,6 +43,11 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
     public func evaluate(context: SongContext) -> SongExpression {
         switch self {
 
+        case let .SongLet(name, binding as SongExpression, body as SongExpression):
+            var letContext = context
+            letContext[name] = binding
+            return body.evaluate(letContext)
+            
         case let .SongVariable(variable):
             if let value = context[variable] {
                 return value
