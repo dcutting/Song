@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C800D916198D7D0700B34329 /* CallTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C800D915198D7D0700B34329 /* CallTests.swift */; };
 		C827475C198D349F00473E9D /* FunctionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C827475B198D349F00473E9D /* FunctionTests.swift */; };
 		C827475E198D3E2900473E9D /* ClosureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C827475D198D3E2900473E9D /* ClosureTests.swift */; };
 		C89AC462198C143F00F5DB3E /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89AC461198C143F00F5DB3E /* main.swift */; };
@@ -33,6 +34,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		C800D915198D7D0700B34329 /* CallTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallTests.swift; sourceTree = "<group>"; };
 		C827475B198D349F00473E9D /* FunctionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FunctionTests.swift; sourceTree = "<group>"; };
 		C827475D198D3E2900473E9D /* ClosureTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClosureTests.swift; sourceTree = "<group>"; };
 		C89AC45E198C143F00F5DB3E /* Song */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Song; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -104,6 +106,7 @@
 				C8AF2717198D219300EBA02C /* LetTests.swift */,
 				C89AC47D198C4FD600F5DB3E /* VariableTests.swift */,
 				C827475B198D349F00473E9D /* FunctionTests.swift */,
+				C800D915198D7D0700B34329 /* CallTests.swift */,
 				C89AC46E198C145800F5DB3E /* Supporting Files */,
 			);
 			path = SongTests;
@@ -224,6 +227,7 @@
 				C89AC47A198C4A5300F5DB3E /* SongExpression.swift in Sources */,
 				C89AC471198C145800F5DB3E /* StringTests.swift in Sources */,
 				C89AC47E198C4FD600F5DB3E /* VariableTests.swift in Sources */,
+				C800D916198D7D0700B34329 /* CallTests.swift in Sources */,
 				C8AF2714198D0AE900EBA02C /* UnitTests.swift in Sources */,
 				C8AF2718198D219300EBA02C /* LetTests.swift in Sources */,
 				C89AC47C198C4E2700F5DB3E /* IntegerTests.swift in Sources */,

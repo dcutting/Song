@@ -23,6 +23,8 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
     
     case SongFunction(name: String, parameters: [String], body: SongExpressionLike)
     
+    case SongCall(closure: SongExpressionLike, arguments: [SongExpressionLike])
+    
     
     public var description: String {
         switch self {
@@ -49,9 +51,17 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
         case let .SongVariable(variable):
             return "\(variable)"
             
-        case let .SongFunction(name, params, body as SongExpression):
-            let paramsList = ", ".join(params)
-            return "def \(name)(\(paramsList)) { \(body) }"
+        case let .SongFunction(name, parameters, body as SongExpression):
+            let parametersList = ", ".join(parameters)
+            return "def \(name)(\(parametersList)) { \(body) }"
+            
+        case let .SongCall(closure as SongExpression, arguments):
+            var argumentStrings = Array<String>()
+            for arg in arguments {
+                argumentStrings.append("\(arg as SongExpression)")
+            }
+            let argumentsList = ", ".join(argumentStrings)
+            return "\(closure)(\(argumentsList))"
         
         default:
             return "<unknown>"
