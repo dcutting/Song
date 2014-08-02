@@ -13,6 +13,7 @@
 		C89AC47A198C4A5300F5DB3E /* SongExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89AC476198C3E2500F5DB3E /* SongExpression.swift */; };
 		C89AC47C198C4E2700F5DB3E /* IntegerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89AC47B198C4E2700F5DB3E /* IntegerTests.swift */; };
 		C89AC47E198C4FD600F5DB3E /* VariableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89AC47D198C4FD600F5DB3E /* VariableTests.swift */; };
+		C8AF2714198D0AE900EBA02C /* UnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8AF2713198D0AE900EBA02C /* UnitTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -36,6 +37,7 @@
 		C89AC476198C3E2500F5DB3E /* SongExpression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SongExpression.swift; path = Core/SongExpression.swift; sourceTree = "<group>"; };
 		C89AC47B198C4E2700F5DB3E /* IntegerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntegerTests.swift; sourceTree = "<group>"; };
 		C89AC47D198C4FD600F5DB3E /* VariableTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VariableTests.swift; sourceTree = "<group>"; };
+		C8AF2713198D0AE900EBA02C /* UnitTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnitTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +88,7 @@
 		C89AC46D198C145800F5DB3E /* SongTests */ = {
 			isa = PBXGroup;
 			children = (
+				C8AF2713198D0AE900EBA02C /* UnitTests.swift */,
 				C89AC47B198C4E2700F5DB3E /* IntegerTests.swift */,
 				C89AC470198C145800F5DB3E /* StringTests.swift */,
 				C89AC47D198C4FD600F5DB3E /* VariableTests.swift */,
@@ -209,6 +212,7 @@
 				C89AC47A198C4A5300F5DB3E /* SongExpression.swift in Sources */,
 				C89AC471198C145800F5DB3E /* StringTests.swift in Sources */,
 				C89AC47E198C4FD600F5DB3E /* VariableTests.swift in Sources */,
+				C8AF2714198D0AE900EBA02C /* UnitTests.swift in Sources */,
 				C89AC47C198C4E2700F5DB3E /* IntegerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
