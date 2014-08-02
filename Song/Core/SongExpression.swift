@@ -14,6 +14,9 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
     case SongLet(name: String, binding: SongExpressionLike, body: SongExpressionLike)
     case SongVariable(String)
     
+    case SongFunction(name: String, parameters: [String], body: SongExpressionLike)
+    case SongClosure(function: SongExpressionLike, context: SongContext)
+    
     public var description: String {
         switch self {
 
@@ -30,6 +33,10 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
             return "let (\(name) = \(binding)) { \(body) }"
         case let .SongVariable(variable):
             return "\(variable)"
+            
+        case let .SongFunction(name, params, body as SongExpression):
+            let paramsList = ", ".join(params)
+            return "def \(name)(\(paramsList)) { \(body) }"
         
         default:
             return "<unknown>"
@@ -54,6 +61,9 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
             }
             return SongExpression.SongError("cannot evaluate \(variable)")
 
+        case let .SongFunction(name, parameters, body as SongExpression):
+            return SongClosure(function: self, context: context)
+            
         default:
             return self
         }
@@ -78,6 +88,11 @@ public func ==(lhs: SongExpression, rhs: SongExpression) -> Bool {
         
     case let (.SongVariable(lhsVariable), .SongVariable(rhsVariable)):
         return lhsVariable == rhsVariable
+    
+    case let (.SongFunction(lhsName, lhsParameters, lhsBody as SongExpression), .SongFunction(rhsName, rhsParameters, rhsBody as SongExpression)):
+        return lhsName == rhsName && lhsParameters == rhsParameters && lhsBody == rhsBody
+    case let (.SongClosure(lhsFunction as SongExpression, lhsContext), .SongClosure(rhsFunction as SongExpression, rhsContext)):
+        return lhsFunction == rhsFunction && lhsContext == rhsContext
     
     default:
         return false
