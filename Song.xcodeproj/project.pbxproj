@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		C827475C198D349F00473E9D /* FunctionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C827475B198D349F00473E9D /* FunctionTests.swift */; };
+		C827475E198D3E2900473E9D /* ClosureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C827475D198D3E2900473E9D /* ClosureTests.swift */; };
 		C89AC462198C143F00F5DB3E /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89AC461198C143F00F5DB3E /* main.swift */; };
 		C89AC471198C145800F5DB3E /* StringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89AC470198C145800F5DB3E /* StringTests.swift */; };
 		C89AC477198C3E2500F5DB3E /* SongExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89AC476198C3E2500F5DB3E /* SongExpression.swift */; };
@@ -33,6 +34,7 @@
 
 /* Begin PBXFileReference section */
 		C827475B198D349F00473E9D /* FunctionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FunctionTests.swift; sourceTree = "<group>"; };
+		C827475D198D3E2900473E9D /* ClosureTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClosureTests.swift; sourceTree = "<group>"; };
 		C89AC45E198C143F00F5DB3E /* Song */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Song; sourceTree = BUILT_PRODUCTS_DIR; };
 		C89AC461198C143F00F5DB3E /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		C89AC46C198C145800F5DB3E /* SongTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SongTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -98,6 +100,7 @@
 				C89AC47B198C4E2700F5DB3E /* IntegerTests.swift */,
 				C89AC470198C145800F5DB3E /* StringTests.swift */,
 				C8AF2715198D0D0100EBA02C /* PairTests.swift */,
+				C827475D198D3E2900473E9D /* ClosureTests.swift */,
 				C8AF2717198D219300EBA02C /* LetTests.swift */,
 				C89AC47D198C4FD600F5DB3E /* VariableTests.swift */,
 				C827475B198D349F00473E9D /* FunctionTests.swift */,
@@ -226,6 +229,7 @@
 				C89AC47C198C4E2700F5DB3E /* IntegerTests.swift in Sources */,
 				C8AF2716198D0D0100EBA02C /* PairTests.swift in Sources */,
 				C827475C198D349F00473E9D /* FunctionTests.swift in Sources */,
+				C827475E198D3E2900473E9D /* ClosureTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
