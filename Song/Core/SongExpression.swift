@@ -1,12 +1,15 @@
 public typealias SongContext = [String: SongExpression]
 
-public enum SongExpression: Equatable, Printable {
+public protocol SongExpressionLike {}
+
+public enum SongExpression: SongExpressionLike, Equatable, Printable {
 
     case SongError(String)
     
     case SongUnit
     case SongInteger(Int)
     case SongString(String)
+    case SongPair(SongExpressionLike, SongExpressionLike)
     
     case SongVariable(String)
     
@@ -19,6 +22,8 @@ public enum SongExpression: Equatable, Printable {
             return "\(value)"
         case let .SongString(value):
             return "'\(value)'"
+        case let .SongPair(first as SongExpression, second as SongExpression):
+            return "(\(first), \(second))"
         
         case let .SongVariable(variable):
             return "\(variable)"
@@ -59,7 +64,10 @@ public func ==(lhs: SongExpression, rhs: SongExpression) -> Bool {
         return lhsValue == rhsValue
     case let (.SongString(lhsValue), .SongString(rhsValue)):
         return lhsValue == rhsValue
-    
+    case let (.SongPair(lhsFirst as SongExpression, lhsSecond as SongExpression),
+        .SongPair(rhsFirst as SongExpression, rhsSecond as SongExpression)):
+        return lhsFirst == rhsFirst && lhsSecond == rhsSecond
+        
     case let (.SongVariable(lhsVariable), .SongVariable(rhsVariable)):
         return lhsVariable == rhsVariable
     
