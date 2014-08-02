@@ -45,7 +45,7 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
 
         case let .SongLet(name, binding as SongExpression, body as SongExpression):
             var letContext = context
-            letContext[name] = binding
+            letContext[name] = binding.evaluate(context)
             return body.evaluate(letContext)
             
         case let .SongVariable(variable):
