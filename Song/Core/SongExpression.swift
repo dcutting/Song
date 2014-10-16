@@ -30,6 +30,9 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
     
     public var description: String {
         switch self {
+            
+        case let .SongError(value):
+            return "<\(value)>"
 
         case .SongUnit:
             return "#"

@@ -10,6 +10,7 @@
 		C800D916198D7D0700B34329 /* CallTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C800D915198D7D0700B34329 /* CallTests.swift */; };
 		C827475C198D349F00473E9D /* FunctionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C827475B198D349F00473E9D /* FunctionTests.swift */; };
 		C827475E198D3E2900473E9D /* ClosureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C827475D198D3E2900473E9D /* ClosureTests.swift */; };
+		C878E80919F0219D00DFDC8E /* ErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C878E80819F0219D00DFDC8E /* ErrorTests.swift */; };
 		C89AC462198C143F00F5DB3E /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89AC461198C143F00F5DB3E /* main.swift */; };
 		C89AC471198C145800F5DB3E /* StringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89AC470198C145800F5DB3E /* StringTests.swift */; };
 		C89AC477198C3E2500F5DB3E /* SongExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89AC476198C3E2500F5DB3E /* SongExpression.swift */; };
@@ -37,6 +38,7 @@
 		C800D915198D7D0700B34329 /* CallTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallTests.swift; sourceTree = "<group>"; };
 		C827475B198D349F00473E9D /* FunctionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FunctionTests.swift; sourceTree = "<group>"; };
 		C827475D198D3E2900473E9D /* ClosureTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClosureTests.swift; sourceTree = "<group>"; };
+		C878E80819F0219D00DFDC8E /* ErrorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorTests.swift; sourceTree = "<group>"; };
 		C89AC45E198C143F00F5DB3E /* Song */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Song; sourceTree = BUILT_PRODUCTS_DIR; };
 		C89AC461198C143F00F5DB3E /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		C89AC46C198C145800F5DB3E /* SongTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SongTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -98,6 +100,7 @@
 		C89AC46D198C145800F5DB3E /* SongTests */ = {
 			isa = PBXGroup;
 			children = (
+				C878E80819F0219D00DFDC8E /* ErrorTests.swift */,
 				C8AF2713198D0AE900EBA02C /* UnitTests.swift */,
 				C89AC47B198C4E2700F5DB3E /* IntegerTests.swift */,
 				C89AC470198C145800F5DB3E /* StringTests.swift */,
@@ -230,6 +233,7 @@
 				C800D916198D7D0700B34329 /* CallTests.swift in Sources */,
 				C8AF2714198D0AE900EBA02C /* UnitTests.swift in Sources */,
 				C8AF2718198D219300EBA02C /* LetTests.swift in Sources */,
+				C878E80919F0219D00DFDC8E /* ErrorTests.swift in Sources */,
 				C89AC47C198C4E2700F5DB3E /* IntegerTests.swift in Sources */,
 				C8AF2716198D0D0100EBA02C /* PairTests.swift in Sources */,
 				C827475C198D349F00473E9D /* FunctionTests.swift in Sources */,
