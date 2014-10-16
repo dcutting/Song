@@ -1,3 +1,5 @@
+import Foundation
+
 public typealias SongContext = [String: SongExpression]
 
 public protocol SongExpressionLike {}
@@ -133,5 +135,6 @@ func contextDescription(context: SongContext) -> String {
     for (key, value) in context {
         contextPairs.append("\(key) = \(value)")
     }
+    contextPairs.sort { $0.localizedCaseInsensitiveCompare($1) == NSComparisonResult.OrderedAscending }
     return ", ".join(contextPairs)
 }
