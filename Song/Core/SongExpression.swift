@@ -89,13 +89,13 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
             if let value = context[variable] {
                 return value
             }
-            return SongExpression.SongError("cannot evaluate \(variable)")
+            return SongError("cannot evaluate \(variable)")
 
         case let .SongFunction(name, parameters, body as SongExpression):
             return SongClosure(function: self, context: context)
             
         case let .SongCall(closure as SongExpression, arguments):
-            return .SongError("can only call closure")
+            return SongError("can only call closure")
             
         default:
             return self
