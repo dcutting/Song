@@ -31,11 +31,19 @@ class CallTests: XCTestCase {
         XCTAssertEqual(SongExpression.SongInteger(5), result)
     }
     
-    func testEvaluateClosureReferencingContext() {
+    func testEvaluateClosureReferencesDeclarationContext() {
         let function = SongExpression.SongFunction(name: "getX", parameters: [], body: SongExpression.SongVariable("x"))
         let closure = function.evaluate([ "x": SongExpression.SongInteger(7) ])
         let call = SongExpression.SongCall(closure: closure, arguments: [])
         let result = call.evaluate()
         XCTAssertEqual(SongExpression.SongInteger(7), result)
+    }
+    
+    func testEvaluateClosureIgnoresCallingContext() {
+        let function = SongExpression.SongFunction(name: "getX", parameters: [], body: SongExpression.SongVariable("x"))
+        let closure = function.evaluate()
+        let call = SongExpression.SongCall(closure: closure, arguments: [])
+        let result = call.evaluate([ "x": SongExpression.SongInteger(7) ])
+        XCTAssertEqual(SongExpression.SongError("cannot evaluate x"), result)
     }
 }
