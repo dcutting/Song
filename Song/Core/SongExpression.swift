@@ -105,7 +105,7 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
             return evaluateSongCallClosure(closure, arguments: arguments, callingContext: context)
 
         case let .SongIf(condition as SongExpression, then as SongExpression, otherwise as SongExpression):
-            return evaluateSongIf(condition, then: then, otherwise: otherwise)
+            return evaluateSongIf(condition, then: then, otherwise: otherwise, context: context)
             
         default:
             return self
@@ -149,8 +149,8 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
         }
     }
     
-    func evaluateSongIf(condition: SongExpression, then: SongExpression, otherwise: SongExpression) -> SongExpression {
-        switch condition {
+    func evaluateSongIf(condition: SongExpression, then: SongExpression, otherwise: SongExpression, context: SongContext) -> SongExpression {
+        switch condition.evaluate(context) {
         case let .SongBoolean:
             return then
         default:

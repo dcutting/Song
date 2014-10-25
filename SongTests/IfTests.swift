@@ -20,6 +20,15 @@ class IfTests: XCTestCase {
         let result = ifExpr.evaluate()
         XCTAssertEqual(SongExpression.SongError("boolean expression expected"), result)
     }
+    
+    func testEvaluatesCondition() {
+        let condition = SongExpression.SongVariable("x")
+        let then = SongExpression.SongInteger(5)
+        let otherwise = SongExpression.SongInteger(7)
+        let ifExpr = SongExpression.SongIf(condition: condition, then: then, otherwise: otherwise)
+        let result = ifExpr.evaluate([ "x": SongExpression.SongBoolean(true) ])
+        XCTAssertEqual(SongExpression.SongInteger(5), result)
+    }
 
     func testTrueBranch() {
         let condition = SongExpression.SongBoolean(true)
