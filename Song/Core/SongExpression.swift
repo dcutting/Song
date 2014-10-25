@@ -126,6 +126,9 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
             if arguments.count < parameters.count {
                 return SongExpression.SongError("not enough arguments")
             }
+            if arguments.count > parameters.count {
+                return SongExpression.SongError("too many arguments")
+            }
             let extendedContext = extendContext(closureContext, parameters: parameters, arguments: arguments)
             return body.evaluate(extendedContext)
         default:
