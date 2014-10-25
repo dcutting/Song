@@ -95,12 +95,25 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
             return SongClosure(function: self, context: context)
             
         case let .SongCall(closure as SongExpression, arguments):
-            return SongError("can only call closure")
-            
+            return evaluateSongCall(closure)
+
         default:
             return self
         }
     }
+}
+
+func evaluateSongCall(closure: SongExpression) -> SongExpression {
+    switch closure {
+    case let .SongClosure(function as SongExpression, closureContext):
+        return evaluateSongCallFunction(function)
+    default:
+        return .SongError("can only call closure")
+    }
+}
+
+func evaluateSongCallFunction(function: SongExpression) -> SongExpression {
+    return .SongError("closure does not wrap function")
 }
 
 public func ==(lhs: SongExpression, rhs: SongExpression) -> Bool {
