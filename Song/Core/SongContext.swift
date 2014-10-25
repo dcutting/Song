@@ -1,5 +1,3 @@
-//  Copyright (c) 2014 Yellowbek. All rights reserved.
-
 import Foundation
 
 public typealias SongContext = [String: SongExpression]
