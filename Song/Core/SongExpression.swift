@@ -125,7 +125,7 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
     }
     
     func evaluateSongCallClosure(closure: SongExpression, arguments: [SongExpressionLike], callingContext: SongContext) -> SongExpression {
-        switch closure {
+        switch closure.evaluate(callingContext) {
         case let .SongClosure(function as SongExpression, closureContext):
             return evaluateSongCallFunction(function, closureContext: closureContext, arguments: arguments, callingContext: callingContext)
         default:
