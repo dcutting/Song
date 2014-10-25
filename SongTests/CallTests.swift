@@ -46,4 +46,12 @@ class CallTests: XCTestCase {
         let result = call.evaluate([ "x": SongExpression.SongInteger(7) ])
         XCTAssertEqual(SongExpression.SongError("cannot evaluate x"), result)
     }
+    
+    func testEvaluateClosureWithParameter() {
+        let function = SongExpression.SongFunction(name: "echo", parameters: [ "x" ], body: SongExpression.SongVariable("x"))
+        let closure = function.evaluate()
+        let call = SongExpression.SongCall(closure: closure, arguments: [ SongExpression.SongInteger(7) ])
+        let result = call.evaluate()
+        XCTAssertEqual(SongExpression.SongInteger(7), result)
+    }
 }
