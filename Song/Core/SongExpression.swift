@@ -123,6 +123,9 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
     func evaluateSongCallFunction(function: SongExpression, closureContext: SongContext, arguments: [SongExpressionLike], callingContext: SongContext) -> SongExpression {
         switch function {
         case let .SongFunction(name, parameters, body as SongExpression):
+            if arguments.count < parameters.count {
+                return SongExpression.SongError("not enough arguments")
+            }
             let extendedContext = extendContext(closureContext, parameters: parameters, arguments: arguments)
             return body.evaluate(extendedContext)
         default:

@@ -54,4 +54,12 @@ class CallTests: XCTestCase {
         let result = call.evaluate()
         XCTAssertEqual(SongExpression.SongInteger(7), result)
     }
+    
+    func testEvaluateClosureWithoutEnoughArguments() {
+        let function = SongExpression.SongFunction(name: "echo", parameters: [ "x", "y" ], body: SongExpression.SongVariable("x"))
+        let closure = function.evaluate()
+        let call = SongExpression.SongCall(closure: closure, arguments: [ SongExpression.SongInteger(7) ])
+        let result = call.evaluate()
+        XCTAssertEqual(SongExpression.SongError("not enough arguments"), result)
+    }
 }
