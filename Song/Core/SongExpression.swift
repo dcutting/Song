@@ -86,10 +86,7 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
             return evaluateSongLet(name, binding, body, context)
             
         case let .SongVariable(variable):
-            if let value = context[variable] {
-                return value
-            }
-            return SongError("cannot evaluate \(variable)")
+            return evaluateSongVariable(variable, context)
 
         case let .SongFunction(name, parameters, body as SongExpression):
             return SongClosure(function: self, context: context)
@@ -101,25 +98,32 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
             return self
         }
     }
-}
 
-func evaluateSongLet(name: String, binding: SongExpression, body: SongExpression, context: SongContext) -> SongExpression {
-    var letContext = context
-    letContext[name] = binding.evaluate(context)
-    return body.evaluate(letContext)
-}
-
-func evaluateSongCall(closure: SongExpression) -> SongExpression {
-    switch closure {
-    case let .SongClosure(function as SongExpression, closureContext):
-        return evaluateSongCallFunction(function)
-    default:
-        return .SongError("can only call closure")
+    func evaluateSongLet(name: String, _ binding: SongExpression, _ body: SongExpression, _ context: SongContext) -> SongExpression {
+        var letContext = context
+        letContext[name] = binding.evaluate(context)
+        return body.evaluate(letContext)
     }
-}
 
-func evaluateSongCallFunction(function: SongExpression) -> SongExpression {
-    return .SongError("closure does not wrap function")
+    func evaluateSongVariable(variable: String, _ context: SongContext) -> SongExpression {
+        if let value = context[variable] {
+            return value
+        }
+        return SongError("cannot evaluate \(variable)")
+    }
+    
+    func evaluateSongCall(closure: SongExpression) -> SongExpression {
+        switch closure {
+        case let .SongClosure(function as SongExpression, closureContext):
+            return evaluateSongCallFunction(function)
+        default:
+            return .SongError("can only call closure")
+        }
+    }
+    
+    func evaluateSongCallFunction(function: SongExpression) -> SongExpression {
+        return .SongError("closure does not wrap function")
+    }
 }
 
 public func ==(lhs: SongExpression, rhs: SongExpression) -> Bool {
