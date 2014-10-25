@@ -19,6 +19,8 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
     
     case SongPair(SongExpressionLike, SongExpressionLike)
     
+    case SongSecond(SongExpressionLike)
+    
     case SongClosure(function: SongExpressionLike, context: SongContext)
     
     case SongLet(name: String, binding: SongExpressionLike, body: SongExpressionLike)
@@ -55,6 +57,9 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
         
         case let .SongPair(first as SongExpression, second as SongExpression):
             return "(\(first), \(second))"
+            
+        case let .SongSecond(value):
+            return "second(\(value))"
         
         case let .SongClosure(function as SongExpression, context):
             let contextList = contextDescription(context)
@@ -114,6 +119,9 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
 
         case let .SongIf(condition as SongExpression, then as SongExpression, otherwise as SongExpression):
             return evaluateSongIf(condition, then: then, otherwise: otherwise, context: context)
+            
+        case let .SongSecond(pair as SongExpression):
+            return evaluateSecond(pair, context: context)
             
         default:
             return self
@@ -175,6 +183,10 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
         default:
             return SongError("boolean expression expected")
         }
+    }
+    
+    func evaluateSecond(pair: SongExpression, context: SongContext) -> SongExpression {
+        return SongError("requires pair")
     }
 }
 
