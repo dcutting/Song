@@ -94,6 +94,9 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
         case let .SongFunction(name, parameters, body as SongExpression):
             return SongClosure(function: self, context: context)
             
+        case let .SongCall(closure as SongExpression, arguments):
+            return .SongError("can only call closure")
+            
         default:
             return self
         }
