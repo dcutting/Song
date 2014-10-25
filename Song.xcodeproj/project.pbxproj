@@ -45,6 +45,7 @@
 		C827475D198D3E2900473E9D /* ClosureTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClosureTests.swift; sourceTree = "<group>"; };
 		C878E80819F0219D00DFDC8E /* ErrorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorTests.swift; sourceTree = "<group>"; };
 		C87E7C6019FC677A00ADFC80 /* IsUnitTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IsUnitTests.swift; sourceTree = "<group>"; };
+		C87E7C6219FC6F3600ADFC80 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		C89AC45E198C143F00F5DB3E /* Song */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Song; sourceTree = BUILT_PRODUCTS_DIR; };
 		C89AC461198C143F00F5DB3E /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		C89AC46C198C145800F5DB3E /* SongTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SongTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -82,6 +83,7 @@
 		C89AC455198C143F00F5DB3E = {
 			isa = PBXGroup;
 			children = (
+				C87E7C6219FC6F3600ADFC80 /* README.md */,
 				C89AC460198C143F00F5DB3E /* Song */,
 				C89AC46D198C145800F5DB3E /* SongTests */,
 				C89AC45F198C143F00F5DB3E /* Products */,
