@@ -122,7 +122,12 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
     }
     
     func evaluateSongCallFunction(function: SongExpression) -> SongExpression {
-        return .SongError("closure does not wrap function")
+        switch function {
+        case let .SongFunction(name, parameters, body as SongExpression):
+            return body.evaluate()
+        default:
+            return .SongError("closure does not wrap function")
+        }
     }
 }
 
