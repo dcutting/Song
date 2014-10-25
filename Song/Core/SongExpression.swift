@@ -61,16 +61,20 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
             return "def \(name)(\(parametersList)) { \(body) }"
             
         case let .SongCall(closure as SongExpression, arguments):
-            var argumentStrings = Array<String>()
-            for arg in arguments {
-                argumentStrings.append("\(arg as SongExpression)")
-            }
-            let argumentsList = ", ".join(argumentStrings)
-            return "\(closure)(\(argumentsList))"
+            return descriptionSongCall(closure, arguments: arguments)
         
         default:
             return "<unknown>"
         }
+    }
+    
+    func descriptionSongCall(closure: SongExpression, arguments: [SongExpressionLike]) -> String {
+        var argumentStrings = Array<String>()
+        for arg in arguments {
+            argumentStrings.append("\(arg as SongExpression)")
+        }
+        let argumentsList = ", ".join(argumentStrings)
+        return "\(closure)(\(argumentsList))"
     }
     
     public func evaluate() -> SongExpression {
@@ -81,9 +85,7 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
         switch self {
 
         case let .SongLet(name, binding as SongExpression, body as SongExpression):
-            var letContext = context
-            letContext[name] = binding.evaluate(context)
-            return body.evaluate(letContext)
+            return evaluateSongLet(name, binding, body, context)
             
         case let .SongVariable(variable):
             if let value = context[variable] {
@@ -101,6 +103,12 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
             return self
         }
     }
+}
+
+func evaluateSongLet(name: String, binding: SongExpression, body: SongExpression, context: SongContext) -> SongExpression {
+    var letContext = context
+    letContext[name] = binding.evaluate(context)
+    return body.evaluate(letContext)
 }
 
 func evaluateSongCall(closure: SongExpression) -> SongExpression {
