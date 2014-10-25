@@ -186,7 +186,13 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
     }
     
     func evaluateSecond(pair: SongExpression, context: SongContext) -> SongExpression {
-        return SongError("requires pair")
+        let evaluatedPair = pair.evaluate(context)
+        switch evaluatedPair {
+        case let SongPair(fst as SongExpression, snd as SongExpression):
+            return snd.evaluate(context)
+        default:
+            return SongError("requires pair")
+        }
     }
 }
 

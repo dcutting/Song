@@ -45,4 +45,14 @@ class PairTests: XCTestCase {
         let result = second.evaluate()
         XCTAssertEqual(SongExpression.SongError("requires pair"), result)
     }
+
+    func testEvaluateSecond() {
+        let pair = SongExpression.SongVariable("p")
+        let second = SongExpression.SongSecond(pair)
+        let result = second.evaluate([
+            "x": SongExpression.SongInteger(50),
+            "p": SongExpression.SongPair(SongExpression.SongInteger(0), SongExpression.SongVariable("x"))
+            ])
+        XCTAssertEqual(SongExpression.SongInteger(50), result)
+    }
 }
