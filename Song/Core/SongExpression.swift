@@ -11,6 +11,8 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
 
     case SongBoolean(Bool)
     
+    case SongIsUnit(SongExpressionLike)
+    
     case SongInteger(Int)
     
     case SongString(String)
@@ -41,6 +43,9 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
 
         case let .SongBoolean(value):
             return value ? "yes" : "no"
+            
+        case let .SongIsUnit(value):
+            return "isUnit(\(value))"
             
         case let .SongInteger(value):
             return "\(value)"
@@ -92,6 +97,9 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
     public func evaluate(context: SongContext) -> SongExpression {
         switch self {
 
+        case let .SongIsUnit(value as SongExpression):
+            return evaluateSongIsUnit(value)
+            
         case let .SongLet(name, binding as SongExpression, body as SongExpression):
             return evaluateSongLet(name, binding, body, context)
             
@@ -112,6 +120,15 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
         }
     }
 
+    func evaluateSongIsUnit(value: SongExpression) -> SongExpression {
+        switch value {
+        case .SongUnit:
+            return SongBoolean(true)
+        default:
+            return SongBoolean(false)
+        }
+    }
+    
     func evaluateSongLet(name: String, _ binding: SongExpression, _ body: SongExpression, _ context: SongContext) -> SongExpression {
         let letContext = extendContext(context, name: name, value: binding.evaluate(context))
         return body.evaluate(letContext)
