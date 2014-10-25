@@ -34,4 +34,11 @@ class IsUnitTests: XCTestCase {
         let result = isNotUnit.evaluate()
         XCTAssertEqual(SongExpression.SongBoolean(false), result)
     }
+    
+    func testEvaluateIsUnitReferencingContext() {
+        let x = SongExpression.SongVariable("x")
+        let unit = SongExpression.SongIsUnit(x)
+        let result = unit.evaluate([ "x": SongExpression.SongUnit ])
+        XCTAssertEqual(SongExpression.SongBoolean(true), result)
+    }
 }

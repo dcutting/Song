@@ -98,7 +98,7 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
         switch self {
 
         case let .SongIsUnit(value as SongExpression):
-            return evaluateSongIsUnit(value)
+            return evaluateSongIsUnit(value, context: context)
             
         case let .SongLet(name, binding as SongExpression, body as SongExpression):
             return evaluateSongLet(name, binding, body, context)
@@ -120,8 +120,8 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
         }
     }
 
-    func evaluateSongIsUnit(value: SongExpression) -> SongExpression {
-        switch value {
+    func evaluateSongIsUnit(value: SongExpression, context: SongContext) -> SongExpression {
+        switch value.evaluate(context) {
         case .SongUnit:
             return SongBoolean(true)
         default:
