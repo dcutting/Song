@@ -150,7 +150,12 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
     }
     
     func evaluateSongIf(condition: SongExpression, then: SongExpression, otherwise: SongExpression) -> SongExpression {
-        return SongError("boolean expression expected")
+        switch condition {
+        case let .SongBoolean:
+            return then
+        default:
+            return SongError("boolean expression expected")
+        }
     }
 }
 
