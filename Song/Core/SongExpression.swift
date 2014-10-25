@@ -104,6 +104,9 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
         case let .SongCall(closure as SongExpression, arguments):
             return evaluateSongCallClosure(closure, arguments: arguments, callingContext: context)
 
+        case let .SongIf(condition as SongExpression, then as SongExpression, otherwise as SongExpression):
+            return evaluateSongIf(condition, then: then, otherwise: otherwise)
+            
         default:
             return self
         }
@@ -144,6 +147,10 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
         default:
             return SongError("closure does not wrap function")
         }
+    }
+    
+    func evaluateSongIf(condition: SongExpression, then: SongExpression, otherwise: SongExpression) -> SongExpression {
+        return SongError("boolean expression expected")
     }
 }
 
