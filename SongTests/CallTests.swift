@@ -22,12 +22,20 @@ class CallTests: XCTestCase {
         let result = call.evaluate()
         XCTAssertEqual(SongExpression.SongError("closure does not wrap function"), result)
     }
-
+    
     func testEvaluateClosureWithoutParameters() {
         let function = SongExpression.SongFunction(name: "five", parameters: [], body: SongExpression.SongInteger(5))
         let closure = function.evaluate()
         let call = SongExpression.SongCall(closure: closure, arguments: [])
         let result = call.evaluate()
         XCTAssertEqual(SongExpression.SongInteger(5), result)
+    }
+    
+    func testEvaluateClosureReferencingContext() {
+        let function = SongExpression.SongFunction(name: "getX", parameters: [], body: SongExpression.SongVariable("x"))
+        let closure = function.evaluate([ "x": SongExpression.SongInteger(7) ])
+        let call = SongExpression.SongCall(closure: closure, arguments: [])
+        let result = call.evaluate()
+        XCTAssertEqual(SongExpression.SongInteger(7), result)
     }
 }
