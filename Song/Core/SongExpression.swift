@@ -27,6 +27,8 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
     
     case SongCall(closure: SongExpressionLike, arguments: [SongExpressionLike])
     
+    case SongIf(condition: SongExpressionLike, then: SongExpressionLike, otherwise: SongExpressionLike)
+    
     
     public var description: String {
         switch self {
@@ -65,6 +67,9 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
             
         case let .SongCall(closure as SongExpression, arguments):
             return descriptionSongCall(closure, arguments: arguments)
+            
+        case let .SongIf(condition as SongExpression, then as SongExpression, otherwise as SongExpression):
+            return "if \(condition) then \(then) else \(otherwise) end"
         
         default:
             return "<unknown>"

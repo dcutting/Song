@@ -23,6 +23,7 @@
 		C8E2DE6A19FC466100BDAE7A /* SongContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8E2DE6919FC466100BDAE7A /* SongContext.swift */; };
 		C8E2DE6B19FC466100BDAE7A /* SongContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8E2DE6919FC466100BDAE7A /* SongContext.swift */; };
 		C8F3F58D19FC5AAA005FC3E6 /* BooleanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8F3F58C19FC5AAA005FC3E6 /* BooleanTests.swift */; };
+		C8F3F58F19FC5C51005FC3E6 /* IfTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8F3F58E19FC5C51005FC3E6 /* IfTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -55,6 +56,7 @@
 		C8AF2717198D219300EBA02C /* LetTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LetTests.swift; sourceTree = "<group>"; };
 		C8E2DE6919FC466100BDAE7A /* SongContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SongContext.swift; path = Core/SongContext.swift; sourceTree = "<group>"; };
 		C8F3F58C19FC5AAA005FC3E6 /* BooleanTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BooleanTests.swift; sourceTree = "<group>"; };
+		C8F3F58E19FC5C51005FC3E6 /* IfTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IfTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,6 +118,7 @@
 				C89AC47D198C4FD600F5DB3E /* VariableTests.swift */,
 				C827475B198D349F00473E9D /* FunctionTests.swift */,
 				C800D915198D7D0700B34329 /* CallTests.swift */,
+				C8F3F58E19FC5C51005FC3E6 /* IfTests.swift */,
 				C89AC46E198C145800F5DB3E /* Supporting Files */,
 			);
 			path = SongTests;
@@ -237,6 +240,7 @@
 			files = (
 				C8E2DE6B19FC466100BDAE7A /* SongContext.swift in Sources */,
 				C8F3F58D19FC5AAA005FC3E6 /* BooleanTests.swift in Sources */,
+				C8F3F58F19FC5C51005FC3E6 /* IfTests.swift in Sources */,
 				C89AC47A198C4A5300F5DB3E /* SongExpression.swift in Sources */,
 				C89AC471198C145800F5DB3E /* StringTests.swift in Sources */,
 				C89AC47E198C4FD600F5DB3E /* VariableTests.swift in Sources */,
