@@ -129,7 +129,7 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
             if arguments.count > parameters.count {
                 return SongExpression.SongError("too many arguments")
             }
-            let extendedContext = extendContext(closureContext, parameters: parameters, arguments: arguments)
+            let extendedContext = extendContext(closureContext, parameters: parameters, arguments: arguments, callingContext: callingContext)
             return body.evaluate(extendedContext)
         default:
             return SongError("closure does not wrap function")

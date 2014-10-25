@@ -19,12 +19,13 @@ func extendContext(context: SongContext, #name: String, #value: SongExpression) 
     return extendedContext
 }
 
-func extendContext(context: SongContext, #parameters: [String], #arguments: [SongExpressionLike]) -> SongContext {
+func extendContext(context: SongContext, #parameters: [String], #arguments: [SongExpressionLike], #callingContext: SongContext) -> SongContext {
     var extendedContext = context
     for (var i = 0; i < parameters.count; i++) {
-        var name = parameters[i]
-        var value = arguments[i] as SongExpression
-        extendedContext = extendContext(extendedContext, name: name, value: value)
+        let name = parameters[i]
+        let value = arguments[i] as SongExpression
+        let evaluatedValue = value.evaluate(callingContext)
+        extendedContext = extendContext(extendedContext, name: name, value: evaluatedValue)
     }
     return extendedContext
 }
