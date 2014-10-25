@@ -117,7 +117,7 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
         case let .SongClosure(function as SongExpression, closureContext):
             return evaluateSongCallFunction(function, closureContext)
         default:
-            return .SongError("can only call closure")
+            return SongError("can only call closure")
         }
     }
     
@@ -126,7 +126,7 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
         case let .SongFunction(name, parameters, body as SongExpression):
             return body.evaluate(context)
         default:
-            return .SongError("closure does not wrap function")
+            return SongError("closure does not wrap function")
         }
     }
 }
