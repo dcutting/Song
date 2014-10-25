@@ -9,6 +9,8 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
     
     case SongUnit
 
+    case SongBoolean(Bool)
+    
     case SongInteger(Int)
     
     case SongString(String)
@@ -35,6 +37,9 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
         case .SongUnit:
             return "#"
 
+        case let .SongBoolean(value):
+            return value ? "yes" : "no"
+            
         case let .SongInteger(value):
             return "\(value)"
         
@@ -145,6 +150,9 @@ public func ==(lhs: SongExpression, rhs: SongExpression) -> Bool {
 
     case (.SongUnit, .SongUnit):
         return true
+        
+    case let (.SongBoolean(lhsValue), .SongBoolean(rhsValue)):
+        return lhsValue == rhsValue
         
     case let (.SongInteger(lhsValue), .SongInteger(rhsValue)):
         return lhsValue == rhsValue
