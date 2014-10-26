@@ -173,7 +173,7 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
         case let .SongClosure(function as SongExpression, closureContext):
             return evaluateSongCallFunction(function, closureContext: closureContext, arguments: arguments, callingContext: callingContext)
         default:
-            return SongError("can only call closure")
+            return SongError("\(closure) is not a closure")
         }
     }
     

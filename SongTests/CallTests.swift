@@ -13,7 +13,7 @@ class CallTests: XCTestCase {
     func testEvaluateCallingNonClosure() {
         let call = SongExpression.SongCall(closure: SongExpression.SongInteger(5), arguments: [])
         let result = call.evaluate()
-        XCTAssertEqual(SongExpression.SongError("can only call closure"), result)
+        XCTAssertEqual(SongExpression.SongError("5 is not a closure"), result)
     }
 
     func testEvaluateCallingInvalidClosure() {
