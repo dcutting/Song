@@ -24,10 +24,18 @@ class IntegerTests: XCTestCase {
         XCTAssertEqual(integer, result)
     }
     
-    func testPlusNonInteger() {
-        let otherInteger = SongExpression.SongVariable("x")
-        let plus = SongExpression.SongPlus(integer, otherInteger)
+    func testPlusNonIntegerRight() {
+        let nonInteger = SongExpression.SongVariable("x")
+        let plus = SongExpression.SongPlus(integer, nonInteger)
         let result = plus.evaluate([ "x": SongExpression.SongString("hi") ])
         XCTAssertEqual(SongExpression.SongError("cannot add non-integer to integer"), result)
+    }
+
+    func testPlus() {
+        let leftInteger = SongExpression.SongVariable("x")
+        let rightInteger = SongExpression.SongVariable("y")
+        let plus = SongExpression.SongPlus(leftInteger, rightInteger)
+        let result = plus.evaluate([ "x": SongExpression.SongInteger(9), "y": SongExpression.SongInteger(5) ])
+        XCTAssertEqual(SongExpression.SongInteger(14), result)
     }
 }

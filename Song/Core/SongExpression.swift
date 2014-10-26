@@ -108,7 +108,7 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
             return evaluateSongIsUnit(value, context: context)
             
         case let .SongPlus(left as SongExpression, right as SongExpression):
-            return SongError("cannot add non-integer to integer")
+            return evaluateSongPlus(left, right, context: context)
             
         case let .SongLet(name, binding as SongExpression, body as SongExpression):
             return evaluateSongLet(name, binding, body, context)
@@ -139,6 +139,17 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
             return SongBoolean(true)
         default:
             return SongBoolean(false)
+        }
+    }
+    
+    func evaluateSongPlus(left: SongExpression, _ right: SongExpression, context: SongContext) -> SongExpression {
+        let evaluatedLeft = left.evaluate(context)
+        let evaluatedRight = right.evaluate(context)
+        switch (evaluatedLeft, evaluatedRight) {
+        case let (.SongInteger(leftValue), .SongInteger(rightValue)):
+            return SongExpression.SongInteger(leftValue + rightValue)
+        default:
+            return SongError("cannot add non-integer to integer")
         }
     }
     
