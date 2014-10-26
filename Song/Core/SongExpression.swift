@@ -15,6 +15,8 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
     
     case SongInteger(Int)
     
+    case SongPlus(SongExpressionLike, SongExpressionLike)
+    
     case SongString(String)
     
     case SongPair(SongExpressionLike, SongExpressionLike)
@@ -104,6 +106,9 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
 
         case let .SongIsUnit(value as SongExpression):
             return evaluateSongIsUnit(value, context: context)
+            
+        case let .SongPlus(left as SongExpression, right as SongExpression):
+            return SongError("cannot add non-integer to integer")
             
         case let .SongLet(name, binding as SongExpression, body as SongExpression):
             return evaluateSongLet(name, binding, body, context)

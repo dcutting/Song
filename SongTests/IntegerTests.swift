@@ -23,4 +23,11 @@ class IntegerTests: XCTestCase {
         let result = integer.evaluate()
         XCTAssertEqual(integer, result)
     }
+    
+    func testPlusNonInteger() {
+        let otherInteger = SongExpression.SongVariable("x")
+        let plus = SongExpression.SongPlus(integer, otherInteger)
+        let result = plus.evaluate([ "x": SongExpression.SongString("hi") ])
+        XCTAssertEqual(SongExpression.SongError("cannot add non-integer to integer"), result)
+    }
 }
