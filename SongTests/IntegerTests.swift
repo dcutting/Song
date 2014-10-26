@@ -35,7 +35,7 @@ class IntegerTests: XCTestCase {
     func testPlusNonInteger() {
         let nonInteger = SongExpression.SongVariable("x")
         let plus = SongExpression.SongPlus(integer, nonInteger)
-        let result = plus.evaluate([ "x": SongExpression.SongString("hi") ])
+        let result = plus.evaluate(["x": SongExpression.SongString("hi")])
         XCTAssertEqual(SongExpression.SongError("cannot add 5 to 'hi'"), result)
     }
 
@@ -43,7 +43,7 @@ class IntegerTests: XCTestCase {
         let leftInteger = SongExpression.SongVariable("x")
         let rightInteger = SongExpression.SongVariable("y")
         let plus = SongExpression.SongPlus(leftInteger, rightInteger)
-        let result = plus.evaluate([ "x": SongExpression.SongInteger(9), "y": SongExpression.SongInteger(5) ])
+        let result = plus.evaluate(["x": SongExpression.SongInteger(9), "y": SongExpression.SongInteger(5)])
         XCTAssertEqual(SongExpression.SongInteger(14), result)
     }
 }

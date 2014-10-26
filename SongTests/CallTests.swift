@@ -27,7 +27,7 @@ class CallTests: XCTestCase {
         let function = SongExpression.SongFunction(name: "five", parameters: [], body: SongExpression.SongInteger(5))
         let closure = function.evaluate()
         let call = SongExpression.SongCall(closure: SongExpression.SongVariable("f"), arguments: [])
-        let result = call.evaluate([ "f": closure ])
+        let result = call.evaluate(["f": closure])
         XCTAssertEqual(SongExpression.SongInteger(5), result)
     }
     
@@ -41,7 +41,7 @@ class CallTests: XCTestCase {
     
     func testEvaluateClosureReferencesDeclarationContext() {
         let function = SongExpression.SongFunction(name: "getX", parameters: [], body: SongExpression.SongVariable("x"))
-        let closure = function.evaluate([ "x": SongExpression.SongInteger(7) ])
+        let closure = function.evaluate(["x": SongExpression.SongInteger(7)])
         let call = SongExpression.SongCall(closure: closure, arguments: [])
         let result = call.evaluate()
         XCTAssertEqual(SongExpression.SongInteger(7), result)
@@ -51,38 +51,38 @@ class CallTests: XCTestCase {
         let function = SongExpression.SongFunction(name: "getX", parameters: [], body: SongExpression.SongVariable("x"))
         let closure = function.evaluate()
         let call = SongExpression.SongCall(closure: closure, arguments: [])
-        let result = call.evaluate([ "x": SongExpression.SongInteger(7) ])
+        let result = call.evaluate(["x": SongExpression.SongInteger(7)])
         XCTAssertEqual(SongExpression.SongError("cannot evaluate x"), result)
     }
     
     func testEvaluateClosureWithParameter() {
-        let function = SongExpression.SongFunction(name: "echo", parameters: [ "x" ], body: SongExpression.SongVariable("x"))
+        let function = SongExpression.SongFunction(name: "echo", parameters: ["x"], body: SongExpression.SongVariable("x"))
         let closure = function.evaluate()
-        let call = SongExpression.SongCall(closure: closure, arguments: [ SongExpression.SongInteger(7) ])
+        let call = SongExpression.SongCall(closure: closure, arguments: [SongExpression.SongInteger(7)])
         let result = call.evaluate()
         XCTAssertEqual(SongExpression.SongInteger(7), result)
     }
     
     func testEvaluateClosureWithArgumentReferencingCallingContext() {
-        let function = SongExpression.SongFunction(name: "echo", parameters: [ "x" ], body: SongExpression.SongVariable("x"))
+        let function = SongExpression.SongFunction(name: "echo", parameters: ["x"], body: SongExpression.SongVariable("x"))
         let closure = function.evaluate()
-        let call = SongExpression.SongCall(closure: closure, arguments: [ SongExpression.SongVariable("y") ])
-        let result = call.evaluate([ "y": SongExpression.SongInteger(15) ])
+        let call = SongExpression.SongCall(closure: closure, arguments: [SongExpression.SongVariable("y")])
+        let result = call.evaluate(["y": SongExpression.SongInteger(15)])
         XCTAssertEqual(SongExpression.SongInteger(15), result)
     }
     
     func testEvaluateClosureWithoutEnoughArguments() {
-        let function = SongExpression.SongFunction(name: "echo", parameters: [ "x", "y" ], body: SongExpression.SongVariable("x"))
+        let function = SongExpression.SongFunction(name: "echo", parameters: ["x", "y"], body: SongExpression.SongVariable("x"))
         let closure = function.evaluate()
-        let call = SongExpression.SongCall(closure: closure, arguments: [ SongExpression.SongInteger(7) ])
+        let call = SongExpression.SongCall(closure: closure, arguments: [SongExpression.SongInteger(7)])
         let result = call.evaluate()
         XCTAssertEqual(SongExpression.SongError("not enough arguments"), result)
     }
     
     func testEvaluateClosureWithTooManyArguments() {
-        let function = SongExpression.SongFunction(name: "echo", parameters: [ "x" ], body: SongExpression.SongVariable("x"))
+        let function = SongExpression.SongFunction(name: "echo", parameters: ["x"], body: SongExpression.SongVariable("x"))
         let closure = function.evaluate()
-        let call = SongExpression.SongCall(closure: closure, arguments: [ SongExpression.SongInteger(7), SongExpression.SongInteger(8) ])
+        let call = SongExpression.SongCall(closure: closure, arguments: [SongExpression.SongInteger(7), SongExpression.SongInteger(8)])
         let result = call.evaluate()
         XCTAssertEqual(SongExpression.SongError("too many arguments"), result)
     }

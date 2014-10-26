@@ -38,7 +38,7 @@ class IsUnitTests: XCTestCase {
     func testEvaluateIsUnitReferencingContext() {
         let x = SongExpression.SongVariable("x")
         let unit = SongExpression.SongIsUnit(x)
-        let result = unit.evaluate([ "x": SongExpression.SongUnit ])
+        let result = unit.evaluate(["x": SongExpression.SongUnit])
         XCTAssertEqual(SongExpression.SongBoolean(true), result)
     }
 }

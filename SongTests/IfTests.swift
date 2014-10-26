@@ -26,7 +26,7 @@ class IfTests: XCTestCase {
         let then = SongExpression.SongInteger(5)
         let otherwise = SongExpression.SongInteger(7)
         let ifExpr = SongExpression.SongIf(condition: condition, then: then, otherwise: otherwise)
-        let result = ifExpr.evaluate([ "x": SongExpression.SongBoolean(true) ])
+        let result = ifExpr.evaluate(["x": SongExpression.SongBoolean(true)])
         XCTAssertEqual(SongExpression.SongInteger(5), result)
     }
     
@@ -35,7 +35,7 @@ class IfTests: XCTestCase {
         let then = SongExpression.SongVariable("x")
         let otherwise = SongExpression.SongInteger(7)
         let ifExpr = SongExpression.SongIf(condition: condition, then: then, otherwise: otherwise)
-        let result = ifExpr.evaluate([ "x": SongExpression.SongInteger(5) ])
+        let result = ifExpr.evaluate(["x": SongExpression.SongInteger(5)])
         XCTAssertEqual(SongExpression.SongInteger(5), result)
     }
     
@@ -44,7 +44,7 @@ class IfTests: XCTestCase {
         let then = SongExpression.SongInteger(5)
         let otherwise = SongExpression.SongVariable("y")
         let ifExpr = SongExpression.SongIf(condition: condition, then: then, otherwise: otherwise)
-        let result = ifExpr.evaluate([ "y": SongExpression.SongInteger(7) ])
+        let result = ifExpr.evaluate(["y": SongExpression.SongInteger(7)])
         XCTAssertEqual(SongExpression.SongInteger(7), result)
     }
 }
