@@ -169,17 +169,18 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
     }
     
     func evaluateSongCallClosure(closure: SongExpression, arguments: [SongExpressionLike], callingContext: SongContext) -> SongExpression {
-        switch closure.evaluate(callingContext) {
+        let evaluatedClosure = closure.evaluate(callingContext)
+        switch evaluatedClosure {
         case let .SongClosure(function as SongExpression, closureContext):
-            return evaluateSongCallFunction(function, closureContext: closureContext, arguments: arguments, callingContext: callingContext)
+            return evaluateSongCallFunction(function, closureContext: closureContext, arguments: arguments, callingContext: callingContext, closure: evaluatedClosure)
         default:
             return SongError("\(closure) is not a closure")
         }
     }
     
-    func evaluateSongCallFunction(function: SongExpression, closureContext: SongContext, arguments: [SongExpressionLike], callingContext: SongContext) -> SongExpression {
+    func evaluateSongCallFunction(function: SongExpression, closureContext: SongContext, arguments: [SongExpressionLike], callingContext: SongContext, closure: SongExpression) -> SongExpression {
         switch function {
-        case let .SongFunction(_, parameters, body as SongExpression):
+        case let .SongFunction(name, parameters, body as SongExpression):
             if arguments.count < parameters.count {
                 return SongExpression.SongError("not enough arguments")
             }
@@ -187,7 +188,8 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
                 return SongExpression.SongError("too many arguments")
             }
             let extendedContext = extendContext(closureContext, parameters: parameters, arguments: arguments, callingContext: callingContext)
-            return body.evaluate(extendedContext)
+            let recursiveContext = extendContext(extendedContext, name: name, value: closure)
+            return body.evaluate(recursiveContext)
         default:
             return SongError("closure does not wrap function")
         }

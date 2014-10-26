@@ -86,4 +86,22 @@ class CallTests: XCTestCase {
         let result = call.evaluate()
         XCTAssertEqual(SongExpression.SongError("too many arguments"), result)
     }
+    
+    func testEvaluateClosureExtendsContextWithRecursiveReference() {
+        let listVar = SongExpression.SongVariable("list")
+        let isUnit = SongExpression.SongIsUnit(listVar)
+        let zero = SongExpression.SongInteger(0)
+        let one = SongExpression.SongInteger(1)
+        let second = SongExpression.SongSecond(listVar)
+        let recursiveCall = SongExpression.SongCall(closure: SongExpression.SongVariable("length"), arguments: [second])
+        let otherwise = SongExpression.SongPlus(one, recursiveCall)
+        let lengthBody = SongExpression.SongIf(condition: isUnit, then: zero, otherwise: otherwise)
+        let lengthFunc = SongExpression.SongFunction(name: "length", parameters: ["list"], body: lengthBody)
+        let lengthClosure = lengthFunc.evaluate()
+        let list = SongExpression.SongPair(SongExpression.SongInteger(5), SongExpression.SongUnit)
+        let lengthCall = SongExpression.SongCall(closure: lengthClosure, arguments: [list])
+        let result = lengthCall.evaluate()
+        
+        XCTAssertEqual(SongExpression.SongInteger(1), result)
+    }
 }
