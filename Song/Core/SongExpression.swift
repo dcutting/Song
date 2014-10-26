@@ -54,6 +54,9 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
         case let .SongInteger(value):
             return "\(value)"
         
+        case let .SongPlus(left, right):
+            return "\(left) + \(right)"
+            
         case let .SongString(value):
             return "'\(value)'"
         
@@ -149,7 +152,7 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
         case let (.SongInteger(leftValue), .SongInteger(rightValue)):
             return SongExpression.SongInteger(leftValue + rightValue)
         default:
-            return SongError("cannot add non-integer to integer")
+            return SongError("cannot add \(evaluatedLeft) to \(evaluatedRight)")
         }
     }
     
