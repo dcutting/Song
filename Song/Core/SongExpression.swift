@@ -133,6 +133,9 @@ public enum Expression: ExpressionLike, Equatable, Printable {
         case let .Conditional(condition as Expression, then as Expression, otherwise as Expression):
             return evaluateConditional(condition, then: then, otherwise: otherwise, context: context)
             
+        case let .First(pair as Expression):
+            return evaluateFirst(pair, context: context)
+            
         case let .Second(pair as Expression):
             return evaluateSecond(pair, context: context)
             
@@ -211,10 +214,20 @@ public enum Expression: ExpressionLike, Equatable, Printable {
         }
     }
     
+    func evaluateFirst(pair: Expression, context: SongContext) -> Expression {
+        let evaluatedPair = pair.evaluate(context)
+        switch evaluatedPair {
+        case let Pair(fst as Expression, _ as Expression):
+            return fst.evaluate(context)
+        default:
+            return Error("requires pair")
+        }
+    }
+    
     func evaluateSecond(pair: Expression, context: SongContext) -> Expression {
         let evaluatedPair = pair.evaluate(context)
         switch evaluatedPair {
-        case let Pair(fst as Expression, snd as Expression):
+        case let Pair(_ as Expression, snd as Expression):
             return snd.evaluate(context)
         default:
             return Error("requires pair")

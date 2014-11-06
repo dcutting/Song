@@ -39,6 +39,23 @@ class PairTests: XCTestCase {
         XCTAssertEqual("first((0, #))", result)
     }
     
+    func testEvaluateFirstForNonPair() {
+        let pair = Expression.Integer(1)
+        let first = Expression.First(pair)
+        let result = first.evaluate()
+        XCTAssertEqual(Expression.Error("requires pair"), result)
+    }
+    
+    func testEvaluateFirst() {
+        let pair = Expression.Variable("p")
+        let first = Expression.First(pair)
+        let result = first.evaluate([
+            "x": Expression.Integer(60),
+            "p": Expression.Pair(Expression.Variable("x"), Expression.Integer(0))
+            ])
+        XCTAssertEqual(Expression.Integer(60), result)
+    }
+
     func testDescriptionSecond() {
         let second = Expression.Second(pair)
         let result = "\(second)"
