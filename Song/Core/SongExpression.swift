@@ -21,6 +21,8 @@ public enum Expression: ExpressionLike, Equatable, Printable {
     
     case Pair(ExpressionLike, ExpressionLike)
     
+    case First(ExpressionLike)
+    
     case Second(ExpressionLike)
     
     case Closure(function: ExpressionLike, context: SongContext)
@@ -62,6 +64,9 @@ public enum Expression: ExpressionLike, Equatable, Printable {
         
         case let .Pair(first as Expression, second as Expression):
             return "(\(first), \(second))"
+            
+        case let .First(value):
+            return "first(\(value))"
             
         case let .Second(value):
             return "second(\(value))"

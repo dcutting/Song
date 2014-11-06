@@ -33,6 +33,12 @@ class PairTests: XCTestCase {
         XCTAssertEqual(pair, result)
     }
     
+    func testDescriptionFirst() {
+        let first = Expression.First(pair)
+        let result = "\(first)"
+        XCTAssertEqual("first((0, #))", result)
+    }
+    
     func testDescriptionSecond() {
         let second = Expression.Second(pair)
         let result = "\(second)"
