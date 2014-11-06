@@ -3,12 +3,12 @@ import Song
 
 class BooleanTests: XCTestCase {
     
-    let trueBoolean = SongExpression.SongBoolean(true)
-    let falseBoolean = SongExpression.SongBoolean(false)
+    let trueBoolean = Expression.Boolean(true)
+    let falseBoolean = Expression.Boolean(false)
     
     func testConstructor() {
         switch trueBoolean {
-        case let .SongBoolean:
+        case let .Boolean:
             XCTAssertTrue(true)
         default:
             XCTFail("not a boolean")

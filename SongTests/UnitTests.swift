@@ -3,11 +3,11 @@ import Song
 
 class UnitTests: XCTestCase {
     
-    let unit = SongExpression.SongUnit
+    let unit = Expression.Unit
     
     func testConstructor() {
         switch unit {
-        case let .SongUnit:
+        case let .Unit:
             XCTAssertTrue(true)
         default:
             XCTFail("not a unit")

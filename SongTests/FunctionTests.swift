@@ -3,7 +3,7 @@ import Song
 
 class FunctionTests: XCTestCase {
 
-    let function = SongExpression.SongFunction(name: "foo", parameters: ["a", "b"], body: SongExpression.SongVariable("x"))
+    let function = Expression.Function(name: "foo", parameters: ["a", "b"], body: Expression.Variable("x"))
 
     func testDescription() {
         let result = "\(function)"
@@ -11,9 +11,9 @@ class FunctionTests: XCTestCase {
     }
 
     func testEvaluate() {
-        let context = ["x": SongExpression.SongInteger(5)]
+        let context = ["x": Expression.Integer(5)]
         let result = function.evaluate(context)
-        let closure = SongExpression.SongClosure(function: function, context: context)
+        let closure = Expression.Closure(function: function, context: context)
         XCTAssertEqual(closure, result)
     }
 }

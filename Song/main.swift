@@ -3,19 +3,24 @@ println("Song")
 // [].length = 0
 // [x|xs].length = 1 + xs.length
 
-let listVar = SongExpression.SongVariable("list")
-let isUnit = SongExpression.SongIsUnit(listVar)
-let zero = SongExpression.SongInteger(0)
-let one = SongExpression.SongInteger(1)
-let second = SongExpression.SongSecond(listVar)
-let recursiveCall = SongExpression.SongCall(closure: SongExpression.SongVariable("length"), arguments: [second])
-let otherwise = SongExpression.SongPlus(one, recursiveCall)
-let lengthBody = SongExpression.SongIf(condition: isUnit, then: zero, otherwise: otherwise)
-let lengthFunc = SongExpression.SongFunction(name: "length", parameters: ["list"], body: lengthBody)
+func integerList(values: [Int]) -> Expression {
+    return values.reverse().reduce(Expression.Unit) {
+        Expression.Pair(Expression.Integer($1), $0)
+    }
+}
+
+let listVar = Expression.Variable("list")
+let isUnit = Expression.IsUnit(listVar)
+let zero = Expression.Integer(0)
+let one = Expression.Integer(1)
+let second = Expression.Second(listVar)
+let recursiveCall = Expression.Call(closure: Expression.Variable("length"), arguments: [second])
+let otherwise = Expression.Plus(one, recursiveCall)
+let lengthBody = Expression.Conditional(condition: isUnit, then: zero, otherwise: otherwise)
+let lengthFunc = Expression.Function(name: "length", parameters: ["list"], body: lengthBody)
 let lengthClosure = lengthFunc.evaluate()
-let listB = SongExpression.SongPair(SongExpression.SongInteger(9), SongExpression.SongUnit)
-let list = SongExpression.SongPair(SongExpression.SongInteger(5), listB)
-let lengthCall = SongExpression.SongCall(closure: lengthClosure, arguments: [list])
+let list = integerList([1,2,3,4,3,2,1,2,2,4,4,1,2])
+let lengthCall = Expression.Call(closure: lengthClosure, arguments: [list])
 let result = lengthCall.evaluate()
 
 println(lengthCall)

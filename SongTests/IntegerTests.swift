@@ -3,11 +3,11 @@ import Song
 
 class IntegerTests: XCTestCase {
 
-    let integer = SongExpression.SongInteger(5)
+    let integer = Expression.Integer(5)
 
     func testConstructor() {
         switch integer {
-        case let .SongInteger(value):
+        case let .Integer(value):
             XCTAssertEqual(5, value)
         default:
             XCTFail("not an integer")
@@ -25,25 +25,25 @@ class IntegerTests: XCTestCase {
     }
     
     func testPlusDescription() {
-        let left = SongExpression.SongInteger(5)
-        let right = SongExpression.SongInteger(9)
-        let plus = SongExpression.SongPlus(left, right)
+        let left = Expression.Integer(5)
+        let right = Expression.Integer(9)
+        let plus = Expression.Plus(left, right)
         let result = "\(plus)"
         XCTAssertEqual("5 + 9", result)
     }
     
     func testPlusNonInteger() {
-        let nonInteger = SongExpression.SongVariable("x")
-        let plus = SongExpression.SongPlus(integer, nonInteger)
-        let result = plus.evaluate(["x": SongExpression.SongString("hi")])
-        XCTAssertEqual(SongExpression.SongError("cannot add 5 to 'hi'"), result)
+        let nonInteger = Expression.Variable("x")
+        let plus = Expression.Plus(integer, nonInteger)
+        let result = plus.evaluate(["x": Expression.SongString("hi")])
+        XCTAssertEqual(Expression.Error("cannot add 5 to 'hi'"), result)
     }
 
     func testPlus() {
-        let leftInteger = SongExpression.SongVariable("x")
-        let rightInteger = SongExpression.SongVariable("y")
-        let plus = SongExpression.SongPlus(leftInteger, rightInteger)
-        let result = plus.evaluate(["x": SongExpression.SongInteger(9), "y": SongExpression.SongInteger(5)])
-        XCTAssertEqual(SongExpression.SongInteger(14), result)
+        let leftInteger = Expression.Variable("x")
+        let rightInteger = Expression.Variable("y")
+        let plus = Expression.Plus(leftInteger, rightInteger)
+        let result = plus.evaluate(["x": Expression.Integer(9), "y": Expression.Integer(5)])
+        XCTAssertEqual(Expression.Integer(14), result)
     }
 }

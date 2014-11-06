@@ -4,47 +4,47 @@ import Song
 class IfTests: XCTestCase {
     
     func testDescription() {
-        let condition = SongExpression.SongBoolean(true)
-        let then = SongExpression.SongInteger(5)
-        let otherwise = SongExpression.SongInteger(7)
-        let ifExpr = SongExpression.SongIf(condition: condition, then: then, otherwise: otherwise)
+        let condition = Expression.Boolean(true)
+        let then = Expression.Integer(5)
+        let otherwise = Expression.Integer(7)
+        let ifExpr = Expression.Conditional(condition: condition, then: then, otherwise: otherwise)
         let result = "\(ifExpr)"
         XCTAssertEqual("if yes then 5 else 7 end", result)
     }
     
     func testConditionNotBooleanExpression() {
-        let condition = SongExpression.SongInteger(10)
-        let then = SongExpression.SongInteger(5)
-        let otherwise = SongExpression.SongInteger(7)
-        let ifExpr = SongExpression.SongIf(condition: condition, then: then, otherwise: otherwise)
+        let condition = Expression.Integer(10)
+        let then = Expression.Integer(5)
+        let otherwise = Expression.Integer(7)
+        let ifExpr = Expression.Conditional(condition: condition, then: then, otherwise: otherwise)
         let result = ifExpr.evaluate()
-        XCTAssertEqual(SongExpression.SongError("boolean expression expected"), result)
+        XCTAssertEqual(Expression.Error("boolean expression expected"), result)
     }
     
     func testEvaluatesCondition() {
-        let condition = SongExpression.SongVariable("x")
-        let then = SongExpression.SongInteger(5)
-        let otherwise = SongExpression.SongInteger(7)
-        let ifExpr = SongExpression.SongIf(condition: condition, then: then, otherwise: otherwise)
-        let result = ifExpr.evaluate(["x": SongExpression.SongBoolean(true)])
-        XCTAssertEqual(SongExpression.SongInteger(5), result)
+        let condition = Expression.Variable("x")
+        let then = Expression.Integer(5)
+        let otherwise = Expression.Integer(7)
+        let ifExpr = Expression.Conditional(condition: condition, then: then, otherwise: otherwise)
+        let result = ifExpr.evaluate(["x": Expression.Boolean(true)])
+        XCTAssertEqual(Expression.Integer(5), result)
     }
     
     func testTrueBranch() {
-        let condition = SongExpression.SongBoolean(true)
-        let then = SongExpression.SongVariable("x")
-        let otherwise = SongExpression.SongInteger(7)
-        let ifExpr = SongExpression.SongIf(condition: condition, then: then, otherwise: otherwise)
-        let result = ifExpr.evaluate(["x": SongExpression.SongInteger(5)])
-        XCTAssertEqual(SongExpression.SongInteger(5), result)
+        let condition = Expression.Boolean(true)
+        let then = Expression.Variable("x")
+        let otherwise = Expression.Integer(7)
+        let ifExpr = Expression.Conditional(condition: condition, then: then, otherwise: otherwise)
+        let result = ifExpr.evaluate(["x": Expression.Integer(5)])
+        XCTAssertEqual(Expression.Integer(5), result)
     }
     
     func testFalseBranch() {
-        let condition = SongExpression.SongBoolean(false)
-        let then = SongExpression.SongInteger(5)
-        let otherwise = SongExpression.SongVariable("y")
-        let ifExpr = SongExpression.SongIf(condition: condition, then: then, otherwise: otherwise)
-        let result = ifExpr.evaluate(["y": SongExpression.SongInteger(7)])
-        XCTAssertEqual(SongExpression.SongInteger(7), result)
+        let condition = Expression.Boolean(false)
+        let then = Expression.Integer(5)
+        let otherwise = Expression.Variable("y")
+        let ifExpr = Expression.Conditional(condition: condition, then: then, otherwise: otherwise)
+        let result = ifExpr.evaluate(["y": Expression.Integer(7)])
+        XCTAssertEqual(Expression.Integer(7), result)
     }
 }

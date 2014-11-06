@@ -3,9 +3,9 @@ import Song
 
 class ClosureTests: XCTestCase {
     
-    let function = SongExpression.SongFunction(name: "foo", parameters: ["a", "b"], body: SongExpression.SongVariable("x"))
+    let function = Expression.Function(name: "foo", parameters: ["a", "b"], body: Expression.Variable("x"))
 
-    let context = ["x": SongExpression.SongInteger(5), "y": SongExpression.SongString("hi")]
+    let context = ["x": Expression.Integer(5), "y": Expression.SongString("hi")]
     
     func testDescription() {
         let closure = function.evaluate(context)

@@ -3,13 +3,13 @@ import Song
 
 class PairTests: XCTestCase {
     
-    let pair = SongExpression.SongPair(SongExpression.SongInteger(0), SongExpression.SongUnit)
+    let pair = Expression.Pair(Expression.Integer(0), Expression.Unit)
     
     func testConstructor() {
         switch pair {
-        case let .SongPair(first as SongExpression, second as SongExpression):
-            let expectedFirst = SongExpression.SongInteger(0)
-            let expectedSecond = SongExpression.SongUnit
+        case let .Pair(first as Expression, second as Expression):
+            let expectedFirst = Expression.Integer(0)
+            let expectedSecond = Expression.Unit
             XCTAssertEqual(expectedFirst, first)
             XCTAssertEqual(expectedSecond, second)
         default:
@@ -23,7 +23,7 @@ class PairTests: XCTestCase {
     }
     
     func testDescriptionSubPair() {
-        let compoundPair = SongExpression.SongPair(SongExpression.SongString("hi"), pair)
+        let compoundPair = Expression.Pair(Expression.SongString("hi"), pair)
         let result = "\(compoundPair)"
         XCTAssertEqual("('hi', (0, #))", result)
     }
@@ -34,25 +34,25 @@ class PairTests: XCTestCase {
     }
     
     func testDescriptionSecond() {
-        let second = SongExpression.SongSecond(pair)
+        let second = Expression.Second(pair)
         let result = "\(second)"
         XCTAssertEqual("second((0, #))", result)
     }
     
     func testEvaluateSecondForNonPair() {
-        let pair = SongExpression.SongInteger(1)
-        let second = SongExpression.SongSecond(pair)
+        let pair = Expression.Integer(1)
+        let second = Expression.Second(pair)
         let result = second.evaluate()
-        XCTAssertEqual(SongExpression.SongError("requires pair"), result)
+        XCTAssertEqual(Expression.Error("requires pair"), result)
     }
 
     func testEvaluateSecond() {
-        let pair = SongExpression.SongVariable("p")
-        let second = SongExpression.SongSecond(pair)
+        let pair = Expression.Variable("p")
+        let second = Expression.Second(pair)
         let result = second.evaluate([
-            "x": SongExpression.SongInteger(50),
-            "p": SongExpression.SongPair(SongExpression.SongInteger(0), SongExpression.SongVariable("x"))
+            "x": Expression.Integer(50),
+            "p": Expression.Pair(Expression.Integer(0), Expression.Variable("x"))
             ])
-        XCTAssertEqual(SongExpression.SongInteger(50), result)
+        XCTAssertEqual(Expression.Integer(50), result)
     }
 }

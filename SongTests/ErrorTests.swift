@@ -3,7 +3,7 @@ import Song
 
 class ErrorTests: XCTestCase {
     
-    let error = SongExpression.SongError("problem")
+    let error = Expression.Error("problem")
 
     func testDescription() {
         let result = "\(error)"
@@ -12,6 +12,6 @@ class ErrorTests: XCTestCase {
     
     func testEvaluate() {
         let result = error.evaluate()
-        XCTAssertEqual(SongExpression.SongError("problem"), result)
+        XCTAssertEqual(Expression.Error("problem"), result)
     }
 }

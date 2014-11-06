@@ -4,104 +4,104 @@ import Song
 class CallTests: XCTestCase {
     
     func testDescription() {
-        let closure = SongExpression.SongFunction(name: "echo", parameters: ["x", "y"], body: SongExpression.SongVariable("x")).evaluate()
-        let call = SongExpression.SongCall(closure: closure, arguments: [SongExpression.SongInteger(99), SongExpression.SongInteger(100)])
+        let closure = Expression.Function(name: "echo", parameters: ["x", "y"], body: Expression.Variable("x")).evaluate()
+        let call = Expression.Call(closure: closure, arguments: [Expression.Integer(99), Expression.Integer(100)])
         let result = "\(call)"
         XCTAssertEqual("[() def echo(x, y) { x }](99, 100)", result)
     }
 
     func testEvaluateCallingNonClosure() {
-        let call = SongExpression.SongCall(closure: SongExpression.SongInteger(5), arguments: [])
+        let call = Expression.Call(closure: Expression.Integer(5), arguments: [])
         let result = call.evaluate()
-        XCTAssertEqual(SongExpression.SongError("5 is not a closure"), result)
+        XCTAssertEqual(Expression.Error("5 is not a closure"), result)
     }
 
     func testEvaluateCallingInvalidClosure() {
-        let closure = SongExpression.SongClosure(function: SongExpression.SongInteger(5), context: SongContext())
-        let call = SongExpression.SongCall(closure: closure, arguments: [])
+        let closure = Expression.Closure(function: Expression.Integer(5), context: SongContext())
+        let call = Expression.Call(closure: closure, arguments: [])
         let result = call.evaluate()
-        XCTAssertEqual(SongExpression.SongError("closure does not wrap function"), result)
+        XCTAssertEqual(Expression.Error("closure does not wrap function"), result)
     }
     
     func testEvaluateCallingFunctionReferencedInContext() {
-        let function = SongExpression.SongFunction(name: "five", parameters: [], body: SongExpression.SongInteger(5))
+        let function = Expression.Function(name: "five", parameters: [], body: Expression.Integer(5))
         let closure = function.evaluate()
-        let call = SongExpression.SongCall(closure: SongExpression.SongVariable("f"), arguments: [])
+        let call = Expression.Call(closure: Expression.Variable("f"), arguments: [])
         let result = call.evaluate(["f": closure])
-        XCTAssertEqual(SongExpression.SongInteger(5), result)
+        XCTAssertEqual(Expression.Integer(5), result)
     }
     
     func testEvaluateClosureWithoutParameters() {
-        let function = SongExpression.SongFunction(name: "five", parameters: [], body: SongExpression.SongInteger(5))
+        let function = Expression.Function(name: "five", parameters: [], body: Expression.Integer(5))
         let closure = function.evaluate()
-        let call = SongExpression.SongCall(closure: closure, arguments: [])
+        let call = Expression.Call(closure: closure, arguments: [])
         let result = call.evaluate()
-        XCTAssertEqual(SongExpression.SongInteger(5), result)
+        XCTAssertEqual(Expression.Integer(5), result)
     }
     
     func testEvaluateClosureReferencesDeclarationContext() {
-        let function = SongExpression.SongFunction(name: "getX", parameters: [], body: SongExpression.SongVariable("x"))
-        let closure = function.evaluate(["x": SongExpression.SongInteger(7)])
-        let call = SongExpression.SongCall(closure: closure, arguments: [])
+        let function = Expression.Function(name: "getX", parameters: [], body: Expression.Variable("x"))
+        let closure = function.evaluate(["x": Expression.Integer(7)])
+        let call = Expression.Call(closure: closure, arguments: [])
         let result = call.evaluate()
-        XCTAssertEqual(SongExpression.SongInteger(7), result)
+        XCTAssertEqual(Expression.Integer(7), result)
     }
     
     func testEvaluateClosureIgnoresCallingContext() {
-        let function = SongExpression.SongFunction(name: "getX", parameters: [], body: SongExpression.SongVariable("x"))
+        let function = Expression.Function(name: "getX", parameters: [], body: Expression.Variable("x"))
         let closure = function.evaluate()
-        let call = SongExpression.SongCall(closure: closure, arguments: [])
-        let result = call.evaluate(["x": SongExpression.SongInteger(7)])
-        XCTAssertEqual(SongExpression.SongError("cannot evaluate x"), result)
+        let call = Expression.Call(closure: closure, arguments: [])
+        let result = call.evaluate(["x": Expression.Integer(7)])
+        XCTAssertEqual(Expression.Error("cannot evaluate x"), result)
     }
     
     func testEvaluateClosureWithParameter() {
-        let function = SongExpression.SongFunction(name: "echo", parameters: ["x"], body: SongExpression.SongVariable("x"))
+        let function = Expression.Function(name: "echo", parameters: ["x"], body: Expression.Variable("x"))
         let closure = function.evaluate()
-        let call = SongExpression.SongCall(closure: closure, arguments: [SongExpression.SongInteger(7)])
+        let call = Expression.Call(closure: closure, arguments: [Expression.Integer(7)])
         let result = call.evaluate()
-        XCTAssertEqual(SongExpression.SongInteger(7), result)
+        XCTAssertEqual(Expression.Integer(7), result)
     }
     
     func testEvaluateClosureWithArgumentReferencingCallingContext() {
-        let function = SongExpression.SongFunction(name: "echo", parameters: ["x"], body: SongExpression.SongVariable("x"))
+        let function = Expression.Function(name: "echo", parameters: ["x"], body: Expression.Variable("x"))
         let closure = function.evaluate()
-        let call = SongExpression.SongCall(closure: closure, arguments: [SongExpression.SongVariable("y")])
-        let result = call.evaluate(["y": SongExpression.SongInteger(15)])
-        XCTAssertEqual(SongExpression.SongInteger(15), result)
+        let call = Expression.Call(closure: closure, arguments: [Expression.Variable("y")])
+        let result = call.evaluate(["y": Expression.Integer(15)])
+        XCTAssertEqual(Expression.Integer(15), result)
     }
     
     func testEvaluateClosureWithoutEnoughArguments() {
-        let function = SongExpression.SongFunction(name: "echo", parameters: ["x", "y"], body: SongExpression.SongVariable("x"))
+        let function = Expression.Function(name: "echo", parameters: ["x", "y"], body: Expression.Variable("x"))
         let closure = function.evaluate()
-        let call = SongExpression.SongCall(closure: closure, arguments: [SongExpression.SongInteger(7)])
+        let call = Expression.Call(closure: closure, arguments: [Expression.Integer(7)])
         let result = call.evaluate()
-        XCTAssertEqual(SongExpression.SongError("not enough arguments"), result)
+        XCTAssertEqual(Expression.Error("not enough arguments"), result)
     }
     
     func testEvaluateClosureWithTooManyArguments() {
-        let function = SongExpression.SongFunction(name: "echo", parameters: ["x"], body: SongExpression.SongVariable("x"))
+        let function = Expression.Function(name: "echo", parameters: ["x"], body: Expression.Variable("x"))
         let closure = function.evaluate()
-        let call = SongExpression.SongCall(closure: closure, arguments: [SongExpression.SongInteger(7), SongExpression.SongInteger(8)])
+        let call = Expression.Call(closure: closure, arguments: [Expression.Integer(7), Expression.Integer(8)])
         let result = call.evaluate()
-        XCTAssertEqual(SongExpression.SongError("too many arguments"), result)
+        XCTAssertEqual(Expression.Error("too many arguments"), result)
     }
     
     func testEvaluateClosureExtendsContextWithRecursiveReference() {
-        let listVar = SongExpression.SongVariable("list")
-        let isUnit = SongExpression.SongIsUnit(listVar)
-        let zero = SongExpression.SongInteger(0)
-        let one = SongExpression.SongInteger(1)
-        let second = SongExpression.SongSecond(listVar)
-        let recursiveCall = SongExpression.SongCall(closure: SongExpression.SongVariable("length"), arguments: [second])
-        let otherwise = SongExpression.SongPlus(one, recursiveCall)
-        let lengthBody = SongExpression.SongIf(condition: isUnit, then: zero, otherwise: otherwise)
-        let lengthFunc = SongExpression.SongFunction(name: "length", parameters: ["list"], body: lengthBody)
+        let listVar = Expression.Variable("list")
+        let isUnit = Expression.IsUnit(listVar)
+        let zero = Expression.Integer(0)
+        let one = Expression.Integer(1)
+        let second = Expression.Second(listVar)
+        let recursiveCall = Expression.Call(closure: Expression.Variable("length"), arguments: [second])
+        let otherwise = Expression.Plus(one, recursiveCall)
+        let lengthBody = Expression.Conditional(condition: isUnit, then: zero, otherwise: otherwise)
+        let lengthFunc = Expression.Function(name: "length", parameters: ["list"], body: lengthBody)
         let lengthClosure = lengthFunc.evaluate()
-        let list = SongExpression.SongPair(SongExpression.SongInteger(5), SongExpression.SongUnit)
-        let lengthCall = SongExpression.SongCall(closure: lengthClosure, arguments: [list])
+        let list = Expression.Pair(Expression.Integer(5), Expression.Unit)
+        let lengthCall = Expression.Call(closure: lengthClosure, arguments: [list])
         let result = lengthCall.evaluate()
         
-        XCTAssertEqual(SongExpression.SongInteger(1), result)
+        XCTAssertEqual(Expression.Integer(1), result)
     }
 }

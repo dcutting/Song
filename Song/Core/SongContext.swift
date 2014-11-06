@@ -1,6 +1,6 @@
 import Foundation
 
-public typealias SongContext = [String: SongExpression]
+public typealias SongContext = [String: Expression]
 
 func contextDescription(context: SongContext) -> String {
     var contextPairs = Array<String>()
@@ -11,17 +11,17 @@ func contextDescription(context: SongContext) -> String {
     return ", ".join(contextPairs)
 }
 
-func extendContext(context: SongContext, #name: String, #value: SongExpression) -> SongContext {
+func extendContext(context: SongContext, #name: String, #value: Expression) -> SongContext {
     var extendedContext = context
     extendedContext[name] = value
     return extendedContext
 }
 
-func extendContext(context: SongContext, #parameters: [String], #arguments: [SongExpressionLike], #callingContext: SongContext) -> SongContext {
+func extendContext(context: SongContext, #parameters: [String], #arguments: [ExpressionLike], #callingContext: SongContext) -> SongContext {
     var extendedContext = context
     for (var i = 0; i < parameters.count; i++) {
         let name = parameters[i]
-        let value = arguments[i] as SongExpression
+        let value = arguments[i] as Expression
         let evaluatedValue = value.evaluate(callingContext)
         extendedContext = extendContext(extendedContext, name: name, value: evaluatedValue)
     }

@@ -3,7 +3,7 @@ import Song
 
 class StringTests: XCTestCase {
     
-    let string = SongExpression.SongString("hello")
+    let string = Expression.SongString("hello")
 
     func testConstructor() {
         switch string {

@@ -1,89 +1,89 @@
 import Foundation
 
-public protocol SongExpressionLike {}
+public protocol ExpressionLike {}
 
-public enum SongExpression: SongExpressionLike, Equatable, Printable {
+public enum Expression: ExpressionLike, Equatable, Printable {
 
     
-    case SongError(String)
+    case Error(String)
     
-    case SongUnit
+    case Unit
 
-    case SongBoolean(Bool)
+    case Boolean(Bool)
     
-    case SongIsUnit(SongExpressionLike)
+    case IsUnit(ExpressionLike)
     
-    case SongInteger(Int)
+    case Integer(Int)
     
-    case SongPlus(SongExpressionLike, SongExpressionLike)
+    case Plus(ExpressionLike, ExpressionLike)
     
     case SongString(String)
     
-    case SongPair(SongExpressionLike, SongExpressionLike)
+    case Pair(ExpressionLike, ExpressionLike)
     
-    case SongSecond(SongExpressionLike)
+    case Second(ExpressionLike)
     
-    case SongClosure(function: SongExpressionLike, context: SongContext)
+    case Closure(function: ExpressionLike, context: SongContext)
     
-    case SongLet(name: String, binding: SongExpressionLike, body: SongExpressionLike)
+    case Let(name: String, binding: ExpressionLike, body: ExpressionLike)
     
-    case SongVariable(String)
+    case Variable(String)
     
-    case SongFunction(name: String, parameters: [String], body: SongExpressionLike)
+    case Function(name: String, parameters: [String], body: ExpressionLike)
     
-    case SongCall(closure: SongExpressionLike, arguments: [SongExpressionLike])
+    case Call(closure: ExpressionLike, arguments: [ExpressionLike])
     
-    case SongIf(condition: SongExpressionLike, then: SongExpressionLike, otherwise: SongExpressionLike)
+    case Conditional(condition: ExpressionLike, then: ExpressionLike, otherwise: ExpressionLike)
     
     
     public var description: String {
         switch self {
             
-        case let .SongError(value):
+        case let .Error(value):
             return "<\(value)>"
 
-        case .SongUnit:
+        case .Unit:
             return "#"
 
-        case let .SongBoolean(value):
+        case let .Boolean(value):
             return value ? "yes" : "no"
             
-        case let .SongIsUnit(value):
+        case let .IsUnit(value):
             return "isUnit(\(value))"
             
-        case let .SongInteger(value):
+        case let .Integer(value):
             return "\(value)"
         
-        case let .SongPlus(left, right):
+        case let .Plus(left, right):
             return "\(left) + \(right)"
             
         case let .SongString(value):
             return "'\(value)'"
         
-        case let .SongPair(first as SongExpression, second as SongExpression):
+        case let .Pair(first as Expression, second as Expression):
             return "(\(first), \(second))"
             
-        case let .SongSecond(value):
+        case let .Second(value):
             return "second(\(value))"
         
-        case let .SongClosure(function as SongExpression, context):
+        case let .Closure(function as Expression, context):
             let contextList = contextDescription(context)
             return "[(\(contextList)) \(function)]"
 
-        case let .SongLet(name, binding as SongExpression, body as SongExpression):
+        case let .Let(name, binding as Expression, body as Expression):
             return "let (\(name) = \(binding)) { \(body) }"
         
-        case let .SongVariable(variable):
+        case let .Variable(variable):
             return "\(variable)"
             
-        case let .SongFunction(name, parameters, body as SongExpression):
+        case let .Function(name, parameters, body as Expression):
             let parametersList = ", ".join(parameters)
             return "def \(name)(\(parametersList)) { \(body) }"
             
-        case let .SongCall(closure as SongExpression, arguments):
-            return descriptionSongCall(closure, arguments: arguments)
+        case let .Call(closure as Expression, arguments):
+            return descriptionCall(closure, arguments: arguments)
             
-        case let .SongIf(condition as SongExpression, then as SongExpression, otherwise as SongExpression):
+        case let .Conditional(condition as Expression, then as Expression, otherwise as Expression):
             return "if \(condition) then \(then) else \(otherwise) end"
         
         default:
@@ -91,44 +91,44 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
         }
     }
     
-    func descriptionSongCall(closure: SongExpression, arguments: [SongExpressionLike]) -> String {
+    func descriptionCall(closure: Expression, arguments: [ExpressionLike]) -> String {
         var argumentStrings = Array<String>()
         for arg in arguments {
-            argumentStrings.append("\(arg as SongExpression)")
+            argumentStrings.append("\(arg as Expression)")
         }
         let argumentsList = ", ".join(argumentStrings)
         return "\(closure)(\(argumentsList))"
     }
     
-    public func evaluate() -> SongExpression {
+    public func evaluate() -> Expression {
         return evaluate(SongContext())
     }
     
-    public func evaluate(context: SongContext) -> SongExpression {
+    public func evaluate(context: SongContext) -> Expression {
         switch self {
 
-        case let .SongIsUnit(value as SongExpression):
-            return evaluateSongIsUnit(value, context: context)
+        case let .IsUnit(value as Expression):
+            return evaluateIsUnit(value, context: context)
             
-        case let .SongPlus(left as SongExpression, right as SongExpression):
-            return evaluateSongPlus(left, right, context: context)
+        case let .Plus(left as Expression, right as Expression):
+            return evaluatePlus(left, right, context: context)
             
-        case let .SongLet(name, binding as SongExpression, body as SongExpression):
-            return evaluateSongLet(name, binding, body, context)
+        case let .Let(name, binding as Expression, body as Expression):
+            return evaluateLet(name, binding, body, context)
             
-        case let .SongVariable(variable):
-            return evaluateSongVariable(variable, context)
+        case let .Variable(variable):
+            return evaluateVariable(variable, context)
 
-        case let .SongFunction:
-            return SongClosure(function: self, context: context)
+        case let .Function:
+            return Closure(function: self, context: context)
             
-        case let .SongCall(closure as SongExpression, arguments):
-            return evaluateSongCallClosure(closure, arguments: arguments, callingContext: context)
+        case let .Call(closure as Expression, arguments):
+            return evaluateCallClosure(closure, arguments: arguments, callingContext: context)
 
-        case let .SongIf(condition as SongExpression, then as SongExpression, otherwise as SongExpression):
-            return evaluateSongIf(condition, then: then, otherwise: otherwise, context: context)
+        case let .Conditional(condition as Expression, then as Expression, otherwise as Expression):
+            return evaluateConditional(condition, then: then, otherwise: otherwise, context: context)
             
-        case let .SongSecond(pair as SongExpression):
+        case let .Second(pair as Expression):
             return evaluateSecond(pair, context: context)
             
         default:
@@ -136,116 +136,116 @@ public enum SongExpression: SongExpressionLike, Equatable, Printable {
         }
     }
 
-    func evaluateSongIsUnit(value: SongExpression, context: SongContext) -> SongExpression {
+    func evaluateIsUnit(value: Expression, context: SongContext) -> Expression {
         switch value.evaluate(context) {
-        case .SongUnit:
-            return SongBoolean(true)
+        case .Unit:
+            return Boolean(true)
         default:
-            return SongBoolean(false)
+            return Boolean(false)
         }
     }
     
-    func evaluateSongPlus(left: SongExpression, _ right: SongExpression, context: SongContext) -> SongExpression {
+    func evaluatePlus(left: Expression, _ right: Expression, context: SongContext) -> Expression {
         let evaluatedLeft = left.evaluate(context)
         let evaluatedRight = right.evaluate(context)
         switch (evaluatedLeft, evaluatedRight) {
-        case let (.SongInteger(leftValue), .SongInteger(rightValue)):
-            return SongExpression.SongInteger(leftValue + rightValue)
+        case let (.Integer(leftValue), .Integer(rightValue)):
+            return Expression.Integer(leftValue + rightValue)
         default:
-            return SongError("cannot add \(evaluatedLeft) to \(evaluatedRight)")
+            return Error("cannot add \(evaluatedLeft) to \(evaluatedRight)")
         }
     }
     
-    func evaluateSongLet(name: String, _ binding: SongExpression, _ body: SongExpression, _ context: SongContext) -> SongExpression {
+    func evaluateLet(name: String, _ binding: Expression, _ body: Expression, _ context: SongContext) -> Expression {
         let letContext = extendContext(context, name: name, value: binding.evaluate(context))
         return body.evaluate(letContext)
     }
     
-    func evaluateSongVariable(variable: String, _ context: SongContext) -> SongExpression {
+    func evaluateVariable(variable: String, _ context: SongContext) -> Expression {
         if let value = context[variable] {
             return value
         }
-        return SongError("cannot evaluate \(variable)")
+        return Error("cannot evaluate \(variable)")
     }
     
-    func evaluateSongCallClosure(closure: SongExpression, arguments: [SongExpressionLike], callingContext: SongContext) -> SongExpression {
+    func evaluateCallClosure(closure: Expression, arguments: [ExpressionLike], callingContext: SongContext) -> Expression {
         let evaluatedClosure = closure.evaluate(callingContext)
         switch evaluatedClosure {
-        case let .SongClosure(function as SongExpression, closureContext):
-            return evaluateSongCallFunction(function, closureContext: closureContext, arguments: arguments, callingContext: callingContext, closure: evaluatedClosure)
+        case let .Closure(function as Expression, closureContext):
+            return evaluateCallFunction(function, closureContext: closureContext, arguments: arguments, callingContext: callingContext, closure: evaluatedClosure)
         default:
-            return SongError("\(closure) is not a closure")
+            return Error("\(closure) is not a closure")
         }
     }
     
-    func evaluateSongCallFunction(function: SongExpression, closureContext: SongContext, arguments: [SongExpressionLike], callingContext: SongContext, closure: SongExpression) -> SongExpression {
+    func evaluateCallFunction(function: Expression, closureContext: SongContext, arguments: [ExpressionLike], callingContext: SongContext, closure: Expression) -> Expression {
         switch function {
-        case let .SongFunction(name, parameters, body as SongExpression):
+        case let .Function(name, parameters, body as Expression):
             if arguments.count < parameters.count {
-                return SongExpression.SongError("not enough arguments")
+                return Expression.Error("not enough arguments")
             }
             if arguments.count > parameters.count {
-                return SongExpression.SongError("too many arguments")
+                return Expression.Error("too many arguments")
             }
             let extendedContext = extendContext(closureContext, parameters: parameters, arguments: arguments, callingContext: callingContext)
             let recursiveContext = extendContext(extendedContext, name: name, value: closure)
             return body.evaluate(recursiveContext)
         default:
-            return SongError("closure does not wrap function")
+            return Error("closure does not wrap function")
         }
     }
     
-    func evaluateSongIf(condition: SongExpression, then: SongExpression, otherwise: SongExpression, context: SongContext) -> SongExpression {
+    func evaluateConditional(condition: Expression, then: Expression, otherwise: Expression, context: SongContext) -> Expression {
         switch condition.evaluate(context) {
-        case .SongBoolean(true):
+        case .Boolean(true):
             return then.evaluate(context)
-        case .SongBoolean(false):
+        case .Boolean(false):
             return otherwise.evaluate(context)
         default:
-            return SongError("boolean expression expected")
+            return Error("boolean expression expected")
         }
     }
     
-    func evaluateSecond(pair: SongExpression, context: SongContext) -> SongExpression {
+    func evaluateSecond(pair: Expression, context: SongContext) -> Expression {
         let evaluatedPair = pair.evaluate(context)
         switch evaluatedPair {
-        case let SongPair(fst as SongExpression, snd as SongExpression):
+        case let Pair(fst as Expression, snd as Expression):
             return snd.evaluate(context)
         default:
-            return SongError("requires pair")
+            return Error("requires pair")
         }
     }
 }
 
-public func ==(lhs: SongExpression, rhs: SongExpression) -> Bool {
+public func ==(lhs: Expression, rhs: Expression) -> Bool {
     switch (lhs, rhs) {
         
-    case let (.SongError(lhsError), .SongError(rhsError)):
+    case let (.Error(lhsError), .Error(rhsError)):
         return lhsError == rhsError
 
-    case (.SongUnit, .SongUnit):
+    case (.Unit, .Unit):
         return true
         
-    case let (.SongBoolean(lhsValue), .SongBoolean(rhsValue)):
+    case let (.Boolean(lhsValue), .Boolean(rhsValue)):
         return lhsValue == rhsValue
         
-    case let (.SongInteger(lhsValue), .SongInteger(rhsValue)):
+    case let (.Integer(lhsValue), .Integer(rhsValue)):
         return lhsValue == rhsValue
     
     case let (.SongString(lhsValue), .SongString(rhsValue)):
         return lhsValue == rhsValue
     
-    case let (.SongPair(lhsFirst as SongExpression, lhsSecond as SongExpression),
-        .SongPair(rhsFirst as SongExpression, rhsSecond as SongExpression)):
+    case let (.Pair(lhsFirst as Expression, lhsSecond as Expression),
+        .Pair(rhsFirst as Expression, rhsSecond as Expression)):
         return lhsFirst == rhsFirst && lhsSecond == rhsSecond
     
-    case let (.SongClosure(lhsFunction as SongExpression, lhsContext), .SongClosure(rhsFunction as SongExpression, rhsContext)):
+    case let (.Closure(lhsFunction as Expression, lhsContext), .Closure(rhsFunction as Expression, rhsContext)):
         return lhsFunction == rhsFunction && lhsContext == rhsContext
         
-    case let (.SongVariable(lhsVariable), .SongVariable(rhsVariable)):
+    case let (.Variable(lhsVariable), .Variable(rhsVariable)):
         return lhsVariable == rhsVariable
     
-    case let (.SongFunction(lhsName, lhsParameters, lhsBody as SongExpression), .SongFunction(rhsName, rhsParameters, rhsBody as SongExpression)):
+    case let (.Function(lhsName, lhsParameters, lhsBody as Expression), .Function(rhsName, rhsParameters, rhsBody as Expression)):
         return lhsName == rhsName && lhsParameters == rhsParameters && lhsBody == rhsBody
     
     default:
