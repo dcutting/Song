@@ -20,6 +20,6 @@ class FunctionTests: XCTestCase {
     
     func testDescriptionAnonymousFunction() {
         let result = "\(anonymousFunction)"
-        XCTAssertEqual("lambda(a, b) { x }", result)
+        XCTAssertEqual("λ(a, b) { x }", result)
     }
 }

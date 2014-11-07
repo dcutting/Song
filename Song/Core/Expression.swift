@@ -98,7 +98,7 @@ public enum Expression: ExpressionLike, Equatable, Printable {
         if let funcName = name {
             return "def \(funcName)(\(parametersList)) { \(body) }"
         } else {
-            return "lambda(\(parametersList)) { \(body) }"
+            return "λ(\(parametersList)) { \(body) }"
         }
     }
     
