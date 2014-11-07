@@ -18,9 +18,8 @@ let recursiveCall = Expression.Call(closure: Expression.Variable("length"), argu
 let otherwise = Expression.Plus(one, recursiveCall)
 let lengthBody = Expression.Conditional(condition: isUnitValue, then: zero, otherwise: otherwise)
 let lengthFunc = Expression.Function(name: "length", parameters: ["list"], body: lengthBody)
-let lengthClosure = lengthFunc.evaluate()
 let list = integerList([1,2,3,4,3,2,1,2,2,4,4,1,2])
-let lengthCall = Expression.Call(closure: lengthClosure, arguments: [list])
+let lengthCall = Expression.Call(closure: lengthFunc, arguments: [list])
 let result = lengthCall.evaluate()
 
 println(lengthCall)
