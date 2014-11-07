@@ -29,7 +29,7 @@ public enum Expression: ExpressionLike, Equatable, Printable {
     
     case Variable(String)
     
-    case Function(name: String, parameters: [String], body: ExpressionLike)
+    case Function(name: String?, parameters: [String], body: ExpressionLike)
     
     case Call(closure: ExpressionLike, arguments: [ExpressionLike])
     
@@ -80,8 +80,7 @@ public enum Expression: ExpressionLike, Equatable, Printable {
             return "\(variable)"
             
         case let .Function(name, parameters, body as Expression):
-            let parametersList = ", ".join(parameters)
-            return "def \(name)(\(parametersList)) { \(body) }"
+            return descriptionFunction(name, parameters, body)
             
         case let .Call(closure as Expression, arguments):
             return descriptionCall(closure, arguments: arguments)
@@ -91,6 +90,15 @@ public enum Expression: ExpressionLike, Equatable, Printable {
         
         default:
             return "<unknown>"
+        }
+    }
+    
+    func descriptionFunction(name: String?, _ parameters: [String], _ body: Expression) -> String {
+        let parametersList = ", ".join(parameters)
+        if let funcName = name {
+            return "def \(funcName)(\(parametersList)) { \(body) }"
+        } else {
+            return "lambda(\(parametersList)) { \(body) }"
         }
     }
     
@@ -194,7 +202,7 @@ public enum Expression: ExpressionLike, Equatable, Printable {
                 return Expression.Error("too many arguments")
             }
             let extendedContext = extendContext(closureContext, parameters: parameters, arguments: arguments, callingContext: callingContext)
-            let recursiveContext = extendContext(extendedContext, name: name, value: closure)
+            let recursiveContext = extendContext(extendedContext, name: name!, value: closure)
             return body.evaluate(recursiveContext)
         default:
             return Error("closure does not wrap function")
