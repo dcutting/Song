@@ -1,5 +1,3 @@
-import Foundation
-
 public typealias Context = [String: Expression]
 
 func contextDescription(context: Context) -> String {
@@ -7,8 +5,7 @@ func contextDescription(context: Context) -> String {
     for (key, value) in context {
         contextPairs.append("\(key) = \(value)")
     }
-    contextPairs.sort { $0.localizedCaseInsensitiveCompare($1) == NSComparisonResult.OrderedAscending }
-    return ", ".join(contextPairs)
+    return ", ".join(sorted(contextPairs))
 }
 
 func extendContext(context: Context, #name: String, #value: Expression) -> Context {
