@@ -18,7 +18,7 @@ class FunctionTests: XCTestCase {
         XCTAssertEqual(closure, result)
     }
     
-    func testEvaluateAnonymousFunction() {
+    func testDescriptionAnonymousFunction() {
         let result = "\(anonymousFunction)"
         XCTAssertEqual("lambda(a, b) { x }", result)
     }
