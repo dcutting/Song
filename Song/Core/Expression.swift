@@ -202,8 +202,11 @@ public enum Expression: ExpressionLike, Equatable, Printable {
                 return Expression.Error("too many arguments")
             }
             let extendedContext = extendContext(closureContext, parameters: parameters, arguments: arguments, callingContext: callingContext)
-            let recursiveContext = extendContext(extendedContext, name: name!, value: closure)
-            return body.evaluate(recursiveContext)
+            var finalContext = extendedContext
+            if let funcName = name {
+                finalContext = extendContext(finalContext, name: funcName, value: closure)
+            }
+            return body.evaluate(finalContext)
         default:
             return Error("closure does not wrap function")
         }

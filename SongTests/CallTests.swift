@@ -104,4 +104,11 @@ class CallTests: XCTestCase {
         
         XCTAssertEqual(Expression.IntegerValue(1), result)
     }
+    
+    func testEvaluateLambda() {
+        let lambda = Expression.Function(name: nil, parameters: ["x"], body: Expression.Variable("x")).evaluate()
+        let call = Expression.Call(closure: lambda, arguments: [Expression.IntegerValue(7)])
+        let result = call.evaluate()
+        XCTAssertEqual(Expression.IntegerValue(7), result)
+    }
 }
