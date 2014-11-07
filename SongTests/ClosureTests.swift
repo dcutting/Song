@@ -5,7 +5,7 @@ class ClosureTests: XCTestCase {
     
     let function = Expression.Function(name: "foo", parameters: ["a", "b"], body: Expression.Variable("x"))
 
-    let context = ["x": Expression.Integer(5), "y": Expression.SongString("hi")]
+    let context = ["x": Expression.IntegerValue(5), "y": Expression.StringValue("hi")]
     
     func testDescription() {
         let closure = function.evaluate(context)

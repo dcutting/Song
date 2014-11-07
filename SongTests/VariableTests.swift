@@ -20,9 +20,9 @@ class VariableTests: XCTestCase {
     }
 
     func testEvaluateBoundVariable() {
-        let context = ["n": Expression.Integer(5)]
+        let context = ["n": Expression.IntegerValue(5)]
         let result = variable.evaluate(context)
-        XCTAssertEqual(Expression.Integer(5), result)
+        XCTAssertEqual(Expression.IntegerValue(5), result)
     }
     
     func testEvaluateUnboundVariable() {

@@ -5,17 +5,17 @@ public enum Expression: ExpressionLike, Equatable, Printable {
     
     case Error(String)
     
-    case Unit
+    case UnitValue
 
-    case Boolean(Bool)
+    case BooleanValue(Bool)
+    
+    case IntegerValue(Int)
+    
+    case StringValue(String)
     
     case IsUnit(ExpressionLike)
     
-    case Integer(Int)
-    
     case Plus(ExpressionLike, ExpressionLike)
-    
-    case SongString(String)
     
     case Pair(ExpressionLike, ExpressionLike)
     
@@ -23,7 +23,7 @@ public enum Expression: ExpressionLike, Equatable, Printable {
     
     case Second(ExpressionLike)
     
-    case Closure(function: ExpressionLike, context: SongContext)
+    case Closure(function: ExpressionLike, context: Context)
     
     case Let(name: String, binding: ExpressionLike, body: ExpressionLike)
     
@@ -42,24 +42,24 @@ public enum Expression: ExpressionLike, Equatable, Printable {
         case let .Error(value):
             return "<\(value)>"
 
-        case .Unit:
+        case .UnitValue:
             return "#"
 
-        case let .Boolean(value):
+        case let .BooleanValue(value):
             return value ? "yes" : "no"
             
-        case let .IsUnit(value):
-            return "isUnit(\(value))"
-            
-        case let .Integer(value):
+        case let .IntegerValue(value):
             return "\(value)"
-        
+            
+        case let .StringValue(value):
+            return "'\(value)'"
+            
+        case let .IsUnit(value):
+            return "isUnitValue(\(value))"
+            
         case let .Plus(left, right):
             return "\(left) + \(right)"
             
-        case let .SongString(value):
-            return "'\(value)'"
-        
         case let .Pair(first as Expression, second as Expression):
             return "(\(first), \(second))"
             
@@ -104,10 +104,10 @@ public enum Expression: ExpressionLike, Equatable, Printable {
     }
     
     public func evaluate() -> Expression {
-        return evaluate(SongContext())
+        return evaluate(Context())
     }
     
-    public func evaluate(context: SongContext) -> Expression {
+    public func evaluate(context: Context) -> Expression {
         switch self {
 
         case let .IsUnit(value as Expression):
@@ -142,39 +142,39 @@ public enum Expression: ExpressionLike, Equatable, Printable {
         }
     }
 
-    func evaluateIsUnit(value: Expression, context: SongContext) -> Expression {
+    func evaluateIsUnit(value: Expression, context: Context) -> Expression {
         switch value.evaluate(context) {
-        case .Unit:
-            return Boolean(true)
+        case .UnitValue:
+            return BooleanValue(true)
         default:
-            return Boolean(false)
+            return BooleanValue(false)
         }
     }
     
-    func evaluatePlus(left: Expression, _ right: Expression, context: SongContext) -> Expression {
+    func evaluatePlus(left: Expression, _ right: Expression, context: Context) -> Expression {
         let evaluatedLeft = left.evaluate(context)
         let evaluatedRight = right.evaluate(context)
         switch (evaluatedLeft, evaluatedRight) {
-        case let (.Integer(leftValue), .Integer(rightValue)):
-            return Expression.Integer(leftValue + rightValue)
+        case let (.IntegerValue(leftValue), .IntegerValue(rightValue)):
+            return Expression.IntegerValue(leftValue + rightValue)
         default:
             return Error("cannot add \(evaluatedLeft) to \(evaluatedRight)")
         }
     }
     
-    func evaluateLet(name: String, _ binding: Expression, _ body: Expression, _ context: SongContext) -> Expression {
+    func evaluateLet(name: String, _ binding: Expression, _ body: Expression, _ context: Context) -> Expression {
         let letContext = extendContext(context, name: name, value: binding.evaluate(context))
         return body.evaluate(letContext)
     }
     
-    func evaluateVariable(variable: String, _ context: SongContext) -> Expression {
+    func evaluateVariable(variable: String, _ context: Context) -> Expression {
         if let value = context[variable] {
             return value
         }
         return Error("cannot evaluate \(variable)")
     }
     
-    func evaluateCallClosure(closure: Expression, arguments: [ExpressionLike], callingContext: SongContext) -> Expression {
+    func evaluateCallClosure(closure: Expression, arguments: [ExpressionLike], callingContext: Context) -> Expression {
         let evaluatedClosure = closure.evaluate(callingContext)
         switch evaluatedClosure {
         case let .Closure(function as Expression, closureContext):
@@ -184,7 +184,7 @@ public enum Expression: ExpressionLike, Equatable, Printable {
         }
     }
     
-    func evaluateCallFunction(function: Expression, closureContext: SongContext, arguments: [ExpressionLike], callingContext: SongContext, closure: Expression) -> Expression {
+    func evaluateCallFunction(function: Expression, closureContext: Context, arguments: [ExpressionLike], callingContext: Context, closure: Expression) -> Expression {
         switch function {
         case let .Function(name, parameters, body as Expression):
             if arguments.count < parameters.count {
@@ -201,18 +201,18 @@ public enum Expression: ExpressionLike, Equatable, Printable {
         }
     }
     
-    func evaluateConditional(condition: Expression, then: Expression, otherwise: Expression, context: SongContext) -> Expression {
+    func evaluateConditional(condition: Expression, then: Expression, otherwise: Expression, context: Context) -> Expression {
         switch condition.evaluate(context) {
-        case .Boolean(true):
+        case .BooleanValue(true):
             return then.evaluate(context)
-        case .Boolean(false):
+        case .BooleanValue(false):
             return otherwise.evaluate(context)
         default:
             return Error("boolean expression expected")
         }
     }
     
-    func evaluateFirst(pair: Expression, context: SongContext) -> Expression {
+    func evaluateFirst(pair: Expression, context: Context) -> Expression {
         let evaluatedPair = pair.evaluate(context)
         switch evaluatedPair {
         case let Pair(fst as Expression, _ as Expression):
@@ -222,7 +222,7 @@ public enum Expression: ExpressionLike, Equatable, Printable {
         }
     }
     
-    func evaluateSecond(pair: Expression, context: SongContext) -> Expression {
+    func evaluateSecond(pair: Expression, context: Context) -> Expression {
         let evaluatedPair = pair.evaluate(context)
         switch evaluatedPair {
         case let Pair(_ as Expression, snd as Expression):
@@ -239,16 +239,16 @@ public func ==(lhs: Expression, rhs: Expression) -> Bool {
     case let (.Error(lhsError), .Error(rhsError)):
         return lhsError == rhsError
 
-    case (.Unit, .Unit):
+    case (.UnitValue, .UnitValue):
         return true
         
-    case let (.Boolean(lhsValue), .Boolean(rhsValue)):
+    case let (.BooleanValue(lhsValue), .BooleanValue(rhsValue)):
         return lhsValue == rhsValue
         
-    case let (.Integer(lhsValue), .Integer(rhsValue)):
+    case let (.IntegerValue(lhsValue), .IntegerValue(rhsValue)):
         return lhsValue == rhsValue
     
-    case let (.SongString(lhsValue), .SongString(rhsValue)):
+    case let (.StringValue(lhsValue), .StringValue(rhsValue)):
         return lhsValue == rhsValue
     
     case let (.Pair(lhsFirst as Expression, lhsSecond as Expression),

@@ -3,11 +3,11 @@ import Song
 
 class StringTests: XCTestCase {
     
-    let string = Expression.SongString("hello")
+    let string = Expression.StringValue("hello")
 
     func testConstructor() {
         switch string {
-        case let .SongString(value):
+        case let .StringValue(value):
             XCTAssertEqual("hello", value)
         default:
             XCTFail("not a string")

@@ -14,15 +14,15 @@
 		C87E7C6119FC677A00ADFC80 /* IsUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87E7C6019FC677A00ADFC80 /* IsUnitTests.swift */; };
 		C89AC462198C143F00F5DB3E /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89AC461198C143F00F5DB3E /* main.swift */; };
 		C89AC471198C145800F5DB3E /* StringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89AC470198C145800F5DB3E /* StringTests.swift */; };
-		C89AC477198C3E2500F5DB3E /* SongExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89AC476198C3E2500F5DB3E /* SongExpression.swift */; };
-		C89AC47A198C4A5300F5DB3E /* SongExpression.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89AC476198C3E2500F5DB3E /* SongExpression.swift */; };
+		C89AC477198C3E2500F5DB3E /* Expression.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89AC476198C3E2500F5DB3E /* Expression.swift */; };
+		C89AC47A198C4A5300F5DB3E /* Expression.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89AC476198C3E2500F5DB3E /* Expression.swift */; };
 		C89AC47C198C4E2700F5DB3E /* IntegerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89AC47B198C4E2700F5DB3E /* IntegerTests.swift */; };
 		C89AC47E198C4FD600F5DB3E /* VariableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89AC47D198C4FD600F5DB3E /* VariableTests.swift */; };
 		C8AF2714198D0AE900EBA02C /* UnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8AF2713198D0AE900EBA02C /* UnitTests.swift */; };
 		C8AF2716198D0D0100EBA02C /* PairTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8AF2715198D0D0100EBA02C /* PairTests.swift */; };
 		C8AF2718198D219300EBA02C /* LetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8AF2717198D219300EBA02C /* LetTests.swift */; };
-		C8E2DE6A19FC466100BDAE7A /* SongContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8E2DE6919FC466100BDAE7A /* SongContext.swift */; };
-		C8E2DE6B19FC466100BDAE7A /* SongContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8E2DE6919FC466100BDAE7A /* SongContext.swift */; };
+		C8E2DE6A19FC466100BDAE7A /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8E2DE6919FC466100BDAE7A /* Context.swift */; };
+		C8E2DE6B19FC466100BDAE7A /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8E2DE6919FC466100BDAE7A /* Context.swift */; };
 		C8F3F58D19FC5AAA005FC3E6 /* BooleanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8F3F58C19FC5AAA005FC3E6 /* BooleanTests.swift */; };
 		C8F3F58F19FC5C51005FC3E6 /* IfTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8F3F58E19FC5C51005FC3E6 /* IfTests.swift */; };
 /* End PBXBuildFile section */
@@ -51,13 +51,13 @@
 		C89AC46C198C145800F5DB3E /* SongTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SongTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C89AC46F198C145800F5DB3E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C89AC470198C145800F5DB3E /* StringTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringTests.swift; sourceTree = "<group>"; };
-		C89AC476198C3E2500F5DB3E /* SongExpression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SongExpression.swift; path = Core/SongExpression.swift; sourceTree = "<group>"; };
+		C89AC476198C3E2500F5DB3E /* Expression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Expression.swift; path = Core/Expression.swift; sourceTree = "<group>"; };
 		C89AC47B198C4E2700F5DB3E /* IntegerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntegerTests.swift; sourceTree = "<group>"; };
 		C89AC47D198C4FD600F5DB3E /* VariableTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VariableTests.swift; sourceTree = "<group>"; };
 		C8AF2713198D0AE900EBA02C /* UnitTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnitTests.swift; sourceTree = "<group>"; };
 		C8AF2715198D0D0100EBA02C /* PairTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PairTests.swift; sourceTree = "<group>"; };
 		C8AF2717198D219300EBA02C /* LetTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LetTests.swift; sourceTree = "<group>"; };
-		C8E2DE6919FC466100BDAE7A /* SongContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SongContext.swift; path = Core/SongContext.swift; sourceTree = "<group>"; };
+		C8E2DE6919FC466100BDAE7A /* Context.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Context.swift; path = Core/Context.swift; sourceTree = "<group>"; };
 		C8F3F58C19FC5AAA005FC3E6 /* BooleanTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BooleanTests.swift; sourceTree = "<group>"; };
 		C8F3F58E19FC5C51005FC3E6 /* IfTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IfTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -140,8 +140,8 @@
 		C89AC478198C3E2F00F5DB3E /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				C89AC476198C3E2500F5DB3E /* SongExpression.swift */,
-				C8E2DE6919FC466100BDAE7A /* SongContext.swift */,
+				C89AC476198C3E2500F5DB3E /* Expression.swift */,
+				C8E2DE6919FC466100BDAE7A /* Context.swift */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -233,8 +233,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C8E2DE6A19FC466100BDAE7A /* SongContext.swift in Sources */,
-				C89AC477198C3E2500F5DB3E /* SongExpression.swift in Sources */,
+				C8E2DE6A19FC466100BDAE7A /* Context.swift in Sources */,
+				C89AC477198C3E2500F5DB3E /* Expression.swift in Sources */,
 				C89AC462198C143F00F5DB3E /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -243,10 +243,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C8E2DE6B19FC466100BDAE7A /* SongContext.swift in Sources */,
+				C8E2DE6B19FC466100BDAE7A /* Context.swift in Sources */,
 				C8F3F58D19FC5AAA005FC3E6 /* BooleanTests.swift in Sources */,
 				C8F3F58F19FC5C51005FC3E6 /* IfTests.swift in Sources */,
-				C89AC47A198C4A5300F5DB3E /* SongExpression.swift in Sources */,
+				C89AC47A198C4A5300F5DB3E /* Expression.swift in Sources */,
 				C89AC471198C145800F5DB3E /* StringTests.swift in Sources */,
 				C89AC47E198C4FD600F5DB3E /* VariableTests.swift in Sources */,
 				C87E7C6119FC677A00ADFC80 /* IsUnitTests.swift in Sources */,

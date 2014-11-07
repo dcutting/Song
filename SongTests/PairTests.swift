@@ -3,13 +3,13 @@ import Song
 
 class PairTests: XCTestCase {
     
-    let pair = Expression.Pair(Expression.Integer(0), Expression.Unit)
+    let pair = Expression.Pair(Expression.IntegerValue(0), Expression.UnitValue)
     
     func testConstructor() {
         switch pair {
         case let .Pair(first as Expression, second as Expression):
-            let expectedFirst = Expression.Integer(0)
-            let expectedSecond = Expression.Unit
+            let expectedFirst = Expression.IntegerValue(0)
+            let expectedSecond = Expression.UnitValue
             XCTAssertEqual(expectedFirst, first)
             XCTAssertEqual(expectedSecond, second)
         default:
@@ -23,7 +23,7 @@ class PairTests: XCTestCase {
     }
     
     func testDescriptionSubPair() {
-        let compoundPair = Expression.Pair(Expression.SongString("hi"), pair)
+        let compoundPair = Expression.Pair(Expression.StringValue("hi"), pair)
         let result = "\(compoundPair)"
         XCTAssertEqual("('hi', (0, #))", result)
     }
@@ -40,7 +40,7 @@ class PairTests: XCTestCase {
     }
     
     func testEvaluateFirstForNonPair() {
-        let pair = Expression.Integer(1)
+        let pair = Expression.IntegerValue(1)
         let first = Expression.First(pair)
         let result = first.evaluate()
         XCTAssertEqual(Expression.Error("requires pair"), result)
@@ -50,10 +50,10 @@ class PairTests: XCTestCase {
         let pair = Expression.Variable("p")
         let first = Expression.First(pair)
         let result = first.evaluate([
-            "x": Expression.Integer(60),
-            "p": Expression.Pair(Expression.Variable("x"), Expression.Integer(0))
+            "x": Expression.IntegerValue(60),
+            "p": Expression.Pair(Expression.Variable("x"), Expression.IntegerValue(0))
             ])
-        XCTAssertEqual(Expression.Integer(60), result)
+        XCTAssertEqual(Expression.IntegerValue(60), result)
     }
 
     func testDescriptionSecond() {
@@ -63,7 +63,7 @@ class PairTests: XCTestCase {
     }
     
     func testEvaluateSecondForNonPair() {
-        let pair = Expression.Integer(1)
+        let pair = Expression.IntegerValue(1)
         let second = Expression.Second(pair)
         let result = second.evaluate()
         XCTAssertEqual(Expression.Error("requires pair"), result)
@@ -73,9 +73,9 @@ class PairTests: XCTestCase {
         let pair = Expression.Variable("p")
         let second = Expression.Second(pair)
         let result = second.evaluate([
-            "x": Expression.Integer(50),
-            "p": Expression.Pair(Expression.Integer(0), Expression.Variable("x"))
+            "x": Expression.IntegerValue(50),
+            "p": Expression.Pair(Expression.IntegerValue(0), Expression.Variable("x"))
             ])
-        XCTAssertEqual(Expression.Integer(50), result)
+        XCTAssertEqual(Expression.IntegerValue(50), result)
     }
 }

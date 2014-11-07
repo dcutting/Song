@@ -1,13 +1,13 @@
 import XCTest
 import Song
 
-class IntegerTests: XCTestCase {
+class IntegerValueTests: XCTestCase {
 
-    let integer = Expression.Integer(5)
+    let integer = Expression.IntegerValue(5)
 
     func testConstructor() {
         switch integer {
-        case let .Integer(value):
+        case let .IntegerValue(value):
             XCTAssertEqual(5, value)
         default:
             XCTFail("not an integer")
@@ -25,25 +25,25 @@ class IntegerTests: XCTestCase {
     }
     
     func testPlusDescription() {
-        let left = Expression.Integer(5)
-        let right = Expression.Integer(9)
+        let left = Expression.IntegerValue(5)
+        let right = Expression.IntegerValue(9)
         let plus = Expression.Plus(left, right)
         let result = "\(plus)"
         XCTAssertEqual("5 + 9", result)
     }
     
-    func testPlusNonInteger() {
-        let nonInteger = Expression.Variable("x")
-        let plus = Expression.Plus(integer, nonInteger)
-        let result = plus.evaluate(["x": Expression.SongString("hi")])
+    func testPlusNonIntegerValue() {
+        let nonIntegerValue = Expression.Variable("x")
+        let plus = Expression.Plus(integer, nonIntegerValue)
+        let result = plus.evaluate(["x": Expression.StringValue("hi")])
         XCTAssertEqual(Expression.Error("cannot add 5 to 'hi'"), result)
     }
 
     func testPlus() {
-        let leftInteger = Expression.Variable("x")
-        let rightInteger = Expression.Variable("y")
-        let plus = Expression.Plus(leftInteger, rightInteger)
-        let result = plus.evaluate(["x": Expression.Integer(9), "y": Expression.Integer(5)])
-        XCTAssertEqual(Expression.Integer(14), result)
+        let leftIntegerValue = Expression.Variable("x")
+        let rightIntegerValue = Expression.Variable("y")
+        let plus = Expression.Plus(leftIntegerValue, rightIntegerValue)
+        let result = plus.evaluate(["x": Expression.IntegerValue(9), "y": Expression.IntegerValue(5)])
+        XCTAssertEqual(Expression.IntegerValue(14), result)
     }
 }

@@ -11,7 +11,7 @@ class FunctionTests: XCTestCase {
     }
 
     func testEvaluate() {
-        let context = ["x": Expression.Integer(5)]
+        let context = ["x": Expression.IntegerValue(5)]
         let result = function.evaluate(context)
         let closure = Expression.Closure(function: function, context: context)
         XCTAssertEqual(closure, result)

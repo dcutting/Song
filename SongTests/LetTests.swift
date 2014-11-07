@@ -3,7 +3,7 @@ import Song
 
 class LetTests: XCTestCase {
     
-    let letExpression = Expression.Let(name: "company", binding: Expression.SongString("Yellowbek"), body: Expression.Variable("company"))
+    let letExpression = Expression.Let(name: "company", binding: Expression.StringValue("Yellowbek"), body: Expression.Variable("company"))
     
     func testDescription() {
         let result = "\(letExpression)"
@@ -12,26 +12,26 @@ class LetTests: XCTestCase {
     
     func testEvaluate() {
         let result = letExpression.evaluate()
-        XCTAssertEqual(Expression.SongString("Yellowbek"), result)
+        XCTAssertEqual(Expression.StringValue("Yellowbek"), result)
     }
     
     func testEmbeddedLet() {
         
         let innerLetExpression = Expression.Let(name: "x", binding: Expression.Variable("y"), body: Expression.Variable("x"))
 
-        let outerLetExpression = Expression.Let(name: "y", binding: Expression.Integer(99), body: innerLetExpression)
+        let outerLetExpression = Expression.Let(name: "y", binding: Expression.IntegerValue(99), body: innerLetExpression)
         
         let result = outerLetExpression.evaluate()
-        XCTAssertEqual(Expression.Integer(99), result)
+        XCTAssertEqual(Expression.IntegerValue(99), result)
     }
     
     func testContextNotShared() {
 
-        let context = ["company": Expression.Integer(5)]
+        let context = ["company": Expression.IntegerValue(5)]
         
         letExpression.evaluate(context)
         
         let result = Expression.Variable("company").evaluate(context)
-        XCTAssertEqual(Expression.Integer(5), result)
+        XCTAssertEqual(Expression.IntegerValue(5), result)
     }
 }
