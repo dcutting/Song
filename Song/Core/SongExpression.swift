@@ -1,5 +1,3 @@
-import Foundation
-
 public protocol ExpressionLike {}
 
 public enum Expression: ExpressionLike, Equatable, Printable {
