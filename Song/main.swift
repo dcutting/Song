@@ -1,10 +1,10 @@
-println("Song")
+print("Song")
 
 // [].length = 0
 // [x|xs].length = 1 + xs.length
 
 func integerList(values: [Int]) -> Expression {
-    return values.reverse().reduce(Expression.UnitValue) {
+    return Array(values.reverse()).reduce(Expression.UnitValue) {
         Expression.Pair(Expression.IntegerValue($1), $0)
     }
 }
@@ -22,8 +22,8 @@ let list = integerList([1,2,3,4,3,2,1,2,2,4,4,1,2])
 let lengthCall = Expression.Call(closure: lengthFunc, arguments: [list])
 let result = lengthCall.evaluate()
 
-println(lengthCall)
-println(result)
+print(lengthCall)
+print(result)
 
 let lambda = Expression.Function(name: nil, parameters: [], body: Expression.IntegerValue(5))
 let lambdaCall = Expression.Call(closure: Expression.Variable("x"), arguments: [])

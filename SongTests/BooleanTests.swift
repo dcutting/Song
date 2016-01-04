@@ -8,7 +8,7 @@ class BooleanValueTests: XCTestCase {
     
     func testConstructor() {
         switch trueBooleanValue {
-        case let .BooleanValue:
+        case .BooleanValue:
             XCTAssertTrue(true)
         default:
             XCTFail("not a boolean")

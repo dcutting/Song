@@ -1,6 +1,6 @@
 public protocol ExpressionLike {}
 
-public enum Expression: ExpressionLike, Equatable, Printable {
+public enum Expression: ExpressionLike, Equatable, CustomStringConvertible {
 
     
     case Error(String)
@@ -94,7 +94,7 @@ public enum Expression: ExpressionLike, Equatable, Printable {
     }
     
     func descriptionFunction(name: String?, _ parameters: [String], _ body: Expression) -> String {
-        let parametersList = ", ".join(parameters)
+        let parametersList = parameters.joinWithSeparator(", ")
         if let funcName = name {
             return "def \(funcName)(\(parametersList)) { \(body) }"
         } else {
@@ -105,9 +105,9 @@ public enum Expression: ExpressionLike, Equatable, Printable {
     func descriptionCall(closure: Expression, arguments: [ExpressionLike]) -> String {
         var argumentStrings = Array<String>()
         for arg in arguments {
-            argumentStrings.append("\(arg as Expression)")
+            argumentStrings.append("\(arg as! Expression)")
         }
-        let argumentsList = ", ".join(argumentStrings)
+        let argumentsList = argumentStrings.joinWithSeparator(", ")
         return "\(closure)(\(argumentsList))"
     }
     
@@ -130,7 +130,7 @@ public enum Expression: ExpressionLike, Equatable, Printable {
         case let .Variable(variable):
             return evaluateVariable(variable, context)
 
-        case let .Function:
+        case .Function:
             return Closure(function: self, context: context)
             
         case let .Call(closure as Expression, arguments):

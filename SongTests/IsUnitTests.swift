@@ -8,7 +8,7 @@ class IsUnitTests: XCTestCase {
     
     func testConstructor() {
         switch isUnitValue {
-        case let .IsUnit:
+        case .IsUnit:
             XCTAssertTrue(true)
         default:
             XCTFail("not an isUnitValue")
