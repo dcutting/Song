@@ -30,5 +30,5 @@ let lambdaCall = Expression.Call(closure: Expression.Variable("x"), arguments: [
 let letExpr = Expression.Let(name: "x", binding: lambda, body: lambdaCall)
 let lambdaResult = letExpr.evaluate();
 
-println(letExpr)
-println(lambdaResult)
+print(letExpr)
+print(lambdaResult)
