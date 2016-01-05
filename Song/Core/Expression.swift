@@ -1,6 +1,4 @@
-public protocol ExpressionLike {}
-
-public enum Expression: ExpressionLike, Equatable, CustomStringConvertible {
+public indirect enum Expression: Equatable, CustomStringConvertible {
 
     
     case Error(String)
@@ -13,27 +11,27 @@ public enum Expression: ExpressionLike, Equatable, CustomStringConvertible {
     
     case StringValue(String)
     
-    case IsUnit(ExpressionLike)
+    case IsUnit(Expression)
     
-    case Plus(ExpressionLike, ExpressionLike)
+    case Plus(Expression, Expression)
     
-    case Pair(ExpressionLike, ExpressionLike)
+    case Pair(Expression, Expression)
     
-    case First(ExpressionLike)
+    case First(Expression)
     
-    case Second(ExpressionLike)
+    case Second(Expression)
     
-    case Closure(function: ExpressionLike, context: Context)
+    case Closure(function: Expression, context: Context)
     
-    case Let(name: String, binding: ExpressionLike, body: ExpressionLike)
+    case Let(name: String, binding: Expression, body: Expression)
     
     case Variable(String)
     
-    case Function(name: String?, parameters: [String], body: ExpressionLike)
+    case Function(name: String?, parameters: [String], body: Expression)
     
-    case Call(closure: ExpressionLike, arguments: [ExpressionLike])
+    case Call(closure: Expression, arguments: [Expression])
     
-    case Conditional(condition: ExpressionLike, then: ExpressionLike, otherwise: ExpressionLike)
+    case Conditional(condition: Expression, then: Expression, otherwise: Expression)
     
     
     public var description: String {
@@ -60,7 +58,7 @@ public enum Expression: ExpressionLike, Equatable, CustomStringConvertible {
         case let .Plus(left, right):
             return "\(left) + \(right)"
             
-        case let .Pair(first as Expression, second as Expression):
+        case let .Pair(first, second):
             return "(\(first), \(second))"
             
         case let .First(value):
@@ -69,27 +67,24 @@ public enum Expression: ExpressionLike, Equatable, CustomStringConvertible {
         case let .Second(value):
             return "second(\(value))"
         
-        case let .Closure(function as Expression, context):
+        case let .Closure(function, context):
             let contextList = contextDescription(context)
             return "[(\(contextList)) \(function)]"
 
-        case let .Let(name, binding as Expression, body as Expression):
+        case let .Let(name, binding, body):
             return "let (\(name) = \(binding)) { \(body) }"
         
         case let .Variable(variable):
             return "\(variable)"
             
-        case let .Function(name, parameters, body as Expression):
+        case let .Function(name, parameters, body):
             return descriptionFunction(name, parameters, body)
             
-        case let .Call(closure as Expression, arguments):
+        case let .Call(closure, arguments):
             return descriptionCall(closure, arguments: arguments)
             
-        case let .Conditional(condition as Expression, then as Expression, otherwise as Expression):
+        case let .Conditional(condition, then, otherwise):
             return "if \(condition) then \(then) else \(otherwise) end"
-        
-        default:
-            return "<unknown>"
         }
     }
     
@@ -102,10 +97,10 @@ public enum Expression: ExpressionLike, Equatable, CustomStringConvertible {
         }
     }
     
-    func descriptionCall(closure: Expression, arguments: [ExpressionLike]) -> String {
+    func descriptionCall(closure: Expression, arguments: [Expression]) -> String {
         var argumentStrings = Array<String>()
         for arg in arguments {
-            argumentStrings.append("\(arg as! Expression)")
+            argumentStrings.append("\(arg)")
         }
         let argumentsList = argumentStrings.joinWithSeparator(", ")
         return "\(closure)(\(argumentsList))"
@@ -118,13 +113,13 @@ public enum Expression: ExpressionLike, Equatable, CustomStringConvertible {
     public func evaluate(context: Context) -> Expression {
         switch self {
 
-        case let .IsUnit(value as Expression):
+        case let .IsUnit(value):
             return evaluateIsUnit(value, context: context)
             
-        case let .Plus(left as Expression, right as Expression):
+        case let .Plus(left, right):
             return evaluatePlus(left, right, context: context)
             
-        case let .Let(name, binding as Expression, body as Expression):
+        case let .Let(name, binding, body):
             return evaluateLet(name, binding, body, context)
             
         case let .Variable(variable):
@@ -133,16 +128,16 @@ public enum Expression: ExpressionLike, Equatable, CustomStringConvertible {
         case .Function:
             return Closure(function: self, context: context)
             
-        case let .Call(closure as Expression, arguments):
+        case let .Call(closure, arguments):
             return evaluateCallClosure(closure, arguments: arguments, callingContext: context)
 
-        case let .Conditional(condition as Expression, then as Expression, otherwise as Expression):
+        case let .Conditional(condition, then, otherwise):
             return evaluateConditional(condition, then: then, otherwise: otherwise, context: context)
             
-        case let .First(pair as Expression):
+        case let .First(pair):
             return evaluateFirst(pair, context: context)
             
-        case let .Second(pair as Expression):
+        case let .Second(pair):
             return evaluateSecond(pair, context: context)
             
         default:
@@ -182,19 +177,19 @@ public enum Expression: ExpressionLike, Equatable, CustomStringConvertible {
         return Error("cannot evaluate \(variable)")
     }
     
-    func evaluateCallClosure(closure: Expression, arguments: [ExpressionLike], callingContext: Context) -> Expression {
+    func evaluateCallClosure(closure: Expression, arguments: [Expression], callingContext: Context) -> Expression {
         let evaluatedClosure = closure.evaluate(callingContext)
         switch evaluatedClosure {
-        case let .Closure(function as Expression, closureContext):
+        case let .Closure(function, closureContext):
             return evaluateCallFunction(function, closureContext: closureContext, arguments: arguments, callingContext: callingContext, closure: evaluatedClosure)
         default:
             return Error("\(closure) is not a closure")
         }
     }
     
-    func evaluateCallFunction(function: Expression, closureContext: Context, arguments: [ExpressionLike], callingContext: Context, closure: Expression) -> Expression {
+    func evaluateCallFunction(function: Expression, closureContext: Context, arguments: [Expression], callingContext: Context, closure: Expression) -> Expression {
         switch function {
-        case let .Function(name, parameters, body as Expression):
+        case let .Function(name, parameters, body):
             if arguments.count < parameters.count {
                 return Expression.Error("not enough arguments")
             }
@@ -226,7 +221,7 @@ public enum Expression: ExpressionLike, Equatable, CustomStringConvertible {
     func evaluateFirst(pair: Expression, context: Context) -> Expression {
         let evaluatedPair = pair.evaluate(context)
         switch evaluatedPair {
-        case let Pair(fst as Expression, _ as Expression):
+        case let Pair(fst, _):
             return fst.evaluate(context)
         default:
             return Error("requires pair")
@@ -236,7 +231,7 @@ public enum Expression: ExpressionLike, Equatable, CustomStringConvertible {
     func evaluateSecond(pair: Expression, context: Context) -> Expression {
         let evaluatedPair = pair.evaluate(context)
         switch evaluatedPair {
-        case let Pair(_ as Expression, snd as Expression):
+        case let Pair(_, snd):
             return snd.evaluate(context)
         default:
             return Error("requires pair")
@@ -262,17 +257,17 @@ public func ==(lhs: Expression, rhs: Expression) -> Bool {
     case let (.StringValue(lhsValue), .StringValue(rhsValue)):
         return lhsValue == rhsValue
     
-    case let (.Pair(lhsFirst as Expression, lhsSecond as Expression),
-        .Pair(rhsFirst as Expression, rhsSecond as Expression)):
+    case let (.Pair(lhsFirst, lhsSecond),
+        .Pair(rhsFirst, rhsSecond)):
         return lhsFirst == rhsFirst && lhsSecond == rhsSecond
     
-    case let (.Closure(lhsFunction as Expression, lhsContext), .Closure(rhsFunction as Expression, rhsContext)):
+    case let (.Closure(lhsFunction, lhsContext), .Closure(rhsFunction, rhsContext)):
         return lhsFunction == rhsFunction && lhsContext == rhsContext
         
     case let (.Variable(lhsVariable), .Variable(rhsVariable)):
         return lhsVariable == rhsVariable
     
-    case let (.Function(lhsName, lhsParameters, lhsBody as Expression), .Function(rhsName, rhsParameters, rhsBody as Expression)):
+    case let (.Function(lhsName, lhsParameters, lhsBody), .Function(rhsName, rhsParameters, rhsBody)):
         return lhsName == rhsName && lhsParameters == rhsParameters && lhsBody == rhsBody
     
     default:

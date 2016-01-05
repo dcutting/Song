@@ -14,11 +14,11 @@ func extendContext(context: Context, name: String, value: Expression) -> Context
     return extendedContext
 }
 
-func extendContext(context: Context, parameters: [String], arguments: [ExpressionLike], callingContext: Context) -> Context {
+func extendContext(context: Context, parameters: [String], arguments: [Expression], callingContext: Context) -> Context {
     var extendedContext = context
     for (var i = 0; i < parameters.count; i++) {
         let name = parameters[i]
-        let value = arguments[i] as! Expression
+        let value = arguments[i] 
         let evaluatedValue = value.evaluate(callingContext)
         extendedContext = extendContext(extendedContext, name: name, value: evaluatedValue)
     }

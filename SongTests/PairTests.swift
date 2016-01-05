@@ -7,7 +7,7 @@ class PairTests: XCTestCase {
     
     func testConstructor() {
         switch pair {
-        case let .Pair(first as Expression, second as Expression):
+        case let .Pair(first, second):
             let expectedFirst = Expression.IntegerValue(0)
             let expectedSecond = Expression.UnitValue
             XCTAssertEqual(expectedFirst, first)
