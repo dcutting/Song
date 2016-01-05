@@ -21,6 +21,8 @@
 		C8AF2714198D0AE900EBA02C /* UnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8AF2713198D0AE900EBA02C /* UnitTests.swift */; };
 		C8AF2716198D0D0100EBA02C /* PairTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8AF2715198D0D0100EBA02C /* PairTests.swift */; };
 		C8AF2718198D219300EBA02C /* LetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8AF2717198D219300EBA02C /* LetTests.swift */; };
+		C8DB31D41C3B43F800FCB46F /* ExpressionDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8DB31D31C3B43F800FCB46F /* ExpressionDescription.swift */; };
+		C8DB31D81C3B457D00FCB46F /* ExpressionDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8DB31D31C3B43F800FCB46F /* ExpressionDescription.swift */; };
 		C8E2DE6A19FC466100BDAE7A /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8E2DE6919FC466100BDAE7A /* Context.swift */; };
 		C8E2DE6B19FC466100BDAE7A /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8E2DE6919FC466100BDAE7A /* Context.swift */; };
 		C8F3F58D19FC5AAA005FC3E6 /* BooleanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8F3F58C19FC5AAA005FC3E6 /* BooleanTests.swift */; };
@@ -57,6 +59,7 @@
 		C8AF2713198D0AE900EBA02C /* UnitTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnitTests.swift; sourceTree = "<group>"; };
 		C8AF2715198D0D0100EBA02C /* PairTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PairTests.swift; sourceTree = "<group>"; };
 		C8AF2717198D219300EBA02C /* LetTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LetTests.swift; sourceTree = "<group>"; };
+		C8DB31D31C3B43F800FCB46F /* ExpressionDescription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ExpressionDescription.swift; path = Core/ExpressionDescription.swift; sourceTree = "<group>"; };
 		C8E2DE6919FC466100BDAE7A /* Context.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Context.swift; path = Core/Context.swift; sourceTree = "<group>"; };
 		C8F3F58C19FC5AAA005FC3E6 /* BooleanTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BooleanTests.swift; sourceTree = "<group>"; };
 		C8F3F58E19FC5C51005FC3E6 /* IfTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IfTests.swift; sourceTree = "<group>"; };
@@ -142,6 +145,7 @@
 			children = (
 				C89AC476198C3E2500F5DB3E /* Expression.swift */,
 				C8E2DE6919FC466100BDAE7A /* Context.swift */,
+				C8DB31D31C3B43F800FCB46F /* ExpressionDescription.swift */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -237,6 +241,7 @@
 			files = (
 				C8E2DE6A19FC466100BDAE7A /* Context.swift in Sources */,
 				C89AC477198C3E2500F5DB3E /* Expression.swift in Sources */,
+				C8DB31D41C3B43F800FCB46F /* ExpressionDescription.swift in Sources */,
 				C89AC462198C143F00F5DB3E /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -255,6 +260,7 @@
 				C800D916198D7D0700B34329 /* CallTests.swift in Sources */,
 				C8AF2714198D0AE900EBA02C /* UnitTests.swift in Sources */,
 				C8AF2718198D219300EBA02C /* LetTests.swift in Sources */,
+				C8DB31D81C3B457D00FCB46F /* ExpressionDescription.swift in Sources */,
 				C878E80919F0219D00DFDC8E /* ErrorTests.swift in Sources */,
 				C89AC47C198C4E2700F5DB3E /* IntegerTests.swift in Sources */,
 				C8AF2716198D0D0100EBA02C /* PairTests.swift in Sources */,
