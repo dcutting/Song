@@ -19,8 +19,7 @@ public func ==(lhs: Expression, rhs: Expression) -> Bool {
     case let (.StringValue(lhsValue), .StringValue(rhsValue)):
         return lhsValue == rhsValue
         
-    case let (.Pair(lhsFirst, lhsSecond),
-        .Pair(rhsFirst, rhsSecond)):
+    case let (.Pair(lhsFirst, lhsSecond), .Pair(rhsFirst, rhsSecond)):
         return lhsFirst == rhsFirst && lhsSecond == rhsSecond
         
     case let (.Closure(lhsFunction, lhsContext), .Closure(rhsFunction, rhsContext)):
