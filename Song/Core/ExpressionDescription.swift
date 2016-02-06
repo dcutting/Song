@@ -58,9 +58,8 @@ extension Expression: CustomStringConvertible {
         let parametersList = parameters.joinWithSeparator(", ")
         if let funcName = name {
             return "def \(funcName)(\(parametersList)) { \(body) }"
-        } else {
-            return "λ(\(parametersList)) { \(body) }"
         }
+        return "λ(\(parametersList)) { \(body) }"
     }
     
     func descriptionCall(closure: Expression, arguments: [Expression]) -> String {
