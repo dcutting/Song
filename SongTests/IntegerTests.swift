@@ -34,7 +34,7 @@ class IntegerValueTests: XCTestCase {
     func testPlusNonIntegerValue() {
         let nonIntegerValue = Expression.Variable("x")
         let plus = Expression.Plus(integer, nonIntegerValue)
-        let result = plus.evaluate(["x": Expression.StringValue("hi")])
+        let result = plus.evaluate(context: ["x": Expression.StringValue("hi")])
         XCTAssertEqual(Expression.Error("cannot add 5 to 'hi'"), result)
     }
 
@@ -42,7 +42,7 @@ class IntegerValueTests: XCTestCase {
         let leftIntegerValue = Expression.Variable("x")
         let rightIntegerValue = Expression.Variable("y")
         let plus = Expression.Plus(leftIntegerValue, rightIntegerValue)
-        let result = plus.evaluate(["x": Expression.IntegerValue(9), "y": Expression.IntegerValue(5)])
+        let result = plus.evaluate(context: ["x": Expression.IntegerValue(9), "y": Expression.IntegerValue(5)])
         XCTAssertEqual(Expression.IntegerValue(14), result)
     }
 }

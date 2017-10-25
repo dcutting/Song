@@ -20,7 +20,7 @@ class VariableTests: XCTestCase {
 
     func testEvaluateBoundVariable() {
         let context = ["n": Expression.IntegerValue(5)]
-        let result = variable.evaluate(context)
+        let result = variable.evaluate(context: context)
         XCTAssertEqual(Expression.IntegerValue(5), result)
     }
     

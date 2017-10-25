@@ -25,7 +25,7 @@ class IfTests: XCTestCase {
         let then = Expression.IntegerValue(5)
         let otherwise = Expression.IntegerValue(7)
         let ifExpr = Expression.Conditional(condition: condition, then: then, otherwise: otherwise)
-        let result = ifExpr.evaluate(["x": Expression.BooleanValue(true)])
+        let result = ifExpr.evaluate(context: ["x": Expression.BooleanValue(true)])
         XCTAssertEqual(Expression.IntegerValue(5), result)
     }
     
@@ -34,7 +34,7 @@ class IfTests: XCTestCase {
         let then = Expression.Variable("x")
         let otherwise = Expression.IntegerValue(7)
         let ifExpr = Expression.Conditional(condition: condition, then: then, otherwise: otherwise)
-        let result = ifExpr.evaluate(["x": Expression.IntegerValue(5)])
+        let result = ifExpr.evaluate(context: ["x": Expression.IntegerValue(5)])
         XCTAssertEqual(Expression.IntegerValue(5), result)
     }
     
@@ -43,7 +43,7 @@ class IfTests: XCTestCase {
         let then = Expression.IntegerValue(5)
         let otherwise = Expression.Variable("y")
         let ifExpr = Expression.Conditional(condition: condition, then: then, otherwise: otherwise)
-        let result = ifExpr.evaluate(["y": Expression.IntegerValue(7)])
+        let result = ifExpr.evaluate(context: ["y": Expression.IntegerValue(7)])
         XCTAssertEqual(Expression.IntegerValue(7), result)
     }
 }

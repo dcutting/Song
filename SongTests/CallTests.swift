@@ -26,7 +26,7 @@ class CallTests: XCTestCase {
         let function = Expression.Function(name: "five", parameters: [], body: Expression.IntegerValue(5))
         let closure = function.evaluate()
         let call = Expression.Call(closure: Expression.Variable("f"), arguments: [])
-        let result = call.evaluate(["f": closure])
+        let result = call.evaluate(context: ["f": closure])
         XCTAssertEqual(Expression.IntegerValue(5), result)
     }
     
@@ -40,7 +40,7 @@ class CallTests: XCTestCase {
     
     func testEvaluateClosureReferencesDeclarationContext() {
         let function = Expression.Function(name: "getX", parameters: [], body: Expression.Variable("x"))
-        let closure = function.evaluate(["x": Expression.IntegerValue(7)])
+        let closure = function.evaluate(context: ["x": Expression.IntegerValue(7)])
         let call = Expression.Call(closure: closure, arguments: [])
         let result = call.evaluate()
         XCTAssertEqual(Expression.IntegerValue(7), result)
@@ -50,7 +50,7 @@ class CallTests: XCTestCase {
         let function = Expression.Function(name: "getX", parameters: [], body: Expression.Variable("x"))
         let closure = function.evaluate()
         let call = Expression.Call(closure: closure, arguments: [])
-        let result = call.evaluate(["x": Expression.IntegerValue(7)])
+        let result = call.evaluate(context: ["x": Expression.IntegerValue(7)])
         XCTAssertEqual(Expression.Error("cannot evaluate x"), result)
     }
     
@@ -66,7 +66,7 @@ class CallTests: XCTestCase {
         let function = Expression.Function(name: "echo", parameters: ["x"], body: Expression.Variable("x"))
         let closure = function.evaluate()
         let call = Expression.Call(closure: closure, arguments: [Expression.Variable("y")])
-        let result = call.evaluate(["y": Expression.IntegerValue(15)])
+        let result = call.evaluate(context: ["y": Expression.IntegerValue(15)])
         XCTAssertEqual(Expression.IntegerValue(15), result)
     }
     

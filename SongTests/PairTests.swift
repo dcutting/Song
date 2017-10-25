@@ -48,7 +48,7 @@ class PairTests: XCTestCase {
     func testEvaluateFirst() {
         let pair = Expression.Variable("p")
         let first = Expression.First(pair)
-        let result = first.evaluate([
+        let result = first.evaluate(context: [
             "x": Expression.IntegerValue(60),
             "p": Expression.Pair(Expression.Variable("x"), Expression.IntegerValue(0))
             ])
@@ -71,7 +71,7 @@ class PairTests: XCTestCase {
     func testEvaluateSecond() {
         let pair = Expression.Variable("p")
         let second = Expression.Second(pair)
-        let result = second.evaluate([
+        let result = second.evaluate(context: [
             "x": Expression.IntegerValue(50),
             "p": Expression.Pair(Expression.IntegerValue(0), Expression.Variable("x"))
             ])

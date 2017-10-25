@@ -28,9 +28,9 @@ class LetTests: XCTestCase {
 
         let context = ["company": Expression.IntegerValue(5)]
         
-        letExpression.evaluate(context)
+        _ = letExpression.evaluate(context: context)
         
-        let result = Expression.Variable("company").evaluate(context)
+        let result = Expression.Variable("company").evaluate(context: context)
         XCTAssertEqual(Expression.IntegerValue(5), result)
     }
 }

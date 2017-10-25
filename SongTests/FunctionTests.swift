@@ -12,7 +12,7 @@ class FunctionTests: XCTestCase {
 
     func testEvaluateNamedFunction() {
         let context = ["x": Expression.IntegerValue(5)]
-        let result = namedFunction.evaluate(context)
+        let result = namedFunction.evaluate(context: context)
         let closure = Expression.Closure(function: namedFunction, context: context)
         XCTAssertEqual(closure, result)
     }

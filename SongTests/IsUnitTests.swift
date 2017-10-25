@@ -37,7 +37,7 @@ class IsUnitTests: XCTestCase {
     func testEvaluateIsUnitReferencingContext() {
         let x = Expression.Variable("x")
         let unit = Expression.IsUnit(x)
-        let result = unit.evaluate(["x": Expression.UnitValue])
+        let result = unit.evaluate(context: ["x": Expression.UnitValue])
         XCTAssertEqual(Expression.BooleanValue(true), result)
     }
 }

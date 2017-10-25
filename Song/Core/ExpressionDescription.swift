@@ -34,7 +34,7 @@ extension Expression: CustomStringConvertible {
             return "second(\(value))"
             
         case let .Closure(function, context):
-            let contextList = contextDescription(context)
+            let contextList = contextDescription(context: context)
             return "[(\(contextList)) \(function)]"
             
         case let .Let(name, binding, body):
@@ -44,10 +44,10 @@ extension Expression: CustomStringConvertible {
             return "\(variable)"
             
         case let .Function(name, parameters, body):
-            return descriptionFunction(name, parameters, body)
+            return descriptionFunction(name: name, parameters, body)
             
         case let .Call(closure, arguments):
-            return descriptionCall(closure, arguments: arguments)
+            return descriptionCall(closure: closure, arguments: arguments)
             
         case let .Conditional(condition, then, otherwise):
             return "if \(condition) then \(then) else \(otherwise) end"
@@ -55,7 +55,7 @@ extension Expression: CustomStringConvertible {
     }
     
     func descriptionFunction(name: String?, _ parameters: [String], _ body: Expression) -> String {
-        let parametersList = parameters.joinWithSeparator(", ")
+        let parametersList = parameters.joined(separator: ", ")
         if let funcName = name {
             return "def \(funcName)(\(parametersList)) { \(body) }"
         }
@@ -67,7 +67,7 @@ extension Expression: CustomStringConvertible {
         for arg in arguments {
             argumentStrings.append("\(arg)")
         }
-        let argumentsList = argumentStrings.joinWithSeparator(", ")
+        let argumentsList = argumentStrings.joined(separator: ", ")
         return "\(closure)(\(argumentsList))"
     }
 }
