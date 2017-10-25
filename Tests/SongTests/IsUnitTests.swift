@@ -1,13 +1,14 @@
 import XCTest
+import Song
 
 class IsUnitTests: XCTestCase {
     
-    let isUnitValue = Expression.IsUnit(Expression.UnitValue)
-    let isNotUnitValue = Expression.IsUnit(Expression.IntegerValue(1))
+    let isUnitValue = Expression.isUnit(Expression.unitValue)
+    let isNotUnitValue = Expression.isUnit(Expression.integerValue(1))
     
     func testConstructor() {
         switch isUnitValue {
-        case .IsUnit:
+        case .isUnit:
             XCTAssertTrue(true)
         default:
             XCTFail("not an isUnitValue")
@@ -26,18 +27,18 @@ class IsUnitTests: XCTestCase {
     
     func testEvaluateIsUnit() {
         let result = isUnitValue.evaluate()
-        XCTAssertEqual(Expression.BooleanValue(true), result)
+        XCTAssertEqual(Expression.booleanValue(true), result)
     }
 
     func testEvaluateIsNotUnitValue() {
         let result = isNotUnitValue.evaluate()
-        XCTAssertEqual(Expression.BooleanValue(false), result)
+        XCTAssertEqual(Expression.booleanValue(false), result)
     }
     
     func testEvaluateIsUnitReferencingContext() {
-        let x = Expression.Variable("x")
-        let unit = Expression.IsUnit(x)
-        let result = unit.evaluate(context: ["x": Expression.UnitValue])
-        XCTAssertEqual(Expression.BooleanValue(true), result)
+        let x = Expression.variable("x")
+        let unit = Expression.isUnit(x)
+        let result = unit.evaluate(context: ["x": Expression.unitValue])
+        XCTAssertEqual(Expression.booleanValue(true), result)
     }
 }

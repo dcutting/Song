@@ -1,13 +1,14 @@
 import XCTest
+import Song
 
 class BooleanValueTests: XCTestCase {
     
-    let trueBooleanValue = Expression.BooleanValue(true)
-    let falseBooleanValue = Expression.BooleanValue(false)
+    let trueBooleanValue = Expression.booleanValue(true)
+    let falseBooleanValue = Expression.booleanValue(false)
     
     func testConstructor() {
         switch trueBooleanValue {
-        case .BooleanValue:
+        case .booleanValue:
             XCTAssertTrue(true)
         default:
             XCTFail("not a boolean")

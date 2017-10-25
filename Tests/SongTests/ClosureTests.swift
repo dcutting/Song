@@ -1,10 +1,11 @@
 import XCTest
+import Song
 
 class ClosureTests: XCTestCase {
     
-    let function = Expression.Function(name: "foo", parameters: ["a", "b"], body: Expression.Variable("x"))
+    let function = Expression.function(name: "foo", parameters: ["a", "b"], body: Expression.variable("x"))
 
-    let context = ["x": Expression.IntegerValue(5), "y": Expression.StringValue("hi")]
+    let context = ["x": Expression.integerValue(5), "y": Expression.stringValue("hi")]
     
     func testDescription() {
         let closure = function.evaluate(context: context)

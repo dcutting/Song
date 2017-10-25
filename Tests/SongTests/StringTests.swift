@@ -1,12 +1,13 @@
 import XCTest
+import Song
 
 class StringTests: XCTestCase {
     
-    let string = Expression.StringValue("hello")
+    let string = Expression.stringValue("hello")
 
     func testConstructor() {
         switch string {
-        case let .StringValue(value):
+        case let .stringValue(value):
             XCTAssertEqual("hello", value)
         default:
             XCTFail("not a string")

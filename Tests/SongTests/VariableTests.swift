@@ -1,12 +1,13 @@
 import XCTest
+import Song
 
 class VariableTests: XCTestCase {
     
-    let variable = Expression.Variable("n")
+    let variable = Expression.variable("n")
     
     func testConstructor() {
         switch variable {
-        case let .Variable(token):
+        case let .variable(token):
             XCTAssertEqual("n", token)
         default:
             XCTFail("not a variable")
@@ -19,13 +20,13 @@ class VariableTests: XCTestCase {
     }
 
     func testEvaluateBoundVariable() {
-        let context = ["n": Expression.IntegerValue(5)]
+        let context = ["n": Expression.integerValue(5)]
         let result = variable.evaluate(context: context)
-        XCTAssertEqual(Expression.IntegerValue(5), result)
+        XCTAssertEqual(Expression.integerValue(5), result)
     }
     
     func testEvaluateUnboundVariable() {
         let result = variable.evaluate()
-        XCTAssertEqual(Expression.Error("cannot evaluate n"), result)
+        XCTAssertEqual(Expression.error("cannot evaluate n"), result)
     }
 }

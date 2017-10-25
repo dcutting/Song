@@ -1,9 +1,10 @@
 import XCTest
+import Song
 
 class FunctionTests: XCTestCase {
 
-    let namedFunction = Expression.Function(name: "foo", parameters: ["a", "b"], body: Expression.Variable("x"))
-    let anonymousFunction = Expression.Function(name: nil, parameters: ["a", "b"], body: Expression.Variable("x"))
+    let namedFunction = Expression.function(name: "foo", parameters: ["a", "b"], body: Expression.variable("x"))
+    let anonymousFunction = Expression.function(name: nil, parameters: ["a", "b"], body: Expression.variable("x"))
 
     func testDescriptionNamedFunction() {
         let result = "\(namedFunction)"
@@ -11,9 +12,9 @@ class FunctionTests: XCTestCase {
     }
 
     func testEvaluateNamedFunction() {
-        let context = ["x": Expression.IntegerValue(5)]
+        let context = ["x": Expression.integerValue(5)]
         let result = namedFunction.evaluate(context: context)
-        let closure = Expression.Closure(function: namedFunction, context: context)
+        let closure = Expression.closure(function: namedFunction, context: context)
         XCTAssertEqual(closure, result)
     }
     

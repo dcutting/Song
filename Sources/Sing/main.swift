@@ -1,3 +1,5 @@
+import Song
+
 print("Song")
 
 // [].length = 0

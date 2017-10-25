@@ -6,441 +6,856 @@
 	objectVersion = 46;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		"Song::SongPackageTests::ProductTarget" /* SongPackageTests */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = OBJ_123 /* Build configuration list for PBXAggregateTarget "SongPackageTests" */;
+			buildPhases = (
+			);
+			dependencies = (
+				OBJ_126 /* PBXTargetDependency */,
+			);
+			name = SongPackageTests;
+			productName = SongPackageTests;
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
-		C800D916198D7D0700B34329 /* CallTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C800D915198D7D0700B34329 /* CallTests.swift */; };
-		C827475C198D349F00473E9D /* FunctionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C827475B198D349F00473E9D /* FunctionTests.swift */; };
-		C827475E198D3E2900473E9D /* ClosureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C827475D198D3E2900473E9D /* ClosureTests.swift */; };
-		C84512FA1C657482001BF707 /* Expression.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89AC476198C3E2500F5DB3E /* Expression.swift */; };
-		C84512FB1C657484001BF707 /* ExpressionDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8DB31D31C3B43F800FCB46F /* ExpressionDescription.swift */; };
-		C84512FC1C657489001BF707 /* ExpressionEvaluation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8DB31D91C3B463600FCB46F /* ExpressionEvaluation.swift */; };
-		C84512FD1C65748B001BF707 /* ExpressionEquatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8DB31DC1C3B46D900FCB46F /* ExpressionEquatable.swift */; };
-		C84512FE1C65748F001BF707 /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8E2DE6919FC466100BDAE7A /* Context.swift */; };
-		C878E80919F0219D00DFDC8E /* ErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C878E80819F0219D00DFDC8E /* ErrorTests.swift */; };
-		C87E7C6119FC677A00ADFC80 /* IsUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C87E7C6019FC677A00ADFC80 /* IsUnitTests.swift */; };
-		C89AC462198C143F00F5DB3E /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89AC461198C143F00F5DB3E /* main.swift */; };
-		C89AC471198C145800F5DB3E /* StringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89AC470198C145800F5DB3E /* StringTests.swift */; };
-		C89AC477198C3E2500F5DB3E /* Expression.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89AC476198C3E2500F5DB3E /* Expression.swift */; };
-		C89AC47C198C4E2700F5DB3E /* IntegerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89AC47B198C4E2700F5DB3E /* IntegerTests.swift */; };
-		C89AC47E198C4FD600F5DB3E /* VariableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C89AC47D198C4FD600F5DB3E /* VariableTests.swift */; };
-		C8AF2714198D0AE900EBA02C /* UnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8AF2713198D0AE900EBA02C /* UnitTests.swift */; };
-		C8AF2716198D0D0100EBA02C /* PairTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8AF2715198D0D0100EBA02C /* PairTests.swift */; };
-		C8AF2718198D219300EBA02C /* LetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8AF2717198D219300EBA02C /* LetTests.swift */; };
-		C8DB31D41C3B43F800FCB46F /* ExpressionDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8DB31D31C3B43F800FCB46F /* ExpressionDescription.swift */; };
-		C8DB31DA1C3B463600FCB46F /* ExpressionEvaluation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8DB31D91C3B463600FCB46F /* ExpressionEvaluation.swift */; };
-		C8DB31DD1C3B46D900FCB46F /* ExpressionEquatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8DB31DC1C3B46D900FCB46F /* ExpressionEquatable.swift */; };
-		C8E2DE6A19FC466100BDAE7A /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8E2DE6919FC466100BDAE7A /* Context.swift */; };
-		C8F3F58D19FC5AAA005FC3E6 /* BooleanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8F3F58C19FC5AAA005FC3E6 /* BooleanTests.swift */; };
-		C8F3F58F19FC5C51005FC3E6 /* IfTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8F3F58E19FC5C51005FC3E6 /* IfTests.swift */; };
+		OBJ_100 /* Context.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_9 /* Context.swift */; };
+		OBJ_101 /* Expression.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* Expression.swift */; };
+		OBJ_102 /* ExpressionDescription.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_11 /* ExpressionDescription.swift */; };
+		OBJ_103 /* ExpressionEquatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_12 /* ExpressionEquatable.swift */; };
+		OBJ_104 /* ExpressionEvaluation.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_13 /* ExpressionEvaluation.swift */; };
+		OBJ_106 /* Syft.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Syft::Syft::Product" /* Syft.framework */; };
+		OBJ_112 /* ArrayUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_34 /* ArrayUtilities.swift */; };
+		OBJ_113 /* DSL.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_35 /* DSL.swift */; };
+		OBJ_114 /* DictionaryUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_36 /* DictionaryUtilities.swift */; };
+		OBJ_115 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_37 /* Parser.swift */; };
+		OBJ_116 /* Remainder.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_38 /* Remainder.swift */; };
+		OBJ_117 /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_39 /* Result.swift */; };
+		OBJ_118 /* ResultReporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_40 /* ResultReporter.swift */; };
+		OBJ_119 /* StringUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_41 /* StringUtilities.swift */; };
+		OBJ_120 /* Transformer.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_42 /* Transformer.swift */; };
+		OBJ_53 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_6 /* Package.swift */; };
+		OBJ_59 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_33 /* Package.swift */; };
+		OBJ_65 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_15 /* main.swift */; };
+		OBJ_67 /* Song.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Song::Song::Product" /* Song.framework */; };
+		OBJ_68 /* Syft.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Syft::Syft::Product" /* Syft.framework */; };
+		OBJ_78 /* BooleanTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_18 /* BooleanTests.swift */; };
+		OBJ_79 /* CallTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_19 /* CallTests.swift */; };
+		OBJ_80 /* ClosureTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_20 /* ClosureTests.swift */; };
+		OBJ_81 /* ErrorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_21 /* ErrorTests.swift */; };
+		OBJ_82 /* FunctionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_22 /* FunctionTests.swift */; };
+		OBJ_83 /* IfTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_23 /* IfTests.swift */; };
+		OBJ_84 /* IntegerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_24 /* IntegerTests.swift */; };
+		OBJ_85 /* IsUnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_25 /* IsUnitTests.swift */; };
+		OBJ_86 /* LetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_26 /* LetTests.swift */; };
+		OBJ_87 /* PairTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_27 /* PairTests.swift */; };
+		OBJ_88 /* StringTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_28 /* StringTests.swift */; };
+		OBJ_89 /* UnitTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_29 /* UnitTests.swift */; };
+		OBJ_90 /* VariableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_30 /* VariableTests.swift */; };
+		OBJ_92 /* Song.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Song::Song::Product" /* Song.framework */; };
+		OBJ_93 /* Syft.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "Syft::Syft::Product" /* Syft.framework */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXCopyFilesBuildPhase section */
-		C89AC45C198C143F00F5DB3E /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 1;
+/* Begin PBXContainerItemProxy section */
+		C87F083F1FA13E2B00BDF310 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = OBJ_1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = "Song::Song";
+			remoteInfo = Song;
 		};
-/* End PBXCopyFilesBuildPhase section */
+		C87F08401FA13E2B00BDF310 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = OBJ_1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = "Syft::Syft";
+			remoteInfo = Syft;
+		};
+		C87F08411FA13E2B00BDF310 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = OBJ_1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = "Syft::Syft";
+			remoteInfo = Syft;
+		};
+		C87F08421FA13E2B00BDF310 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = OBJ_1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = "Song::Song";
+			remoteInfo = Song;
+		};
+		C87F08431FA13E2B00BDF310 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = OBJ_1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = "Syft::Syft";
+			remoteInfo = Syft;
+		};
+		C87F08441FA13E2D00BDF310 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = OBJ_1 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = "Song::SongTests";
+			remoteInfo = SongTests;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		C800D915198D7D0700B34329 /* CallTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CallTests.swift; sourceTree = "<group>"; };
-		C827475B198D349F00473E9D /* FunctionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FunctionTests.swift; sourceTree = "<group>"; };
-		C827475D198D3E2900473E9D /* ClosureTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ClosureTests.swift; sourceTree = "<group>"; };
-		C878E80819F0219D00DFDC8E /* ErrorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorTests.swift; sourceTree = "<group>"; };
-		C87E7C6019FC677A00ADFC80 /* IsUnitTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IsUnitTests.swift; sourceTree = "<group>"; };
-		C87E7C6219FC6F3600ADFC80 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		C89AC45E198C143F00F5DB3E /* Song */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Song; sourceTree = BUILT_PRODUCTS_DIR; };
-		C89AC461198C143F00F5DB3E /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		C89AC46C198C145800F5DB3E /* SongTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SongTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		C89AC46F198C145800F5DB3E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C89AC470198C145800F5DB3E /* StringTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringTests.swift; sourceTree = "<group>"; };
-		C89AC476198C3E2500F5DB3E /* Expression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Expression.swift; path = Core/Expression.swift; sourceTree = "<group>"; };
-		C89AC47B198C4E2700F5DB3E /* IntegerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IntegerTests.swift; sourceTree = "<group>"; };
-		C89AC47D198C4FD600F5DB3E /* VariableTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VariableTests.swift; sourceTree = "<group>"; };
-		C8AF2713198D0AE900EBA02C /* UnitTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnitTests.swift; sourceTree = "<group>"; };
-		C8AF2715198D0D0100EBA02C /* PairTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PairTests.swift; sourceTree = "<group>"; };
-		C8AF2717198D219300EBA02C /* LetTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LetTests.swift; sourceTree = "<group>"; };
-		C8DB31D31C3B43F800FCB46F /* ExpressionDescription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ExpressionDescription.swift; path = Core/ExpressionDescription.swift; sourceTree = "<group>"; };
-		C8DB31D91C3B463600FCB46F /* ExpressionEvaluation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ExpressionEvaluation.swift; path = Core/ExpressionEvaluation.swift; sourceTree = "<group>"; };
-		C8DB31DC1C3B46D900FCB46F /* ExpressionEquatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ExpressionEquatable.swift; path = Core/ExpressionEquatable.swift; sourceTree = "<group>"; };
-		C8E2DE6919FC466100BDAE7A /* Context.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Context.swift; path = Core/Context.swift; sourceTree = "<group>"; };
-		C8F3F58C19FC5AAA005FC3E6 /* BooleanTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BooleanTests.swift; sourceTree = "<group>"; };
-		C8F3F58E19FC5C51005FC3E6 /* IfTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IfTests.swift; sourceTree = "<group>"; };
+		OBJ_10 /* Expression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Expression.swift; sourceTree = "<group>"; };
+		OBJ_11 /* ExpressionDescription.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpressionDescription.swift; sourceTree = "<group>"; };
+		OBJ_12 /* ExpressionEquatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpressionEquatable.swift; sourceTree = "<group>"; };
+		OBJ_13 /* ExpressionEvaluation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpressionEvaluation.swift; sourceTree = "<group>"; };
+		OBJ_15 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		OBJ_18 /* BooleanTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BooleanTests.swift; sourceTree = "<group>"; };
+		OBJ_19 /* CallTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallTests.swift; sourceTree = "<group>"; };
+		OBJ_20 /* ClosureTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClosureTests.swift; sourceTree = "<group>"; };
+		OBJ_21 /* ErrorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorTests.swift; sourceTree = "<group>"; };
+		OBJ_22 /* FunctionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FunctionTests.swift; sourceTree = "<group>"; };
+		OBJ_23 /* IfTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IfTests.swift; sourceTree = "<group>"; };
+		OBJ_24 /* IntegerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntegerTests.swift; sourceTree = "<group>"; };
+		OBJ_25 /* IsUnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IsUnitTests.swift; sourceTree = "<group>"; };
+		OBJ_26 /* LetTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LetTests.swift; sourceTree = "<group>"; };
+		OBJ_27 /* PairTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PairTests.swift; sourceTree = "<group>"; };
+		OBJ_28 /* StringTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringTests.swift; sourceTree = "<group>"; };
+		OBJ_29 /* UnitTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnitTests.swift; sourceTree = "<group>"; };
+		OBJ_30 /* VariableTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VariableTests.swift; sourceTree = "<group>"; };
+		OBJ_33 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; name = Package.swift; path = "/Users/dcutting/Dropbox/Dan/Code/song/.build/checkouts/Syft.git-1029463822516369926/Package.swift"; sourceTree = "<group>"; };
+		OBJ_34 /* ArrayUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrayUtilities.swift; sourceTree = "<group>"; };
+		OBJ_35 /* DSL.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DSL.swift; sourceTree = "<group>"; };
+		OBJ_36 /* DictionaryUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DictionaryUtilities.swift; sourceTree = "<group>"; };
+		OBJ_37 /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
+		OBJ_38 /* Remainder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Remainder.swift; sourceTree = "<group>"; };
+		OBJ_39 /* Result.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
+		OBJ_40 /* ResultReporter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResultReporter.swift; sourceTree = "<group>"; };
+		OBJ_41 /* StringUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringUtilities.swift; sourceTree = "<group>"; };
+		OBJ_42 /* Transformer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Transformer.swift; sourceTree = "<group>"; };
+		OBJ_6 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
+		OBJ_9 /* Context.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Context.swift; sourceTree = "<group>"; };
+		"Song::Sing::Product" /* Sing */ = {isa = PBXFileReference; lastKnownFileType = text; path = Sing; sourceTree = BUILT_PRODUCTS_DIR; };
+		"Song::Song::Product" /* Song.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Song.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		"Song::SongTests::Product" /* SongTests.xctest */ = {isa = PBXFileReference; lastKnownFileType = file; path = SongTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		"Syft::Syft::Product" /* Syft.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = Syft.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		C89AC45B198C143F00F5DB3E /* Frameworks */ = {
+		OBJ_105 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 0;
+			files = (
+				OBJ_106 /* Syft.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		OBJ_121 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 0;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C89AC469198C145800F5DB3E /* Frameworks */ = {
+		OBJ_66 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 0;
 			files = (
+				OBJ_67 /* Song.framework in Frameworks */,
+				OBJ_68 /* Syft.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		OBJ_91 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 0;
+			files = (
+				OBJ_92 /* Song.framework in Frameworks */,
+				OBJ_93 /* Syft.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		C89AC455198C143F00F5DB3E = {
+		OBJ_14 /* Sing */ = {
 			isa = PBXGroup;
 			children = (
-				C87E7C6219FC6F3600ADFC80 /* README.md */,
-				C89AC460198C143F00F5DB3E /* Song */,
-				C89AC46D198C145800F5DB3E /* SongTests */,
-				C89AC45F198C143F00F5DB3E /* Products */,
+				OBJ_15 /* main.swift */,
 			);
+			name = Sing;
+			path = Sources/Sing;
+			sourceTree = SOURCE_ROOT;
+		};
+		OBJ_16 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_17 /* SongTests */,
+			);
+			name = Tests;
+			sourceTree = SOURCE_ROOT;
+		};
+		OBJ_17 /* SongTests */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_18 /* BooleanTests.swift */,
+				OBJ_19 /* CallTests.swift */,
+				OBJ_20 /* ClosureTests.swift */,
+				OBJ_21 /* ErrorTests.swift */,
+				OBJ_22 /* FunctionTests.swift */,
+				OBJ_23 /* IfTests.swift */,
+				OBJ_24 /* IntegerTests.swift */,
+				OBJ_25 /* IsUnitTests.swift */,
+				OBJ_26 /* LetTests.swift */,
+				OBJ_27 /* PairTests.swift */,
+				OBJ_28 /* StringTests.swift */,
+				OBJ_29 /* UnitTests.swift */,
+				OBJ_30 /* VariableTests.swift */,
+			);
+			name = SongTests;
+			path = Tests/SongTests;
+			sourceTree = SOURCE_ROOT;
+		};
+		OBJ_31 /* Dependencies */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_32 /* Syft 0.1.0 */,
+			);
+			name = Dependencies;
 			sourceTree = "<group>";
 		};
-		C89AC45F198C143F00F5DB3E /* Products */ = {
+		OBJ_32 /* Syft 0.1.0 */ = {
 			isa = PBXGroup;
 			children = (
-				C89AC45E198C143F00F5DB3E /* Song */,
-				C89AC46C198C145800F5DB3E /* SongTests.xctest */,
+				OBJ_33 /* Package.swift */,
+				OBJ_34 /* ArrayUtilities.swift */,
+				OBJ_35 /* DSL.swift */,
+				OBJ_36 /* DictionaryUtilities.swift */,
+				OBJ_37 /* Parser.swift */,
+				OBJ_38 /* Remainder.swift */,
+				OBJ_39 /* Result.swift */,
+				OBJ_40 /* ResultReporter.swift */,
+				OBJ_41 /* StringUtilities.swift */,
+				OBJ_42 /* Transformer.swift */,
+			);
+			name = "Syft 0.1.0";
+			path = ".build/checkouts/Syft.git-1029463822516369926/Sources";
+			sourceTree = SOURCE_ROOT;
+		};
+		OBJ_43 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				"Song::Sing::Product" /* Sing */,
+				"Song::SongTests::Product" /* SongTests.xctest */,
+				"Song::Song::Product" /* Song.framework */,
+				"Syft::Syft::Product" /* Syft.framework */,
 			);
 			name = Products;
-			sourceTree = "<group>";
+			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		C89AC460198C143F00F5DB3E /* Song */ = {
+		OBJ_5 /*  */ = {
 			isa = PBXGroup;
 			children = (
-				C89AC461198C143F00F5DB3E /* main.swift */,
-				C89AC478198C3E2F00F5DB3E /* Core */,
+				OBJ_6 /* Package.swift */,
+				OBJ_7 /* Sources */,
+				OBJ_16 /* Tests */,
+				OBJ_31 /* Dependencies */,
+				OBJ_43 /* Products */,
 			);
-			path = Song;
+			name = "";
 			sourceTree = "<group>";
 		};
-		C89AC46D198C145800F5DB3E /* SongTests */ = {
+		OBJ_7 /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				C878E80819F0219D00DFDC8E /* ErrorTests.swift */,
-				C8AF2713198D0AE900EBA02C /* UnitTests.swift */,
-				C8F3F58C19FC5AAA005FC3E6 /* BooleanTests.swift */,
-				C89AC47B198C4E2700F5DB3E /* IntegerTests.swift */,
-				C89AC470198C145800F5DB3E /* StringTests.swift */,
-				C8AF2715198D0D0100EBA02C /* PairTests.swift */,
-				C827475D198D3E2900473E9D /* ClosureTests.swift */,
-				C8AF2717198D219300EBA02C /* LetTests.swift */,
-				C89AC47D198C4FD600F5DB3E /* VariableTests.swift */,
-				C827475B198D349F00473E9D /* FunctionTests.swift */,
-				C800D915198D7D0700B34329 /* CallTests.swift */,
-				C8F3F58E19FC5C51005FC3E6 /* IfTests.swift */,
-				C87E7C6019FC677A00ADFC80 /* IsUnitTests.swift */,
-				C89AC46E198C145800F5DB3E /* Supporting Files */,
+				OBJ_8 /* Song */,
+				OBJ_14 /* Sing */,
 			);
-			path = SongTests;
-			sourceTree = "<group>";
+			name = Sources;
+			sourceTree = SOURCE_ROOT;
 		};
-		C89AC46E198C145800F5DB3E /* Supporting Files */ = {
+		OBJ_8 /* Song */ = {
 			isa = PBXGroup;
 			children = (
-				C89AC46F198C145800F5DB3E /* Info.plist */,
+				OBJ_9 /* Context.swift */,
+				OBJ_10 /* Expression.swift */,
+				OBJ_11 /* ExpressionDescription.swift */,
+				OBJ_12 /* ExpressionEquatable.swift */,
+				OBJ_13 /* ExpressionEvaluation.swift */,
 			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		C89AC478198C3E2F00F5DB3E /* Core */ = {
-			isa = PBXGroup;
-			children = (
-				C89AC476198C3E2500F5DB3E /* Expression.swift */,
-				C8DB31D31C3B43F800FCB46F /* ExpressionDescription.swift */,
-				C8DB31D91C3B463600FCB46F /* ExpressionEvaluation.swift */,
-				C8DB31DC1C3B46D900FCB46F /* ExpressionEquatable.swift */,
-				C8E2DE6919FC466100BDAE7A /* Context.swift */,
-			);
-			name = Core;
-			sourceTree = "<group>";
+			name = Song;
+			path = Sources/Song;
+			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		C89AC45D198C143F00F5DB3E /* Song */ = {
+		"Song::Sing" /* Sing */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C89AC465198C143F00F5DB3E /* Build configuration list for PBXNativeTarget "Song" */;
+			buildConfigurationList = OBJ_61 /* Build configuration list for PBXNativeTarget "Sing" */;
 			buildPhases = (
-				C89AC45A198C143F00F5DB3E /* Sources */,
-				C89AC45B198C143F00F5DB3E /* Frameworks */,
-				C89AC45C198C143F00F5DB3E /* CopyFiles */,
+				OBJ_64 /* Sources */,
+				OBJ_66 /* Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				OBJ_69 /* PBXTargetDependency */,
+				OBJ_71 /* PBXTargetDependency */,
+			);
+			name = Sing;
+			productName = Sing;
+			productReference = "Song::Sing::Product" /* Sing */;
+			productType = "com.apple.product-type.tool";
+		};
+		"Song::Song" /* Song */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = OBJ_96 /* Build configuration list for PBXNativeTarget "Song" */;
+			buildPhases = (
+				OBJ_99 /* Sources */,
+				OBJ_105 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				OBJ_107 /* PBXTargetDependency */,
 			);
 			name = Song;
 			productName = Song;
-			productReference = C89AC45E198C143F00F5DB3E /* Song */;
-			productType = "com.apple.product-type.tool";
+			productReference = "Song::Song::Product" /* Song.framework */;
+			productType = "com.apple.product-type.framework";
 		};
-		C89AC46B198C145800F5DB3E /* SongTests */ = {
+		"Song::SongTests" /* SongTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = C89AC472198C145800F5DB3E /* Build configuration list for PBXNativeTarget "SongTests" */;
+			buildConfigurationList = OBJ_74 /* Build configuration list for PBXNativeTarget "SongTests" */;
 			buildPhases = (
-				C89AC468198C145800F5DB3E /* Sources */,
-				C89AC469198C145800F5DB3E /* Frameworks */,
-				C89AC46A198C145800F5DB3E /* Resources */,
+				OBJ_77 /* Sources */,
+				OBJ_91 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				OBJ_94 /* PBXTargetDependency */,
+				OBJ_95 /* PBXTargetDependency */,
+			);
+			name = SongTests;
+			productName = SongTests;
+			productReference = "Song::SongTests::Product" /* SongTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		"Song::SwiftPMPackageDescription" /* SongPackageDescription */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = OBJ_49 /* Build configuration list for PBXNativeTarget "SongPackageDescription" */;
+			buildPhases = (
+				OBJ_52 /* Sources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = SongTests;
-			productName = SongTests;
-			productReference = C89AC46C198C145800F5DB3E /* SongTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
+			name = SongPackageDescription;
+			productName = SongPackageDescription;
+			productType = "com.apple.product-type.framework";
+		};
+		"Syft::SwiftPMPackageDescription" /* SyftPackageDescription */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = OBJ_55 /* Build configuration list for PBXNativeTarget "SyftPackageDescription" */;
+			buildPhases = (
+				OBJ_58 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SyftPackageDescription;
+			productName = SyftPackageDescription;
+			productType = "com.apple.product-type.framework";
+		};
+		"Syft::Syft" /* Syft */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = OBJ_108 /* Build configuration list for PBXNativeTarget "Syft" */;
+			buildPhases = (
+				OBJ_111 /* Sources */,
+				OBJ_121 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Syft;
+			productName = Syft;
+			productReference = "Syft::Syft::Product" /* Syft.framework */;
+			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
-		C89AC456198C143F00F5DB3E /* Project object */ = {
+		OBJ_1 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftMigration = 0720;
-				LastSwiftUpdateCheck = 0720;
-				LastUpgradeCheck = 0720;
-				ORGANIZATIONNAME = Yellowbek;
-				TargetAttributes = {
-					C89AC45D198C143F00F5DB3E = {
-						CreatedOnToolsVersion = 6.0;
-					};
-					C89AC46B198C145800F5DB3E = {
-						CreatedOnToolsVersion = 6.0;
-					};
-				};
+				LastUpgradeCheck = 9999;
 			};
-			buildConfigurationList = C89AC459198C143F00F5DB3E /* Build configuration list for PBXProject "Song" */;
+			buildConfigurationList = OBJ_2 /* Build configuration list for PBXProject "Song" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
 			);
-			mainGroup = C89AC455198C143F00F5DB3E;
-			productRefGroup = C89AC45F198C143F00F5DB3E /* Products */;
+			mainGroup = OBJ_5 /*  */;
+			productRefGroup = OBJ_43 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				C89AC45D198C143F00F5DB3E /* Song */,
-				C89AC46B198C145800F5DB3E /* SongTests */,
+				"Song::SwiftPMPackageDescription" /* SongPackageDescription */,
+				"Syft::SwiftPMPackageDescription" /* SyftPackageDescription */,
+				"Song::Sing" /* Sing */,
+				"Song::SongTests" /* SongTests */,
+				"Song::Song" /* Song */,
+				"Syft::Syft" /* Syft */,
+				"Song::SongPackageTests::ProductTarget" /* SongPackageTests */,
 			);
 		};
 /* End PBXProject section */
 
-/* Begin PBXResourcesBuildPhase section */
-		C89AC46A198C145800F5DB3E /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXResourcesBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
-		C89AC45A198C143F00F5DB3E /* Sources */ = {
+		OBJ_111 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 0;
 			files = (
-				C8DB31DD1C3B46D900FCB46F /* ExpressionEquatable.swift in Sources */,
-				C8E2DE6A19FC466100BDAE7A /* Context.swift in Sources */,
-				C89AC477198C3E2500F5DB3E /* Expression.swift in Sources */,
-				C8DB31D41C3B43F800FCB46F /* ExpressionDescription.swift in Sources */,
-				C89AC462198C143F00F5DB3E /* main.swift in Sources */,
-				C8DB31DA1C3B463600FCB46F /* ExpressionEvaluation.swift in Sources */,
+				OBJ_112 /* ArrayUtilities.swift in Sources */,
+				OBJ_113 /* DSL.swift in Sources */,
+				OBJ_114 /* DictionaryUtilities.swift in Sources */,
+				OBJ_115 /* Parser.swift in Sources */,
+				OBJ_116 /* Remainder.swift in Sources */,
+				OBJ_117 /* Result.swift in Sources */,
+				OBJ_118 /* ResultReporter.swift in Sources */,
+				OBJ_119 /* StringUtilities.swift in Sources */,
+				OBJ_120 /* Transformer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C89AC468198C145800F5DB3E /* Sources */ = {
+		OBJ_52 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
+			buildActionMask = 0;
 			files = (
-				C8F3F58D19FC5AAA005FC3E6 /* BooleanTests.swift in Sources */,
-				C8F3F58F19FC5C51005FC3E6 /* IfTests.swift in Sources */,
-				C89AC471198C145800F5DB3E /* StringTests.swift in Sources */,
-				C89AC47E198C4FD600F5DB3E /* VariableTests.swift in Sources */,
-				C84512FD1C65748B001BF707 /* ExpressionEquatable.swift in Sources */,
-				C87E7C6119FC677A00ADFC80 /* IsUnitTests.swift in Sources */,
-				C84512FA1C657482001BF707 /* Expression.swift in Sources */,
-				C800D916198D7D0700B34329 /* CallTests.swift in Sources */,
-				C8AF2714198D0AE900EBA02C /* UnitTests.swift in Sources */,
-				C8AF2718198D219300EBA02C /* LetTests.swift in Sources */,
-				C878E80919F0219D00DFDC8E /* ErrorTests.swift in Sources */,
-				C89AC47C198C4E2700F5DB3E /* IntegerTests.swift in Sources */,
-				C8AF2716198D0D0100EBA02C /* PairTests.swift in Sources */,
-				C84512FB1C657484001BF707 /* ExpressionDescription.swift in Sources */,
-				C84512FC1C657489001BF707 /* ExpressionEvaluation.swift in Sources */,
-				C84512FE1C65748F001BF707 /* Context.swift in Sources */,
-				C827475C198D349F00473E9D /* FunctionTests.swift in Sources */,
-				C827475E198D3E2900473E9D /* ClosureTests.swift in Sources */,
+				OBJ_53 /* Package.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		OBJ_58 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 0;
+			files = (
+				OBJ_59 /* Package.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		OBJ_64 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 0;
+			files = (
+				OBJ_65 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		OBJ_77 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 0;
+			files = (
+				OBJ_78 /* BooleanTests.swift in Sources */,
+				OBJ_79 /* CallTests.swift in Sources */,
+				OBJ_80 /* ClosureTests.swift in Sources */,
+				OBJ_81 /* ErrorTests.swift in Sources */,
+				OBJ_82 /* FunctionTests.swift in Sources */,
+				OBJ_83 /* IfTests.swift in Sources */,
+				OBJ_84 /* IntegerTests.swift in Sources */,
+				OBJ_85 /* IsUnitTests.swift in Sources */,
+				OBJ_86 /* LetTests.swift in Sources */,
+				OBJ_87 /* PairTests.swift in Sources */,
+				OBJ_88 /* StringTests.swift in Sources */,
+				OBJ_89 /* UnitTests.swift in Sources */,
+				OBJ_90 /* VariableTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		OBJ_99 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 0;
+			files = (
+				OBJ_100 /* Context.swift in Sources */,
+				OBJ_101 /* Expression.swift in Sources */,
+				OBJ_102 /* ExpressionDescription.swift in Sources */,
+				OBJ_103 /* ExpressionEquatable.swift in Sources */,
+				OBJ_104 /* ExpressionEvaluation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		OBJ_107 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = "Syft::Syft" /* Syft */;
+			targetProxy = C87F08401FA13E2B00BDF310 /* PBXContainerItemProxy */;
+		};
+		OBJ_126 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = "Song::SongTests" /* SongTests */;
+			targetProxy = C87F08441FA13E2D00BDF310 /* PBXContainerItemProxy */;
+		};
+		OBJ_69 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = "Song::Song" /* Song */;
+			targetProxy = C87F083F1FA13E2B00BDF310 /* PBXContainerItemProxy */;
+		};
+		OBJ_71 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = "Syft::Syft" /* Syft */;
+			targetProxy = C87F08411FA13E2B00BDF310 /* PBXContainerItemProxy */;
+		};
+		OBJ_94 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = "Song::Song" /* Song */;
+			targetProxy = C87F08421FA13E2B00BDF310 /* PBXContainerItemProxy */;
+		};
+		OBJ_95 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = "Syft::Syft" /* Syft */;
+			targetProxy = C87F08431FA13E2B00BDF310 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
-		C89AC463198C143F00F5DB3E /* Debug */ = {
+		OBJ_109 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
+				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 				);
-				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
-				MTL_ENABLE_DEBUG_INFO = YES;
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = Song.xcodeproj/Syft_Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
+				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = Syft;
+				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+				TARGET_NAME = Syft;
+			};
+			name = Debug;
+		};
+		OBJ_110 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
+				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = Song.xcodeproj/Syft_Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
+				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = Syft;
+				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
+				TARGET_NAME = Syft;
+			};
+			name = Release;
+		};
+		OBJ_124 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		OBJ_125 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		OBJ_3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_NS_ASSERTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_SWIFT_FLAGS = "-DXcode";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator appletvos appletvsimulator watchos watchsimulator";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = SWIFT_PACKAGE;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
+				USE_HEADERMAP = NO;
 			};
 			name = Debug;
 		};
-		C89AC464198C143F00F5DB3E /* Release */ = {
+		OBJ_4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = YES;
 				COPY_PHASE_STRIP = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
-				MTL_ENABLE_DEBUG_INFO = NO;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_OPTIMIZATION_LEVEL = s;
+				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				OTHER_SWIFT_FLAGS = "-DXcode";
+				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
+				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator appletvos appletvsimulator watchos watchsimulator";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = SWIFT_PACKAGE;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 4.0;
+				USE_HEADERMAP = NO;
+			};
+			name = Release;
+		};
+		OBJ_50 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				LD = /usr/bin/true;
+				OTHER_SWIFT_FLAGS = "-swift-version 4 -I /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/pm/4 -target x86_64-apple-macosx10.10 -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk";
+				SWIFT_VERSION = 4.0;
+			};
+			name = Debug;
+		};
+		OBJ_51 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				LD = /usr/bin/true;
+				OTHER_SWIFT_FLAGS = "-swift-version 4 -I /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/pm/4 -target x86_64-apple-macosx10.10 -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk";
 				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
-		C89AC466198C143F00F5DB3E /* Debug */ = {
+		OBJ_56 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				LD = /usr/bin/true;
+				OTHER_SWIFT_FLAGS = "-swift-version 3 -I /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/pm/3 -target x86_64-apple-macosx10.10 -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
-		C89AC467198C143F00F5DB3E /* Release */ = {
+		OBJ_57 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				LD = /usr/bin/true;
+				OTHER_SWIFT_FLAGS = "-swift-version 3 -I /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/pm/3 -target x86_64-apple-macosx10.10 -sdk /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
-		C89AC473198C145800F5DB3E /* Debug */ = {
+		OBJ_62 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 				);
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = SongTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.yellowbek.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = Song.xcodeproj/Sing_Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx @executable_path";
+				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				SWIFT_FORCE_DYNAMIC_LINK_STDLIB = YES;
+				SWIFT_FORCE_STATIC_LINK_STDLIB = NO;
+				SWIFT_VERSION = 4.0;
+				TARGET_NAME = Sing;
 			};
 			name = Debug;
 		};
-		C89AC474198C145800F5DB3E /* Release */ = {
+		OBJ_63 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				COMBINE_HIDPI_IMAGES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 				);
-				INFOPLIST_FILE = SongTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/../Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.yellowbek.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = Song.xcodeproj/Sing_Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx @executable_path";
+				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				SWIFT_FORCE_DYNAMIC_LINK_STDLIB = YES;
+				SWIFT_FORCE_STATIC_LINK_STDLIB = NO;
+				SWIFT_VERSION = 4.0;
+				TARGET_NAME = Sing;
+			};
+			name = Release;
+		};
+		OBJ_75 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
+				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = Song.xcodeproj/SongTests_Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @loader_path/Frameworks";
+				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				SWIFT_VERSION = 4.0;
+				TARGET_NAME = SongTests;
+			};
+			name = Debug;
+		};
+		OBJ_76 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
+				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = Song.xcodeproj/SongTests_Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks @loader_path/Frameworks";
+				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				SWIFT_VERSION = 4.0;
+				TARGET_NAME = SongTests;
+			};
+			name = Release;
+		};
+		OBJ_97 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
+				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = Song.xcodeproj/Song_Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
+				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = Song;
+				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.0;
+				TARGET_NAME = Song;
+			};
+			name = Debug;
+		};
+		OBJ_98 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ENABLE_TESTABILITY = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
+				);
+				HEADER_SEARCH_PATHS = "$(inherited)";
+				INFOPLIST_FILE = Song.xcodeproj/Song_Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(TOOLCHAIN_DIR)/usr/lib/swift/macosx";
+				OTHER_LDFLAGS = "$(inherited)";
+				OTHER_SWIFT_FLAGS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = Song;
+				PRODUCT_MODULE_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 4.0;
+				TARGET_NAME = Song;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		C89AC459198C143F00F5DB3E /* Build configuration list for PBXProject "Song" */ = {
+		OBJ_108 /* Build configuration list for PBXNativeTarget "Syft" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				C89AC463198C143F00F5DB3E /* Debug */,
-				C89AC464198C143F00F5DB3E /* Release */,
+				OBJ_109 /* Debug */,
+				OBJ_110 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
-		C89AC465198C143F00F5DB3E /* Build configuration list for PBXNativeTarget "Song" */ = {
+		OBJ_123 /* Build configuration list for PBXAggregateTarget "SongPackageTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				C89AC466198C143F00F5DB3E /* Debug */,
-				C89AC467198C143F00F5DB3E /* Release */,
+				OBJ_124 /* Debug */,
+				OBJ_125 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
 		};
-		C89AC472198C145800F5DB3E /* Build configuration list for PBXNativeTarget "SongTests" */ = {
+		OBJ_2 /* Build configuration list for PBXProject "Song" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				C89AC473198C145800F5DB3E /* Debug */,
-				C89AC474198C145800F5DB3E /* Release */,
+				OBJ_3 /* Debug */,
+				OBJ_4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
+			defaultConfigurationName = Debug;
+		};
+		OBJ_49 /* Build configuration list for PBXNativeTarget "SongPackageDescription" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				OBJ_50 /* Debug */,
+				OBJ_51 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		OBJ_55 /* Build configuration list for PBXNativeTarget "SyftPackageDescription" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				OBJ_56 /* Debug */,
+				OBJ_57 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		OBJ_61 /* Build configuration list for PBXNativeTarget "Sing" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				OBJ_62 /* Debug */,
+				OBJ_63 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		OBJ_74 /* Build configuration list for PBXNativeTarget "SongTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				OBJ_75 /* Debug */,
+				OBJ_76 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		OBJ_96 /* Build configuration list for PBXNativeTarget "Song" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				OBJ_97 /* Debug */,
+				OBJ_98 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
 	};
-	rootObject = C89AC456198C143F00F5DB3E /* Project object */;
+	rootObject = OBJ_1 /* Project object */;
 }
