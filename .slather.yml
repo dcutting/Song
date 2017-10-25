@@ -1,0 +1,5 @@
+coverage_service: coveralls
+xcodeproj: Song.xcodeproj
+scheme: Song-Package
+ignore:
+  - Tests/*
