@@ -4,31 +4,31 @@ extension Expression: Equatable {
 public func ==(lhs: Expression, rhs: Expression) -> Bool {
     switch (lhs, rhs) {
         
-    case let (.Error(lhsError), .Error(rhsError)):
+    case let (.error(lhsError), .error(rhsError)):
         return lhsError == rhsError
         
-    case (.UnitValue, .UnitValue):
+    case (.unitValue, .unitValue):
         return true
         
-    case let (.BooleanValue(lhsValue), .BooleanValue(rhsValue)):
+    case let (.booleanValue(lhsValue), .booleanValue(rhsValue)):
         return lhsValue == rhsValue
         
-    case let (.IntegerValue(lhsValue), .IntegerValue(rhsValue)):
+    case let (.integerValue(lhsValue), .integerValue(rhsValue)):
         return lhsValue == rhsValue
         
-    case let (.StringValue(lhsValue), .StringValue(rhsValue)):
+    case let (.stringValue(lhsValue), .stringValue(rhsValue)):
         return lhsValue == rhsValue
         
-    case let (.Pair(lhsFirst, lhsSecond), .Pair(rhsFirst, rhsSecond)):
+    case let (.pair(lhsFirst, lhsSecond), .pair(rhsFirst, rhsSecond)):
         return lhsFirst == rhsFirst && lhsSecond == rhsSecond
         
-    case let (.Closure(lhsFunction, lhsContext), .Closure(rhsFunction, rhsContext)):
+    case let (.closure(lhsFunction, lhsContext), .closure(rhsFunction, rhsContext)):
         return lhsFunction == rhsFunction && lhsContext == rhsContext
         
-    case let (.Variable(lhsVariable), .Variable(rhsVariable)):
+    case let (.variable(lhsVariable), .variable(rhsVariable)):
         return lhsVariable == rhsVariable
         
-    case let (.Function(lhsName, lhsParameters, lhsBody), .Function(rhsName, rhsParameters, rhsBody)):
+    case let (.function(lhsName, lhsParameters, lhsBody), .function(rhsName, rhsParameters, rhsBody)):
         return lhsName == rhsName && lhsParameters == rhsParameters && lhsBody == rhsBody
         
     default:

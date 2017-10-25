@@ -3,53 +3,53 @@ extension Expression: CustomStringConvertible {
     public var description: String {
         switch self {
             
-        case let .Error(value):
+        case let .error(value):
             return "<\(value)>"
             
-        case .UnitValue:
+        case .unitValue:
             return "#"
             
-        case let .BooleanValue(value):
+        case let .booleanValue(value):
             return value ? "yes" : "no"
             
-        case let .IntegerValue(value):
+        case let .integerValue(value):
             return "\(value)"
             
-        case let .StringValue(value):
+        case let .stringValue(value):
             return "'\(value)'"
             
-        case let .IsUnit(value):
+        case let .isUnit(value):
             return "isUnitValue(\(value))"
             
-        case let .Plus(left, right):
+        case let .plus(left, right):
             return "\(left) + \(right)"
             
-        case let .Pair(first, second):
+        case let .pair(first, second):
             return "(\(first), \(second))"
             
-        case let .First(value):
+        case let .first(value):
             return "first(\(value))"
             
-        case let .Second(value):
+        case let .second(value):
             return "second(\(value))"
             
-        case let .Closure(function, context):
+        case let .closure(function, context):
             let contextList = contextDescription(context: context)
             return "[(\(contextList)) \(function)]"
             
-        case let .Let(name, binding, body):
+        case let .let(name, binding, body):
             return "let (\(name) = \(binding)) { \(body) }"
             
-        case let .Variable(variable):
+        case let .variable(variable):
             return "\(variable)"
             
-        case let .Function(name, parameters, body):
+        case let .function(name, parameters, body):
             return descriptionFunction(name: name, parameters, body)
             
-        case let .Call(closure, arguments):
+        case let .call(closure, arguments):
             return descriptionCall(closure: closure, arguments: arguments)
             
-        case let .Conditional(condition, then, otherwise):
+        case let .conditional(condition, then, otherwise):
             return "if \(condition) then \(then) else \(otherwise) end"
         }
     }

@@ -1,34 +1,34 @@
 public indirect enum Expression {
 
-    case Error(String)
+    case error(String)
     
-    case UnitValue
+    case unitValue
 
-    case BooleanValue(Bool)
+    case booleanValue(Bool)
     
-    case IntegerValue(Int)
+    case integerValue(Int)
     
-    case StringValue(String)
+    case stringValue(String)
     
-    case IsUnit(Expression)
+    case isUnit(Expression)
     
-    case Plus(Expression, Expression)
+    case plus(Expression, Expression)
     
-    case Pair(Expression, Expression)
+    case pair(Expression, Expression)
     
-    case First(Expression)
+    case first(Expression)
     
-    case Second(Expression)
+    case second(Expression)
     
-    case Closure(function: Expression, context: Context)
+    case closure(function: Expression, context: Context)
     
-    case Let(name: String, binding: Expression, body: Expression)
+    case `let`(name: String, binding: Expression, body: Expression)
     
-    case Variable(String)
+    case variable(String)
     
-    case Function(name: String?, parameters: [String], body: Expression)
+    case function(name: String?, parameters: [String], body: Expression)
     
-    case Call(closure: Expression, arguments: [Expression])
+    case call(closure: Expression, arguments: [Expression])
     
-    case Conditional(condition: Expression, then: Expression, otherwise: Expression)
+    case conditional(condition: Expression, then: Expression, otherwise: Expression)
 }

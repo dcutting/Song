@@ -7,31 +7,31 @@ extension Expression {
     public func evaluate(context: Context) -> Expression {
         switch self {
             
-        case let .IsUnit(value):
+        case let .isUnit(value):
             return evaluateIsUnit(value: value, context: context)
             
-        case let .Plus(left, right):
+        case let .plus(left, right):
             return evaluatePlus(left: left, right, context: context)
             
-        case let .Let(name, binding, body):
+        case let .let(name, binding, body):
             return evaluateLet(name: name, binding, body, context)
             
-        case let .Variable(variable):
+        case let .variable(variable):
             return evaluateVariable(variable: variable, context)
             
-        case .Function:
-            return .Closure(function: self, context: context)
+        case .function:
+            return .closure(function: self, context: context)
             
-        case let .Call(closure, arguments):
+        case let .call(closure, arguments):
             return evaluateCallClosure(closure: closure, arguments: arguments, callingContext: context)
             
-        case let .Conditional(condition, then, otherwise):
+        case let .conditional(condition, then, otherwise):
             return evaluateConditional(condition: condition, then: then, otherwise: otherwise, context: context)
             
-        case let .First(pair):
+        case let .first(pair):
             return evaluateFirst(pair: pair, context: context)
             
-        case let .Second(pair):
+        case let .second(pair):
             return evaluateSecond(pair: pair, context: context)
             
         default:
@@ -41,10 +41,10 @@ extension Expression {
     
     func evaluateIsUnit(value: Expression, context: Context) -> Expression {
         switch value.evaluate(context: context) {
-        case .UnitValue:
-            return .BooleanValue(true)
+        case .unitValue:
+            return .booleanValue(true)
         default:
-            return .BooleanValue(false)
+            return .booleanValue(false)
         }
     }
     
@@ -52,10 +52,10 @@ extension Expression {
         let evaluatedLeft = left.evaluate(context: context)
         let evaluatedRight = right.evaluate(context: context)
         switch (evaluatedLeft, evaluatedRight) {
-        case let (.IntegerValue(leftValue), .IntegerValue(rightValue)):
-            return Expression.IntegerValue(leftValue + rightValue)
+        case let (.integerValue(leftValue), .integerValue(rightValue)):
+            return Expression.integerValue(leftValue + rightValue)
         default:
-            return .Error("cannot add \(evaluatedLeft) to \(evaluatedRight)")
+            return .error("cannot add \(evaluatedLeft) to \(evaluatedRight)")
         }
     }
     
@@ -68,27 +68,27 @@ extension Expression {
         if let value = context[variable] {
             return value
         }
-        return .Error("cannot evaluate \(variable)")
+        return .error("cannot evaluate \(variable)")
     }
     
     func evaluateCallClosure(closure: Expression, arguments: [Expression], callingContext: Context) -> Expression {
         let evaluatedClosure = closure.evaluate(context: callingContext)
         switch evaluatedClosure {
-        case let .Closure(function, closureContext):
+        case let .closure(function, closureContext):
             return evaluateCallFunction(function: function, closureContext: closureContext, arguments: arguments, callingContext: callingContext, closure: evaluatedClosure)
         default:
-            return .Error("\(closure) is not a closure")
+            return .error("\(closure) is not a closure")
         }
     }
     
     func evaluateCallFunction(function: Expression, closureContext: Context, arguments: [Expression], callingContext: Context, closure: Expression) -> Expression {
         switch function {
-        case let .Function(name, parameters, body):
+        case let .function(name, parameters, body):
             if arguments.count < parameters.count {
-                return Expression.Error("not enough arguments")
+                return Expression.error("not enough arguments")
             }
             if arguments.count > parameters.count {
-                return Expression.Error("too many arguments")
+                return Expression.error("too many arguments")
             }
             let extendedContext = extendContext(context: closureContext, parameters: parameters, arguments: arguments, callingContext: callingContext)
             var finalContext = extendedContext
@@ -97,38 +97,38 @@ extension Expression {
             }
             return body.evaluate(context: finalContext)
         default:
-            return .Error("closure does not wrap function")
+            return .error("closure does not wrap function")
         }
     }
     
     func evaluateConditional(condition: Expression, then: Expression, otherwise: Expression, context: Context) -> Expression {
         switch condition.evaluate(context: context) {
-        case .BooleanValue(true):
+        case .booleanValue(true):
             return then.evaluate(context: context)
-        case .BooleanValue(false):
+        case .booleanValue(false):
             return otherwise.evaluate(context: context)
         default:
-            return .Error("boolean expression expected")
+            return .error("boolean expression expected")
         }
     }
     
     func evaluateFirst(pair: Expression, context: Context) -> Expression {
         let evaluatedPair = pair.evaluate(context: context)
         switch evaluatedPair {
-        case let .Pair(fst, _):
+        case let .pair(fst, _):
             return fst.evaluate(context: context)
         default:
-            return .Error("requires pair")
+            return .error("requires pair")
         }
     }
     
     func evaluateSecond(pair: Expression, context: Context) -> Expression {
         let evaluatedPair = pair.evaluate(context: context)
         switch evaluatedPair {
-        case let .Pair(_, snd):
+        case let .pair(_, snd):
             return snd.evaluate(context: context)
         default:
-            return .Error("requires pair")
+            return .error("requires pair")
         }
     }
 }
