@@ -1,6 +1,7 @@
 coverage_service: coveralls
 xcodeproj: Song.xcodeproj
 scheme: Song-Package
-build_directory: xcbuild
+build_directory: .xcbuild
+binary_basename: Song
 ignore:
   - Tests/*

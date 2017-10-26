@@ -13,6 +13,6 @@ install:
 script:
   - set -o pipefail
   - swift package generate-xcodeproj --enable-code-coverage
-  - xcodebuild -project Song.xcodeproj -scheme Song-Package -derivedDataPath "$PWD/xcbuild" clean build test | bundle exec xcpretty
+  - xcodebuild -project Song.xcodeproj -scheme Song-Package -derivedDataPath "$PWD/.xcbuild" clean build test | bundle exec xcpretty
 after_success:
   - bundle exec slather
