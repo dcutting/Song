@@ -15,7 +15,10 @@ public func ==(lhs: Expression, rhs: Expression) -> Bool {
         
     case let (.integerValue(lhsValue), .integerValue(rhsValue)):
         return lhsValue == rhsValue
-        
+
+    case let (.floatValue(lhsValue), .floatValue(rhsValue)):
+        return lhsValue == rhsValue
+
     case let (.stringValue(lhsValue), .stringValue(rhsValue)):
         return lhsValue == rhsValue
         
