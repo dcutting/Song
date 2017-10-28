@@ -33,5 +33,8 @@ public func ==(lhs: Expression, rhs: Expression) -> Bool {
         
     case let (.function(lhsName, lhsParameters, lhsBody), .function(rhsName, rhsParameters, rhsBody)):
         return lhsName == rhsName && lhsParameters == rhsParameters && lhsBody == rhsBody
+
+    default:
+        return false
     }
 }
