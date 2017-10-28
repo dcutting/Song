@@ -14,7 +14,10 @@ extension Expression: CustomStringConvertible {
             
         case let .integerValue(value):
             return "\(value)"
-            
+
+        case let .floatValue(value):
+            return "\(value)"
+
         case let .stringValue(value):
             return "'\(value)'"
             

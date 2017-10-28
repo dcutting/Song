@@ -7,7 +7,9 @@ public indirect enum Expression {
     case booleanValue(Bool)
     
     case integerValue(Int)
-    
+
+    case floatValue(Double)
+
     case stringValue(String)
     
     case isUnit(Expression)
