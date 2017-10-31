@@ -37,7 +37,7 @@ public func makeParser() -> ParserProtocol {
     let name = (letter >>> (letter | digit).some.maybe).tag("identifier")
 
     // Literal values.
-    
+
     let stringValue = quote >>> letter.recur.tag("stringValue") >>> quote >>> skip
     let floatValue = (minus.maybe >>> digit.some >>> dot >>> digit.some).tag("floatValue")
     let integerValue = (minus.maybe >>> digit.some).tag("integerValue")
@@ -104,9 +104,10 @@ public func makeParser() -> ParserProtocol {
 
     // Terms.
 
-    let notKeyword = str("NOT").tag("not") >>> space
-    let negatedTerm = notKeyword >>> term.tag("negatedTerm")
-    term.parser = negatedTerm | functionChain | lambda | atom
+    //    let notKeyword = str("NOT").tag("not") >>> space
+    //    let negatedTerm = notKeyword >>> term.tag("negatedTerm")
+    //    term.parser = negatedTerm | functionChain | lambda | atom
+    term.parser = numericValue
 
     let list = (lBracket >>> (expression.tag("listItem") >>> (comma >>> expression.tag("listItem")).recur).maybe.tag("list") >>> rBracket)
     let wrappedExpression = lParen >>> expression.tag("expression") >>> rParen
@@ -133,5 +134,5 @@ public func makeParser() -> ParserProtocol {
     let statement = classDeclaration >>> `import` >>> function >>> expression
     let program = skip >>> statement
 
-    return literalValue
+    return expression
 }
