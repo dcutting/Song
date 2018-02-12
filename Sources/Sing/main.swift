@@ -9,15 +9,20 @@ let transformer = makeTransformer()
 
 while (true) {
     do {
+        print()
         print(prompt, terminator: "")
         guard let line = readLine(strippingNewline: true) else { break }
         let ist = parser.parse(line)
-        print(ist)
+        print()
+        print("... \(ist)")
         let ast = try transformer.transform(ist)
-        print(ast)
+        print()
+        print(">>> \(ast)")
+        print()
         print(ast.evaluate())
     } catch {
-        print(error)
+        print()
+        print("ERROR: \(error)")
     }
 }
-print("\n🙇‍♀️")
+print("\n👏")
