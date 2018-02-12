@@ -36,10 +36,10 @@ public func makeTransformer() -> Transformer<Expression> {
         try $0.val("left")
     }
 
-    t.rule(["right": .simple("right"), "op": .simple("op")]) {
-        let right = try $0.val("right")
-        Expression.plus(<#T##Expression#>, right)
-    }
+//    t.rule(["right": .simple("right"), "op": .simple("op")]) {
+//        let right = try $0.val("right")
+//        Expression.plus(<#T##Expression#>, right)
+//    }
 
 //    t.rule(["left": .simple("left"), "ops": .series("ops")]) {
 //
