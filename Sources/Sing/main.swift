@@ -1,4 +1,5 @@
 import Song
+import Syft
 
 print("Song v0.1.0 🎵")
 
@@ -12,10 +13,11 @@ while (true) {
         print()
         print(prompt, terminator: "")
         guard let line = readLine(strippingNewline: true) else { break }
-        let ist = parser.parse(line)
+        let result = parser.parse(line)
+        let (ist, _) = result
         print()
-        print("... \(ist)")
-        let ast = try transformer.transform(ist)
+        print(makeReport(result: ist))
+        let ast = try transformer.transform(result)
         print()
         print(">>> \(ast)")
         print()
