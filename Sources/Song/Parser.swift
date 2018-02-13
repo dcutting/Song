@@ -46,8 +46,8 @@ public func makeParser() -> ParserProtocol {
     let floatValue = (minus.maybe >>> digit.some >>> dot >>> digit.some).tag("floatValue")
     let integerValue = (minus.maybe >>> digit.some).tag("integerValue")
     let numericValue = floatValue | integerValue
-    let trueValue = str("YES").tag("trueValue")
-    let falseValue = str("NO").tag("falseValue")
+    let trueValue = str("yes").tag("trueValue")
+    let falseValue = str("no").tag("falseValue")
     let booleanValue = trueValue | falseValue
     let literalValue = booleanValue | numericValue | stringValue
 
@@ -111,7 +111,7 @@ public func makeParser() -> ParserProtocol {
     //    let notKeyword = str("NOT").tag("not") >>> space
     //    let negatedTerm = notKeyword >>> term.tag("negatedTerm")
     //    term.parser = negatedTerm | functionChain | lambda | atom
-    term.parser = numericValue
+    term.parser = literalValue
 
     let list = (lBracket >>> (expression.tag("listItem") >>> (comma >>> expression.tag("listItem")).recur).maybe.tag("list") >>> rBracket)
     let wrappedExpression = lParen >>> expression.tag("expression") >>> rParen
