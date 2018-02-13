@@ -3,7 +3,7 @@ import Syft
 
 print("Song v0.1.0 🎵")
 
-let verbose = false
+let verbose = true
 let prompt = "🎤 "
 
 let parser = makeParser()
