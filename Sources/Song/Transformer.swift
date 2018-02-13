@@ -42,6 +42,17 @@ public func makeTransformer() -> Transformer<Expression> {
         return try $0.val("e")
     }
 
+    t.rule(["listItem": .simple("item")]) {
+        return try $0.val("item")
+    }
+
+    t.rule(["list": .series("items")]) {
+        let items = try $0.vals("items").reversed()
+        return items.reduce(Expression.unitValue) { acc, item in
+            return Expression.pair(item, acc)
+        }
+    }
+
     t.rule(["left": .simple("left"), "ops": .series("ops")]) {
         let left = try $0.val("left")
         var ops = try $0.vals("ops")
