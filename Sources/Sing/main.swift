@@ -15,6 +15,7 @@ func log(_ str: String = "") {
 }
 
 while (true) {
+    var context: Context = [:]
     do {
         log()
         print(prompt, terminator: "")
@@ -27,7 +28,13 @@ while (true) {
         log()
         log(">>> \(ast)")
         log()
-        print(ast.evaluate())
+        let expression = ast.evaluate(context: context)
+        if case .function(let name, _, _) = expression {
+            if let name = name {
+                context[name] = expression
+            }
+        }
+        print(expression)
     } catch Syft.TransformerError<Expression>.unexpectedRemainder(let remainder) {
         log()
         print("Syntax error at \(remainder.index): \(remainder.text)")
