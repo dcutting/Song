@@ -23,7 +23,10 @@ extension Expression: CustomStringConvertible {
             
         case let .isUnit(value):
             return "isUnitValue(\(value))"
-            
+
+        case let .builtin(name: name, arguments: arguments):
+            return "\(name)(\(arguments))"
+
         case let .plus(left, right):
             return "\(left) + \(right)"
             

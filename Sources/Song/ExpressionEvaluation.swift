@@ -1,3 +1,10 @@
+typealias Number = Int
+
+enum EvaluationError: Error {
+    case insufficientArguments
+    case notANumber(Expression)
+}
+
 extension Expression {
     
     public func evaluate() -> Expression {
@@ -6,9 +13,12 @@ extension Expression {
     
     public func evaluate(context: Context) -> Expression {
         switch self {
-            
+
         case let .isUnit(value):
             return evaluateIsUnit(value: value, context: context)
+
+        case let .builtin(name: name, arguments: arguments):
+            return evaluateBuiltin(name: name, arguments: arguments, context: context)
             
         case let .plus(left, right):
             return evaluatePlus(left: left, right, context: context)
@@ -33,21 +43,71 @@ extension Expression {
             
         case let .second(pair):
             return evaluateSecond(pair: pair, context: context)
-            
-        default:
+
+        case .error, .unitValue, .booleanValue, .integerValue, .floatValue, .stringValue, .pair, .closure:
             return self
         }
     }
     
     func evaluateIsUnit(value: Expression, context: Context) -> Expression {
-        switch value.evaluate(context: context) {
-        case .unitValue:
+        if case .unitValue = value.evaluate(context: context) {
             return .booleanValue(true)
-        default:
+        } else {
             return .booleanValue(false)
         }
     }
-    
+
+    func evaluateBuiltin(name: String, arguments: [Expression], context: Context) -> Expression {
+
+        do {
+            switch name {
+            case "*":
+                let numbers = try toNumbers(arguments: arguments, context: context)
+                let result = numbers.reduce(1) { a, n in a * n }
+                return Expression.integerValue(result)
+            case "/":
+                var numbers = try toNumbers(arguments: arguments, context: context)
+                guard numbers.count > 0 else { throw EvaluationError.insufficientArguments }
+                let first = numbers.removeFirst()
+                let result = numbers.reduce(first) { a, n in a / n }
+                return Expression.integerValue(result)
+            case "%":
+                var numbers = try toNumbers(arguments: arguments, context: context)
+                guard numbers.count > 0 else { throw EvaluationError.insufficientArguments }
+                let first = numbers.removeFirst()
+                let result = numbers.reduce(first) { a, n in a % n }
+                return Expression.integerValue(result)
+            case "+":
+                let numbers = try toNumbers(arguments: arguments, context: context)
+                let result = numbers.reduce(0) { a, n in a + n }
+                return Expression.integerValue(result)
+            case "-":
+                let numbers = try toNumbers(arguments: arguments, context: context)
+                let normalisedNumbers = numbers.enumerated().map { (i, n) in
+                    return i > 0 ? -n : n
+                }
+                let result = normalisedNumbers.reduce(0) { a, n in a + n }
+                return Expression.integerValue(result)
+            default:
+                return .error("cannot evaluate builtin '\(name)' with arguments \(arguments)")
+            }
+        } catch let EvaluationError.notANumber(x) {
+            return .error("\(x) is not a number")
+        } catch {
+            preconditionFailure("internal error: \(error)")
+        }
+    }
+
+    private func toNumbers(arguments: [Expression], context: Context) throws -> [Number] {
+        return try arguments.map { arg -> Number in
+            let evaluatedArg = arg.evaluate(context: context)
+            guard case let .integerValue(n) = evaluatedArg else {
+                throw EvaluationError.notANumber(evaluatedArg)
+            }
+            return Number(n)
+        }
+    }
+
     func evaluatePlus(left: Expression, _ right: Expression, context: Context) -> Expression {
         let evaluatedLeft = left.evaluate(context: context)
         let evaluatedRight = right.evaluate(context: context)

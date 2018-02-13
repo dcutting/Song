@@ -13,6 +13,8 @@ public indirect enum Expression {
     case stringValue(String)
     
     case isUnit(Expression)
+
+    case builtin(name: String, arguments: [Expression])
     
     case plus(Expression, Expression)
     
