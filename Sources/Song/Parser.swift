@@ -14,8 +14,12 @@ public func makeParser() -> ParserProtocol {
     let lParen = str("(") >>> skip
     let rParen = str(")")
     let quote = str("'")
+    let escape = str("\\")
     let digit = (0...9).match
     let letter = "abcdefghijklmnopqrstuvwxyz".match
+    let symbol = dot | pipe | comma | lBracket | rBracket | lParen | rParen
+    let character = Deferred()
+    character.parser = letter | digit | space | symbol | escape >>> (character | quote)
     let times = str("*")
     let dividedBy = str("/")
     let modulo = str("%")
@@ -38,7 +42,7 @@ public func makeParser() -> ParserProtocol {
 
     // Literal values.
 
-    let stringValue = quote >>> letter.recur.tag("stringValue") >>> quote >>> skip
+    let stringValue = quote >>> character.recur.tag("stringValue") >>> quote >>> skip
     let floatValue = (minus.maybe >>> digit.some >>> dot >>> digit.some).tag("floatValue")
     let integerValue = (minus.maybe >>> digit.some).tag("integerValue")
     let numericValue = floatValue | integerValue
