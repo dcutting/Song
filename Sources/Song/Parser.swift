@@ -71,15 +71,15 @@ public func makeParser() -> ParserProtocol {
     let equalityExpression = Deferred()
     equalityExpression.parser = relationalExpression.tag("left") >>> (skip >>> (equals | notEquals).tag("op") >>> skip >>> equalityExpression.tag("right")).recur.tag("ops")
 
-    let andKeyword = str("AND")
+    let andKeyword = str("&")
     let andExpression = Deferred()
-    andExpression.parser = equalityExpression.tag("left") >>> (space >>> andKeyword.tag("op") >>> space >>> andExpression.tag("right")).recur.tag("ops")
+    andExpression.parser = equalityExpression.tag("left") >>> (skip >>> andKeyword.tag("op") >>> skip >>> andExpression.tag("right")).recur.tag("ops")
 
-    let orKeyword = str("OR")
+    let orKeyword = str("|")
     let orExpression = Deferred()
-    orExpression.parser = andExpression.tag("left") >>> (space >>> orKeyword.tag("op") >>> space >>> orExpression.tag("right")).recur.tag("ops")
+    orExpression.parser = andExpression.tag("left") >>> (skip >>> orKeyword.tag("op") >>> skip >>> orExpression.tag("right")).recur.tag("ops")
 
-    expression.parser = equalityExpression.parser// orExpression.parser
+    expression.parser = orExpression.parser
 
     // Function chains.
 

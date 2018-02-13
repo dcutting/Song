@@ -3,6 +3,7 @@ typealias Number = Int
 enum EvaluationError: Error {
     case insufficientArguments
     case notANumber(Expression)
+    case notABoolean(Expression)
 }
 
 extension Expression {
@@ -97,11 +98,17 @@ extension Expression {
                 return try evaluateRelational(arguments: arguments, context: context) { a, b in a == b }
             case "<>":
                 return try evaluateRelational(arguments: arguments, context: context) { a, b in a != b }
+            case "&":
+                return try evaluateLogical(arguments: arguments, context: context) { a, b in a && b }
+            case "|":
+                return try evaluateLogical(arguments: arguments, context: context) { a, b in a || b }
             default:
                 return .error("cannot evaluate builtin '\(name)' with arguments \(arguments)")
             }
         } catch let EvaluationError.notANumber(x) {
             return .error("\(x) is not a number")
+        } catch let EvaluationError.notABoolean(x) {
+            return .error("\(x) is not a boolean")
         } catch {
             preconditionFailure("internal error: \(error)")
         }
@@ -125,6 +132,27 @@ extension Expression {
                 throw EvaluationError.notANumber(evaluatedArg)
             }
             return Number(n)
+        }
+    }
+
+    private func evaluateLogical(arguments: [Expression], context: Context, callback: (Bool, Bool) -> Bool) throws -> Expression {
+        var bools = try toBools(arguments: arguments, context: context)
+        guard bools.count > 0 else { throw EvaluationError.insufficientArguments }
+        let first = bools.removeFirst()
+        let (result, _) = bools.reduce((true, first)) { a, n in
+            let (v, x) = a
+            return (v && callback(x, n), n)
+        }
+        return Expression.booleanValue(result)
+    }
+
+    private func toBools(arguments: [Expression], context: Context) throws -> [Bool] {
+        return try arguments.map { arg -> Bool in
+            let evaluatedArg = arg.evaluate(context: context)
+            guard case let .booleanValue(n) = evaluatedArg else {
+                throw EvaluationError.notABoolean(evaluatedArg)
+            }
+            return n
         }
     }
 
