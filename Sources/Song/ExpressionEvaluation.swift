@@ -43,7 +43,16 @@ extension Expression {
             return evaluateSecond(pair: pair, context: context)
 
         case let .pair(first, second):
-            return .pair(first.evaluate(context: context), second.evaluate(context: context))
+            let evaluatedFirst = first.evaluate(context: context)
+            let evaluatedSecond = second.evaluate(context: context)
+            switch (evaluatedFirst, evaluatedSecond) {
+            case (.error, _):
+                return evaluatedFirst
+            case (_, .error):
+                return evaluatedSecond
+            default:
+                return .pair(evaluatedFirst, evaluatedSecond)
+            }
 
         case .error, .unitValue, .booleanValue, .integerValue, .floatValue, .stringValue, .closure:
             return self
@@ -179,7 +188,7 @@ extension Expression {
         if let value = context[variable] {
             return value
         }
-        return .error("cannot evaluate \(variable)")
+        return .error("cannot evaluate '\(variable)'")
     }
     
     func evaluateCallClosure(closure: Expression, arguments: [Expression], callingContext: Context) -> Expression {
