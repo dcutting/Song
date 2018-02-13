@@ -32,18 +32,30 @@ public func makeTransformer() -> Transformer<Expression> {
         return .floatValue(float)
     }
 
-    t.rule(["left": .simple("left"), "ops": .simple("")]) {
-        try $0.val("left")
+    t.rule(["right": .simple("right"), "op": .simple("op")]) {
+        let right = try $0.val("right")
+        let op = try $0.str("op")
+        return Expression.builtin(name: op, arguments: [right])
     }
 
-//    t.rule(["right": .simple("right"), "op": .simple("op")]) {
-//        let right = try $0.val("right")
-//        Expression.plus(<#T##Expression#>, right)
-//    }
-
-//    t.rule(["left": .simple("left"), "ops": .series("ops")]) {
-//
-//    }
+    t.rule(["left": .simple("left"), "ops": .series("ops")]) {
+        let left = try $0.val("left")
+        var ops = try $0.vals("ops")
+        guard ops.count > 0 else { return left }
+        let first = ops.removeFirst()
+        guard case .builtin(let name, var arguments) = first else {
+            preconditionFailure("not a function call")
+        }
+        arguments.insert(left, at: 0)
+        let firstFuncCall = Expression.builtin(name: name, arguments: arguments)
+        return ops.reduce(firstFuncCall) { acc, next in
+            guard case .builtin(let name, var arguments) = next else {
+                preconditionFailure("not a function call")
+            }
+            arguments.insert(acc, at: 0)
+            return Expression.builtin(name: name, arguments: arguments)
+        }
+    }
 
     return t
 }

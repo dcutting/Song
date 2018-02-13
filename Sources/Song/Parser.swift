@@ -79,7 +79,7 @@ public func makeParser() -> ParserProtocol {
     let orExpression = Deferred()
     orExpression.parser = andExpression.tag("left") >>> (space >>> orKeyword.tag("op") >>> space >>> orExpression.tag("right")).recur.tag("ops")
 
-    expression.parser = integerValue// orExpression.parser
+    expression.parser = additiveExpression// orExpression.parser
 
     // Function chains.
 
