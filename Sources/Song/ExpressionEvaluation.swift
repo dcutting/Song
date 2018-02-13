@@ -85,6 +85,18 @@ extension Expression {
                 }
                 let result = normalisedNumbers.reduce(0) { a, n in a + n }
                 return Expression.integerValue(result)
+            case "<":
+                return try evaluateRelational(arguments: arguments, context: context) { a, b in a < b }
+            case ">":
+                return try evaluateRelational(arguments: arguments, context: context) { a, b in a > b }
+            case "<=":
+                return try evaluateRelational(arguments: arguments, context: context) { a, b in a <= b }
+            case ">=":
+                return try evaluateRelational(arguments: arguments, context: context) { a, b in a >= b }
+            case "=":
+                return try evaluateRelational(arguments: arguments, context: context) { a, b in a == b }
+            case "<>":
+                return try evaluateRelational(arguments: arguments, context: context) { a, b in a != b }
             default:
                 return .error("cannot evaluate builtin '\(name)' with arguments \(arguments)")
             }
@@ -93,6 +105,17 @@ extension Expression {
         } catch {
             preconditionFailure("internal error: \(error)")
         }
+    }
+
+    private func evaluateRelational(arguments: [Expression], context: Context, callback: (Number, Number) -> Bool) throws -> Expression {
+        var numbers = try toNumbers(arguments: arguments, context: context)
+        guard numbers.count > 0 else { throw EvaluationError.insufficientArguments }
+        let first = numbers.removeFirst()
+        let (result, _) = numbers.reduce((true, first)) { a, n in
+            let (v, x) = a
+            return (v && callback(x, n), n)
+        }
+        return Expression.booleanValue(result)
     }
 
     private func toNumbers(arguments: [Expression], context: Context) throws -> [Number] {

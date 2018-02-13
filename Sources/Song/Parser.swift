@@ -66,10 +66,10 @@ public func makeParser() -> ParserProtocol {
     let relationalExpression = Deferred()
     relationalExpression.parser = additiveExpression.tag("left") >>> (skip >>> (lessThanOrEqual | greaterThanOrEqual | lessThan | greaterThan).tag("op") >>> skip >>> relationalExpression.tag("right")).recur.tag("ops")
 
-    let equals = str("EQ")
-    let notEquals = str("NEQ")
+    let equals = str("=")
+    let notEquals = str("<>")
     let equalityExpression = Deferred()
-    equalityExpression.parser = relationalExpression.tag("left") >>> (space >>> (equals | notEquals).tag("op") >>> space >>> equalityExpression.tag("right")).recur.tag("ops")
+    equalityExpression.parser = relationalExpression.tag("left") >>> (skip >>> (equals | notEquals).tag("op") >>> skip >>> equalityExpression.tag("right")).recur.tag("ops")
 
     let andKeyword = str("AND")
     let andExpression = Deferred()
@@ -79,7 +79,7 @@ public func makeParser() -> ParserProtocol {
     let orExpression = Deferred()
     orExpression.parser = andExpression.tag("left") >>> (space >>> orKeyword.tag("op") >>> space >>> orExpression.tag("right")).recur.tag("ops")
 
-    expression.parser = additiveExpression// orExpression.parser
+    expression.parser = equalityExpression.parser// orExpression.parser
 
     // Function chains.
 
