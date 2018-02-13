@@ -4,7 +4,7 @@ extension Expression: CustomStringConvertible {
         switch self {
             
         case let .error(value):
-            return "<\(value)>"
+            return value
             
         case .unitValue:
             return "#"
