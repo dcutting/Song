@@ -42,7 +42,10 @@ extension Expression {
         case let .second(pair):
             return evaluateSecond(pair: pair, context: context)
 
-        case .error, .unitValue, .booleanValue, .integerValue, .floatValue, .stringValue, .pair, .closure:
+        case let .pair(first, second):
+            return .pair(first.evaluate(context: context), second.evaluate(context: context))
+
+        case .error, .unitValue, .booleanValue, .integerValue, .floatValue, .stringValue, .closure:
             return self
         }
     }
