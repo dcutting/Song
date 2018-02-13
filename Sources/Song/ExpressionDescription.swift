@@ -27,9 +27,6 @@ extension Expression: CustomStringConvertible {
         case let .builtin(name: name, arguments: arguments):
             return "\(name)(\(arguments))"
 
-        case let .plus(left, right):
-            return "\(left) + \(right)"
-            
         case let .pair(first, second):
             return "(\(first), \(second))"
             

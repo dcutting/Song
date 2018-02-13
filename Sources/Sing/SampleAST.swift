@@ -17,7 +17,7 @@ func evaluateSampleAST() {
     let one = Expression.integerValue(1)
     let second = Expression.second(listVar)
     let recursiveCall = Expression.call(closure: Expression.variable("length"), arguments: [second])
-    let otherwise = Expression.plus(one, recursiveCall)
+    let otherwise = Expression.builtin(name: "+", arguments: [one, recursiveCall])
     let lengthBody = Expression.conditional(condition: isUnitValue, then: zero, otherwise: otherwise)
     let lengthFunc = Expression.function(name: "length", parameters: ["list"], body: lengthBody)
     let list = integerList(values: [1,2,3,4,3,2,1,2,2,4,4,1,2])

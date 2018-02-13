@@ -16,8 +16,6 @@ public indirect enum Expression {
 
     case builtin(name: String, arguments: [Expression])
     
-    case plus(Expression, Expression)
-    
     case pair(Expression, Expression)
     
     case first(Expression)

@@ -20,9 +20,6 @@ extension Expression {
         case let .builtin(name: name, arguments: arguments):
             return evaluateBuiltin(name: name, arguments: arguments, context: context)
             
-        case let .plus(left, right):
-            return evaluatePlus(left: left, right, context: context)
-            
         case let .let(name, binding, body):
             return evaluateLet(name: name, binding, body, context)
             
@@ -118,7 +115,7 @@ extension Expression {
             return .error("cannot add \(evaluatedLeft) to \(evaluatedRight)")
         }
     }
-    
+
     func evaluateLet(name: String, _ binding: Expression, _ body: Expression, _ context: Context) -> Expression {
         let letContext = extendContext(context: context, name: name, value: binding.evaluate(context: context))
         return body.evaluate(context: letContext)
