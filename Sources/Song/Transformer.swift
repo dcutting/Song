@@ -46,6 +46,35 @@ public func makeTransformer() -> Transformer<Expression> {
         return try $0.val("item")
     }
 
+    t.rule(["variable": .simple("v")]) {
+        let v = try $0.str("v")
+        return Expression.variable(v)
+    }
+
+    t.rule(["arg": .simple("arg")]) {
+        return try $0.val("arg")
+    }
+
+    t.rule(["funcName": .simple("funcName"), "args": .series("args")]) {
+        let funcName = try $0.str("funcName")
+        let args = try $0.vals("args")
+        return Expression.builtin(name: funcName, arguments: args)
+    }
+
+    t.rule(["subject": .simple("subject"), "calls": .series("calls")]) {
+        let calls = try $0.vals("calls")
+        let call = calls.first!
+        let subject = try $0.val("subject")
+        return Expression.call(closure: call, arguments: [subject])
+    }
+
+    t.rule(["FUNC": .simple("funcName"), "body": .simple("body"), "defunSubject": .simple("subject")]) {
+        let funcName = try $0.str("funcName")
+//        let subject = try $0.val("subject")
+        let body = try $0.val("body")
+        return Expression.function(name: funcName, parameters: [], body: body)
+    }
+
     t.rule(["list": .series("items")]) {
         let items = try $0.vals("items").reversed()
         return items.reduce(Expression.unitValue) { acc, item in

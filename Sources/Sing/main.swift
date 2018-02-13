@@ -14,8 +14,8 @@ func log(_ str: String = "") {
     print(str)
 }
 
+var context: Context = [:]
 while (true) {
-    var context: Context = [:]
     do {
         log()
         print(prompt, terminator: "")
@@ -29,9 +29,11 @@ while (true) {
         log(">>> \(ast)")
         log()
         let expression = ast.evaluate(context: context)
-        if case .function(let name, _, _) = expression {
-            if let name = name {
-                context[name] = expression
+        if case .closure(let function, _) = expression {
+            if case .function(let name, _, _) = function {
+                if let name = name {
+                    context[name] = expression
+                }
             }
         }
         print(expression)

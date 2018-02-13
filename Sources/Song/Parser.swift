@@ -38,7 +38,7 @@ public func makeParser() -> ParserProtocol {
     // Atoms.
 
     // RESERVED_WORDS = %w( yes no not and or if use class eq neq Boolean List String Number )
-    let name = (letter >>> (letter | digit).some.maybe).tag("identifier")
+    let name = (letter >>> (letter | digit).some.maybe)
 
     // Literal values.
 
@@ -56,7 +56,7 @@ public func makeParser() -> ParserProtocol {
 
     let listPattern = lBracket >>> (pattern.tag("headItem") >>> (comma >>> pattern.tag("headItem")).recur).tag("headItems") >>> (pipe >>> name.tag("tail")).maybe >>> rBracket
     let listParamPattern = lBracket >>> (pattern.tag("listItem") >>> (comma >>> pattern.tag("listItem")).recur).maybe.tag("list") >>> rBracket
-    pattern.parser = listParamPattern | listPattern | numericValue | trueValue | falseValue | stringValue | name
+    pattern.parser = listParamPattern | listPattern | literalValue// | name.tag("param")
 
     // Expressions.
 
@@ -97,9 +97,9 @@ public func makeParser() -> ParserProtocol {
     let functionParameters = lParen >>> parameters.recur(0, 1).tag("params") >>> rParen
     let assign = skip >>> str("=") >>> skip
     let functionBody = expression.tag("body") >>> skip
-    let ifKeyword = space >>> str("IF") >>> space
-    let guardClause = (ifKeyword >>> expression).maybe.tag("guard")
-    let function = functionSubject >>> dot >>> functionName >>> functionParameters.maybe >>> guardClause >>> assign >>> functionBody
+//    let ifKeyword = space >>> str("IF") >>> space
+//    let guardClause = (ifKeyword >>> expression).maybe.tag("guard")
+    let function = functionSubject >>> dot >>> functionName >>> functionParameters.maybe /*>>> guardClause*/ >>> assign >>> functionBody
 
     // Lambdas.
 
@@ -110,12 +110,12 @@ public func makeParser() -> ParserProtocol {
     // Terms.
 
     let wrappedExpression = lParen >>> expression.tag("expression") >>> rParen
-    atom.parser = wrappedExpression | literalValue// | listPattern | name
+    atom.parser = wrappedExpression | literalValue | name.tag("variable")// | listPattern | name
 
     //    let notKeyword = str("NOT").tag("not") >>> space
     //    let negatedTerm = notKeyword >>> term.tag("negatedTerm")
     //    term.parser = negatedTerm | functionChain | lambda | atom
-    term.parser = atom.parser
+    term.parser = functionChain | atom.parser!
 
     // Imports.
 
@@ -138,5 +138,5 @@ public func makeParser() -> ParserProtocol {
     let statement = classDeclaration >>> `import` >>> function >>> expression
     let program = skip >>> statement
 
-    return expression
+    return function | expression
 }
