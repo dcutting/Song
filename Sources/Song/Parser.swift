@@ -19,7 +19,7 @@ public func makeParser() -> ParserProtocol {
     let letter = "abcdefghijklmnopqrstuvwxyz".match
     let symbol = dot | pipe | comma | lBracket | rBracket | lParen | rParen
     let character = Deferred()
-    character.parser = letter | digit | space | symbol | escape >>> (character | quote)
+    character.parser = letter | digit | space | symbol | escape >>> (escape | quote | character)
     let times = str("*")
     let dividedBy = str("/")
     let modulo = str("%")
@@ -49,7 +49,8 @@ public func makeParser() -> ParserProtocol {
     let trueValue = str("yes").tag("trueValue")
     let falseValue = str("no").tag("falseValue")
     let booleanValue = trueValue | falseValue
-    let literalValue = booleanValue | numericValue | stringValue
+    let list = (lBracket >>> (expression.tag("listItem") >>> (comma >>> expression.tag("listItem")).recur).maybe.tag("list") >>> rBracket)
+    let literalValue = booleanValue | numericValue | stringValue | list
 
     // Patterns.
 
@@ -108,14 +109,13 @@ public func makeParser() -> ParserProtocol {
 
     // Terms.
 
+    let wrappedExpression = lParen >>> expression.tag("expression") >>> rParen
+    atom.parser = wrappedExpression | literalValue// | listPattern | name
+
     //    let notKeyword = str("NOT").tag("not") >>> space
     //    let negatedTerm = notKeyword >>> term.tag("negatedTerm")
     //    term.parser = negatedTerm | functionChain | lambda | atom
-    term.parser = literalValue
-
-    let list = (lBracket >>> (expression.tag("listItem") >>> (comma >>> expression.tag("listItem")).recur).maybe.tag("list") >>> rBracket)
-    let wrappedExpression = lParen >>> expression.tag("expression") >>> rParen
-    atom.parser = wrappedExpression | list | listPattern | numericValue | name | trueValue | falseValue | stringValue
+    term.parser = atom.parser
 
     // Imports.
 

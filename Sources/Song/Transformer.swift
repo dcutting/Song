@@ -38,6 +38,10 @@ public func makeTransformer() -> Transformer<Expression> {
         return Expression.builtin(name: op, arguments: [right])
     }
 
+    t.rule(["expression": .simple("e")]) {
+        return try $0.val("e")
+    }
+
     t.rule(["left": .simple("left"), "ops": .series("ops")]) {
         let left = try $0.val("left")
         var ops = try $0.vals("ops")
