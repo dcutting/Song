@@ -116,7 +116,7 @@ public func makeParser() -> ParserProtocol {
     // Terms.
 
     let wrappedExpression = lParen >>> expression.tag("expression") >>> rParen
-    atom.parser = wrappedExpression | literalValue | name.tag("variable")// | listPattern | name
+    atom.parser = wrappedExpression | freeFunctionCall | literalValue | name.tag("variable")// | listPattern | name
 
     //    let notKeyword = str("NOT").tag("not") >>> space
     //    let negatedTerm = notKeyword >>> term.tag("negatedTerm")
