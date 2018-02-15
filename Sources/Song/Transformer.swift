@@ -98,11 +98,34 @@ public func makeTransformer() -> Transformer<Expression> {
         return Expression.parameter(param)
     }
 
-    t.rule(["FUNC": .simple("funcName"), "body": .simple("body"), "params": .series("params")]) {
+    t.rule(["funcName": .simple("funcName"), "body": .simple("body"), "params": .series("params")]) {
         let funcName = try $0.str("funcName")
         let when = Expression.booleanValue(true)
         let body = try $0.val("body")
         let params = try $0.vals("params")
+        let subfunction = Subfunction(name: funcName, patterns: params, when: when, body: body)
+        return Expression.subfunction(subfunction)
+    }
+
+    t.rule(["funcName": .simple("funcName"), "subject": .simple("subject"), "body": .simple("body")]) {
+        try transformFunction(args: $0)
+    }
+
+    t.rule(["funcName": .simple("funcName"), "subject": .simple("subject"), "body": .simple("body"), "params": .series("params")]) {
+        try transformFunction(args: $0)
+    }
+
+    func transformFunction(args: TransformerReducerArguments<Expression>) throws -> Expression {
+        let funcName = try args.str("funcName")
+        let when = Expression.booleanValue(true)
+        let body = try args.val("body")
+        var params = [Expression]()
+        do {
+            params = try args.vals("params")
+        } catch {
+        }
+        let subject = try args.val("subject")
+        params.insert(subject, at: 0)
         let subfunction = Subfunction(name: funcName, patterns: params, when: when, body: body)
         return Expression.subfunction(subfunction)
     }

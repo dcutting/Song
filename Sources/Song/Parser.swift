@@ -93,8 +93,8 @@ public func makeParser() -> ParserProtocol {
     // Functions.
 
     let parameter = pattern
-    let functionSubject = parameter.tag("defunSubject")
-    let functionName = name.tag("FUNC")
+    let functionSubject = parameter.tag("param").tag("subject")
+    let functionName = name.tag("funcName")
     let parameters = parameter.tag("param") >>> (comma >>> parameter.tag("param")).recur
     let functionParameters = lParen >>> parameters.recur(0, 1).tag("params") >>> rParen
     let assign = skip >>> str("=") >>> skip
