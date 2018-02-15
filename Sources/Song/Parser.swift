@@ -88,6 +88,8 @@ public func makeParser() -> ParserProtocol {
     let functionCall = dot >>> name.tag("funcName") >>> (lParen >>> functionArguments.tag("args").maybe >>> rParen).maybe
     let functionChain = atom.tag("subject") >>> functionCall.some.tag("calls")
 
+    let freeFunctionCall = name.tag("funcName") >>> (lParen >>> functionArguments.tag("args").maybe >>> rParen)
+
     // Functions.
 
     let parameter = pattern
@@ -119,7 +121,7 @@ public func makeParser() -> ParserProtocol {
     //    let notKeyword = str("NOT").tag("not") >>> space
     //    let negatedTerm = notKeyword >>> term.tag("negatedTerm")
     //    term.parser = negatedTerm | functionChain | lambda | atom
-    term.parser = functionChain | atom.parser!
+    term.parser = functionChain | freeFunctionCall | atom.parser!
 
     // Imports.
 
