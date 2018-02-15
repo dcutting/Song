@@ -44,7 +44,7 @@ extension Expression: CustomStringConvertible {
             return "let (\(name) = \(binding)) { \(body) }"
             
         case let .variable(variable):
-            return "V[\(variable)]"
+            return "\(variable)"
             
         case let .subfunction(subfunction):
             return descriptionSubfunction(subfunction: subfunction)
