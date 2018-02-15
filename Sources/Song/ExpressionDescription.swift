@@ -22,7 +22,7 @@ extension Expression: CustomStringConvertible {
             return "'\(value)'"
             
         case let .isUnit(value):
-            return "isUnitValue(\(value))"
+            return "isUnit?(\(value))"
 
         case let .call(name: name, arguments: arguments):
             return "\(name)(\(arguments))"
@@ -44,7 +44,7 @@ extension Expression: CustomStringConvertible {
             return "let (\(name) = \(binding)) { \(body) }"
             
         case let .variable(variable):
-            return "\(variable)"
+            return "V[\(variable)]"
             
         case let .subfunction(subfunction):
             return descriptionSubfunction(subfunction: subfunction)
@@ -53,7 +53,7 @@ extension Expression: CustomStringConvertible {
             return descriptionCallAnonymous(closure: closure, arguments: arguments)
             
         case let .conditional(condition, then, otherwise):
-            return "if \(condition) then \(then) else \(otherwise) end"
+            return "\(condition) ? \(then) : \(otherwise)"
 
         case let .parameter(parameter):
             return parameter

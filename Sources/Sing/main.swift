@@ -16,33 +16,39 @@ func log(_ str: String = "") {
 
 var context: Context = [:]
 while (true) {
-    do {
-        log()
-        print(prompt, terminator: "")
-        guard let line = readLine(strippingNewline: true) else { break }
-        let result = parser.parse(line)
-        let (ist, _) = result
-        log()
-        log(makeReport(result: ist))
-        let ast = try transformer.transform(result)
-        log()
-        log(">>> \(ast)")
-        log()
-        let expression = ast.evaluate(context: context)
-        if case .closure(let function, _) = expression {
-            if case .subfunction(let subfunction) = function {
-                if let name = subfunction.name {
-                    context[name] = expression
+    print(prompt, terminator: "")
+    guard let line = readLine(strippingNewline: true) else { break }
+    let result = parser.parse(line)
+    let (ist, remainder) = result
+    if remainder.text.isEmpty {
+        do {
+            let ast = try transformer.transform(result)
+            let expression = ast.evaluate(context: context)
+            if case .closure(let function, _) = expression {
+                if case .subfunction(let subfunction) = function {
+                    if let name = subfunction.name {
+                        context[name] = expression
+                    }
                 }
             }
+            print(expression)
+            if case .error = expression {
+                log()
+                log("AST: \(ast)")
+                log()
+            }
+        } catch {
+            print("Transform error")
+            log()
+            log(makeReport(result: ist))
+            log()
+            log("\(error)")
         }
-        print(expression)
-    } catch Syft.TransformerError<Expression>.unexpectedRemainder(let remainder) {
+    } else {
+        print("Syntax error at position \(remainder.index): \(remainder.text)")
         log()
-        print("Syntax error at \(remainder.index): \(remainder.text)")
-    } catch {
+        log(makeReport(result: ist))
         log()
-        print("ERROR: \(error)")
     }
 }
 print("\n👏")
