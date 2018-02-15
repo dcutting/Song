@@ -3,6 +3,7 @@ import Syft
 public enum TransformerError: Error {
     case unknown
     case notNumeric(String)
+    case noFunctionCalls
 }
 
 public func makeTransformer() -> Transformer<Expression> {
@@ -62,20 +63,25 @@ public func makeTransformer() -> Transformer<Expression> {
     }
 
     t.rule(["subject": .simple("subject"), "calls": .series("calls")]) {
-        let calls = try $0.vals("calls")
-        let call = calls.first!
         let subject = try $0.val("subject")
-        return Expression.callAnonymous(closure: call, arguments: [subject])
+        let calls = try $0.vals("calls")
+        guard
+            let firstCall = calls.first,
+            case let .call(call) = firstCall
+            else { throw TransformerError.noFunctionCalls }
+        let arguments = [subject] + call.arguments
+        let amendedCall = Expression.call(name: call.name, arguments: arguments)
+        return amendedCall
     }
 
-    t.rule(["FUNC": .simple("funcName"), "body": .simple("body"), "defunSubject": .simple("subject")]) {
-        let funcName = try $0.str("funcName")
-        //        let subject = try $0.val("subject")
-        let when = Expression.booleanValue(true)
-        let body = try $0.val("body")
-        let subfunction = Subfunction(name: funcName, patterns: [], when: when, body: body)
-        return Expression.subfunction(subfunction)
-    }
+//    t.rule(["FUNC": .simple("funcName"), "body": .simple("body"), "defunSubject": .simple("subject")]) {
+//        let funcName = try $0.str("funcName")
+//        //        let subject = try $0.val("subject")
+//        let when = Expression.booleanValue(true)
+//        let body = try $0.val("body")
+//        let subfunction = Subfunction(name: funcName, patterns: [], when: when, body: body)
+//        return Expression.subfunction(subfunction)
+//    }
 
     t.rule(["param": .simple("param")]) {
         let param = try $0.str("param")
