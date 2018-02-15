@@ -1,3 +1,22 @@
+public struct Subfunction: Equatable {
+
+    public let name: String?
+    public let patterns: [Expression]
+    public let when: Expression
+    public let body: Expression
+
+    public init(name: String?, patterns: [Expression], when: Expression, body: Expression) {
+        self.name = name
+        self.patterns = patterns
+        self.when = when
+        self.body = body
+    }
+
+    public static func ==(lhs: Subfunction, rhs: Subfunction) -> Bool {
+        return lhs.name == rhs.name && lhs.patterns == rhs.patterns && lhs.when == rhs.when && lhs.body == rhs.body
+    }
+}
+
 public indirect enum Expression {
 
     case error(String)
@@ -28,9 +47,17 @@ public indirect enum Expression {
     
     case variable(String)
     
-    case function(name: String?, parameters: [String], body: Expression)
+    case subfunction(Subfunction)
     
     case callAnonymous(closure: Expression, arguments: [Expression])
     
     case conditional(condition: Expression, then: Expression, otherwise: Expression)
+
+    case parameter(String)
 }
+
+let body = Expression.variable("x")
+let when = Expression.call(name: "<", arguments: [Expression.variable("x"), Expression.variable("y")])
+let patterns = [Expression.parameter("x"), Expression.parameter("y")]
+let subfunction = Subfunction(name: "min", patterns: patterns, when: when, body: body)
+let function = Expression.subfunction(subfunction)

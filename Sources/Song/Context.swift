@@ -14,10 +14,13 @@ func extendContext(context: Context, name: String, value: Expression) -> Context
     return extendedContext
 }
 
-func extendContext(context: Context, parameters: [String], arguments: [Expression], callingContext: Context) -> Context {
+func extendContext(context: Context, parameters: [Expression], arguments: [Expression], callingContext: Context) -> Context {
     var extendedContext = context
     for i in 0..<parameters.count {
-        let name = parameters[i]
+        let param = parameters[i]
+        guard case .parameter(let name) = param else {
+            preconditionFailure("Expected a parameter: \(param)")
+        }
         let value = arguments[i] 
         let evaluatedValue = value.evaluate(context: callingContext)
         extendedContext = extendContext(context: extendedContext, name: name, value: evaluatedValue)

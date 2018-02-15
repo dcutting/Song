@@ -46,20 +46,23 @@ extension Expression: CustomStringConvertible {
         case let .variable(variable):
             return "\(variable)"
             
-        case let .function(name, parameters, body):
-            return descriptionFunction(name: name, parameters, body)
+        case let .subfunction(subfunction):
+            return descriptionSubfunction(subfunction: subfunction)
             
         case let .callAnonymous(closure, arguments):
             return descriptionCallAnonymous(closure: closure, arguments: arguments)
             
         case let .conditional(condition, then, otherwise):
             return "if \(condition) then \(then) else \(otherwise) end"
+
+        case let .parameter(parameter):
+            return parameter
         }
     }
     
-    func descriptionFunction(name: String?, _ parameters: [String], _ body: Expression) -> String {
-        let parametersList = parameters.joined(separator: ", ")
-        if let funcName = name {
+    func descriptionSubfunction(subfunction: Subfunction) -> String {
+        let parametersList = subfunction.patterns.map { "\($0)" }.joined(separator: ", ")
+        if let funcName = subfunction.name {
             return "def \(funcName)(\(parametersList)) { \(body) }"
         }
         return "λ(\(parametersList)) { \(body) }"

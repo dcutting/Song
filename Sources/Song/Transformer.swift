@@ -70,9 +70,25 @@ public func makeTransformer() -> Transformer<Expression> {
 
     t.rule(["FUNC": .simple("funcName"), "body": .simple("body"), "defunSubject": .simple("subject")]) {
         let funcName = try $0.str("funcName")
-//        let subject = try $0.val("subject")
+        //        let subject = try $0.val("subject")
+        let when = Expression.booleanValue(true)
         let body = try $0.val("body")
-        return Expression.function(name: funcName, parameters: [], body: body)
+        let subfunction = Subfunction(name: funcName, patterns: [], when: when, body: body)
+        return Expression.subfunction(subfunction)
+    }
+
+    t.rule(["param": .simple("param")]) {
+        let param = try $0.str("param")
+        return Expression.parameter(param)
+    }
+
+    t.rule(["FUNC": .simple("funcName"), "body": .simple("body"), "params": .series("params")]) {
+        let funcName = try $0.str("funcName")
+        let when = Expression.booleanValue(true)
+        let body = try $0.val("body")
+        let params = try $0.vals("params")
+        let subfunction = Subfunction(name: funcName, patterns: params, when: when, body: body)
+        return Expression.subfunction(subfunction)
     }
 
     t.rule(["list": .series("items")]) {

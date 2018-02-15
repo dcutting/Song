@@ -56,7 +56,7 @@ public func makeParser() -> ParserProtocol {
 
     let listPattern = lBracket >>> (pattern.tag("headItem") >>> (comma >>> pattern.tag("headItem")).recur).tag("headItems") >>> (pipe >>> name.tag("tail")).maybe >>> rBracket
     let listParamPattern = lBracket >>> (pattern.tag("listItem") >>> (comma >>> pattern.tag("listItem")).recur).maybe.tag("list") >>> rBracket
-    pattern.parser = listParamPattern | listPattern | literalValue// | name.tag("param")
+    pattern.parser = listParamPattern | listPattern | literalValue | name
 
     // Expressions.
 
@@ -99,7 +99,11 @@ public func makeParser() -> ParserProtocol {
     let functionBody = expression.tag("body") >>> skip
 //    let ifKeyword = space >>> str("IF") >>> space
 //    let guardClause = (ifKeyword >>> expression).maybe.tag("guard")
-    let function = functionSubject >>> dot >>> functionName >>> functionParameters.maybe /*>>> guardClause*/ >>> assign >>> functionBody
+    let subjectFunction = functionSubject >>> dot >>> functionName >>> functionParameters.maybe /*>>> guardClause*/ >>> assign >>> functionBody
+
+    let freeFunction = functionName >>> functionParameters >>> assign >>> functionBody
+
+    let function = subjectFunction | freeFunction
 
     // Lambdas.
 

@@ -27,7 +27,7 @@ extension Expression {
         case let .variable(variable):
             return evaluateVariable(variable: variable, context)
             
-        case .function:
+        case .subfunction:
             return .closure(function: self, context: context)
             
         case let .callAnonymous(closure, arguments):
@@ -53,6 +53,9 @@ extension Expression {
             default:
                 return .pair(evaluatedFirst, evaluatedSecond)
             }
+
+        case .parameter:
+            return self
 
         case .error, .unitValue, .booleanValue, .integerValue, .floatValue, .stringValue, .closure:
             return self
@@ -203,16 +206,17 @@ extension Expression {
     
     func evaluateCallFunction(function: Expression, closureContext: Context, arguments: [Expression], callingContext: Context, closure: Expression) -> Expression {
         switch function {
-        case let .function(name, parameters, body):
-            if arguments.count < parameters.count {
+        case let .subfunction(subfunction):
+
+            if arguments.count < subfunction.patterns.count {
                 return Expression.error("not enough arguments")
             }
-            if arguments.count > parameters.count {
+            if arguments.count > subfunction.patterns.count {
                 return Expression.error("too many arguments")
             }
-            let extendedContext = extendContext(context: closureContext, parameters: parameters, arguments: arguments, callingContext: callingContext)
+            let extendedContext = extendContext(context: closureContext, parameters: subfunction.patterns, arguments: arguments, callingContext: callingContext)
             var finalContext = extendedContext
-            if let funcName = name {
+            if let funcName = subfunction.name {
                 finalContext = extendContext(context: finalContext, name: funcName, value: closure)
             }
             return body.evaluate(context: finalContext)

@@ -30,8 +30,8 @@ while (true) {
         log()
         let expression = ast.evaluate(context: context)
         if case .closure(let function, _) = expression {
-            if case .function(let name, _, _) = function {
-                if let name = name {
+            if case .subfunction(let subfunction) = function {
+                if let name = subfunction.name {
                     context[name] = expression
                 }
             }

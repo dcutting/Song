@@ -19,7 +19,8 @@ func evaluateSampleAST() {
     let recursiveCall = Expression.callAnonymous(closure: Expression.variable("length"), arguments: [second])
     let otherwise = Expression.call(name: "+", arguments: [one, recursiveCall])
     let lengthBody = Expression.conditional(condition: isUnitValue, then: zero, otherwise: otherwise)
-    let lengthFunc = Expression.function(name: "length", parameters: ["list"], body: lengthBody)
+    let lengthSubfunction = Subfunction(name: "length", patterns: [Expression.parameter("list")], when: Expression.booleanValue(true), body: lengthBody)
+    let lengthFunc = Expression.subfunction(lengthSubfunction)
     let list = integerList(values: [1,2,3,4,3,2,1,2,2,4,4,1,2])
     let lengthCall = Expression.callAnonymous(closure: lengthFunc, arguments: [list])
     let result = lengthCall.evaluate()
@@ -27,7 +28,8 @@ func evaluateSampleAST() {
     print(lengthCall)
     print(result)
 
-    let lambda = Expression.function(name: nil, parameters: [], body: Expression.integerValue(5))
+    let lambdaSubfunction = Subfunction(name: nil, patterns: [], when: Expression.booleanValue(true), body: Expression.integerValue(5))
+    let lambda = Expression.subfunction(lambdaSubfunction)
     let lambdaCall = Expression.callAnonymous(closure: Expression.variable("x"), arguments: [])
     let letExpr = Expression.let(name: "x", binding: lambda, body: lambdaCall)
     let lambdaResult = letExpr.evaluate();

@@ -31,10 +31,7 @@ public func ==(lhs: Expression, rhs: Expression) -> Bool {
     case let (.variable(lhsVariable), .variable(rhsVariable)):
         return lhsVariable == rhsVariable
         
-    case let (.function(lhsName, lhsParameters, lhsBody), .function(rhsName, rhsParameters, rhsBody)):
-        return lhsName == rhsName && lhsParameters == rhsParameters && lhsBody == rhsBody
-
-    default:
-        return false
+    case let (.subfunction(lhsSubfunction), .subfunction(rhsSubfunction)):
+        return lhsSubfunction == rhsSubfunction
     }
 }
