@@ -55,9 +55,3 @@ public indirect enum Expression {
 
     case parameter(String)
 }
-
-let body = Expression.variable("x")
-let when = Expression.call(name: "<", arguments: [Expression.variable("x"), Expression.variable("y")])
-let patterns = [Expression.parameter("x"), Expression.parameter("y")]
-let subfunction = Subfunction(name: "min", patterns: patterns, when: when, body: body)
-let function = Expression.subfunction(subfunction)

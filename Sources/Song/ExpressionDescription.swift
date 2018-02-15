@@ -63,9 +63,9 @@ extension Expression: CustomStringConvertible {
     func descriptionSubfunction(subfunction: Subfunction) -> String {
         let parametersList = subfunction.patterns.map { "\($0)" }.joined(separator: ", ")
         if let funcName = subfunction.name {
-            return "def \(funcName)(\(parametersList)) { \(body) }"
+            return "def \(funcName)(\(parametersList)) { \(subfunction.body) }"
         }
-        return "λ(\(parametersList)) { \(body) }"
+        return "λ(\(parametersList)) { \(subfunction.body) }"
     }
     
     func descriptionCallAnonymous(closure: Expression, arguments: [Expression]) -> String {
