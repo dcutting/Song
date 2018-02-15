@@ -18,8 +18,8 @@ extension Expression {
         case let .isUnit(value):
             return evaluateIsUnit(value: value, context: context)
 
-        case let .builtin(name: name, arguments: arguments):
-            return evaluateBuiltin(name: name, arguments: arguments, context: context)
+        case let .call(name: name, arguments: arguments):
+            return evaluateCall(name: name, arguments: arguments, context: context)
             
         case let .let(name, binding, body):
             return evaluateLet(name: name, binding, body, context)
@@ -30,8 +30,8 @@ extension Expression {
         case .function:
             return .closure(function: self, context: context)
             
-        case let .call(closure, arguments):
-            return evaluateCallClosure(closure: closure, arguments: arguments, callingContext: context)
+        case let .callAnonymous(closure, arguments):
+            return evaluateCallAnonymous(closure: closure, arguments: arguments, callingContext: context)
             
         case let .conditional(condition, then, otherwise):
             return evaluateConditional(condition: condition, then: then, otherwise: otherwise, context: context)
@@ -67,7 +67,7 @@ extension Expression {
         }
     }
 
-    func evaluateBuiltin(name: String, arguments: [Expression], context: Context) -> Expression {
+    func evaluateCall(name: String, arguments: [Expression], context: Context) -> Expression {
 
         do {
             switch name {
@@ -115,7 +115,7 @@ extension Expression {
             case "|":
                 return try evaluateLogical(arguments: arguments, context: context) { a, b in a || b }
             default:
-                return .error("cannot evaluate builtin '\(name)' with arguments \(arguments)")
+                return .error("cannot evaluate call '\(name)' with arguments \(arguments)")
             }
         } catch let EvaluationError.notANumber(x) {
             return .error("\(x) is not a number")
@@ -191,7 +191,7 @@ extension Expression {
         return .error("cannot evaluate '\(variable)'")
     }
     
-    func evaluateCallClosure(closure: Expression, arguments: [Expression], callingContext: Context) -> Expression {
+    func evaluateCallAnonymous(closure: Expression, arguments: [Expression], callingContext: Context) -> Expression {
         let evaluatedClosure = closure.evaluate(context: callingContext)
         switch evaluatedClosure {
         case let .closure(function, closureContext):

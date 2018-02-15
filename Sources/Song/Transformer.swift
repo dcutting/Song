@@ -35,7 +35,7 @@ public func makeTransformer() -> Transformer<Expression> {
     t.rule(["right": .simple("right"), "op": .simple("op")]) {
         let right = try $0.val("right")
         let op = try $0.str("op")
-        return Expression.builtin(name: op, arguments: [right])
+        return Expression.call(name: op, arguments: [right])
     }
 
     t.rule(["expression": .simple("e")]) {
@@ -58,14 +58,14 @@ public func makeTransformer() -> Transformer<Expression> {
     t.rule(["funcName": .simple("funcName"), "args": .series("args")]) {
         let funcName = try $0.str("funcName")
         let args = try $0.vals("args")
-        return Expression.builtin(name: funcName, arguments: args)
+        return Expression.call(name: funcName, arguments: args)
     }
 
     t.rule(["subject": .simple("subject"), "calls": .series("calls")]) {
         let calls = try $0.vals("calls")
         let call = calls.first!
         let subject = try $0.val("subject")
-        return Expression.call(closure: call, arguments: [subject])
+        return Expression.callAnonymous(closure: call, arguments: [subject])
     }
 
     t.rule(["FUNC": .simple("funcName"), "body": .simple("body"), "defunSubject": .simple("subject")]) {
@@ -87,17 +87,17 @@ public func makeTransformer() -> Transformer<Expression> {
         var ops = try $0.vals("ops")
         guard ops.count > 0 else { return left }
         let first = ops.removeFirst()
-        guard case .builtin(let name, var arguments) = first else {
+        guard case .call(let name, var arguments) = first else {
             preconditionFailure("not a function call")
         }
         arguments.insert(left, at: 0)
-        let firstFuncCall = Expression.builtin(name: name, arguments: arguments)
+        let firstFuncCall = Expression.call(name: name, arguments: arguments)
         return ops.reduce(firstFuncCall) { acc, next in
-            guard case .builtin(let name, var arguments) = next else {
+            guard case .call(let name, var arguments) = next else {
                 preconditionFailure("not a function call")
             }
             arguments.insert(acc, at: 0)
-            return Expression.builtin(name: name, arguments: arguments)
+            return Expression.call(name: name, arguments: arguments)
         }
     }
 

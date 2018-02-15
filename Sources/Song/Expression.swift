@@ -14,7 +14,7 @@ public indirect enum Expression {
     
     case isUnit(Expression)
 
-    case builtin(name: String, arguments: [Expression])
+    case call(name: String, arguments: [Expression])
     
     case pair(Expression, Expression)
     
@@ -30,7 +30,7 @@ public indirect enum Expression {
     
     case function(name: String?, parameters: [String], body: Expression)
     
-    case call(closure: Expression, arguments: [Expression])
+    case callAnonymous(closure: Expression, arguments: [Expression])
     
     case conditional(condition: Expression, then: Expression, otherwise: Expression)
 }

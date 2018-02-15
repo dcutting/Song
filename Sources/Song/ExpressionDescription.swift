@@ -24,7 +24,7 @@ extension Expression: CustomStringConvertible {
         case let .isUnit(value):
             return "isUnitValue(\(value))"
 
-        case let .builtin(name: name, arguments: arguments):
+        case let .call(name: name, arguments: arguments):
             return "\(name)(\(arguments))"
 
         case let .pair(first, second):
@@ -49,8 +49,8 @@ extension Expression: CustomStringConvertible {
         case let .function(name, parameters, body):
             return descriptionFunction(name: name, parameters, body)
             
-        case let .call(closure, arguments):
-            return descriptionCall(closure: closure, arguments: arguments)
+        case let .callAnonymous(closure, arguments):
+            return descriptionCallAnonymous(closure: closure, arguments: arguments)
             
         case let .conditional(condition, then, otherwise):
             return "if \(condition) then \(then) else \(otherwise) end"
@@ -65,7 +65,7 @@ extension Expression: CustomStringConvertible {
         return "λ(\(parametersList)) { \(body) }"
     }
     
-    func descriptionCall(closure: Expression, arguments: [Expression]) -> String {
+    func descriptionCallAnonymous(closure: Expression, arguments: [Expression]) -> String {
         var argumentStrings = Array<String>()
         for arg in arguments {
             argumentStrings.append("\(arg)")
