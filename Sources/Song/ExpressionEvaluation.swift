@@ -4,6 +4,7 @@ enum EvaluationError: Error {
     case insufficientArguments
     case notANumber(Expression)
     case notABoolean(Expression)
+    case notAFunction(Expression)
 }
 
 extension Expression {
@@ -118,12 +119,14 @@ extension Expression {
             case "|":
                 return try evaluateLogical(arguments: arguments, context: context) { a, b in a || b }
             default:
-                return .error("cannot evaluate call '\(name)' with arguments \(arguments)")
+                return try evaluateUserFunction(name: name, arguments: arguments, context: context)
             }
         } catch let EvaluationError.notANumber(x) {
             return .error("\(x) is not a number")
         } catch let EvaluationError.notABoolean(x) {
             return .error("\(x) is not a boolean")
+        } catch let EvaluationError.notAFunction(x) {
+            return .error("\(x) is not a function")
         } catch {
             preconditionFailure("internal error: \(error)")
         }
@@ -219,7 +222,7 @@ extension Expression {
             if let funcName = subfunction.name {
                 finalContext = extendContext(context: finalContext, name: funcName, value: closure)
             }
-            return body.evaluate(context: finalContext)
+            return subfunction.body.evaluate(context: finalContext)
         default:
             return .error("closure does not wrap function")
         }
@@ -254,5 +257,15 @@ extension Expression {
         default:
             return .error("requires pair")
         }
+    }
+
+    private func evaluateUserFunction(name: String, arguments: [Expression], context: Context) throws -> Expression {
+        guard let expr = context[name] else {
+            return .error("cannot evaluate call '\(name)' with arguments \(arguments)")
+        }
+        guard case let .closure(closureFunction, closureContext) = expr else { throw EvaluationError.notAFunction(expr) }
+        guard case let .subfunction(subfunction) = closureFunction else { throw EvaluationError.notAFunction(closureFunction) }
+        let body = subfunction.body
+        return body.evaluate(context: context)
     }
 }
