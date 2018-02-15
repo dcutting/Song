@@ -62,6 +62,11 @@ public func makeTransformer() -> Transformer<Expression> {
         return Expression.call(name: funcName, arguments: args)
     }
 
+    t.rule(["funcName": .simple("funcName")]) {
+        let funcName = try $0.str("funcName")
+        return Expression.call(name: funcName, arguments: [])
+    }
+
     t.rule(["subject": .simple("subject"), "calls": .series("calls")]) {
         let subject = try $0.val("subject")
         let calls = try $0.vals("calls")
