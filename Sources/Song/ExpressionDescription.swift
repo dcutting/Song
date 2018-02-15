@@ -56,7 +56,7 @@ extension Expression: CustomStringConvertible {
             return "\(condition) ? \(then) : \(otherwise)"
 
         case let .parameter(parameter):
-            return parameter
+            return "\(parameter)"
         }
     }
     

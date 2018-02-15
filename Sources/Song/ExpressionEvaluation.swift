@@ -263,10 +263,6 @@ extension Expression {
         guard let expr = context[name] else {
             return .error("cannot evaluate call '\(name)' with arguments \(arguments)")
         }
-        guard case let .closure(closureFunction, closureContext) = expr else { throw EvaluationError.notAFunction(expr) }
-        guard case let .subfunction(subfunction) = closureFunction else { throw EvaluationError.notAFunction(closureFunction) }
-        let body = subfunction.body
-        let contextWithArguments = extendContext(context: context, parameters: subfunction.patterns, arguments: arguments, callingContext: context)
-        return body.evaluate(context: contextWithArguments)
+        return evaluateCallAnonymous(closure: expr, arguments: arguments, callingContext: context)
     }
 }
