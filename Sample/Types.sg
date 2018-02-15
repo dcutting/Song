@@ -1,0 +1,48 @@
+#!/usr/bin/env/song
+
+use Console
+
+eg [2, 4] = [1, 2, 3, 4].select(|x| x % 2 = 0)
+function<T> [T].select(T -> Bool) -> [T]
+    [].select(_) = []
+    [x|xs].select(f) when f(x) = [x] + xs.select(f)
+    [x|xs].select(f) = xs.select(f)
+end
+
+let list: List<Numeric> = [-1, 1, -2, 3]
+let positives = list.select(|x| x >= 0)
+print(positives)
+# [1, 3]
+
+eg 4 = min(4, 9)
+function<T: Numeric> min(T, T) -> T
+    min(x, y) when x < y = x
+    min(_, y) = y
+end
+
+eg [4, 8].head = 4
+eg [].head = nil
+function
+    [].head = nil
+    [x|_].head = x
+end
+
+eg [3, 4] = [3, 4, 5].take(2)
+function<T> [T].take(Int) -> [T]
+    [].take(_) = []
+    [x|xs].take(n) = [x] + xs.take(n-1)
+end
+
+eg [[2, 4], [1, 3]] = [1, 2, 3, 4].partition(|x| x % 2 = 0)
+function<T> [T].partition(T -> Bool) -> [[T], [T]]
+    list.partition(f) = list.partition(f, [], [])
+end
+function<T> [T].partition(T -> Bool, [T], [T]) -> [[T], [T]]
+    [].partition(f, selected, rest) = [selected, rest]
+    [x|xs].partition(f, selected, rest) if x.f = xs.partition(f, selected + [x], rest)
+    [x|xs].partition(f, selected, rest) = xs.partition(f, selected, rest + [x])
+end
+
+print("What is your name?")
+let name = readLine()
+print("Hello \(name)")
