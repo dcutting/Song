@@ -69,14 +69,19 @@ public func makeTransformer() -> Transformer<Expression> {
 
     t.rule(["subject": .simple("subject"), "calls": .series("calls")]) {
         let subject = try $0.val("subject")
-        let calls = try $0.vals("calls")
-        guard
-            let firstCall = calls.first,
-            case let .call(call) = firstCall
-            else { throw TransformerError.noFunctionCalls }
+        var calls = try $0.vals("calls")
+        guard calls.count > 0 else { throw TransformerError.noFunctionCalls }
+        let firstCall = calls.removeFirst()
+        guard case let .call(call) = firstCall else { throw TransformerError.noFunctionCalls }
         let arguments = [subject] + call.arguments
-        let amendedCall = Expression.call(name: call.name, arguments: arguments)
-        return amendedCall
+        let firstFuncCall = Expression.call(name: call.name, arguments: arguments)
+        return calls.reduce(firstFuncCall) { acc, next in
+            guard case .call(let name, var arguments) = next else {
+                preconditionFailure("not a function call")
+            }
+            arguments.insert(acc, at: 0)
+            return Expression.call(name: name, arguments: arguments)
+        }
     }
 
 //    t.rule(["FUNC": .simple("funcName"), "body": .simple("body"), "defunSubject": .simple("subject")]) {
