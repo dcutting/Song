@@ -4,9 +4,6 @@ extension Expression: Equatable {
 public func ==(lhs: Expression, rhs: Expression) -> Bool {
     switch (lhs, rhs) {
         
-    case let (.error(lhsError), .error(rhsError)):
-        return lhsError == rhsError
-        
     case (.unitValue, .unitValue):
         return true
         

@@ -3,9 +3,6 @@ extension Expression: CustomStringConvertible {
     public var description: String {
         switch self {
             
-        case let .error(value):
-            return value
-            
         case .unitValue:
             return "#"
             

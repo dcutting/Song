@@ -23,16 +23,18 @@ while (true) {
     if remainder.text.isEmpty {
         do {
             let ast = try transformer.transform(result)
-            let expression = ast.evaluate(context: context)
-            if case .closure(let function, _) = expression {
-                if case .subfunction(let subfunction) = function {
-                    if let name = subfunction.name {
-                        context[name] = expression
+            do {
+                let expression = try ast.evaluate(context: context)
+                if case .closure(let function, _) = expression {
+                    if case .subfunction(let subfunction) = function {
+                        if let name = subfunction.name {
+                            context[name] = expression
+                        }
                     }
                 }
-            }
-            print(expression)
-            if case .error = expression {
+                print(expression)
+            } catch {
+                print(error)
                 log()
                 log("AST: \(ast)")
                 log()

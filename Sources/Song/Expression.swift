@@ -19,8 +19,6 @@ public struct Subfunction: Equatable {
 
 public indirect enum Expression {
 
-    case error(String)
-    
     case unitValue
 
     case booleanValue(Bool)
