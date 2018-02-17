@@ -33,10 +33,6 @@ extension Expression: CustomStringConvertible {
         case let .second(value):
             return "second(\(value))"
             
-        case let .closure(function, context):
-            let contextList = contextDescription(context: context)
-            return "[(\(contextList)) \(function)]"
-            
         case let .let(name, binding, body):
             return "let (\(name) = \(binding)) { \(body) }"
             

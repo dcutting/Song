@@ -121,7 +121,7 @@ public func makeParser() -> ParserProtocol {
     //    let notKeyword = str("NOT").tag("not") >>> space
     //    let negatedTerm = notKeyword >>> term.tag("negatedTerm")
     //    term.parser = negatedTerm | functionChain | lambda | atom
-    term.parser = functionChain | freeFunctionCall | atom.parser!
+    term.parser = functionChain | freeFunctionCall | lambda | atom.parser!
 
     // Imports.
 

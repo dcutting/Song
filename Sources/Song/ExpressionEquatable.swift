@@ -22,9 +22,6 @@ public func ==(lhs: Expression, rhs: Expression) -> Bool {
     case let (.pair(lhsFirst, lhsSecond), .pair(rhsFirst, rhsSecond)):
         return lhsFirst == rhsFirst && lhsSecond == rhsSecond
         
-    case let (.closure(lhsFunction, lhsContext), .closure(rhsFunction, rhsContext)):
-        return lhsFunction == rhsFunction && lhsContext == rhsContext
-        
     case let (.variable(lhsVariable), .variable(rhsVariable)):
         return lhsVariable == rhsVariable
         

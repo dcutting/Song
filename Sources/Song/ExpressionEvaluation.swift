@@ -31,11 +31,8 @@ extension Expression {
         case let .variable(variable):
             return try evaluateVariable(variable: variable, context)
             
-        case .subfunction:
-            return .closure(function: self, context: context)
-            
-        case let .callAnonymous(closure, arguments):
-            return try evaluateCallAnonymous(closure: closure, arguments: arguments, callingContext: context)
+        case let .callAnonymous(subfunction, arguments):
+            return try evaluateSubfunctionCall(expression: subfunction, arguments: arguments, callingContext: context)
             
         case let .conditional(condition, then, otherwise):
             return try evaluateConditional(condition: condition, then: then, otherwise: otherwise, context: context)
@@ -54,7 +51,7 @@ extension Expression {
         case .parameter:
             return self
 
-        case .unitValue, .booleanValue, .integerValue, .floatValue, .stringValue, .closure:
+        case .unitValue, .booleanValue, .integerValue, .floatValue, .stringValue, .subfunction:
             return self
         }
     }
@@ -172,13 +169,15 @@ extension Expression {
         throw EvaluationError.symbolNotFound(variable)
     }
     
-    func evaluateCallAnonymous(closure: Expression, arguments: [Expression], callingContext: Context) throws -> Expression {
-        let evaluatedClosure = try closure.evaluate(context: callingContext)
-        switch evaluatedClosure {
-        case let .closure(function, closureContext):
-            return try evaluateCallFunction(function: function, closureContext: closureContext, arguments: arguments, callingContext: callingContext, closure: evaluatedClosure)
+    func evaluateSubfunctionCall(expression: Expression, arguments: [Expression], callingContext: Context) throws -> Expression {
+        let evaluated = try expression.evaluate(context: callingContext)
+        switch evaluated {
+        case let .subfunction(subfunction):
+            let body = subfunction.body
+            let finalContext = try extendContext(context: Context(), parameters: subfunction.patterns, arguments: arguments, callingContext: callingContext)
+            return try evaluateCallFunction(function: body, closureContext: finalContext, arguments: arguments, callingContext: callingContext, closure: evaluated)
         default:
-            throw EvaluationError.notAFunction(closure)
+            throw EvaluationError.notAFunction(expression)
         }
     }
     
@@ -198,6 +197,8 @@ extension Expression {
                 finalContext = extendContext(context: finalContext, name: funcName, value: closure)
             }
             return try subfunction.body.evaluate(context: finalContext)
+        case let .call(name, arguments):
+            return try evaluateCall(name: name, arguments: arguments, context: closureContext)
         default:
             throw EvaluationError.notAFunction(closure)
         }
@@ -238,6 +239,6 @@ extension Expression {
         guard let expr = context[name] else {
             throw EvaluationError.symbolNotFound(name)
         }
-        return try evaluateCallAnonymous(closure: expr, arguments: arguments, callingContext: context)
+        return try evaluateSubfunctionCall(expression: expr, arguments: arguments, callingContext: context)
     }
 }

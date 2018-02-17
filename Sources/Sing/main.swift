@@ -25,11 +25,9 @@ while (true) {
             let ast = try transformer.transform(result)
             do {
                 let expression = try ast.evaluate(context: context)
-                if case .closure(let function, _) = expression {
-                    if case .subfunction(let subfunction) = function {
-                        if let name = subfunction.name {
-                            context[name] = expression
-                        }
+                if case .subfunction(let subfunction) = expression {
+                    if let name = subfunction.name {
+                        context[name] = expression
                     }
                 }
                 print(expression)
