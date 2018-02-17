@@ -47,9 +47,6 @@ extension Expression: CustomStringConvertible {
             
         case let .conditional(condition, then, otherwise):
             return "\(condition) ? \(then) : \(otherwise)"
-
-        case let .parameter(parameter):
-            return "\(parameter)"
         }
     }
     

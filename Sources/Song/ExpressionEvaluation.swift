@@ -48,9 +48,6 @@ extension Expression {
             let evaluatedSecond = try second.evaluate(context: context)
             return .pair(evaluatedFirst, evaluatedSecond)
 
-        case .parameter:
-            return self
-
         case .unitValue, .booleanValue, .integerValue, .floatValue, .stringValue, .subfunction:
             return self
         }

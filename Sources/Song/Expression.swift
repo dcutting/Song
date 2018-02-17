@@ -31,8 +31,6 @@ public indirect enum Expression {
 
     case variable(String)
 
-    case parameter(String)
-
     case subfunction(Subfunction)
 
     case call(name: String, arguments: [Expression])

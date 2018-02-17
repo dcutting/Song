@@ -19,7 +19,7 @@ func evaluateSampleAST() {
     let recursiveCall = Expression.callAnonymous(closure: Expression.variable("length"), arguments: [second])
     let otherwise = Expression.call(name: "+", arguments: [one, recursiveCall])
     let lengthBody = Expression.conditional(condition: isUnitValue, then: zero, otherwise: otherwise)
-    let lengthSubfunction = Subfunction(name: "length", patterns: [Expression.parameter("list")], when: Expression.booleanValue(true), body: lengthBody)
+    let lengthSubfunction = Subfunction(name: "length", patterns: [Expression.variable("list")], when: Expression.booleanValue(true), body: lengthBody)
     let lengthFunc = Expression.subfunction(lengthSubfunction)
     let list = integerList(values: [1,2,3,4,3,2,1,2,2,4,4,1,2])
     let lengthCall = Expression.callAnonymous(closure: lengthFunc, arguments: [list])

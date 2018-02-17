@@ -18,7 +18,7 @@ func extendContext(context: Context, parameters: [Expression], arguments: [Expre
     var extendedContext = context
     for i in 0..<parameters.count {
         let param = parameters[i]
-        guard case .parameter(let name) = param else {
+        guard case .variable(let name) = param else {
             preconditionFailure("Expected a parameter: \(param)")
         }
         let value = arguments[i]
