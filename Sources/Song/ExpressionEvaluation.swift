@@ -198,7 +198,8 @@ extension Expression {
             }
             return try subfunction.body.evaluate(context: finalContext)
         case let .call(name, arguments):
-            return try evaluateCall(name: name, arguments: arguments, context: closureContext)
+            let finalContext = callingContext.merging(closureContext) { l, r in l }
+            return try evaluateCall(name: name, arguments: arguments, context: finalContext)
         default:
             throw EvaluationError.notAFunction(closure)
         }
