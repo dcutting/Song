@@ -175,7 +175,7 @@ extension Expression {
         case let .subfunction(subfunction):
             let body = subfunction.body
             let finalContext = try extendContext(context: Context(), parameters: subfunction.patterns, arguments: arguments, callingContext: callingContext)
-            return try evaluateCallFunction(function: body, closureContext: finalContext, arguments: arguments, callingContext: callingContext, closure: evaluated)
+            return try body.evaluate(context: finalContext)
         default:
             throw EvaluationError.notAFunction(expression)
         }
