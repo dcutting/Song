@@ -36,6 +36,7 @@ while (true) {
             } catch {
                 print(error)
                 log()
+                log("Context: \(context)")
                 log("AST: \(ast)")
                 log()
             }
