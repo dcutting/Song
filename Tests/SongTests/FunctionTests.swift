@@ -27,7 +27,7 @@ class FunctionTests: XCTestCase {
 
     private func makeNamedFunction() -> Expression {
         let subfunction = Subfunction(name: "foo",
-                                      patterns: [ Expression.variable("a"), Expression.variable("b") ],
+                                      patterns: [Expression.variable("a"), Expression.variable("b")],
                                       when: Expression.booleanValue(true),
                                       body: Expression.variable("x"))
         return .subfunction(subfunction)
@@ -35,7 +35,7 @@ class FunctionTests: XCTestCase {
 
     private func makeAnonymousFunction() -> Expression {
         let subfunction = Subfunction(name: nil,
-                                      patterns: [ Expression.variable("a"), Expression.variable("b") ],
+                                      patterns: [Expression.variable("a"), Expression.variable("b")],
                                       when: Expression.booleanValue(true),
                                       body: Expression.variable("x"))
         return .subfunction(subfunction)

@@ -9,7 +9,7 @@ class IfTests: XCTestCase {
         let otherwise = Expression.integerValue(7)
         let ifExpr = Expression.conditional(condition: condition, then: then, otherwise: otherwise)
         let result = "\(ifExpr)"
-        XCTAssertEqual("if yes then 5 else 7 end", result)
+        XCTAssertEqual("yes ? 5 : 7", result)
     }
     
     func testConditionNotBooleanValueExpression() {

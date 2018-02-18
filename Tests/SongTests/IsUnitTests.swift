@@ -17,12 +17,12 @@ class IsUnitTests: XCTestCase {
     
     func testDescriptionIsUnit() {
         let result = "\(isUnitValue)"
-        XCTAssertEqual("isUnitValue(#)", result)
+        XCTAssertEqual("isUnit?(#)", result)
     }
     
     func testDescriptionIsNotUnitValue() {
         let result = "\(isNotUnitValue)"
-        XCTAssertEqual("isUnitValue(1)", result)
+        XCTAssertEqual("isUnit?(1)", result)
     }
     
     func testEvaluateIsUnit() {

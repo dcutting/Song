@@ -54,7 +54,7 @@ class CallTests: XCTestCase {
     }
     
     func testEvaluateClosureReferencesDeclarationContext() {
-        let subfunction = Subfunction(name: "getX", patterns: [], when: .booleanValue(true), body: Expression.variable("x"))
+        let subfunction = Subfunction(name: "getX", patterns: [], when: .booleanValue(true), body: .variable("x"))
         let function = Expression.subfunction(subfunction)
         assertNoThrow {
             let closure = try function.evaluate(context: ["x": Expression.integerValue(7)])
