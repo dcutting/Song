@@ -20,7 +20,9 @@ class StringTests: XCTestCase {
     }
     
     func testEvaluate() {
-        let result = string.evaluate()
-        XCTAssertEqual(string, result)
+        assertNoThrow {
+            let result = try string.evaluate()
+            XCTAssertEqual(string, result)
+        }
     }
 }

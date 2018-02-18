@@ -26,12 +26,16 @@ class BooleanValueTests: XCTestCase {
     }
     
     func testEvaluateTrue() {
-        let result = trueBooleanValue.evaluate()
-        XCTAssertEqual(trueBooleanValue, result)
+        assertNoThrow {
+            let result = try trueBooleanValue.evaluate()
+            XCTAssertEqual(trueBooleanValue, result)
+        }
     }
     
     func testEvaluateFalse() {
-        let result = falseBooleanValue.evaluate()
-        XCTAssertEqual(falseBooleanValue, result)
+        assertNoThrow {
+            let result = try falseBooleanValue.evaluate()
+            XCTAssertEqual(falseBooleanValue, result)
+        }
     }
 }

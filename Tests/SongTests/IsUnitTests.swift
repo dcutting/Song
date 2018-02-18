@@ -26,19 +26,25 @@ class IsUnitTests: XCTestCase {
     }
     
     func testEvaluateIsUnit() {
-        let result = isUnitValue.evaluate()
-        XCTAssertEqual(Expression.booleanValue(true), result)
+        assertNoThrow {
+            let result = try isUnitValue.evaluate()
+            XCTAssertEqual(Expression.booleanValue(true), result)
+        }
     }
 
     func testEvaluateIsNotUnitValue() {
-        let result = isNotUnitValue.evaluate()
-        XCTAssertEqual(Expression.booleanValue(false), result)
+        assertNoThrow {
+            let result = try isNotUnitValue.evaluate()
+            XCTAssertEqual(Expression.booleanValue(false), result)
+        }
     }
     
     func testEvaluateIsUnitReferencingContext() {
-        let x = Expression.variable("x")
-        let unit = Expression.isUnit(x)
-        let result = unit.evaluate(context: ["x": Expression.unitValue])
-        XCTAssertEqual(Expression.booleanValue(true), result)
+        assertNoThrow {
+            let x = Expression.variable("x")
+            let unit = Expression.isUnit(x)
+            let result = try unit.evaluate(context: ["x": Expression.unitValue])
+            XCTAssertEqual(Expression.booleanValue(true), result)
+        }
     }
 }

@@ -29,8 +29,10 @@ class PairTests: XCTestCase {
     }
     
     func testEvaluate() {
-        let result = pair.evaluate()
-        XCTAssertEqual(pair, result)
+        assertNoThrow {
+            let result = try pair.evaluate()
+            XCTAssertEqual(pair, result)
+        }
     }
     
     func testDescriptionFirst() {
@@ -42,18 +44,19 @@ class PairTests: XCTestCase {
     func testEvaluateFirstForNonPair() {
         let pair = Expression.integerValue(1)
         let first = Expression.first(pair)
-        let result = first.evaluate()
-        XCTAssertEqual(Expression.error("requires pair"), result)
+        XCTAssertThrowsError(try first.evaluate())
     }
     
     func testEvaluateFirst() {
         let pair = Expression.variable("p")
         let first = Expression.first(pair)
-        let result = first.evaluate(context: [
-            "x": Expression.integerValue(60),
-            "p": Expression.pair(Expression.variable("x"), Expression.integerValue(0))
-            ])
-        XCTAssertEqual(Expression.integerValue(60), result)
+        assertNoThrow {
+            let result = try first.evaluate(context: [
+                "x": Expression.integerValue(60),
+                "p": Expression.pair(Expression.variable("x"), Expression.integerValue(0))
+                ])
+            XCTAssertEqual(Expression.integerValue(60), result)
+        }
     }
 
     func testDescriptionSecond() {
@@ -65,17 +68,18 @@ class PairTests: XCTestCase {
     func testEvaluateSecondForNonPair() {
         let pair = Expression.integerValue(1)
         let second = Expression.second(pair)
-        let result = second.evaluate()
-        XCTAssertEqual(Expression.error("requires pair"), result)
+        XCTAssertThrowsError(try second.evaluate())
     }
 
     func testEvaluateSecond() {
         let pair = Expression.variable("p")
         let second = Expression.second(pair)
-        let result = second.evaluate(context: [
-            "x": Expression.integerValue(50),
-            "p": Expression.pair(Expression.integerValue(0), Expression.variable("x"))
-            ])
-        XCTAssertEqual(Expression.integerValue(50), result)
+        assertNoThrow {
+            let result = try second.evaluate(context: [
+                "x": Expression.integerValue(50),
+                "p": Expression.pair(Expression.integerValue(0), Expression.variable("x"))
+                ])
+            XCTAssertEqual(Expression.integerValue(50), result)
+        }
     }
 }

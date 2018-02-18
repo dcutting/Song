@@ -17,8 +17,7 @@ class IfTests: XCTestCase {
         let then = Expression.integerValue(5)
         let otherwise = Expression.integerValue(7)
         let ifExpr = Expression.conditional(condition: condition, then: then, otherwise: otherwise)
-        let result = ifExpr.evaluate()
-        XCTAssertEqual(Expression.error("boolean expression expected"), result)
+        XCTAssertThrowsError(try ifExpr.evaluate())
     }
     
     func testEvaluatesCondition() {
@@ -26,8 +25,10 @@ class IfTests: XCTestCase {
         let then = Expression.integerValue(5)
         let otherwise = Expression.integerValue(7)
         let ifExpr = Expression.conditional(condition: condition, then: then, otherwise: otherwise)
-        let result = ifExpr.evaluate(context: ["x": Expression.booleanValue(true)])
-        XCTAssertEqual(Expression.integerValue(5), result)
+        assertNoThrow {
+            let result = try ifExpr.evaluate(context: ["x": Expression.booleanValue(true)])
+            XCTAssertEqual(Expression.integerValue(5), result)
+        }
     }
     
     func testTrueBranch() {
@@ -35,8 +36,10 @@ class IfTests: XCTestCase {
         let then = Expression.variable("x")
         let otherwise = Expression.integerValue(7)
         let ifExpr = Expression.conditional(condition: condition, then: then, otherwise: otherwise)
-        let result = ifExpr.evaluate(context: ["x": Expression.integerValue(5)])
-        XCTAssertEqual(Expression.integerValue(5), result)
+        assertNoThrow {
+            let result = try ifExpr.evaluate(context: ["x": Expression.integerValue(5)])
+            XCTAssertEqual(Expression.integerValue(5), result)
+        }
     }
     
     func testFalseBranch() {
@@ -44,7 +47,9 @@ class IfTests: XCTestCase {
         let then = Expression.integerValue(5)
         let otherwise = Expression.variable("y")
         let ifExpr = Expression.conditional(condition: condition, then: then, otherwise: otherwise)
-        let result = ifExpr.evaluate(context: ["y": Expression.integerValue(7)])
-        XCTAssertEqual(Expression.integerValue(7), result)
+        assertNoThrow {
+            let result = try ifExpr.evaluate(context: ["y": Expression.integerValue(7)])
+            XCTAssertEqual(Expression.integerValue(7), result)
+        }
     }
 }

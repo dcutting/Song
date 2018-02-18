@@ -20,7 +20,9 @@ class UnitValueTests: XCTestCase {
     }
     
     func testEvaluate() {
-        let result = unit.evaluate()
-        XCTAssertEqual(unit, result)
+        assertNoThrow {
+            let result = try unit.evaluate()
+            XCTAssertEqual(unit, result)
+        }
     }
 }

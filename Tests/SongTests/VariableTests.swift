@@ -21,12 +21,13 @@ class VariableTests: XCTestCase {
 
     func testEvaluateBoundVariable() {
         let context = ["n": Expression.integerValue(5)]
-        let result = variable.evaluate(context: context)
-        XCTAssertEqual(Expression.integerValue(5), result)
+        assertNoThrow {
+            let result = try variable.evaluate(context: context)
+            XCTAssertEqual(Expression.integerValue(5), result)
+        }
     }
     
     func testEvaluateUnboundVariable() {
-        let result = variable.evaluate()
-        XCTAssertEqual(Expression.error("cannot evaluate n"), result)
+        XCTAssertThrowsError(try variable.evaluate())
     }
 }

@@ -11,8 +11,10 @@ class LetTests: XCTestCase {
     }
     
     func testEvaluate() {
-        let result = letExpression.evaluate()
-        XCTAssertEqual(Expression.stringValue("Yellowbek"), result)
+        assertNoThrow {
+            let result = try letExpression.evaluate()
+            XCTAssertEqual(Expression.stringValue("Yellowbek"), result)
+        }
     }
     
     func testEmbeddedLet() {
@@ -21,17 +23,20 @@ class LetTests: XCTestCase {
 
         let outerLetExpression = Expression.let(name: "y", binding: Expression.integerValue(99), body: innerLetExpression)
         
-        let result = outerLetExpression.evaluate()
-        XCTAssertEqual(Expression.integerValue(99), result)
+        assertNoThrow {
+            let result = try outerLetExpression.evaluate()
+            XCTAssertEqual(Expression.integerValue(99), result)
+        }
     }
     
     func testContextNotShared() {
 
         let context = ["company": Expression.integerValue(5)]
-        
-        _ = letExpression.evaluate(context: context)
-        
-        let result = Expression.variable("company").evaluate(context: context)
-        XCTAssertEqual(Expression.integerValue(5), result)
+
+        assertNoThrow {
+            _ = try letExpression.evaluate(context: context)
+            let result = try Expression.variable("company").evaluate(context: context)
+            XCTAssertEqual(Expression.integerValue(5), result)
+        }
     }
 }

@@ -2,20 +2,32 @@ import XCTest
 import Song
 
 class ClosureTests: XCTestCase {
-    
-    let function = Expression.function(name: "foo", parameters: ["a", "b"], body: Expression.variable("x"))
+
+    lazy var function = makeNamedFunction()
 
     let context = ["x": Expression.integerValue(5), "y": Expression.stringValue("hi")]
     
     func testDescription() {
-        let closure = function.evaluate(context: context)
-        let result = "\(closure)"
-        XCTAssertEqual("[(x = 5, y = 'hi') def foo(a, b) { x }]", result)
+        assertNoThrow {
+            let closure = try function.evaluate(context: context)
+            let result = "\(closure)"
+            XCTAssertEqual("[(x = 5, y = 'hi') def foo(a, b) { x }]", result)
+        }
     }
     
     func testEvaluate() {
-        let closure = function.evaluate(context: context)
-        let result = closure.evaluate()
-        XCTAssertEqual(closure, result)
+        assertNoThrow {
+            let closure = try function.evaluate(context: context)
+            let result = try closure.evaluate()
+            XCTAssertEqual(closure, result)
+        }
+    }
+
+    private func makeNamedFunction() -> Expression {
+        let subfunction = Subfunction(name: "foo",
+                                      patterns: [ Expression.variable("a"), Expression.variable("b") ],
+                                      when: Expression.booleanValue(true),
+                                      body: Expression.variable("x"))
+        return .subfunction(subfunction)
     }
 }
