@@ -103,7 +103,7 @@ public func makeParser() -> ParserProtocol {
     let guardClause = (ifKeyword >>> expression).maybe.tag("guard")
     let subjectFunction = functionSubject >>> dot >>> functionName >>> functionParameters.maybe >>> guardClause >>> assign >>> functionBody
 
-    let freeFunction = functionName >>> functionParameters >>> assign >>> functionBody
+    let freeFunction = functionName >>> functionParameters >>> guardClause >>> assign >>> functionBody
 
     let function = subjectFunction | freeFunction
 
