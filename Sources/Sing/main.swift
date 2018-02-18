@@ -4,7 +4,7 @@ import Syft
 print("Song v0.1.0 🎵")
 
 let verbose = true
-let prompt = "🎤 "
+let prompt = "➤ "
 
 let parser = makeParser()
 let transformer = makeTransformer()
