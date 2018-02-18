@@ -105,9 +105,9 @@ extension Expression {
             return try evaluateRelational(arguments: arguments, context: context) { a, b in a <= b }
         case ">=":
             return try evaluateRelational(arguments: arguments, context: context) { a, b in a >= b }
-        case "=":
+        case "eq":
             return try evaluateRelational(arguments: arguments, context: context) { a, b in a == b }
-        case "<>":
+        case "neq":
             return try evaluateRelational(arguments: arguments, context: context) { a, b in a != b }
         case "&":
             return try evaluateLogical(arguments: arguments, context: context) { a, b in a && b }

@@ -67,10 +67,10 @@ public func makeParser() -> ParserProtocol {
     let relationalExpression = Deferred()
     relationalExpression.parser = additiveExpression.tag("left") >>> (skip >>> (lessThanOrEqual | greaterThanOrEqual | lessThan | greaterThan).tag("op") >>> skip >>> relationalExpression.tag("right")).recur.tag("ops")
 
-    let equals = str("=")
-    let notEquals = str("<>")
+    let equals = str("eq")
+    let notEquals = str("neq")
     let equalityExpression = Deferred()
-    equalityExpression.parser = relationalExpression.tag("left") >>> (skip >>> (equals | notEquals).tag("op") >>> skip >>> equalityExpression.tag("right")).recur.tag("ops")
+    equalityExpression.parser = relationalExpression.tag("left") >>> (space >>> (equals | notEquals).tag("op") >>> space >>> equalityExpression.tag("right")).recur.tag("ops")
 
     let andKeyword = str("&")
     let andExpression = Deferred()
