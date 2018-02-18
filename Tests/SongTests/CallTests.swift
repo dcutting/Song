@@ -25,11 +25,11 @@ class CallTests: XCTestCase {
         XCTAssertThrowsError(try call.evaluate())
     }
 
-//    func testEvaluateCallingInvalidClosure() {
-//        let closure = Expression.closure(function: Expression.integerValue(5), context: Context())
-//        let call = Expression.call(closure: closure, arguments: [])
-//        XCTAssertThrowsError(try call.evaluate())
-//    }
+    func testEvaluateCallingInvalidClosure() {
+        let closure = Expression.closure(closure: Expression.integerValue(5), context: Context())
+        let call = Expression.callAnonymous(closure: closure, arguments: [])
+        XCTAssertThrowsError(try call.evaluate())
+    }
 
     func testEvaluateCallingFunctionReferencedInContext() {
         assertNoThrow {
