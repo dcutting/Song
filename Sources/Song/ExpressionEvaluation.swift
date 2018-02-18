@@ -31,9 +31,12 @@ extension Expression {
         case let .variable(variable):
             return try evaluateVariable(variable: variable, context)
 
+        case let .constant(name, value):
+            return .constant(name: name, value: try value.evaluate(context: context))
+
         case .subfunction:
             return .closure(closure: self, context: context)
-            
+
         case let .callAnonymous(subfunction, arguments):
             return try evaluateCallAnonymous(closure: subfunction, arguments: arguments, callingContext: context)
             

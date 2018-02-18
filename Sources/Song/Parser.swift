@@ -113,6 +113,10 @@ public func makeParser() -> ParserProtocol {
     let lambdaBody = expression.tag("lambdaBody") >>> skip
     let lambda = (lambdaParameters >>> lambdaBody).tag("lambda")
 
+    // Let.
+
+    let letExpr = str("let") >>> skip >>> (name.tag("variable") >>> assign >>> expression.tag("body")).tag("let")
+
     // Terms.
 
     let wrappedExpression = lParen >>> expression.tag("expression") >>> rParen
@@ -121,7 +125,7 @@ public func makeParser() -> ParserProtocol {
     //    let notKeyword = str("NOT").tag("not") >>> space
     //    let negatedTerm = notKeyword >>> term.tag("negatedTerm")
     //    term.parser = negatedTerm | functionChain | lambda | atom
-    term.parser = functionChain | freeFunctionCall | lambda | atom.parser!
+    term.parser = functionChain | freeFunctionCall | lambda | letExpr | atom.parser!
 
     // Imports.
 

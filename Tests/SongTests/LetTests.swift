@@ -3,7 +3,7 @@ import Song
 
 class LetTests: XCTestCase {
     
-    let letExpression = Expression.let(name: "company", binding: Expression.stringValue("Yellowbek"), body: Expression.variable("company"))
+    let letExpression = Expression.let(name: "company", binding: .stringValue("Yellowbek"), body: .variable("company"))
     
     func testDescription() {
         let result = "\(letExpression)"
@@ -19,9 +19,9 @@ class LetTests: XCTestCase {
     
     func testEmbeddedLet() {
         
-        let innerLetExpression = Expression.let(name: "x", binding: Expression.variable("y"), body: Expression.variable("x"))
+        let innerLetExpression = Expression.let(name: "x", binding: .variable("y"), body: .variable("x"))
 
-        let outerLetExpression = Expression.let(name: "y", binding: Expression.integerValue(99), body: innerLetExpression)
+        let outerLetExpression = Expression.let(name: "y", binding: .integerValue(99), body: innerLetExpression)
         
         assertNoThrow {
             let result = try outerLetExpression.evaluate()
@@ -31,7 +31,7 @@ class LetTests: XCTestCase {
     
     func testContextNotShared() {
 
-        let context = ["company": Expression.integerValue(5)]
+        let context: Context = ["company": .integerValue(5)]
 
         assertNoThrow {
             _ = try letExpression.evaluate(context: context)

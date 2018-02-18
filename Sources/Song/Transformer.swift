@@ -165,5 +165,15 @@ public func makeTransformer() -> Transformer<Expression> {
         }
     }
 
+    t.rule(["body": .simple("body"), "variable": .simple("name")]) {
+        let name = try $0.str("name")
+        let body = try $0.val("body")
+        return Expression.constant(name: name, value: body)
+    }
+
+    t.rule(["let": .simple("let")]) {
+        try $0.val("let")
+    }
+
     return t
 }
