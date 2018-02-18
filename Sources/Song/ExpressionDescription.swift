@@ -41,7 +41,11 @@ extension Expression: CustomStringConvertible {
             
         case let .subfunction(subfunction):
             return descriptionSubfunction(subfunction: subfunction)
-            
+
+        case let .closure(function, context):
+            let contextList = contextDescription(context: context)
+            return "[(\(contextList)) \(function)]"
+
         case let .callAnonymous(closure, arguments):
             return descriptionCallAnonymous(closure: closure, arguments: arguments)
             

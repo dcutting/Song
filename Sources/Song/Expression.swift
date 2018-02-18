@@ -32,6 +32,7 @@ public indirect enum Expression {
     case variable(String)
 
     case subfunction(Subfunction)
+    case closure(closure: Expression, context: Context)
 
     case call(name: String, arguments: [Expression])
     case callAnonymous(closure: Expression, arguments: [Expression])

@@ -30,9 +30,12 @@ extension Expression {
             
         case let .variable(variable):
             return try evaluateVariable(variable: variable, context)
+
+        case .subfunction:
+            return .closure(closure: self, context: context)
             
         case let .callAnonymous(subfunction, arguments):
-            return try evaluateSubfunctionCall(expression: subfunction, arguments: arguments, callingContext: context)
+            return try evaluateCallAnonymous(closure: subfunction, arguments: arguments, callingContext: context)
             
         case let .conditional(condition, then, otherwise):
             return try evaluateConditional(condition: condition, then: then, otherwise: otherwise, context: context)
@@ -48,7 +51,7 @@ extension Expression {
             let evaluatedSecond = try second.evaluate(context: context)
             return .pair(evaluatedFirst, evaluatedSecond)
 
-        case .unitValue, .booleanValue, .integerValue, .floatValue, .stringValue, .subfunction:
+        case .unitValue, .booleanValue, .integerValue, .floatValue, .stringValue, .closure:
             return self
         }
     }
@@ -166,15 +169,13 @@ extension Expression {
         throw EvaluationError.symbolNotFound(variable)
     }
     
-    func evaluateSubfunctionCall(expression: Expression, arguments: [Expression], callingContext: Context) throws -> Expression {
-        let evaluated = try expression.evaluate(context: callingContext)
-        switch evaluated {
-        case let .subfunction(subfunction):
-            let body = subfunction.body
-            let finalContext = try extendContext(context: Context(), parameters: subfunction.patterns, arguments: arguments, callingContext: callingContext)
-            return try body.evaluate(context: finalContext)
+    func evaluateCallAnonymous(closure: Expression, arguments: [Expression], callingContext: Context) throws -> Expression {
+        let evaluatedClosure = try closure.evaluate(context: callingContext)
+        switch evaluatedClosure {
+        case let .closure(function, closureContext):
+            return try evaluateCallFunction(function: function, closureContext: closureContext, arguments: arguments, callingContext: callingContext, closure: evaluatedClosure)
         default:
-            throw EvaluationError.notAFunction(expression)
+            throw EvaluationError.notAFunction(closure)
         }
     }
     
@@ -237,6 +238,6 @@ extension Expression {
         guard let expr = context[name] else {
             throw EvaluationError.symbolNotFound(name)
         }
-        return try evaluateSubfunctionCall(expression: expr, arguments: arguments, callingContext: context)
+        return try evaluateCallAnonymous(closure: expr, arguments: arguments, callingContext: context)
     }
 }

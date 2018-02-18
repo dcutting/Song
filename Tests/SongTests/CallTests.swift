@@ -57,7 +57,7 @@ class CallTests: XCTestCase {
         let subfunction = Subfunction(name: "getX", patterns: [], when: .booleanValue(true), body: .variable("x"))
         let function = Expression.subfunction(subfunction)
         assertNoThrow {
-            let closure = try function.evaluate(context: ["x": Expression.integerValue(7)])
+            let closure = try function.evaluate(context: ["x": .integerValue(7)])
             let call = Expression.callAnonymous(closure: closure, arguments: [])
             let result = try call.evaluate()
             XCTAssertEqual(Expression.integerValue(7), result)
