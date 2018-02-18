@@ -22,7 +22,7 @@ extension Expression: CustomStringConvertible {
             return "isUnit?(\(value))"
 
         case let .call(name: name, arguments: arguments):
-            return "\(name)(\(arguments))"
+            return descriptionCall(name: name, arguments: arguments)
 
         case let .pair(first, second):
             return "(\(first), \(second))"
@@ -60,17 +60,20 @@ extension Expression: CustomStringConvertible {
     func descriptionSubfunction(subfunction: Subfunction) -> String {
         let parametersList = subfunction.patterns.map { "\($0)" }.joined(separator: ", ")
         if let funcName = subfunction.name {
-            return "def \(funcName)(\(parametersList)) { \(subfunction.body) }"
+            return "\(funcName)(\(parametersList)) when \(subfunction.when) = \(subfunction.body)"
         }
-        return "λ(\(parametersList)) { \(subfunction.body) }"
+        return "λ(\(parametersList)) = \(subfunction.body)"
     }
-    
+
+    func descriptionCall(name: String, arguments: [Expression]) -> String {
+        return "\(name)(\(description(arguments: arguments)))"
+    }
+
     func descriptionCallAnonymous(closure: Expression, arguments: [Expression]) -> String {
-        var argumentStrings = Array<String>()
-        for arg in arguments {
-            argumentStrings.append("\(arg)")
-        }
-        let argumentsList = argumentStrings.joined(separator: ", ")
-        return "\(closure)(\(argumentsList))"
+        return "\(closure)(\(description(arguments: arguments)))"
+    }
+
+    private func description(arguments: [Expression]) -> String {
+        return arguments.map { "\($0)" }.joined(separator: ", ")
     }
 }

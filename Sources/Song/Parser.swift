@@ -99,9 +99,9 @@ public func makeParser() -> ParserProtocol {
     let functionParameters = lParen >>> parameters.recur(0, 1).tag("params") >>> rParen
     let assign = skip >>> str("=") >>> skip
     let functionBody = expression.tag("body") >>> skip
-//    let ifKeyword = space >>> str("IF") >>> space
-//    let guardClause = (ifKeyword >>> expression).maybe.tag("guard")
-    let subjectFunction = functionSubject >>> dot >>> functionName >>> functionParameters.maybe /*>>> guardClause*/ >>> assign >>> functionBody
+    let ifKeyword = space >>> str("when") >>> space
+    let guardClause = (ifKeyword >>> expression).maybe.tag("guard")
+    let subjectFunction = functionSubject >>> dot >>> functionName >>> functionParameters.maybe >>> guardClause >>> assign >>> functionBody
 
     let freeFunction = functionName >>> functionParameters >>> assign >>> functionBody
 

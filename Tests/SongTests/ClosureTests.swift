@@ -11,7 +11,7 @@ class ClosureTests: XCTestCase {
         assertNoThrow {
             let closure = try function.evaluate(context: context)
             let result = "\(closure)"
-            XCTAssertEqual("[(x = 5, y = 'hi') def foo(a, b) { x }]", result)
+            XCTAssertEqual("[(x = 5, y = 'hi') foo(a, b) when yes = x]", result)
         }
     }
     

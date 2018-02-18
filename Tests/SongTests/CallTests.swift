@@ -9,7 +9,7 @@ class CallTests: XCTestCase {
             let closure = try Expression.subfunction(subfunction).evaluate()
             let call = Expression.callAnonymous(closure: closure, arguments: [Expression.integerValue(99), Expression.integerValue(100)])
             let result = "\(call)"
-            XCTAssertEqual("[() def echo(x, y) { x }](99, 100)", result)
+            XCTAssertEqual("[() echo(x, y) when yes = x](99, 100)", result)
         }
     }
 
@@ -17,7 +17,7 @@ class CallTests: XCTestCase {
         let left = Expression.integerValue(5)
         let right = Expression.integerValue(9)
         let foo = Expression.call(name: "foo", arguments: [left, right])
-        XCTAssertEqual("foo([5, 9])", "\(foo)")
+        XCTAssertEqual("foo(5, 9)", "\(foo)")
     }
 
     func testEvaluateCallingNonClosure() {

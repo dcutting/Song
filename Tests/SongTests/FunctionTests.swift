@@ -8,7 +8,7 @@ class FunctionTests: XCTestCase {
 
     func testDescriptionNamedFunction() {
         let result = "\(makeNamedFunction())"
-        XCTAssertEqual("def foo(a, b) { x }", result)
+        XCTAssertEqual("foo(a, b) when yes = x", result)
     }
 
     func testEvaluateNamedFunction() {
@@ -22,7 +22,7 @@ class FunctionTests: XCTestCase {
     
     func testDescriptionAnonymousFunction() {
         let result = "\(anonymousFunction)"
-        XCTAssertEqual("λ(a, b) { x }", result)
+        XCTAssertEqual("λ(a, b) = x", result)
     }
 
     private func makeNamedFunction() -> Expression {
