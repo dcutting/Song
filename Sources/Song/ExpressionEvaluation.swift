@@ -113,6 +113,8 @@ extension Expression {
             return try evaluateLogical(arguments: arguments, context: context) { a, b in a && b }
         case "|":
             return try evaluateLogical(arguments: arguments, context: context) { a, b in a || b }
+        case "out":
+            return try evaluateOut(arguments: arguments, context: context)
         default:
             return try evaluateUserFunction(name: name, arguments: arguments, context: context)
         }
@@ -235,6 +237,13 @@ extension Expression {
         default:
             throw EvaluationError.notAPair(pair)
         }
+    }
+
+    private func evaluateOut(arguments: [Expression], context: Context) throws -> Expression {
+        let evaluated = try arguments.map { expr -> Expression in try expr.evaluate(context: context) }
+        let output = evaluated.map { $0.out() }.joined(separator: " ")
+        print(output)
+        return Expression.unitValue
     }
 
     private func evaluateUserFunction(name: String, arguments: [Expression], context: Context) throws -> Expression {

@@ -35,7 +35,11 @@ while (true) {
                 if case .constant(let name, let value) = expression {
                     context[name] = value
                 }
-                print(expression)
+                if case .unitValue = expression {
+                    // Do nothing.
+                } else {
+                    print(expression)
+                }
             } catch {
                 print(error)
                 log()
