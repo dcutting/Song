@@ -200,11 +200,13 @@ extension Expression {
         switch parameter {
         case .variable(let name):
             extendedContext = extendContext(context: extendedContext, name: name, value: evaluatedValue, replacing: true)
-        case let .list(paramItems):
-            guard case let .list(argItems) = evaluatedValue else { throw EvaluationError.signatureMismatch }
-            for (p, a) in zip(paramItems, argItems) {
-                extendedContext = try matchAndExtend(context: extendedContext, parameter: p, argument: a, callingContext: callingContext)
-            }
+        case let .listConstructor(paramHead, paramTail):
+            guard case var .list(argItems) = evaluatedValue else { throw EvaluationError.signatureMismatch }
+            guard argItems.count > 0 else { throw EvaluationError.signatureMismatch }
+            let argHead = argItems.removeFirst()
+            extendedContext = try matchAndExtend(context: extendedContext, parameter: paramHead, argument: argHead, callingContext: callingContext)
+            let argTail = Expression.list(argItems)
+            extendedContext = try matchAndExtend(context: extendedContext, parameter: paramTail, argument: argTail, callingContext: callingContext)
         default:
             if parameter != evaluatedValue {
                 throw EvaluationError.signatureMismatch

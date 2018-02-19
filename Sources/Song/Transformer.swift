@@ -184,7 +184,7 @@ public func makeTransformer() -> Transformer<Expression> {
     t.rule(["head": .simple("head"), "tail": .simple("tail")]) {
         let head = try $0.val("head")
         let tail = try $0.val("tail")
-        return Expression.list([head, tail])
+        return Expression.listConstructor(head, tail)
     }
 
     return t
