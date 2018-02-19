@@ -1,8 +1,9 @@
 import Syft
 
-public enum TransformerError: Error {
+public enum SongTransformError: Error {
     case unknown
     case notNumeric(String)
+    case notAList(Expression)
     case noFunctionCalls
 }
 
@@ -23,13 +24,13 @@ public func makeTransformer() -> Transformer<Expression> {
 
     t.rule(["integerValue": .simple("i")]) {
         let i = try $0.str("i")
-        guard let int = Int(i) else { throw TransformerError.notNumeric(i) }
+        guard let int = Int(i) else { throw SongTransformError.notNumeric(i) }
         return .integerValue(int)
     }
 
     t.rule(["floatValue": .simple("f")]) {
         let f = try $0.str("f")
-        guard let float = Double(f) else { throw TransformerError.notNumeric(f) }
+        guard let float = Double(f) else { throw SongTransformError.notNumeric(f) }
         return .floatValue(float)
     }
 
@@ -70,9 +71,9 @@ public func makeTransformer() -> Transformer<Expression> {
     t.rule(["subject": .simple("subject"), "calls": .series("calls")]) {
         let subject = try $0.val("subject")
         var calls = try $0.vals("calls")
-        guard calls.count > 0 else { throw TransformerError.noFunctionCalls }
+        guard calls.count > 0 else { throw SongTransformError.noFunctionCalls }
         let firstCall = calls.removeFirst()
-        guard case let .call(call) = firstCall else { throw TransformerError.noFunctionCalls }
+        guard case let .call(call) = firstCall else { throw SongTransformError.noFunctionCalls }
         let arguments = [subject] + call.arguments
         let firstFuncCall = Expression.call(name: call.name, arguments: arguments)
         return calls.reduce(firstFuncCall) { acc, next in
@@ -137,18 +138,18 @@ public func makeTransformer() -> Transformer<Expression> {
     }
 
     t.rule(["list": .series("items")]) {
-        let items = try $0.vals("items").reversed()
-        return items.reduce(Expression.unitValue) { acc, item in
-            return Expression.pair(item, acc)
-        }
+        let items = try $0.vals("items")
+        return Expression.list(items)
     }
 
     t.rule(["list": .simple("")]) { _ in
-        Expression.unitValue
+        Expression.list([])
     }
 
     t.rule(["listItem": .simple("head"), "list": .simple("tail")]) {
-        Expression.pair(try $0.val("head"), try $0.val("tail"))
+        let head = try $0.val("head")
+        let tail = try $0.val("tail")
+        return Expression.listConstructor(head, tail)
     }
 
     t.rule(["left": .simple("left"), "ops": .series("ops")]) {
@@ -183,7 +184,7 @@ public func makeTransformer() -> Transformer<Expression> {
     t.rule(["head": .simple("head"), "tail": .simple("tail")]) {
         let head = try $0.val("head")
         let tail = try $0.val("tail")
-        return Expression.pair(head, tail)
+        return Expression.list([head, tail])
     }
 
     return t

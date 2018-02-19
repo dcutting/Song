@@ -66,7 +66,7 @@ while (true) {
                     log()
                 }
             }
-        } catch let error as Syft.TransformerError<Expression> {
+        } catch {
             print("Internal transform error:")
             dump(error)
             log()

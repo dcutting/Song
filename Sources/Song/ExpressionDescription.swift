@@ -3,9 +3,6 @@ extension Expression: CustomStringConvertible {
     public var description: String {
         switch self {
             
-        case .unitValue:
-            return "[]"
-            
         case let .booleanValue(value):
             return value ? "yes" : "no"
             
@@ -18,42 +15,32 @@ extension Expression: CustomStringConvertible {
         case let .stringValue(value):
             return "\"\(value)\""
             
-        case let .isUnit(value):
-            return "isUnit?(\(value))"
+        case let .list(exprs):
+            let descriptions = exprs.map { "\($0)" }
+            let joined = descriptions.joined(separator: ", ")
+            return "[\(joined)]"
 
-        case let .call(name: name, arguments: arguments):
-            return descriptionCall(name: name, arguments: arguments)
+        case let .listConstructor(head, tail):
+            return "[\(head)|\(tail)]"
 
-        case let .pair(first, second):
-            return "(\(first), \(second))"
-            
-        case let .first(value):
-            return "first(\(value))"
-            
-        case let .second(value):
-            return "second(\(value))"
-            
-        case let .let(name, binding, body):
-            return "let (\(name) = \(binding)) { \(body) }"
-            
         case let .variable(variable):
             return "\(variable)"
 
-        case let .constant(name, value):
-            return "\(name) = \(value)"
-
         case let .subfunction(subfunction):
             return descriptionSubfunction(subfunction: subfunction)
+
+        case let .constant(name, value):
+            return "\(name) = \(value)"
 
         case let .closure(function, context):
             let contextList = contextDescription(context: context)
             return "[(\(contextList)) \(function)]"
 
+        case let .call(name: name, arguments: arguments):
+            return descriptionCall(name: name, arguments: arguments)
+
         case let .callAnonymous(closure, arguments):
             return descriptionCallAnonymous(closure: closure, arguments: arguments)
-            
-        case let .conditional(condition, then, otherwise):
-            return "\(condition) ? \(then) : \(otherwise)"
         }
     }
     

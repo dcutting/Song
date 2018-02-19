@@ -1,14 +1,14 @@
 typealias Number = Int
 
 public enum EvaluationError: Error {
-    case insufficientArguments
-    case tooManyArguments
-    case notAPair(Expression)
-    case notANumber(Expression)
-    case notABoolean(Expression)
-    case notAFunction(Expression)
     case symbolNotFound(String)
     case signatureMismatch
+    case insufficientArguments
+    case tooManyArguments
+    case notABoolean(Expression)
+    case notANumber(Expression)
+    case notAList(Expression)
+    case notAFunction(Expression)
 }
 
 extension Expression {
@@ -20,20 +20,22 @@ extension Expression {
     public func evaluate(context: Context) throws -> Expression {
         switch self {
 
-        case let .isUnit(value):
-            return try evaluateIsUnit(value: value, context: context)
+        case .booleanValue, .integerValue, .floatValue, .stringValue, .closure:
+            return self
 
-        case let .call(name: name, arguments: arguments):
-            return try evaluateCall(name: name, arguments: arguments, context: context)
-            
-        case let .let(name, binding, body):
-            return try evaluateLet(name: name, binding, body, context)
-            
+        case let .list(exprs):
+            let evaluated = try exprs.map { try $0.evaluate(context: context) }
+            return .list(evaluated)
+
+        case let .listConstructor(head, tail):
+            let evaluatedHead = try head.evaluate(context: context)
+            let evaluatedTail = try tail.evaluate(context: context)
+            guard case var .list(items) = evaluatedTail else { throw EvaluationError.notAList(evaluatedTail) }
+            items.insert(evaluatedHead, at: 0)
+            return .list(items)
+
         case let .variable(variable):
             return try evaluateVariable(variable: variable, context)
-
-        case let .constant(name, value):
-            return .constant(name: name, value: try value.evaluate(context: context))
 
         case let .subfunction(subfunction):
             var finalContext = context
@@ -42,35 +44,17 @@ extension Expression {
             }
             return .closure(closure: self, context: finalContext)
 
+        case let .constant(name, value):
+            return .constant(name: name, value: try value.evaluate(context: context))
+
+        case let .call(name: name, arguments: arguments):
+            return try evaluateCall(name: name, arguments: arguments, context: context)
+            
         case let .callAnonymous(subfunction, arguments):
             return try evaluateCallAnonymous(closure: subfunction, arguments: arguments, callingContext: context)
-            
-        case let .conditional(condition, then, otherwise):
-            return try evaluateConditional(condition: condition, then: then, otherwise: otherwise, context: context)
-            
-        case let .first(pair):
-            return try evaluateFirst(pair: pair, context: context)
-            
-        case let .second(pair):
-            return try evaluateSecond(pair: pair, context: context)
-
-        case let .pair(first, second):
-            let evaluatedFirst = try first.evaluate(context: context)
-            let evaluatedSecond = try second.evaluate(context: context)
-            return .pair(evaluatedFirst, evaluatedSecond)
-
-        case .unitValue, .booleanValue, .integerValue, .floatValue, .stringValue, .closure:
-            return self
         }
     }
     
-    func evaluateIsUnit(value: Expression, context: Context) throws -> Expression {
-        if case .unitValue = try value.evaluate(context: context) {
-            return .booleanValue(true)
-        }
-        return .booleanValue(false)
-    }
-
     func evaluateCall(name: String, arguments: [Expression], context: Context) throws -> Expression {
 
         switch name {
@@ -166,11 +150,6 @@ extension Expression {
         }
     }
 
-    func evaluateLet(name: String, _ binding: Expression, _ body: Expression, _ context: Context) throws -> Expression {
-        let letContext = extendContext(context: context, name: name, value: try binding.evaluate(context: context), replacing: true)
-        return try body.evaluate(context: letContext)
-    }
-    
     func evaluateVariable(variable: String, _ context: Context) throws -> Expression {
         guard
             let values = context[variable],
@@ -221,47 +200,17 @@ extension Expression {
         switch parameter {
         case .variable(let name):
             extendedContext = extendContext(context: extendedContext, name: name, value: evaluatedValue, replacing: true)
-        case let .pair(paramHead, paramTail):
-            guard case let .pair(argHead, argTail) = evaluatedValue else { throw EvaluationError.signatureMismatch }
-            extendedContext = try matchAndExtend(context: extendedContext, parameter: paramHead, argument: argHead, callingContext: callingContext)
-            extendedContext = try matchAndExtend(context: extendedContext, parameter: paramTail, argument: argTail, callingContext: callingContext)
+        case let .list(paramItems):
+            guard case let .list(argItems) = evaluatedValue else { throw EvaluationError.signatureMismatch }
+            for (p, a) in zip(paramItems, argItems) {
+                extendedContext = try matchAndExtend(context: extendedContext, parameter: p, argument: a, callingContext: callingContext)
+            }
         default:
             if parameter != evaluatedValue {
                 throw EvaluationError.signatureMismatch
             }
         }
         return extendedContext
-    }
-
-    func evaluateConditional(condition: Expression, then: Expression, otherwise: Expression, context: Context) throws -> Expression {
-        switch try condition.evaluate(context: context) {
-        case .booleanValue(true):
-            return try then.evaluate(context: context)
-        case .booleanValue(false):
-            return try otherwise.evaluate(context: context)
-        default:
-            throw EvaluationError.notABoolean(condition)
-        }
-    }
-    
-    func evaluateFirst(pair: Expression, context: Context) throws -> Expression {
-        let evaluatedPair = try pair.evaluate(context: context)
-        switch evaluatedPair {
-        case let .pair(fst, _):
-            return try fst.evaluate(context: context)
-        default:
-             throw EvaluationError.notAPair(pair)
-        }
-    }
-    
-    func evaluateSecond(pair: Expression, context: Context) throws -> Expression {
-        let evaluatedPair = try pair.evaluate(context: context)
-        switch evaluatedPair {
-        case let .pair(_, snd):
-            return try snd.evaluate(context: context)
-        default:
-            throw EvaluationError.notAPair(pair)
-        }
     }
 
     private func evaluateOut(arguments: [Expression], context: Context) throws -> Expression {

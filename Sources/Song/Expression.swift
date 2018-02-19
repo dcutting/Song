@@ -19,15 +19,12 @@ public struct Subfunction: Equatable {
 
 public indirect enum Expression {
 
-    case unitValue
-    case isUnit(Expression)
     case booleanValue(Bool)
     case integerValue(Int)
     case floatValue(Double)
     case stringValue(String)
-    case pair(Expression, Expression)
-    case first(Expression)
-    case second(Expression)
+    case list([Expression])
+    case listConstructor(Expression, Expression)
 
     case variable(String)
 
@@ -37,7 +34,4 @@ public indirect enum Expression {
 
     case call(name: String, arguments: [Expression])
     case callAnonymous(closure: Expression, arguments: [Expression])
-
-    case `let`(name: String, binding: Expression, body: Expression)
-    case conditional(condition: Expression, then: Expression, otherwise: Expression)
 }
