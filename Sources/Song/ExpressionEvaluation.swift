@@ -62,9 +62,8 @@ extension Expression {
     func evaluateIsUnit(value: Expression, context: Context) throws -> Expression {
         if case .unitValue = try value.evaluate(context: context) {
             return .booleanValue(true)
-        } else {
-            return .booleanValue(false)
         }
+        return .booleanValue(false)
     }
 
     func evaluateCall(name: String, arguments: [Expression], context: Context) throws -> Expression {
