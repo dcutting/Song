@@ -52,8 +52,8 @@ class PairTests: XCTestCase {
         let first = Expression.first(pair)
         assertNoThrow {
             let result = try first.evaluate(context: [
-                "x": Expression.integerValue(60),
-                "p": Expression.pair(Expression.variable("x"), Expression.integerValue(0))
+                "x": [.integerValue(60)],
+                "p": [.pair(.variable("x"), .integerValue(0))]
                 ])
             XCTAssertEqual(Expression.integerValue(60), result)
         }
@@ -76,8 +76,8 @@ class PairTests: XCTestCase {
         let second = Expression.second(pair)
         assertNoThrow {
             let result = try second.evaluate(context: [
-                "x": Expression.integerValue(50),
-                "p": Expression.pair(Expression.integerValue(0), Expression.variable("x"))
+                "x": [.integerValue(50)],
+                "p": [.pair(.integerValue(0), .variable("x"))]
                 ])
             XCTAssertEqual(Expression.integerValue(50), result)
         }

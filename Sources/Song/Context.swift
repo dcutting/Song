@@ -1,4 +1,4 @@
-public typealias Context = [String: Expression]
+public typealias Context = [String: [Expression]]
 
 func contextDescription(context: Context) -> String {
     var contextPairs = Array<String>()
@@ -8,9 +8,14 @@ func contextDescription(context: Context) -> String {
     return contextPairs.sorted().joined(separator: ", ")
 }
 
-func extendContext(context: Context, name: String, value: Expression) -> Context {
+public func extendContext(context: Context, name: String, value: Expression, replacing: Bool) -> Context {
     var extendedContext = context
-    extendedContext[name] = value
+    var group = extendedContext[name, default: []]
+    if replacing {
+        group.removeAll()
+    }
+    group.append(value)
+    extendedContext[name] = group
     return extendedContext
 }
 
@@ -23,7 +28,7 @@ func extendContext(context: Context, parameters: [Expression], arguments: [Expre
         if case .variable(let name) = param {
             let value = arguments[i]
             let evaluatedValue = try value.evaluate(context: callingContext)
-            extendedContext = extendContext(context: extendedContext, name: name, value: evaluatedValue)
+            extendedContext = extendContext(context: extendedContext, name: name, value: evaluatedValue, replacing: true)
         }
     }
     return extendedContext

@@ -34,8 +34,12 @@ extension Expression {
         case let .constant(name, value):
             return .constant(name: name, value: try value.evaluate(context: context))
 
-        case .subfunction:
-            return .closure(closure: self, context: context)
+        case let .subfunction(subfunction):
+            var finalContext = context
+            if let name = subfunction.name {
+                finalContext.removeValue(forKey: name)
+            }
+            return .closure(closure: self, context: finalContext)
 
         case let .callAnonymous(subfunction, arguments):
             return try evaluateCallAnonymous(closure: subfunction, arguments: arguments, callingContext: context)
@@ -162,15 +166,16 @@ extension Expression {
     }
 
     func evaluateLet(name: String, _ binding: Expression, _ body: Expression, _ context: Context) throws -> Expression {
-        let letContext = extendContext(context: context, name: name, value: try binding.evaluate(context: context))
+        let letContext = extendContext(context: context, name: name, value: try binding.evaluate(context: context), replacing: true)
         return try body.evaluate(context: letContext)
     }
     
     func evaluateVariable(variable: String, _ context: Context) throws -> Expression {
-        if let value = context[variable] {
-            return value
-        }
-        throw EvaluationError.symbolNotFound(variable)
+        guard
+            let values = context[variable],
+            let value = values.first
+            else { throw EvaluationError.symbolNotFound(variable) }
+        return value
     }
     
     func evaluateCallAnonymous(closure: Expression, arguments: [Expression], callingContext: Context) throws -> Expression {
@@ -196,7 +201,7 @@ extension Expression {
             let extendedContext = try extendContext(context: closureContext, parameters: subfunction.patterns, arguments: arguments, callingContext: callingContext)
             var finalContext = extendedContext
             if let funcName = subfunction.name {
-                finalContext = extendContext(context: finalContext, name: funcName, value: closure)
+                finalContext = extendContext(context: finalContext, name: funcName, value: closure, replacing: false)
             }
             return try subfunction.body.evaluate(context: finalContext)
         case let .call(name, arguments):
@@ -246,9 +251,10 @@ extension Expression {
     }
 
     private func evaluateUserFunction(name: String, arguments: [Expression], context: Context) throws -> Expression {
-        guard let expr = context[name] else {
-            throw EvaluationError.symbolNotFound(name)
-        }
+        guard
+            let exprs = context[name],
+            let expr = exprs.first
+            else { throw EvaluationError.symbolNotFound(name) }
         return try evaluateCallAnonymous(closure: expr, arguments: arguments, callingContext: context)
     }
 }

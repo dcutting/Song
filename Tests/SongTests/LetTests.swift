@@ -31,7 +31,7 @@ class LetTests: XCTestCase {
     
     func testContextNotShared() {
 
-        let context: Context = ["company": .integerValue(5)]
+        let context: Context = ["company": [.integerValue(5)]]
 
         assertNoThrow {
             _ = try letExpression.evaluate(context: context)

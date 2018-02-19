@@ -37,12 +37,13 @@ while (true) {
                 if case .closure(let function, _) = expression {
                     if case .subfunction(let subfunction) = function {
                         if let name = subfunction.name {
-                            context[name] = expression
+                            // TODO: this extends the context with the same closure if the user enters the closure's name.
+                            context = extendContext(context: context, name: name, value: expression, replacing: false)
                         }
                     }
                 }
                 if case .constant(let name, let value) = expression {
-                    context[name] = value
+                    context = extendContext(context: context, name: name, value: value, replacing: true)
                 }
                 switch expression {
                 case .unitValue, .closure, .constant:

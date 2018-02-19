@@ -26,7 +26,7 @@ class IfTests: XCTestCase {
         let otherwise = Expression.integerValue(7)
         let ifExpr = Expression.conditional(condition: condition, then: then, otherwise: otherwise)
         assertNoThrow {
-            let result = try ifExpr.evaluate(context: ["x": Expression.booleanValue(true)])
+            let result = try ifExpr.evaluate(context: ["x": [.booleanValue(true)]])
             XCTAssertEqual(Expression.integerValue(5), result)
         }
     }
@@ -37,7 +37,7 @@ class IfTests: XCTestCase {
         let otherwise = Expression.integerValue(7)
         let ifExpr = Expression.conditional(condition: condition, then: then, otherwise: otherwise)
         assertNoThrow {
-            let result = try ifExpr.evaluate(context: ["x": Expression.integerValue(5)])
+            let result = try ifExpr.evaluate(context: ["x": [.integerValue(5)]])
             XCTAssertEqual(Expression.integerValue(5), result)
         }
     }
@@ -48,7 +48,7 @@ class IfTests: XCTestCase {
         let otherwise = Expression.variable("y")
         let ifExpr = Expression.conditional(condition: condition, then: then, otherwise: otherwise)
         assertNoThrow {
-            let result = try ifExpr.evaluate(context: ["y": Expression.integerValue(7)])
+            let result = try ifExpr.evaluate(context: ["y": [.integerValue(7)]])
             XCTAssertEqual(Expression.integerValue(7), result)
         }
     }

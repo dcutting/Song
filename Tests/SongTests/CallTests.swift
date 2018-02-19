@@ -37,7 +37,7 @@ class CallTests: XCTestCase {
             let function = Expression.subfunction(subfunction)
             let closure = try function.evaluate()
             let call = Expression.callAnonymous(closure: Expression.variable("f"), arguments: [])
-            let result = try call.evaluate(context: ["f": closure])
+            let result = try call.evaluate(context: ["f": [closure]])
             XCTAssertEqual(Expression.integerValue(5), result)
         }
     }
@@ -57,7 +57,7 @@ class CallTests: XCTestCase {
         let subfunction = Subfunction(name: "getX", patterns: [], when: .booleanValue(true), body: .variable("x"))
         let function = Expression.subfunction(subfunction)
         assertNoThrow {
-            let closure = try function.evaluate(context: ["x": .integerValue(7)])
+            let closure = try function.evaluate(context: ["x": [.integerValue(7)]])
             let call = Expression.callAnonymous(closure: closure, arguments: [])
             let result = try call.evaluate()
             XCTAssertEqual(Expression.integerValue(7), result)
@@ -70,7 +70,7 @@ class CallTests: XCTestCase {
         assertNoThrow {
             let closure = try function.evaluate()
             let call = Expression.callAnonymous(closure: closure, arguments: [])
-            XCTAssertThrowsError(try call.evaluate(context: ["x": Expression.integerValue(7)]))
+            XCTAssertThrowsError(try call.evaluate(context: ["x": [.integerValue(7)]]))
         }
     }
     
@@ -91,7 +91,7 @@ class CallTests: XCTestCase {
         assertNoThrow {
             let closure = try function.evaluate()
             let call = Expression.callAnonymous(closure: closure, arguments: [Expression.variable("y")])
-            let result = try call.evaluate(context: ["y": Expression.integerValue(15)])
+            let result = try call.evaluate(context: ["y": [.integerValue(15)]])
             XCTAssertEqual(Expression.integerValue(15), result)
         }
     }

@@ -7,7 +7,7 @@ class BuiltinFunctionTests: XCTestCase {
         let integer = Expression.integerValue(5)
         let nonIntegerValue = Expression.variable("x")
         let plus = Expression.call(name: "+", arguments: [integer, nonIntegerValue])
-        XCTAssertThrowsError(try plus.evaluate(context: ["x": Expression.stringValue("hi")]))
+        XCTAssertThrowsError(try plus.evaluate(context: ["x": [Expression.stringValue("hi")]]))
     }
 
     func testPlus() {
@@ -15,7 +15,7 @@ class BuiltinFunctionTests: XCTestCase {
         let right = Expression.variable("y")
         let plus = Expression.call(name: "+", arguments: [left, right])
         assertNoThrow {
-            let result = try plus.evaluate(context: ["x": Expression.integerValue(9), "y": Expression.integerValue(5)])
+            let result = try plus.evaluate(context: ["x": [Expression.integerValue(9)], "y": [Expression.integerValue(5)]])
             XCTAssertEqual(Expression.integerValue(14), result)
         }
     }

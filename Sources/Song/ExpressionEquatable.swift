@@ -32,6 +32,6 @@ public func ==(lhs: Expression, rhs: Expression) -> Bool {
         return lhsSubfunction == rhsSubfunction
 
     case let (.closure(lhsFunction, lhsContext), .closure(rhsFunction, rhsContext)):
-        return lhsFunction == rhsFunction && lhsContext == rhsContext
+        return lhsFunction == rhsFunction// && lhsContext == rhsContext // TODO
     }
 }

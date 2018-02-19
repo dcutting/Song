@@ -43,7 +43,7 @@ class IsUnitTests: XCTestCase {
         assertNoThrow {
             let x = Expression.variable("x")
             let unit = Expression.isUnit(x)
-            let result = try unit.evaluate(context: ["x": Expression.unitValue])
+            let result = try unit.evaluate(context: ["x": [.unitValue]])
             XCTAssertEqual(Expression.booleanValue(true), result)
         }
     }
