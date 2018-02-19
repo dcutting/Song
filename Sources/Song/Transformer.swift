@@ -84,9 +84,12 @@ public func makeTransformer() -> Transformer<Expression> {
         }
     }
 
+    t.rule(["literal": .simple("literal")]) {
+        try $0.val("literal")
+    }
+
     t.rule(["param": .simple("param")]) {
-        let param = try $0.str("param")
-        return Expression.variable(param)
+        try $0.val("param")
     }
 
     t.rule(["funcName": .simple("funcName"), "body": .simple("body"), "guard": .simple("guard"), "subject": .simple("subject")]) {
