@@ -268,7 +268,7 @@ extension Expression {
         let evaluated = try arguments.map { expr -> Expression in try expr.evaluate(context: context) }
         let output = evaluated.map { $0.out() }.joined(separator: " ")
         print(output)
-        return Expression.unitValue
+        return .booleanValue(true)
     }
 
     private func evaluateUserFunction(name: String, arguments: [Expression], context: Context) throws -> Expression {

@@ -49,7 +49,7 @@ while (true) {
                     context = extendContext(context: context, name: name, value: value, replacing: true)
                 }
                 switch expression {
-                case .unitValue, .closure, .constant:
+                case .closure, .constant:
                     () // Do nothing.
                 default:
                     print(expression)
