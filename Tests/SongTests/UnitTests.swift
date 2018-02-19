@@ -16,7 +16,7 @@ class UnitValueTests: XCTestCase {
     
     func testDescription() {
         let result = "\(unit)"
-        XCTAssertEqual("#", result)
+        XCTAssertEqual("[]", result)
     }
     
     func testEvaluate() {

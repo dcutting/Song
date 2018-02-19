@@ -19,13 +19,13 @@ class PairTests: XCTestCase {
     
     func testDescription() {
         let result = "\(pair)"
-        XCTAssertEqual("(0, #)", result)
+        XCTAssertEqual("(0, [])", result)
     }
     
     func testDescriptionSubPair() {
         let compoundPair = Expression.pair(Expression.stringValue("hi"), pair)
         let result = "\(compoundPair)"
-        XCTAssertEqual("(\"hi\", (0, #))", result)
+        XCTAssertEqual("(\"hi\", (0, []))", result)
     }
     
     func testEvaluate() {
@@ -38,7 +38,7 @@ class PairTests: XCTestCase {
     func testDescriptionFirst() {
         let first = Expression.first(pair)
         let result = "\(first)"
-        XCTAssertEqual("first((0, #))", result)
+        XCTAssertEqual("first((0, []))", result)
     }
     
     func testEvaluateFirstForNonPair() {
@@ -62,7 +62,7 @@ class PairTests: XCTestCase {
     func testDescriptionSecond() {
         let second = Expression.second(pair)
         let result = "\(second)"
-        XCTAssertEqual("second((0, #))", result)
+        XCTAssertEqual("second((0, []))", result)
     }
     
     func testEvaluateSecondForNonPair() {

@@ -4,7 +4,7 @@ extension Expression: CustomStringConvertible {
         switch self {
             
         case .unitValue:
-            return "#"
+            return "[]"
             
         case let .booleanValue(value):
             return value ? "yes" : "no"
