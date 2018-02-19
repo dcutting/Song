@@ -172,5 +172,11 @@ public func makeTransformer() -> Transformer<Expression> {
         try $0.val("let")
     }
 
+    t.rule(["head": .simple("head"), "tail": .simple("tail")]) {
+        let head = try $0.val("head")
+        let tail = try $0.val("tail")
+        return Expression.pair(head, tail)
+    }
+
     return t
 }
