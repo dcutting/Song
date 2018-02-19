@@ -8,7 +8,7 @@ public enum EvaluationError: Error {
     case notABoolean(Expression)
     case notAFunction(Expression)
     case symbolNotFound(String)
-    case parameterArgumentMismatch
+    case signatureMismatch
 }
 
 extension Expression {
@@ -194,6 +194,8 @@ extension Expression {
         case let .subfunction(subfunction):
 
             var extendedContext = try matchParameters(closureContext: closureContext, callingContext: callingContext, parameters: subfunction.patterns, arguments: arguments)
+            let whenEvaluated = try subfunction.when.evaluate(context: extendedContext)
+            guard case .booleanValue(true) = whenEvaluated else { throw EvaluationError.signatureMismatch }
             if let funcName = subfunction.name {
                 extendedContext = extendContext(context: extendedContext, name: funcName, value: closure, replacing: false)
             }
@@ -221,7 +223,7 @@ extension Expression {
             let evaluatedValue = try argument.evaluate(context: callingContext)
             extendedContext = extendContext(context: extendedContext, name: name, value: evaluatedValue, replacing: true)
         default:
-            throw EvaluationError.parameterArgumentMismatch
+            throw EvaluationError.signatureMismatch
         }
         return extendedContext
     }
@@ -271,8 +273,8 @@ extension Expression {
         for expr in exprs {
             do {
                 return try evaluateCallAnonymous(closure: expr, arguments: arguments, callingContext: context)
-            } catch EvaluationError.parameterArgumentMismatch {}
+            } catch EvaluationError.signatureMismatch {}
         }
-        throw EvaluationError.parameterArgumentMismatch
+        throw EvaluationError.signatureMismatch
     }
 }
