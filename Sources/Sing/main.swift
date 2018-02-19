@@ -1,3 +1,4 @@
+import Foundation
 import Song
 import Syft
 
@@ -18,6 +19,10 @@ var context: Context = [:]
 while (true) {
     print(prompt, terminator: "")
     guard let line = readLine(strippingNewline: true) else { break }
+    if line == "?" {
+        print(context as AnyObject)
+        continue
+    }
     let result = parser.parse(line)
     let (ist, remainder) = result
     if remainder.text.isEmpty {
