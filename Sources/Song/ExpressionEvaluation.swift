@@ -221,6 +221,10 @@ extension Expression {
         switch parameter {
         case .variable(let name):
             extendedContext = extendContext(context: extendedContext, name: name, value: evaluatedValue, replacing: true)
+        case let .pair(paramHead, paramTail):
+            guard case let .pair(argHead, argTail) = evaluatedValue else { throw EvaluationError.signatureMismatch }
+            extendedContext = try matchAndExtend(context: extendedContext, parameter: paramHead, argument: argHead, callingContext: callingContext)
+            extendedContext = try matchAndExtend(context: extendedContext, parameter: paramTail, argument: argTail, callingContext: callingContext)
         default:
             if parameter != evaluatedValue {
                 throw EvaluationError.signatureMismatch
