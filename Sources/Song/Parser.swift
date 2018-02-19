@@ -129,24 +129,24 @@ public func makeParser() -> ParserProtocol {
 
     // Imports.
 
-    let importKeyword = str("Use") >>> space
-    let importFilename = stringValue
-    let `import` = importKeyword >>> importFilename.tag("import")
+//    let importKeyword = str("Use") >>> space
+//    let importFilename = stringValue
+//    let `import` = importKeyword >>> importFilename.tag("import")
 
     // Classes.
 
-    let numberKeyword = str("Number") >>> skip
-    let booleanKeyword = str("Boolean") >>> skip
-    let stringKeyword = str("String") >>> skip
-    let listKeyword = str("List") >>> skip
-    let className = numberKeyword | booleanKeyword | stringKeyword | listKeyword
-    let classKeyword = str("Class") >>> space
-    let classDeclaration = classKeyword >>> className.tag("subjectType")
+//    let numberKeyword = str("Number") >>> skip
+//    let booleanKeyword = str("Boolean") >>> skip
+//    let stringKeyword = str("String") >>> skip
+//    let listKeyword = str("List") >>> skip
+//    let className = numberKeyword | booleanKeyword | stringKeyword | listKeyword
+//    let classKeyword = str("Class") >>> space
+//    let classDeclaration = classKeyword >>> className.tag("subjectType")
 
     // Root.
 
-    let statement = classDeclaration >>> `import` >>> function >>> expression
-    let program = skip >>> statement
+//    let statement = classDeclaration >>> `import` >>> function >>> expression
+//    let program = skip >>> statement
 
     return function | expression
 }
