@@ -50,7 +50,8 @@ public func makeParser() -> ParserProtocol {
     let falseValue = str("no").tag("falseValue")
     let booleanValue = trueValue | falseValue
     let list = (lBracket >>> (expression.tag("listItem") >>> (comma >>> expression.tag("listItem")).recur).maybe.tag("list") >>> rBracket)
-    let literalValue = booleanValue | numericValue | stringValue | list
+    let listConstruction = (lBracket >>> expression.tag("listItem") >>> pipe >>> expression.tag("list") >>> rBracket)
+    let literalValue = booleanValue | numericValue | stringValue | list | listConstruction
 
     // Patterns.
 
