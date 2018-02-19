@@ -217,12 +217,14 @@ extension Expression {
 
     private func matchAndExtend(context: Context, parameter: Expression, argument: Expression, callingContext: Context) throws -> Context {
         var extendedContext = context
+        let evaluatedValue = try argument.evaluate(context: callingContext)
         switch parameter {
         case .variable(let name):
-            let evaluatedValue = try argument.evaluate(context: callingContext)
             extendedContext = extendContext(context: extendedContext, name: name, value: evaluatedValue, replacing: true)
         default:
-            throw EvaluationError.signatureMismatch
+            if parameter != evaluatedValue {
+                throw EvaluationError.signatureMismatch
+            }
         }
         return extendedContext
     }
