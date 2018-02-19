@@ -33,5 +33,8 @@ public func ==(lhs: Expression, rhs: Expression) -> Bool {
 
     case let (.closure(lhsFunction, lhsContext), .closure(rhsFunction, rhsContext)):
         return lhsFunction == rhsFunction// && lhsContext == rhsContext // TODO
+
+    default:
+        return false
     }
 }
