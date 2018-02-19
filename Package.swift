@@ -5,7 +5,7 @@ import PackageDescription
 let package = Package(
     name: "Song",
     dependencies: [
-        .package(url: "https://github.com/dcutting/Syft/", .branch("master"))
+        .package(url: "https://github.com/dcutting/Syft.git", .branch("master"))
     ],
     targets: [
         .target(
