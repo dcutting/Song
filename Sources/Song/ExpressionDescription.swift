@@ -39,8 +39,8 @@ extension Expression: CustomStringConvertible {
         case let .variable(variable):
             return "\(variable)"
 
-        case let .constant(expr):
-            return "\(expr)"
+        case let .constant(name, value):
+            return "\(name) = \(value)"
 
         case let .subfunction(subfunction):
             return descriptionSubfunction(subfunction: subfunction)
