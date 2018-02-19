@@ -3,9 +3,9 @@
     "pins": [
       {
         "package": "Syft",
-        "repositoryURL": "/Users/dcutting/Dropbox/Dan/Code/Syft",
+        "repositoryURL": "https://github.com/dcutting/Syft/",
         "state": {
-          "branch": "develop",
+          "branch": "master",
           "revision": "a7394eae8bff036ff28881f091c093991a371c32",
           "version": null
         }
