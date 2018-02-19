@@ -22,7 +22,10 @@ func dumpContext() {
 
 while (true) {
     print(prompt, terminator: "")
-    guard let line = readLine(strippingNewline: true) else { break }
+    guard let line = readLine()?.trimmingCharacters(in: .whitespacesAndNewlines) else { break }
+    if line == "" {
+        continue
+    }
     if line == "?" {
         dumpContext()
         continue
