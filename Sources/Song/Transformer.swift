@@ -17,8 +17,9 @@ public func makeTransformer() -> Transformer<Expression> {
         .booleanValue(false)
     }
 
-    t.rule(["stringValue": .simple("s")]) {
-        .stringValue(try $0.str("s"))
+    t.rule(["stringValue": .simple("s")]) { _ in
+    throw TransformerError.notNumeric("4")
+//    .stringValue(try $0.str("s"))
     }
 
     t.rule(["integerValue": .simple("i")]) {

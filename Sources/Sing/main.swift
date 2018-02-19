@@ -11,16 +11,20 @@ let parser = makeParser()
 let transformer = makeTransformer()
 
 func log(_ str: String = "") {
-    guard verbose else { return }
     print(str)
 }
 
 var context: Context = [:]
+
+func dumpContext() {
+    print(context as AnyObject)
+}
+
 while (true) {
     print(prompt, terminator: "")
     guard let line = readLine(strippingNewline: true) else { break }
     if line == "?" {
-        print(context as AnyObject)
+        dumpContext()
         continue
     }
     let result = parser.parse(line)
@@ -48,23 +52,34 @@ while (true) {
                 }
             } catch {
                 print(error)
-                log()
-                log("Context: \(context)")
-                log("AST: \(ast)")
-                log()
+                if verbose {
+                    log()
+                    log("Context:")
+                    dumpContext()
+                    log()
+                    log("AST:")
+                    dump(ast)
+                    log()
+                }
             }
         } catch {
-            print("Transform error")
+            print("Internal transform error: \(error)")
             log()
+            log("Input: \(line)")
+            log()
+            log("IST:")
             log(makeReport(result: ist))
             log()
-            log("\(error)")
+            log("\(remainder)")
+            log()
         }
     } else {
         print("Syntax error at position \(remainder.index): \(remainder.text)")
-        log()
-        log(makeReport(result: ist))
-        log()
+        if verbose {
+            log()
+            log(makeReport(result: ist))
+            log()
+        }
     }
 }
 print("\n👏")
