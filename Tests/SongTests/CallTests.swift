@@ -64,13 +64,13 @@ class CallTests: XCTestCase {
         }
     }
     
-    func testEvaluateClosureIgnoresCallingContext() {
-        let subfunction = Subfunction(name: "getX", patterns: [], when: .booleanValue(true), body: Expression.variable("x"))
+    func testEvaluateClosureCapturesCallingContext() {
+        let subfunction = Subfunction(name: "getX", patterns: [], when: .booleanValue(true), body: .variable("x"))
         let function = Expression.subfunction(subfunction)
         assertNoThrow {
             let closure = try function.evaluate()
             let call = Expression.callAnonymous(closure: closure, arguments: [])
-            XCTAssertThrowsError(try call.evaluate(context: ["x": [.integerValue(7)]]))
+            XCTAssertEqual(Expression.integerValue(7), try call.evaluate(context: ["x": [.integerValue(7)]]))
         }
     }
     
