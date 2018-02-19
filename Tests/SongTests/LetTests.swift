@@ -7,7 +7,7 @@ class LetTests: XCTestCase {
     
     func testDescription() {
         let result = "\(letExpression)"
-        XCTAssertEqual("let (company = 'Yellowbek') { company }", result)
+        XCTAssertEqual("let (company = \"Yellowbek\") { company }", result)
     }
     
     func testEvaluate() {

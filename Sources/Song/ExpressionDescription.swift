@@ -16,7 +16,7 @@ extension Expression: CustomStringConvertible {
             return "\(value)"
 
         case let .stringValue(value):
-            return "'\(value)'"
+            return "\"\(value)\""
             
         case let .isUnit(value):
             return "isUnit?(\(value))"

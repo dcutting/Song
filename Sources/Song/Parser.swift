@@ -13,7 +13,7 @@ public func makeParser() -> ParserProtocol {
     let rBracket = str("]") >>> skip
     let lParen = str("(") >>> skip
     let rParen = str(")")
-    let quote = str("'")
+    let quote = str("\"")
     let escape = str("\\")
     let digit = (0...9).match
     let letter = "abcdefghijklmnopqrstuvwxyz".match

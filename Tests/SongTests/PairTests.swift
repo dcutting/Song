@@ -25,7 +25,7 @@ class PairTests: XCTestCase {
     func testDescriptionSubPair() {
         let compoundPair = Expression.pair(Expression.stringValue("hi"), pair)
         let result = "\(compoundPair)"
-        XCTAssertEqual("('hi', (0, #))", result)
+        XCTAssertEqual("(\"hi\", (0, #))", result)
     }
     
     func testEvaluate() {

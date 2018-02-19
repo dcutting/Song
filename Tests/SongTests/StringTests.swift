@@ -16,7 +16,7 @@ class StringTests: XCTestCase {
     
     func testDescription() {
         let result = "\(string)"
-        XCTAssertEqual("'hello'", result)
+        XCTAssertEqual("\"hello\"", result)
     }
     
     func testEvaluate() {
