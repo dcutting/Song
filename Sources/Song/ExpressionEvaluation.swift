@@ -8,6 +8,7 @@ public enum EvaluationError: Error {
     case notABoolean(Expression)
     case notAFunction(Expression)
     case symbolNotFound(String)
+    case parameterArgumentMismatch
 }
 
 extension Expression {
@@ -192,26 +193,39 @@ extension Expression {
         switch function {
         case let .subfunction(subfunction):
 
-            if arguments.count < subfunction.patterns.count {
-                throw EvaluationError.insufficientArguments
-            }
-            if arguments.count > subfunction.patterns.count {
-                throw EvaluationError.tooManyArguments
-            }
-            let extendedContext = try extendContext(context: closureContext, parameters: subfunction.patterns, arguments: arguments, callingContext: callingContext)
-            var finalContext = extendedContext
+            var extendedContext = try matchParameters(closureContext: closureContext, callingContext: callingContext, parameters: subfunction.patterns, arguments: arguments)
             if let funcName = subfunction.name {
-                finalContext = extendContext(context: finalContext, name: funcName, value: closure, replacing: false)
+                extendedContext = extendContext(context: extendedContext, name: funcName, value: closure, replacing: false)
             }
-            return try subfunction.body.evaluate(context: finalContext)
-        case let .call(name, arguments):
-            let finalContext = callingContext.merging(closureContext) { l, r in l }
-            return try evaluateCall(name: name, arguments: arguments, context: finalContext)
+            return try subfunction.body.evaluate(context: extendedContext)
         default:
             throw EvaluationError.notAFunction(closure)
         }
     }
-    
+
+    private func matchParameters(closureContext: Context, callingContext: Context, parameters: [Expression], arguments: [Expression]) throws -> Context {
+        guard parameters.count <= arguments.count else { throw EvaluationError.insufficientArguments }
+        guard arguments.count <= parameters.count else { throw EvaluationError.tooManyArguments }
+
+        var extendedContext = closureContext
+        for (p, a) in zip(parameters, arguments) {
+            extendedContext = try matchAndExtend(context: extendedContext, parameter: p, argument: a, callingContext: callingContext)
+        }
+        return extendedContext
+    }
+
+    private func matchAndExtend(context: Context, parameter: Expression, argument: Expression, callingContext: Context) throws -> Context {
+        var extendedContext = context
+        switch parameter {
+        case .variable(let name):
+            let evaluatedValue = try argument.evaluate(context: callingContext)
+            extendedContext = extendContext(context: extendedContext, name: name, value: evaluatedValue, replacing: true)
+        default:
+            throw EvaluationError.parameterArgumentMismatch
+        }
+        return extendedContext
+    }
+
     func evaluateConditional(condition: Expression, then: Expression, otherwise: Expression, context: Context) throws -> Expression {
         switch try condition.evaluate(context: context) {
         case .booleanValue(true):
@@ -252,9 +266,13 @@ extension Expression {
 
     private func evaluateUserFunction(name: String, arguments: [Expression], context: Context) throws -> Expression {
         guard
-            let exprs = context[name],
-            let expr = exprs.first
+            let exprs = context[name]
             else { throw EvaluationError.symbolNotFound(name) }
-        return try evaluateCallAnonymous(closure: expr, arguments: arguments, callingContext: context)
+        for expr in exprs {
+            do {
+                return try evaluateCallAnonymous(closure: expr, arguments: arguments, callingContext: context)
+            } catch EvaluationError.parameterArgumentMismatch {}
+        }
+        throw EvaluationError.parameterArgumentMismatch
     }
 }

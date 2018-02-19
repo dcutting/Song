@@ -18,18 +18,3 @@ public func extendContext(context: Context, name: String, value: Expression, rep
     extendedContext[name] = group
     return extendedContext
 }
-
-func extendContext(context: Context, parameters: [Expression], arguments: [Expression], callingContext: Context) throws -> Context {
-    guard parameters.count <= arguments.count else { throw EvaluationError.insufficientArguments }
-    guard arguments.count <= parameters.count else { throw EvaluationError.tooManyArguments }
-    var extendedContext = context
-    for i in 0..<parameters.count {
-        let param = parameters[i]
-        if case .variable(let name) = param {
-            let value = arguments[i]
-            let evaluatedValue = try value.evaluate(context: callingContext)
-            extendedContext = extendContext(context: extendedContext, name: name, value: evaluatedValue, replacing: true)
-        }
-    }
-    return extendedContext
-}
