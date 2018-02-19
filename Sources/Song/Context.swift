@@ -18,3 +18,12 @@ public func extendContext(context: Context, name: String, value: Expression, rep
     extendedContext[name] = group
     return extendedContext
 }
+
+func isEqual(lhsContext: Context, rhsContext: Context) -> Bool {
+    guard Set(lhsContext.keys) == Set(rhsContext.keys) else { return false }
+    for (key, value) in lhsContext {
+        guard let rhsValue = rhsContext[key] else { return false }
+        if value != rhsValue { return false }
+    }
+    return true
+}
