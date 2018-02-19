@@ -143,6 +143,10 @@ public func makeTransformer() -> Transformer<Expression> {
         }
     }
 
+    t.rule(["list": .simple("")]) { _ in
+        Expression.unitValue
+    }
+
     t.rule(["left": .simple("left"), "ops": .series("ops")]) {
         let left = try $0.val("left")
         var ops = try $0.vals("ops")
