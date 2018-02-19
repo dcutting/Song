@@ -4,6 +4,6 @@ func assertNoThrow(file: StaticString = #file, line: UInt = #line, _ closure: ()
     do {
         try closure()
     } catch {
-        XCTFail(file: file, line: line)
+        XCTFail("\(error)", file: file, line: line)
     }
 }
