@@ -4,6 +4,8 @@ public extension Expression {
         switch self {
         case let .stringValue(value):
             return value
+        case let .closure(value, _):
+            return "\(value)"
         default:
             return "\(self)"
         }

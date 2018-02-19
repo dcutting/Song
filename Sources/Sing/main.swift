@@ -40,9 +40,10 @@ while (true) {
                 if case .constant(let name, let value) = expression {
                     context[name] = value
                 }
-                if case .unitValue = expression {
-                    // Do nothing.
-                } else {
+                switch expression {
+                case .unitValue, .closure, .constant:
+                    () // Do nothing.
+                default:
                     print(expression)
                 }
             } catch {
