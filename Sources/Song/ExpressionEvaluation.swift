@@ -195,8 +195,8 @@ extension Expression {
 
             let extendedContext = try matchParameters(closureContext: closureContext, callingContext: callingContext, parameters: subfunction.patterns, arguments: arguments)
             let whenEvaluated = try subfunction.when.evaluate(context: extendedContext)
+            guard case .booleanValue = whenEvaluated else { throw EvaluationError.notABoolean(subfunction.when) }
             guard case .booleanValue(true) = whenEvaluated else { throw EvaluationError.signatureMismatch }
-            // TODO: when expressions that don't evaluate to a boolean should throw an error.
             let finalContext = callingContext.merging(extendedContext) { l, r in r }
             return try subfunction.body.evaluate(context: finalContext)
         default:
