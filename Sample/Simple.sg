@@ -26,3 +26,12 @@ list.reverse = list.reverse([])
 front.append(back) = back.reversePrepend(front.reverse)
 back.reversePrepend([]) = back
 back.reversePrepend([x|xs]) = [x|back].reversePrepend(xs)
+
+# Backwards
+[].backwards = []
+[x|xs].backwards = xs.backwards.append([x])
+
+# Fibonacci
+n.fib = n.fib(0, 1)
+0.fib(a, b) = a
+n.fib(a, b) = (n-1).fib(b, a+b)
