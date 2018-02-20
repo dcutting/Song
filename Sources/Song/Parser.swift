@@ -16,7 +16,10 @@ public func makeParser() -> ParserProtocol {
     let quote = str("\"")
     let escape = str("\\")
     let digit = (0...9).match
-    let letter = "abcdefghijklmnopqrstuvwxyz".match
+    let underscore = str("_")
+    let lowercaseLetter = "abcdefghijklmnopqrstuvwxyz".match
+    let uppercaseLetter = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".match
+    let letter = lowercaseLetter | uppercaseLetter
     let symbol = dot | pipe | comma | lBracket | rBracket | lParen | rParen
     let character = Deferred()
     character.parser = letter | digit | space | symbol | escape >>> (escape | quote | character)
@@ -38,7 +41,9 @@ public func makeParser() -> ParserProtocol {
     // Atoms.
 
     // RESERVED_WORDS = %w( yes no not and or if use class eq neq Boolean List String Number )
-    let name = (letter >>> (letter | digit).some.maybe)
+    let namePrefix = underscore.maybe >>> lowercaseLetter
+    let nameSuffix = letter | digit | underscore
+    let name = namePrefix >>> nameSuffix.some.maybe
 
     // Literal values.
 
