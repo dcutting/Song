@@ -83,4 +83,13 @@ class ParserTests: XCTestCase {
                                                             .call(name: "map", arguments: [.variable("xs"), .variable("f")]))))
         )
     }
+
+    func test_constants() {
+        "let x = 5".becomes(.constant(name: "x", value: .integerValue(5)))
+        "let double = |x| x * 2".becomes(.constant(name: "double", value:
+            .subfunction(Subfunction(name: nil,
+                                     patterns: [.variable("x")],
+                                     when: .booleanValue(true),
+                                     body: .call(name: "*", arguments: [.variable("x"), .integerValue(2)])))))
+    }
 }
