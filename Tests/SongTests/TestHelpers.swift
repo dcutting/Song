@@ -18,6 +18,10 @@ extension String {
         }
     }
 
+    func fails(file: StaticString = #file, line: UInt = #line) {
+        XCTAssertThrowsError(try parse(self), "should not parse", file: file, line: line)
+    }
+
     private func parse(_ line: String) throws -> Expression {
         let parser = makeParser()
         let transformer = makeTransformer()
