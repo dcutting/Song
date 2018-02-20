@@ -36,8 +36,8 @@ public func makeParser() -> ParserProtocol {
     let notEqualTo = str("neq")
     let logicalAnd = str("and")
     let logicalOr = str("or")
-//    let notKeyword = str("NOT").tag("not") >>> space
-    let when = str("when") >>> space
+    let logicalNot = str("not")
+    let when = space >>> str("when") >>> space
     let const = str("let") >>> space
     let assign = str("=") >>> skip
 
@@ -104,7 +104,7 @@ public func makeParser() -> ParserProtocol {
     let parameters = parameter >>> (comma >>> parameter).recur
     let functionParameters = lParen >>> parameters.recur(0, 1).tag("params") >>> rParen
     let functionBody = expression.tag("body") >>> skip
-    let guardClause = (space >>> when >>> expression).maybe.tag("guard") >>> skip
+    let guardClause = (when >>> expression).maybe.tag("guard") >>> skip
     let subjectFunctionDecl = functionSubject >>> dot >>> functionName >>> functionParameters.maybe >>> guardClause >>> assign >>> functionBody
 
     let freeFunctionDecl = functionName >>> functionParameters >>> guardClause >>> assign >>> functionBody
@@ -126,12 +126,12 @@ public func makeParser() -> ParserProtocol {
     let wrappedExpression = lParen >>> expression.tag("wrapped") >>> rParen
     atom.parser = wrappedExpression | freeFunctionCall | literalValue | variableName
 
-    //    let negatedTerm = notKeyword >>> term.tag("negatedTerm")
-    term.parser = /*negatedTerm |*/ functionCall | lambda | constant | atom
+    let negatedTerm = logicalNot.tag("op") >>> space >>> term.tag("right")
+    term.parser = negatedTerm | functionCall | lambda | atom
 
     // Root.
 
-    let root = functionDecl | expression
+    let root = functionDecl | constant | expression
 
     return root
 }

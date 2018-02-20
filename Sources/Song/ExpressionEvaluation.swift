@@ -99,6 +99,8 @@ extension Expression {
             return try evaluateLogical(arguments: arguments, context: context) { a, b in a && b }
         case "or":
             return try evaluateLogical(arguments: arguments, context: context) { a, b in a || b }
+        case "not":
+            return try evaluateLogicalNot(arguments: arguments, context: context)
         case "out":
             return try evaluateOut(arguments: arguments, context: context)
         default:
@@ -127,6 +129,13 @@ extension Expression {
         }
     }
 
+    private func evaluateLogicalNot(arguments: [Expression], context: Context) throws -> Expression {
+        let bools = try toBools(arguments: arguments, context: context)
+        guard bools.count == 1 else { throw EvaluationError.signatureMismatch }
+        guard let value = bools.first else { preconditionFailure("expected one boolean") }
+        return .booleanValue(!value)
+    }
+
     private func evaluateLogical(arguments: [Expression], context: Context, callback: (Bool, Bool) -> Bool) throws -> Expression {
         var bools = try toBools(arguments: arguments, context: context)
         guard bools.count > 0 else { throw EvaluationError.signatureMismatch }
@@ -135,7 +144,7 @@ extension Expression {
             let (v, x) = a
             return (v && callback(x, n), n)
         }
-        return Expression.booleanValue(result)
+        return .booleanValue(result)
     }
 
     private func toBools(arguments: [Expression], context: Context) throws -> [Bool] {
