@@ -4,6 +4,10 @@ import PackageDescription
 
 let package = Package(
     name: "Song",
+    products: [
+        .executable(name: "sing", targets: ["Sing"]),
+        .library(name: "Song", targets: ["Song"])
+    ],
     dependencies: [
         .package(url: "https://github.com/dcutting/Syft.git", .branch("develop"))
     ],
