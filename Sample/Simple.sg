@@ -16,3 +16,13 @@ min(_, y) = y
 let result = min(8, 4)
 out(result)
 # 4
+
+# Reverse
+list.reverse = list.reverse([])
+[].reverse(result) = result
+[x|xs].reverse(result) = xs.reverse([x|result])
+
+# Append
+front.append(back) = back.reversePrepend(front.reverse)
+back.reversePrepend([]) = back
+back.reversePrepend([x|xs]) = [x|back].reversePrepend(xs)
