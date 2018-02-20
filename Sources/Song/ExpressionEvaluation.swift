@@ -3,8 +3,6 @@ typealias Number = Int
 public enum EvaluationError: Error {
     case symbolNotFound(String)
     case signatureMismatch
-    case insufficientArguments
-    case tooManyArguments
     case notABoolean(Expression)
     case notANumber(Expression)
     case notAList(Expression)
@@ -64,13 +62,13 @@ extension Expression {
             return Expression.integerValue(result)
         case "/":
             var numbers = try toNumbers(arguments: arguments, context: context)
-            guard numbers.count > 0 else { throw EvaluationError.insufficientArguments }
+            guard numbers.count > 0 else { throw EvaluationError.signatureMismatch }
             let first = numbers.removeFirst()
             let result = numbers.reduce(first) { a, n in a / n }
             return Expression.integerValue(result)
         case "%":
             var numbers = try toNumbers(arguments: arguments, context: context)
-            guard numbers.count > 0 else { throw EvaluationError.insufficientArguments }
+            guard numbers.count > 0 else { throw EvaluationError.signatureMismatch }
             let first = numbers.removeFirst()
             let result = numbers.reduce(first) { a, n in a % n }
             return Expression.integerValue(result)
@@ -110,7 +108,7 @@ extension Expression {
 
     private func evaluateRelational(arguments: [Expression], context: Context, callback: (Number, Number) -> Bool) throws -> Expression {
         var numbers = try toNumbers(arguments: arguments, context: context)
-        guard numbers.count > 0 else { throw EvaluationError.insufficientArguments }
+        guard numbers.count > 0 else { throw EvaluationError.signatureMismatch }
         let first = numbers.removeFirst()
         let (result, _) = numbers.reduce((true, first)) { a, n in
             let (v, x) = a
@@ -131,7 +129,7 @@ extension Expression {
 
     private func evaluateLogical(arguments: [Expression], context: Context, callback: (Bool, Bool) -> Bool) throws -> Expression {
         var bools = try toBools(arguments: arguments, context: context)
-        guard bools.count > 0 else { throw EvaluationError.insufficientArguments }
+        guard bools.count > 0 else { throw EvaluationError.signatureMismatch }
         let first = bools.removeFirst()
         let (result, _) = bools.reduce((true, first)) { a, n in
             let (v, x) = a
@@ -184,8 +182,8 @@ extension Expression {
     }
 
     private func matchParameters(closureContext: Context, callingContext: Context, parameters: [Expression], arguments: [Expression]) throws -> Context {
-        guard parameters.count <= arguments.count else { throw EvaluationError.insufficientArguments }
-        guard arguments.count <= parameters.count else { throw EvaluationError.tooManyArguments }
+        guard parameters.count <= arguments.count else { throw EvaluationError.signatureMismatch }
+        guard arguments.count <= parameters.count else { throw EvaluationError.signatureMismatch }
 
         var extendedContext = closureContext
         for (p, a) in zip(parameters, arguments) {
