@@ -22,8 +22,7 @@ public func extendContext(context: Context, name: String, value: Expression, rep
 func isEqual(lhsContext: Context, rhsContext: Context) -> Bool {
     guard Set(lhsContext.keys) == Set(rhsContext.keys) else { return false }
     for (key, value) in lhsContext {
-        guard let rhsValue = rhsContext[key] else { return false }
-        if value != rhsValue { return false }
+        guard let rhsValue = rhsContext[key], value == rhsValue else { return false }
     }
     return true
 }
