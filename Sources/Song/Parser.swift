@@ -46,10 +46,11 @@ public func makeParser() -> ParserProtocol {
     // Lists.
 
     let item = expression.tag("item")
-    let tail = expression.tag("tail")
     let list = lBracket >>> (item >>> (comma >>> item).recur).recur.tag("list") >>> rBracket
-    let heads = (item >>> (comma >>> item).recur).tag("heads")
-    let listConstructor = lBracket >>> heads >>> pipe >>> tail >>> rBracket
+
+    let heads = (skip >>> item >>> (comma >>> item >>> skip).recur).tag("heads")
+    let tail = expression.tag("tail")
+    let listConstructor = lBracket >>> heads >>> skip >>> pipe >>> skip >>> tail >>> skip >>> rBracket
 
     // Literals.
 

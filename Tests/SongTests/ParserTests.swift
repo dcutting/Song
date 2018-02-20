@@ -41,6 +41,8 @@ class ParserTests: XCTestCase {
         "[x,y|xs]".becomes(.listConstructor([.variable("x"), .variable("y")], .variable("xs")))
         "[ 1 , x | xs ]".becomes(.listConstructor([.integerValue(1), .variable("x")], .variable("xs")))
         "[yes|2]".becomes(.listConstructor([.booleanValue(true)], .integerValue(2)))
+        "[ f(x) | g(x) ]".becomes(.listConstructor([.call(name: "f", arguments: [.variable("x")])],
+                                                   .call(name: "g", arguments: [.variable("x")])))
 
         "[|xs]".fails()
         "[x|]".fails()
@@ -58,5 +60,27 @@ class ParserTests: XCTestCase {
         "_".fails()
         "GoodName".fails()
         "9bottles".fails()
+    }
+
+    func test_subfunctions() {
+        "foo() = 5".becomes(
+            .subfunction(Subfunction(name: "foo", patterns: [], when: .booleanValue(true), body: .integerValue(5)))
+        )
+        "foo(a) = a".becomes(
+            .subfunction(Subfunction(name: "foo", patterns: [.variable("a")], when: .booleanValue(true), body: .variable("a")))
+        )
+        "a.foo = a".becomes(
+            .subfunction(Subfunction(name: "foo", patterns: [.variable("a")], when: .booleanValue(true), body: .variable("a")))
+        )
+        "a.plus(b) = a + b".becomes(
+            .subfunction(Subfunction(name: "plus", patterns: [.variable("a"), .variable("b")], when: .booleanValue(true), body: .call(name: "+", arguments: [.variable("a"), .variable("b")])))
+        )
+        "[x|xs].map(f) = [f(x)|xs.map(f)]".becomes(
+            .subfunction(Subfunction(name: "map",
+                                     patterns: [.listConstructor([.variable("x")], .variable("xs")), .variable("f")],
+                                     when: .booleanValue(true),
+                                     body: .listConstructor([.call(name: "f", arguments: [.variable("x")])],
+                                                            .call(name: "map", arguments: [.variable("xs"), .variable("f")]))))
+        )
     }
 }
