@@ -149,7 +149,7 @@ public func makeTransformer() -> Transformer<Expression> {
     t.rule(["listItem": .simple("head"), "list": .simple("tail")]) {
         let head = try $0.val("head")
         let tail = try $0.val("tail")
-        return Expression.listConstructor(head, tail)
+        return Expression.listConstructor([head], tail)
     }
 
     t.rule(["left": .simple("left"), "ops": .series("ops")]) {
@@ -181,10 +181,14 @@ public func makeTransformer() -> Transformer<Expression> {
         try $0.val("let")
     }
 
-    t.rule(["head": .simple("head"), "tail": .simple("tail")]) {
-        let head = try $0.val("head")
+    t.rule(["head": .simple("head")]) {
+        try $0.val("head")
+    }
+
+    t.rule(["heads": .series("heads"), "tail": .simple("tail")]) {
+        let heads = try $0.vals("heads")
         let tail = try $0.val("tail")
-        return Expression.listConstructor(head, tail)
+        return Expression.listConstructor(heads, tail)
     }
 
     return t

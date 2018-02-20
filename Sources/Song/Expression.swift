@@ -24,7 +24,7 @@ public indirect enum Expression {
     case floatValue(Double)
     case stringValue(String)
     case list([Expression])
-    case listConstructor(Expression, Expression)
+    case listConstructor([Expression], Expression)
 
     case variable(String)
 

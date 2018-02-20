@@ -25,11 +25,11 @@ extension Expression {
             let evaluated = try exprs.map { try $0.evaluate(context: context) }
             return .list(evaluated)
 
-        case let .listConstructor(head, tail):
-            let evaluatedHead = try head.evaluate(context: context)
+        case let .listConstructor(heads, tail):
+            let evaluatedHeads = try heads.map { try $0.evaluate(context: context) }
             let evaluatedTail = try tail.evaluate(context: context)
             guard case var .list(items) = evaluatedTail else { throw EvaluationError.notAList(evaluatedTail) }
-            items.insert(evaluatedHead, at: 0)
+            items.insert(contentsOf: evaluatedHeads, at: 0)
             return .list(items)
 
         case let .variable(variable):
@@ -198,11 +198,14 @@ extension Expression {
         switch parameter {
         case .variable(let name):
             extendedContext = extendContext(context: extendedContext, name: name, value: evaluatedValue, replacing: true)
-        case let .listConstructor(paramHead, paramTail):
+        case .listConstructor(var paramHeads, let paramTail):
             guard case var .list(argItems) = evaluatedValue else { throw EvaluationError.signatureMismatch }
-            guard argItems.count > 0 else { throw EvaluationError.signatureMismatch }
-            let argHead = argItems.removeFirst()
-            extendedContext = try matchAndExtend(context: extendedContext, parameter: paramHead, argument: argHead, callingContext: callingContext)
+            guard argItems.count >= paramHeads.count else { throw EvaluationError.signatureMismatch }
+            while paramHeads.count > 0 {
+                let paramHead = paramHeads.removeFirst()
+                let argHead = argItems.removeFirst()
+                extendedContext = try matchAndExtend(context: extendedContext, parameter: paramHead, argument: argHead, callingContext: callingContext)
+            }
             let argTail = Expression.list(argItems)
             extendedContext = try matchAndExtend(context: extendedContext, parameter: paramTail, argument: argTail, callingContext: callingContext)
         default:

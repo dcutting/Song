@@ -62,8 +62,8 @@ public func makeParser() -> ParserProtocol {
 
     let head = pattern.tag("head")
     let tail = pattern.tag("tail")
-//    let headItems = (head >>> (comma >>> head).recur).tag("heads")
-    let listPattern = lBracket >>> head >>> pipe >>> tail >>> rBracket
+    let heads = (head >>> (comma >>> head).recur).tag("heads")
+    let listPattern = lBracket >>> heads >>> pipe >>> tail >>> rBracket
     let listParamPattern = lBracket >>> (pattern.tag("listItem") >>> (comma >>> pattern.tag("listItem")).recur).maybe.tag("list") >>> rBracket
     pattern.parser = listParamPattern | listPattern | literalValue.tag("literal") | name.tag("variable")
 
