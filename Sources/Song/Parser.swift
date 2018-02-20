@@ -8,7 +8,7 @@ public func makeParser() -> ParserProtocol {
     let skip = space.maybe
     let dot = str(".")
     let pipe = str("|") >>> skip
-    let comma = str(",") >>> skip
+    let comma = skip >>> str(",") >>> skip
     let lBracket = str("[") >>> skip
     let rBracket = str("]") >>> skip
     let lParen = str("(") >>> skip
