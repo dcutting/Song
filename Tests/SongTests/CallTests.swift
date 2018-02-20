@@ -20,6 +20,42 @@ class CallTests: XCTestCase {
         XCTAssertEqual("foo(5, 9)", "\(foo)")
     }
 
+    func testEquatable_call_same_returnsTrue() {
+        let left = Expression.call(name: "foo", arguments: [.integerValue(9)])
+        let right = Expression.call(name: "foo", arguments: [.integerValue(9)])
+        XCTAssertEqual(left, right)
+    }
+
+    func testEquatable_call_differentName_returnsFalse() {
+        let left = Expression.call(name: "foo", arguments: [.integerValue(9)])
+        let right = Expression.call(name: "bar", arguments: [.integerValue(9)])
+        XCTAssertNotEqual(left, right)
+    }
+
+    func testEquatable_call_differentArguments_returnsFalse() {
+        let left = Expression.call(name: "foo", arguments: [.integerValue(9)])
+        let right = Expression.call(name: "foo", arguments: [.stringValue("hi")])
+        XCTAssertNotEqual(left, right)
+    }
+
+    func testEquatable_callAnonymous_same_returnsTrue() {
+        let left = Expression.callAnonymous(closure: .integerValue(9), arguments: [.integerValue(5)])
+        let right = Expression.callAnonymous(closure: .integerValue(9), arguments: [.integerValue(5)])
+        XCTAssertEqual(left, right)
+    }
+
+    func testEquatable_callAnonymous_differentClosure_returnsFalse() {
+        let left = Expression.callAnonymous(closure: .integerValue(1), arguments: [.integerValue(5)])
+        let right = Expression.callAnonymous(closure: .integerValue(9), arguments: [.integerValue(5)])
+        XCTAssertNotEqual(left, right)
+    }
+
+    func testEquatable_callAnonymous_differentArguments_returnsFalse() {
+        let left = Expression.callAnonymous(closure: .integerValue(9), arguments: [.integerValue(5)])
+        let right = Expression.callAnonymous(closure: .integerValue(9), arguments: [.integerValue(1)])
+        XCTAssertNotEqual(left, right)
+    }
+
     func testEvaluateCallingNonClosure() {
         let call = Expression.callAnonymous(closure: Expression.integerValue(5), arguments: [])
         XCTAssertThrowsError(try call.evaluate())
