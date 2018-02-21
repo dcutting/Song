@@ -96,6 +96,12 @@ class ParserTests: XCTestCase {
                                      when: .call(name: "<", arguments: [.variable("a"), .integerValue(50)]),
                                      body: .variable("a")))
         )
+        "a.foo() when a < 50 = a".becomes(
+            .subfunction(Subfunction(name: "foo",
+                                     patterns: [.variable("a")],
+                                     when: .call(name: "<", arguments: [.variable("a"), .integerValue(50)]),
+                                     body: .variable("a")))
+        )
         "a.plus(b) = a + b".becomes(
             .subfunction(Subfunction(name: "plus", patterns: [.variable("a"), .variable("b")], when: .booleanValue(true), body: .call(name: "+", arguments: [.variable("a"), .variable("b")])))
         )
