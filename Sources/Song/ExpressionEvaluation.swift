@@ -58,31 +58,32 @@ extension Expression {
         switch name {
         case "*":
             let numbers = try toNumbers(arguments: arguments, context: context)
+            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
             let result = numbers.reduce(1) { a, n in a * n }
-            return Expression.integerValue(result)
+            return .integerValue(result)
         case "/":
             var numbers = try toNumbers(arguments: arguments, context: context)
-            guard numbers.count > 0 else { throw EvaluationError.signatureMismatch }
+            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
             let first = numbers.removeFirst()
-            let result = numbers.reduce(first) { a, n in a / n }
-            return Expression.integerValue(result)
+            let second = numbers.removeFirst()
+            return .integerValue(first / second)
         case "%":
             var numbers = try toNumbers(arguments: arguments, context: context)
-            guard numbers.count > 0 else { throw EvaluationError.signatureMismatch }
+            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
             let first = numbers.removeFirst()
-            let result = numbers.reduce(first) { a, n in a % n }
-            return Expression.integerValue(result)
+            let second = numbers.removeFirst()
+            return .integerValue(first % second)
         case "+":
             let numbers = try toNumbers(arguments: arguments, context: context)
+            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
             let result = numbers.reduce(0) { a, n in a + n }
             return Expression.integerValue(result)
         case "-":
-            let numbers = try toNumbers(arguments: arguments, context: context)
-            let normalisedNumbers = numbers.enumerated().map { (i, n) in
-                return i > 0 ? -n : n
-            }
-            let result = normalisedNumbers.reduce(0) { a, n in a + n }
-            return Expression.integerValue(result)
+            var numbers = try toNumbers(arguments: arguments, context: context)
+            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
+            let first = numbers.removeFirst()
+            let second = numbers.removeFirst()
+            return .integerValue(first - second)
         case "<":
             return try evaluateRelational(arguments: arguments, context: context) { a, b in a < b }
         case ">":
