@@ -107,4 +107,116 @@ class BuiltinFunctionTests: XCTestCase {
             XCTAssertEqual(Expression.integerValue(1), result)
         }
     }
+
+    func test_lessThan_leftLessThanRight_returnsTrue() {
+        let lessThan = Expression.call(name: "<", arguments: [.integerValue(2), .integerValue(3)])
+        assertNoThrow {
+            let result = try lessThan.evaluate()
+            XCTAssertEqual(Expression.booleanValue(true), result)
+        }
+    }
+
+    func test_lessThan_rightLessThanLeft_returnsFalse() {
+        let lessThan = Expression.call(name: "<", arguments: [.integerValue(4), .integerValue(3)])
+        assertNoThrow {
+            let result = try lessThan.evaluate()
+            XCTAssertEqual(Expression.booleanValue(false), result)
+        }
+    }
+
+    func test_greaterThan_leftLessThanRight_returnsFalse() {
+        let lessThan = Expression.call(name: ">", arguments: [.integerValue(2), .integerValue(3)])
+        assertNoThrow {
+            let result = try lessThan.evaluate()
+            XCTAssertEqual(Expression.booleanValue(false), result)
+        }
+    }
+
+    func test_greaterThan_rightLessThanLeft_returnsTrue() {
+        let lessThan = Expression.call(name: ">", arguments: [.integerValue(4), .integerValue(3)])
+        assertNoThrow {
+            let result = try lessThan.evaluate()
+            XCTAssertEqual(Expression.booleanValue(true), result)
+        }
+    }
+
+    func test_lessThanOrEqual_leftLessThanRight_returnsTrue() {
+        let lessThan = Expression.call(name: "<=", arguments: [.integerValue(2), .integerValue(3)])
+        assertNoThrow {
+            let result = try lessThan.evaluate()
+            XCTAssertEqual(Expression.booleanValue(true), result)
+        }
+    }
+
+    func test_lessThanOrEqual_rightLessThanLeft_returnsFalse() {
+        let lessThan = Expression.call(name: "<=", arguments: [.integerValue(4), .integerValue(3)])
+        assertNoThrow {
+            let result = try lessThan.evaluate()
+            XCTAssertEqual(Expression.booleanValue(false), result)
+        }
+    }
+
+    func test_lessThanOrEqual_equal_returnsTrue() {
+        let lessThan = Expression.call(name: "<=", arguments: [.integerValue(3), .integerValue(3)])
+        assertNoThrow {
+            let result = try lessThan.evaluate()
+            XCTAssertEqual(Expression.booleanValue(true), result)
+        }
+    }
+
+    func test_greaterThanOrEqual_leftLessThanRight_returnsFalse() {
+        let lessThan = Expression.call(name: ">=", arguments: [.integerValue(2), .integerValue(3)])
+        assertNoThrow {
+            let result = try lessThan.evaluate()
+            XCTAssertEqual(Expression.booleanValue(false), result)
+        }
+    }
+
+    func test_greaterThanOrEqual_rightLessThanLeft_returnsTrue() {
+        let lessThan = Expression.call(name: ">=", arguments: [.integerValue(4), .integerValue(3)])
+        assertNoThrow {
+            let result = try lessThan.evaluate()
+            XCTAssertEqual(Expression.booleanValue(true), result)
+        }
+    }
+
+    func test_greaterThanOrEqual_equal_returnsTrue() {
+        let lessThan = Expression.call(name: ">=", arguments: [.integerValue(3), .integerValue(3)])
+        assertNoThrow {
+            let result = try lessThan.evaluate()
+            XCTAssertEqual(Expression.booleanValue(true), result)
+        }
+    }
+
+    func test_equalTo_equal_returnsTrue() {
+        let lessThan = Expression.call(name: "eq", arguments: [.integerValue(3), .integerValue(3)])
+        assertNoThrow {
+            let result = try lessThan.evaluate()
+            XCTAssertEqual(Expression.booleanValue(true), result)
+        }
+    }
+
+    func test_equalTo_notEqual_returnsFalse() {
+        let lessThan = Expression.call(name: "eq", arguments: [.integerValue(2), .integerValue(3)])
+        assertNoThrow {
+            let result = try lessThan.evaluate()
+            XCTAssertEqual(Expression.booleanValue(false), result)
+        }
+    }
+
+    func test_notEqualTo_equal_returnsFalse() {
+        let lessThan = Expression.call(name: "neq", arguments: [.integerValue(3), .integerValue(3)])
+        assertNoThrow {
+            let result = try lessThan.evaluate()
+            XCTAssertEqual(Expression.booleanValue(false), result)
+        }
+    }
+
+    func test_notEqualTo_notEqual_returnsTrue() {
+        let lessThan = Expression.call(name: "neq", arguments: [.integerValue(2), .integerValue(3)])
+        assertNoThrow {
+            let result = try lessThan.evaluate()
+            XCTAssertEqual(Expression.booleanValue(true), result)
+        }
+    }
 }
