@@ -49,6 +49,12 @@ class ParserTests: XCTestCase {
         "[yes|2]".becomes(.listConstructor([.booleanValue(true)], .integerValue(2)))
         "[ f(x) | g(x) ]".becomes(.listConstructor([.call(name: "f", arguments: [.variable("x")])],
                                                    .call(name: "g", arguments: [.variable("x")])))
+        "[1,2|[3,4|[5,6]]]".becomes(.listConstructor(
+            [.integerValue(1), .integerValue(2)],
+            .listConstructor(
+                [.integerValue(3), .integerValue(4)],
+                .list([.integerValue(5), .integerValue(6)])
+            )))
 
         "[|xs]".fails()
         "[x|]".fails()
