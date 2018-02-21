@@ -5,7 +5,7 @@ import PackageDescription
 let package = Package(
     name: "Song",
     products: [
-        .executable(name: "sing", targets: ["Sing"]),
+        .executable(name: "song", targets: ["Sing"]),
         .library(name: "Song", targets: ["Song"])
     ],
     dependencies: [
