@@ -1,7 +1,7 @@
 import XCTest
 import Song
 
-class IntegerValueTests: XCTestCase {
+class IntegerTests: XCTestCase {
 
     let integer = Expression.integerValue(5)
 
