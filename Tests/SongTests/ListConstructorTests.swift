@@ -19,4 +19,33 @@ class ListConstructorTests: XCTestCase {
         let right = Expression.listConstructor([.integerValue(1), .integerValue(5)], .list([.integerValue(2)]))
         XCTAssertNotEqual(left, right)
     }
+
+    func test_evaluate_simple_constructsList() {
+        let cons = Expression.listConstructor([.integerValue(1), .integerValue(2)], .list([.integerValue(3)]))
+        assertNoThrow {
+            let actual = try cons.evaluate()
+            XCTAssertEqual(Expression.list([.integerValue(1), .integerValue(2), .integerValue(3)]), actual)
+        }
+    }
+
+    func test_evaluate_emptyHeads_constructsList() {
+        let cons = Expression.listConstructor([], .list([.integerValue(1)]))
+        assertNoThrow {
+            let actual = try cons.evaluate()
+            XCTAssertEqual(Expression.list([.integerValue(1)]), actual)
+        }
+    }
+
+    func test_evaluate_evaluatesHeadsAndTail() {
+        let cons = Expression.listConstructor([.variable("x")], .list([.variable("y")]))
+        assertNoThrow {
+            let actual = try cons.evaluate(context: ["x": [.stringValue("hi")], "y": [.integerValue(1)]])
+            XCTAssertEqual(Expression.list([.stringValue("hi"), .integerValue(1)]), actual)
+        }
+    }
+
+    func test_evaluate_tailNotAList_throws() {
+        let cons = Expression.listConstructor([.integerValue(1)], .integerValue(2))
+        XCTAssertThrowsError(try cons.evaluate())
+    }
 }
