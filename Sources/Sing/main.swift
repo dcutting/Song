@@ -17,10 +17,12 @@ if args.count > 1 {
                                 encoding: String.Encoding.utf8.rawValue)
 
     lines = [String]()
-    // Print all lines.
     contents.enumerateLines({ (line, stop) -> () in
         lines?.append(line)
     })
+    if let line = lines?.first, line.hasPrefix("#!") {
+        lines?.removeFirst()
+    }
 }
 
 func getLine() -> String? {
