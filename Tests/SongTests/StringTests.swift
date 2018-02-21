@@ -3,26 +3,23 @@ import Song
 
 class StringTests: XCTestCase {
     
-    let string = Expression.stringValue("hello")
+    func test_description_withoutQuotes() {
+        let string = Expression.stringValue("hello")
+        let actual = "\(string)"
+        XCTAssertEqual("\"hello\"", actual)
+    }
 
-    func testConstructor() {
-        switch string {
-        case let .stringValue(value):
-            XCTAssertEqual("hello", value)
-        default:
-            XCTFail("not a string")
-        }
+    func test_description_withQuotes_escapesQuotes() {
+        let string = Expression.stringValue("\"Hello\" world")
+        let actual = "\(string)"
+        XCTAssertEqual("\"\\\"Hello\\\" world\"", actual)
     }
-    
-    func testDescription() {
-        let result = "\(string)"
-        XCTAssertEqual("\"hello\"", result)
-    }
-    
-    func testEvaluate() {
+
+    func test_evaluate() {
         assertNoThrow {
-            let result = try string.evaluate()
-            XCTAssertEqual(string, result)
+            let string = Expression.stringValue("hello")
+            let actual = try string.evaluate()
+            XCTAssertEqual(string, actual)
         }
     }
 }

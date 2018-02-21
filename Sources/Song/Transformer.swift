@@ -1,3 +1,4 @@
+import Foundation
 import Syft
 
 public enum SongTransformError: Error {
@@ -47,7 +48,9 @@ public func makeTransformer() -> Transformer<Expression> {
     }
 
     t.rule(["string": .simple("s")]) {
-        .stringValue(try $0.str("s"))
+        let value = try $0.str("s")
+        let unescaped = value.replacingOccurrences(of: "\\", with: "")
+        return .stringValue(unescaped)
     }
 
     // Expressions.

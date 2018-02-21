@@ -13,7 +13,8 @@ extension Expression: CustomStringConvertible {
             return "\(value)"
 
         case let .stringValue(value):
-            return "\"\(value)\""
+            let escaped = value.replacingOccurrences(of: "\"", with: "\\\"")
+            return "\"\(escaped)\""
             
         case let .list(exprs):
             let descriptions = exprs.map { "\($0)" }
