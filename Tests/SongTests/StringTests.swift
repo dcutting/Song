@@ -15,6 +15,12 @@ class StringTests: XCTestCase {
         XCTAssertEqual("\"\\\"Hello\\\" world\"", actual)
     }
 
+    func test_description_withBackslash_escapesBackslash() {
+        let string = Expression.stringValue("a\\backslash")
+        let actual = "\(string)"
+        XCTAssertEqual("\"a\\backslash\"", actual)
+    }
+
     func test_evaluate() {
         assertNoThrow {
             let string = Expression.stringValue("hello")

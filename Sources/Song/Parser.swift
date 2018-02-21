@@ -22,7 +22,7 @@ public func makeParser() -> ParserProtocol {
     let letter = lowercaseLetter | uppercaseLetter
     let symbol = dot | pipe | comma | lBracket | rBracket | lParen | rParen | underscore
     let stringChar = Deferred()
-    stringChar.parser = letter | digit | space | symbol | backslash >>> (backslash | quote | stringChar)
+    stringChar.parser = backslash >>> (backslash | quote) | letter | digit | space | symbol
     let star = str("*")
     let slash = str("/")
     let percent = str("%")

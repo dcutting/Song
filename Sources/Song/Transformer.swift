@@ -48,9 +48,10 @@ public func makeTransformer() -> Transformer<Expression> {
     }
 
     t.rule(["string": .simple("s")]) {
-        let value = try $0.str("s")
-        let unescaped = value.replacingOccurrences(of: "\\", with: "")
-        return .stringValue(unescaped)
+        var value = try $0.str("s")
+        value = value.replacingOccurrences(of: "\\\\", with: "\\")
+        value = value.replacingOccurrences(of: "\\\"", with: "\"")
+        return .stringValue(value)
     }
 
     // Expressions.

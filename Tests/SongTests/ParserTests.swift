@@ -28,6 +28,7 @@ class ParserTests: XCTestCase {
     func test_strings() {
         "\"hello world\"".becomes(.stringValue("hello world"))
         "\"\\\"Hi,\\\" I said\"".becomes(.stringValue("\"Hi,\" I said"))
+        "\"a\\\\backslash\"".becomes(.stringValue("a\\backslash"))
     }
 
     func test_lists() {
