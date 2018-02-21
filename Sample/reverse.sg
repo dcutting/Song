@@ -1,0 +1,11 @@
+#!/Users/dcutting/Dropbox/Dan/Code/Song/.build/debug/song
+
+list.reverse = list.reverse([])
+[].reverse(result) = result
+[x|xs].reverse(result) = xs.reverse([x|result])
+
+let a = [1, 2, 3, 4, 5, 6]
+let b = a.reverse
+
+out(a)
+out(b)
