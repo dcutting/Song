@@ -41,4 +41,38 @@ class TransformerErrorTests: XCTestCase {
         let remainder = Remainder(text: "", index: 0)
         XCTAssertThrowsError(try transformer.transform((result, remainder)))
     }
+
+    func test_functionCalls_noCallsPresent_throws() {
+        let transformer = makeTransformer()
+        let result = Result.tagged(["subject": .tagged(["integer": .match(match: "9", index: 0)]),
+                                    "calls": .series([])
+            ])
+        let remainder = Remainder(text: "", index: 0)
+        XCTAssertThrowsError(try transformer.transform((result, remainder)))
+    }
+
+    func test_functionCalls_firstCallIsNotAFunctionCall_throws() {
+        let transformer = makeTransformer()
+        let result = Result.tagged(["subject": .tagged(["integer": .match(match: "9", index: 0)]),
+                                    "calls": .series([
+                                        .tagged(["integer": .match(match: "5", index: 0)])
+                                        ])
+            ])
+        let remainder = Remainder(text: "", index: 0)
+        XCTAssertThrowsError(try transformer.transform((result, remainder)))
+    }
+
+    func test_functionCalls_secondCallIsNotAFunctionCall_throws() {
+        let transformer = makeTransformer()
+        let result = Result.tagged(["subject": .tagged(["integer": .match(match: "9", index: 0)]),
+                                    "calls": .series([
+                                        .tagged([
+                                            "functionName": .match(match: "foo", index: 0),
+                                            "args": .series([])]),
+                                        .tagged(["integer": .match(match: "5", index: 0)])
+                                        ])
+            ])
+        let remainder = Remainder(text: "", index: 0)
+        XCTAssertThrowsError(try transformer.transform((result, remainder)))
+    }
 }
