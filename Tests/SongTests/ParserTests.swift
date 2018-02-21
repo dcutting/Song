@@ -72,6 +72,12 @@ class ParserTests: XCTestCase {
         "a.foo = a".becomes(
             .subfunction(Subfunction(name: "foo", patterns: [.variable("a")], when: .booleanValue(true), body: .variable("a")))
         )
+        "a.foo when a < 50 = a".becomes(
+            .subfunction(Subfunction(name: "foo",
+                                     patterns: [.variable("a")],
+                                     when: .call(name: "<", arguments: [.variable("a"), .integerValue(50)]),
+                                     body: .variable("a")))
+        )
         "a.plus(b) = a + b".becomes(
             .subfunction(Subfunction(name: "plus", patterns: [.variable("a"), .variable("b")], when: .booleanValue(true), body: .call(name: "+", arguments: [.variable("a"), .variable("b")])))
         )
@@ -91,5 +97,13 @@ class ParserTests: XCTestCase {
                                      patterns: [.variable("x")],
                                      when: .booleanValue(true),
                                      body: .call(name: "*", arguments: [.variable("x"), .integerValue(2)])))))
+    }
+
+    func test_calls() {
+        "foo()".becomes(.call(name: "foo", arguments: []))
+        "foo(a)".becomes(.call(name: "foo", arguments: [.variable("a")]))
+        "foo(4)".becomes(.call(name: "foo", arguments: [.integerValue(4)]))
+        "4.foo".becomes(.call(name: "foo", arguments: [.integerValue(4)]))
+        "4.foo()".becomes(.call(name: "foo", arguments: [.integerValue(4)]))
     }
 }
