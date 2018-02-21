@@ -34,6 +34,12 @@ class ParserTests: XCTestCase {
         "[]".becomes(.list([]))
         "[1,no]".becomes(.list([.integerValue(1), .booleanValue(false)]))
         "[ 1 , yes , \"hi\" ]".becomes(.list([.integerValue(1), .booleanValue(true), .stringValue("hi")]))
+        "[[1,2],[no,4], [], \"hi\"]".becomes(.list([
+            .list([.integerValue(1), .integerValue(2)]),
+            .list([.booleanValue(false), .integerValue(4)]),
+            .list([]),
+            .stringValue("hi")
+            ]))
     }
 
     func test_listConstructors() {
