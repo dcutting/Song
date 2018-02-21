@@ -16,10 +16,6 @@ public func makeTransformer() -> Transformer<Expression> {
         try $0.val("item")
     }
 
-    t.rule(["tail": .simple("tail")]) {
-        try $0.val("tail")
-    }
-
     t.rule(["list": .series("items")]) {
         .list(try $0.vals("items"))
     }
