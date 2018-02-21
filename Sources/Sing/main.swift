@@ -2,27 +2,60 @@ import Foundation
 import Song
 import Syft
 
-print("Song v0.1.0 🎵")
-
 let verbose = true
 let prompt = "➤ "
+
+var lines: [String]?
+
+var interactive = true
+let args = CommandLine.arguments
+if args.count > 1 {
+    let filename = args[1]
+    interactive = false
+
+    let contents = try NSString(contentsOfFile: filename,
+                                encoding: String.Encoding.utf8.rawValue)
+
+    lines = [String]()
+    // Print all lines.
+    contents.enumerateLines({ (line, stop) -> () in
+        lines?.append(line)
+    })
+}
+
+func getLine() -> String? {
+    if let l = lines {
+        if l.count > 0 {
+            let line = lines?.removeFirst()
+            return line
+        }
+        return nil
+    }
+    return readLine()
+}
 
 let parser = makeParser()
 let transformer = makeTransformer()
 
-func log(_ str: String = "") {
-    print(str)
+func log(_ str: Any? = nil) {
+    if interactive, let str = str {
+        print(str)
+    }
 }
 
 var context: Context = [:]
 
 func dumpContext() {
-    print(context as AnyObject)
+    dump(context as AnyObject)
 }
 
+log("Song v0.1.0 🎵")
+
 while (true) {
-    print(prompt, terminator: "")
-    guard let line = readLine()?.trimmingCharacters(in: .whitespacesAndNewlines) else { break }
+    if interactive {
+        print(prompt, terminator: "")
+    }
+    guard let line = getLine()?.trimmingCharacters(in: .whitespacesAndNewlines) else { break }
     if line == "" {
         continue
     }
@@ -52,7 +85,7 @@ while (true) {
                 case .closure, .constant:
                     () // Do nothing.
                 default:
-                    print(expression)
+                    log(expression)
                 }
             } catch {
                 print(error)
@@ -87,4 +120,4 @@ while (true) {
         }
     }
 }
-print("\n👏")
+log("\n👏")
