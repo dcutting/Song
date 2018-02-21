@@ -65,6 +65,19 @@ class ParserTests: XCTestCase {
         "1*2*3".becomes(.call(name: "*", arguments: [
             .call(name: "*", arguments: [.integerValue(1), .integerValue(2)]),
             .integerValue(3)]))
+        "1+2*3/4-5".becomes(
+            .call(name: "-", arguments: [
+                .call(name: "+", arguments: [
+                    .integerValue(1),
+                    .call(name: "/", arguments: [
+                        .call(name: "*", arguments: [
+                            .integerValue(2),
+                            .integerValue(3)
+                            ])
+                        , .integerValue(4)]),
+                    ]),
+                .integerValue(5)
+                ]))
     }
 
     func test_wrappedExpressions() {
