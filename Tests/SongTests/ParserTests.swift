@@ -124,4 +124,49 @@ class ParserTests: XCTestCase {
         "4.foo".becomes(.call(name: "foo", arguments: [.integerValue(4)]))
         "4.foo()".becomes(.call(name: "foo", arguments: [.integerValue(4)]))
     }
+
+    func test_callChains() {
+        "3.foo.bar".becomes(.call(name: "bar", arguments: [.call(name: "foo", arguments: [.integerValue(3)])]))
+        "3.foo().bar".becomes(.call(name: "bar", arguments: [.call(name: "foo", arguments: [.integerValue(3)])]))
+        "3.foo.bar()".becomes(.call(name: "bar", arguments: [.call(name: "foo", arguments: [.integerValue(3)])]))
+        "3.foo().bar()".becomes(.call(name: "bar", arguments: [.call(name: "foo", arguments: [.integerValue(3)])]))
+        "3.foo(5).bar()".becomes(.call(name: "bar", arguments: [.call(name: "foo", arguments: [.integerValue(3), .integerValue(5)])]))
+        "3.foo(5).bar".becomes(.call(name: "bar", arguments: [.call(name: "foo", arguments: [.integerValue(3), .integerValue(5)])]))
+        "3.foo().bar(5)".becomes(.call(name: "bar", arguments: [.call(name: "foo", arguments: [.integerValue(3)]), .integerValue(5)]))
+        "3.foo.bar(5)".becomes(.call(name: "bar", arguments: [.call(name: "foo", arguments: [.integerValue(3)]), .integerValue(5)]))
+        "3.foo(9).bar(5)".becomes(.call(name: "bar", arguments: [.call(name: "foo", arguments: [.integerValue(3), .integerValue(9)]), .integerValue(5)]))
+        "foo(3).bar()".becomes(.call(name: "bar", arguments: [.call(name: "foo", arguments: [.integerValue(3)])]))
+        "foo().bar()".becomes(.call(name: "bar", arguments: [.call(name: "foo", arguments: [])]))
+    }
+
+    func test_nestedCalls() {
+
+        "foo(bar())".becomes(.call(name: "foo", arguments: [.call(name: "bar", arguments: [])]))
+        "foo(bar(4))".becomes(.call(name: "foo", arguments: [.call(name: "bar", arguments: [.integerValue(4)])]))
+        "foo(1, bar(4))".becomes(.call(name: "foo", arguments: [
+            .integerValue(1),
+            .call(name: "bar", arguments: [.integerValue(4)])]))
+        "1.foo(bar(4))".becomes(.call(name: "foo", arguments: [
+            .integerValue(1),
+            .call(name: "bar", arguments: [.integerValue(4)])]))
+
+        "3.foo(5.bar(6.foo(9)).foo()).bar(foo(3).bar)".becomes(
+            .call(name: "bar", arguments: [
+                .call(name: "foo", arguments: [
+                    .integerValue(3),
+                    .call(name: "foo", arguments: [
+                        .call(name: "bar", arguments: [
+                            .integerValue(5),
+                            .call(name: "foo", arguments: [
+                                .integerValue(6),
+                                .integerValue(9)
+                                ])
+                            ])
+                        ])
+                    ]),
+                .call(name: "bar", arguments: [
+                    .call(name: "foo", arguments: [.integerValue(3)])
+                    ])
+                ]))
+    }
 }
