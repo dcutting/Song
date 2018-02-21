@@ -12,7 +12,7 @@ func assertNoThrow(file: StaticString = #file, line: UInt = #line, _ closure: ()
 extension String {
 
     func becomes(_ expected: Expression, file: StaticString = #file, line: UInt = #line) {
-        assertNoThrow {
+        assertNoThrow(file: file, line: line) {
             let actual = try parse(self)
             XCTAssertEqual(expected, actual, file: file, line: line)
         }
