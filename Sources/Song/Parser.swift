@@ -96,7 +96,7 @@ public func makeParser() -> ParserProtocol {
     let args = (arg >>> (comma >>> arg).recur).tag("args")
     let freeFunctionCall = functionName >>> (lParen >>> args.maybe >>> skip >>> rParen)
     let subjectFunctionCall = atom.tag("subject") >>> (dot >>> functionName >>> (lParen >>> args.maybe >>> rParen).maybe).some.tag("calls")
-    let functionCall = freeFunctionCall | subjectFunctionCall
+    let functionCall = subjectFunctionCall | freeFunctionCall
 
     // Function declarations.
 
