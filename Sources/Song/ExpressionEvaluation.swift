@@ -111,7 +111,7 @@ extension Expression {
 
     private func evaluateRelational(arguments: [Expression], context: Context, callback: (Number, Number) -> Bool) throws -> Expression {
         var numbers = try toNumbers(arguments: arguments, context: context)
-        guard numbers.count > 0 else { throw EvaluationError.signatureMismatch }
+        guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
         let first = numbers.removeFirst()
         let (result, _) = numbers.reduce((true, first)) { a, n in
             let (v, x) = a
@@ -131,15 +131,15 @@ extension Expression {
     }
 
     private func evaluateLogicalNot(arguments: [Expression], context: Context) throws -> Expression {
-        let bools = try toBools(arguments: arguments, context: context)
+        var bools = try toBools(arguments: arguments, context: context)
         guard bools.count == 1 else { throw EvaluationError.signatureMismatch }
-        guard let value = bools.first else { preconditionFailure("expected one boolean") }
+        let value = bools.removeFirst()
         return .booleanValue(!value)
     }
 
     private func evaluateLogical(arguments: [Expression], context: Context, callback: (Bool, Bool) -> Bool) throws -> Expression {
         var bools = try toBools(arguments: arguments, context: context)
-        guard bools.count > 0 else { throw EvaluationError.signatureMismatch }
+        guard bools.count == 2 else { throw EvaluationError.signatureMismatch }
         let first = bools.removeFirst()
         let (result, _) = bools.reduce((true, first)) { a, n in
             let (v, x) = a
