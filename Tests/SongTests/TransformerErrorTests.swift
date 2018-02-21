@@ -18,10 +18,23 @@ class TransformerErrorTests: XCTestCase {
         XCTAssertThrowsError(try transformer.transform((result, remainder)))
     }
 
-    func test_expressions_opIsNotAFunctionCall_throws() {
+    func test_expressions_firstOpIsNotAFunctionCall_throws() {
         let transformer = makeTransformer()
         let result = Result.tagged(["left": .tagged(["integer": .match(match: "9", index: 0)]),
                                     "ops": .series([
+                                        .tagged(["integer": .match(match: "5", index: 0)])
+                                        ])
+            ])
+        let remainder = Remainder(text: "", index: 0)
+        XCTAssertThrowsError(try transformer.transform((result, remainder)))
+    }
+
+    func test_expressions_secondOpIsNotAFunctionCall_throws() {
+        let transformer = makeTransformer()
+        let result = Result.tagged(["left": .tagged(["integer": .match(match: "9", index: 0)]),
+                                    "ops": .series([
+                                        .tagged(["right": .tagged(["integer": .match(match: "3", index: 0)]),
+                                                 "op": .match(match: "+", index: 0)]),
                                         .tagged(["integer": .match(match: "5", index: 0)])
                                         ])
             ])
