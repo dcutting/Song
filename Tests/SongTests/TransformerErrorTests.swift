@@ -17,4 +17,15 @@ class TransformerErrorTests: XCTestCase {
         let remainder = Remainder(text: "", index: 0)
         XCTAssertThrowsError(try transformer.transform((result, remainder)))
     }
+
+    func test_expressions_opIsNotAFunctionCall_throws() {
+        let transformer = makeTransformer()
+        let result = Result.tagged(["left": .tagged(["integer": .match(match: "9", index: 0)]),
+                                    "ops": .series([
+                                        .tagged(["integer": .match(match: "5", index: 0)])
+                                        ])
+            ])
+        let remainder = Remainder(text: "", index: 0)
+        XCTAssertThrowsError(try transformer.transform((result, remainder)))
+    }
 }
