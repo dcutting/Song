@@ -86,7 +86,9 @@ extension Expression {
                 var lists = arguments
                 let left = lists.removeFirst()
                 let right = lists.removeFirst()
-                if case let .list(leftList) = left, case let .list(rightList) = right {
+                if
+                    case let .list(leftList) = try left.evaluate(context: context),
+                    case let .list(rightList) = try right.evaluate(context: context) {
                     return .list(leftList + rightList)
                 } else {
                     throw EvaluationError.signatureMismatch
