@@ -174,7 +174,7 @@ class CallTests: XCTestCase {
         }
     }
 
-    func test_evaluateClosure_trueWhenClause_throws() {
+    func test_evaluateClosure_trueWhenClause_succeeds() {
         let subfunction = Subfunction(name: "echo", patterns: [], when: .booleanValue(true), body: .integerValue(9))
         let function = Expression.subfunction(subfunction)
         assertNoThrow {
