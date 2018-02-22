@@ -117,7 +117,7 @@ public func makeParser() -> ParserProtocol {
 
     // Lambdas.
 
-    let lambdaParameters = pipe >>> parameters.tag("params") >>> pipe
+    let lambdaParameters = pipe >>> parameters.recur(0, 1).tag("params") >>> pipe
     let lambdaBody = expression.tag("lambdaBody") >>> skip
     let lambda = lambdaParameters >>> lambdaBody
 

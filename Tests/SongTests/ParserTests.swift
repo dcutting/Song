@@ -158,6 +158,12 @@ class ParserTests: XCTestCase {
                                      body: .call(name: "*", arguments: [.variable("x"), .integerValue(2)])))))
     }
 
+    func test_lambdas() {
+        "|x| x".becomes(.subfunction(Subfunction(name: nil, patterns: [.variable("x")], when: .booleanValue(true), body: .variable("x"))))
+        "|_| 5".becomes(.subfunction(Subfunction(name: nil, patterns: [.anyVariable], when: .booleanValue(true), body: .integerValue(5))))
+        "|| 5".becomes(.subfunction(Subfunction(name: nil, patterns: [], when: .booleanValue(true), body: .integerValue(5))))
+    }
+
     func test_calls() {
         "foo()".becomes(.call(name: "foo", arguments: []))
         "foo(a)".becomes(.call(name: "foo", arguments: [.variable("a")]))
