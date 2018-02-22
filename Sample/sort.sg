@@ -1,24 +1,9 @@
-list.reverse = list.reverse([])
-[].reverse(result) = result
-[x|xs].reverse(result) = xs.reverse([x|result])
-
-front.append(back) = back.reversePrepend(front.reverse)
-back.reversePrepend([]) = back
-back.reversePrepend([x|xs]) = [x|back].reversePrepend(xs)
-
 [].select(_) = []
 [x|xs].select(f) when f(x) = [x|xs.select(f)]
 [_|xs].select(f) = xs.select(f)
 
 [].sort = []
-[p|xs].sort = xs.select(|x| x < p).sort.append([p|xs.select(|x| x >= p).sort])
-
-[].sort = []
-[p|xs].sort = do
-  left = xs.select(|x| x < p)
-  right = xs.select(|x| x >= p)
-  left.sort ++ [p] ++ right.sort
-end
+[p|xs].sort = xs.select(|x| x < p).sort + [p] + xs.select(|x| x >= p).sort
 
 a = [5, 1, 5, 8, 3, 56, 754, 34, 42, -33, -531, 4, 59]
 

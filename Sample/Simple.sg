@@ -35,3 +35,18 @@ back.reversePrepend([x|xs]) = [x|back].reversePrepend(xs)
 n.fib = n.fib(0, 1)
 0.fib(a, b) = a
 n.fib(a, b) = (n-1).fib(b, a+b)
+
+list.reverse = list.reverse([])
+[].reverse(result) = result
+[x|xs].reverse(result) = xs.reverse([x|result])
+
+front.append(back) = back.reversePrepend(front.reverse)
+back.reversePrepend([]) = back
+back.reversePrepend([x|xs]) = [x|back].reversePrepend(xs)
+
+[].sort = []
+[p|xs].sort = do
+  left = xs.select(|x| x < p)
+  right = xs.select(|x| x >= p)
+  left.sort ++ [p] ++ right.sort
+end
