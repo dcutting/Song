@@ -5,6 +5,7 @@ public enum EvaluationError: Error {
     case notANumber(Expression)
     case notAList(Expression)
     case notAFunction(Expression)
+    case invalidPattern(Expression)
 }
 
 extension Expression {
@@ -34,11 +35,7 @@ extension Expression {
             return try evaluateVariable(variable: variable, context)
 
         case let .subfunction(subfunction):
-            var finalContext = context
-            if let name = subfunction.name {
-                finalContext.removeValue(forKey: name)
-            }
-            return .closure(closure: self, context: finalContext)
+            return try evaluate(subfunction: subfunction, context: context)
 
         case let .constant(name, value):
             return .constant(name: name, value: try value.evaluate(context: context))
@@ -169,6 +166,19 @@ extension Expression {
             }
             return n
         }
+    }
+
+    private func evaluate(subfunction: Subfunction, context: Context) throws -> Expression {
+        var finalContext = context
+        if let name = subfunction.name {
+            finalContext.removeValue(forKey: name)
+        }
+        try subfunction.patterns.forEach { pattern in
+            if case .numberValue(Number.float) = pattern {
+                throw EvaluationError.invalidPattern(pattern)
+            }
+        }
+        return .closure(closure: self, context: finalContext)
     }
 
     func evaluateVariable(variable: String, _ context: Context) throws -> Expression {

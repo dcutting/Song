@@ -19,7 +19,13 @@ class FunctionTests: XCTestCase {
             XCTAssertEqual(closure, result)
         }
     }
-    
+
+    func test_evaluate_patternIsAFloat_throws() {
+        let subfunction = Subfunction(name: "foo", patterns: [.floatValue(1.0)], when: .booleanValue(true), body: .booleanValue(true))
+        let function = Expression.subfunction(subfunction)
+        XCTAssertThrowsError(try function.evaluate())
+    }
+
     func testDescriptionAnonymousFunction() {
         let result = "\(anonymousFunction)"
         XCTAssertEqual("λ(a, b) = x", result)
