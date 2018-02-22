@@ -76,11 +76,22 @@ extension Expression {
             let right = numbers.removeFirst()
             return .numberValue(try left.integerDividedBy(right))
         case "+":
-            var numbers = try toNumbers(arguments: arguments, context: context)
-            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
-            let left = numbers.removeFirst()
-            let right = numbers.removeFirst()
-            return .numberValue(left.plus(right))
+            guard arguments.count == 2 else { throw EvaluationError.signatureMismatch }
+            do {
+                var numbers = try toNumbers(arguments: arguments, context: context)
+                let left = numbers.removeFirst()
+                let right = numbers.removeFirst()
+                return .numberValue(left.plus(right))
+            } catch EvaluationError.notANumber {
+                var lists = arguments
+                let left = lists.removeFirst()
+                let right = lists.removeFirst()
+                if case let .list(leftList) = left, case let .list(rightList) = right {
+                    return .list(leftList + rightList)
+                } else {
+                    throw EvaluationError.signatureMismatch
+                }
+            }
         case "-":
             var numbers = try toNumbers(arguments: arguments, context: context)
             guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
