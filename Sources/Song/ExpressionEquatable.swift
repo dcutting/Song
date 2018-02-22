@@ -7,10 +7,7 @@ public func ==(lhs: Expression, rhs: Expression) -> Bool {
     case let (.booleanValue(lhsValue), .booleanValue(rhsValue)):
         return lhsValue == rhsValue
         
-    case let (.integerValue(lhsValue), .integerValue(rhsValue)):
-        return lhsValue == rhsValue
-
-    case let (.floatValue(lhsValue), .floatValue(rhsValue)):
+    case let (.numberValue(lhsValue), .numberValue(rhsValue)):
         return lhsValue == rhsValue
 
     case let (.stringValue(lhsValue), .stringValue(rhsValue)):

@@ -1,5 +1,3 @@
-typealias Number = Int
-
 public enum EvaluationError: Error {
     case symbolNotFound(String)
     case signatureMismatch
@@ -18,7 +16,7 @@ extension Expression {
     public func evaluate(context: Context) throws -> Expression {
         switch self {
 
-        case .booleanValue, .integerValue, .floatValue, .stringValue, .closure:
+        case .booleanValue, .numberValue, .stringValue, .closure:
             return self
 
         case let .list(exprs):
@@ -57,45 +55,71 @@ extension Expression {
 
         switch name {
         case "*":
-            let numbers = try toNumbers(arguments: arguments, context: context)
+            var numbers = try toNumbers(arguments: arguments, context: context)
             guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
-            let result = numbers.reduce(1) { a, n in a * n }
-            return .integerValue(result)
+            let left = numbers.removeFirst()
+            let right = numbers.removeFirst()
+            return .numberValue(left.times(right))
         case "/":
             var numbers = try toNumbers(arguments: arguments, context: context)
             guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
-            let first = numbers.removeFirst()
-            let second = numbers.removeFirst()
-            return .integerValue(first / second)
+            let left = numbers.removeFirst()
+            let right = numbers.removeFirst()
+            return .numberValue(left.dividedBy(right))
         case "%":
             var numbers = try toNumbers(arguments: arguments, context: context)
             guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
-            let first = numbers.removeFirst()
-            let second = numbers.removeFirst()
-            return .integerValue(first % second)
+            let left = numbers.removeFirst()
+            let right = numbers.removeFirst()
+            return .numberValue(try left.modulo(right))
         case "+":
-            let numbers = try toNumbers(arguments: arguments, context: context)
+            var numbers = try toNumbers(arguments: arguments, context: context)
             guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
-            let result = numbers.reduce(0) { a, n in a + n }
-            return Expression.integerValue(result)
+            let left = numbers.removeFirst()
+            let right = numbers.removeFirst()
+            return .numberValue(left.plus(right))
         case "-":
             var numbers = try toNumbers(arguments: arguments, context: context)
             guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
-            let first = numbers.removeFirst()
-            let second = numbers.removeFirst()
-            return .integerValue(first - second)
+            let left = numbers.removeFirst()
+            let right = numbers.removeFirst()
+            return .numberValue(left.minus(right))
         case "<":
-            return try evaluateRelational(arguments: arguments, context: context) { a, b in a < b }
+            var numbers = try toNumbers(arguments: arguments, context: context)
+            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
+            let left = numbers.removeFirst()
+            let right = numbers.removeFirst()
+            return .booleanValue(left.lessThan(right))
         case ">":
-            return try evaluateRelational(arguments: arguments, context: context) { a, b in a > b }
+            var numbers = try toNumbers(arguments: arguments, context: context)
+            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
+            let left = numbers.removeFirst()
+            let right = numbers.removeFirst()
+            return .booleanValue(left.greaterThan(right))
         case "<=":
-            return try evaluateRelational(arguments: arguments, context: context) { a, b in a <= b }
+            var numbers = try toNumbers(arguments: arguments, context: context)
+            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
+            let left = numbers.removeFirst()
+            let right = numbers.removeFirst()
+            return .booleanValue(left.lessThanOrEqualTo(right))
         case ">=":
-            return try evaluateRelational(arguments: arguments, context: context) { a, b in a >= b }
+            var numbers = try toNumbers(arguments: arguments, context: context)
+            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
+            let left = numbers.removeFirst()
+            let right = numbers.removeFirst()
+            return .booleanValue(left.greaterThanOrEqualTo(right))
         case "eq":
-            return try evaluateRelational(arguments: arguments, context: context) { a, b in a == b }
+            var numbers = try toNumbers(arguments: arguments, context: context)
+            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
+            let left = numbers.removeFirst()
+            let right = numbers.removeFirst()
+            return .booleanValue(try left.equalTo(right))
         case "neq":
-            return try evaluateRelational(arguments: arguments, context: context) { a, b in a != b }
+            var numbers = try toNumbers(arguments: arguments, context: context)
+            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
+            let left = numbers.removeFirst()
+            let right = numbers.removeFirst()
+            return .booleanValue(try !left.equalTo(right))
         case "and":
             return try evaluateLogical(arguments: arguments, context: context) { a, b in a && b }
         case "or":
@@ -109,32 +133,14 @@ extension Expression {
         }
     }
 
-    private func evaluateRelational(arguments: [Expression], context: Context, callback: (Number, Number) -> Bool) throws -> Expression {
-        var numbers = try toNumbers(arguments: arguments, context: context)
-        guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
-        let first = numbers.removeFirst()
-        let (result, _) = numbers.reduce((true, first)) { a, n in
-            let (v, x) = a
-            return (v && callback(x, n), n)
-        }
-        return Expression.booleanValue(result)
-    }
-
     private func toNumbers(arguments: [Expression], context: Context) throws -> [Number] {
         return try arguments.map { arg -> Number in
             let evaluatedArg = try arg.evaluate(context: context)
-            guard case let .integerValue(n) = evaluatedArg else {
+            guard case let .numberValue(n) = evaluatedArg else {
                 throw EvaluationError.notANumber(evaluatedArg)
             }
-            return Number(n)
+            return n
         }
-    }
-
-    private func evaluateLogicalNot(arguments: [Expression], context: Context) throws -> Expression {
-        var bools = try toBools(arguments: arguments, context: context)
-        guard bools.count == 1 else { throw EvaluationError.signatureMismatch }
-        let value = bools.removeFirst()
-        return .booleanValue(!value)
     }
 
     private func evaluateLogical(arguments: [Expression], context: Context, callback: (Bool, Bool) -> Bool) throws -> Expression {
@@ -146,6 +152,13 @@ extension Expression {
             return (v && callback(x, n), n)
         }
         return .booleanValue(result)
+    }
+
+    private func evaluateLogicalNot(arguments: [Expression], context: Context) throws -> Expression {
+        var bools = try toBools(arguments: arguments, context: context)
+        guard bools.count == 1 else { throw EvaluationError.signatureMismatch }
+        let value = bools.removeFirst()
+        return .booleanValue(!value)
     }
 
     private func toBools(arguments: [Expression], context: Context) throws -> [Bool] {

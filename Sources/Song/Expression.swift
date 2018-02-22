@@ -20,8 +20,7 @@ public struct Subfunction: Equatable {
 public indirect enum Expression {
 
     case booleanValue(Bool)
-    case integerValue(Int)
-    case floatValue(Double)
+    case numberValue(Number)
     case stringValue(String)
     case list([Expression])
     case listConstructor([Expression], Expression)
@@ -34,4 +33,15 @@ public indirect enum Expression {
 
     case call(name: String, arguments: [Expression])
     case callAnonymous(closure: Expression, arguments: [Expression])
+}
+
+public extension Expression {
+
+    public static func integerValue(_ int: IntType) -> Expression {
+        return .numberValue(Number.int(int))
+    }
+
+    public static func floatValue(_ float: FloatType) -> Expression {
+        return .numberValue(Number.float(float))
+    }
 }

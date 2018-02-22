@@ -6,10 +6,7 @@ extension Expression: CustomStringConvertible {
         case let .booleanValue(value):
             return value ? "yes" : "no"
             
-        case let .integerValue(value):
-            return "\(value)"
-
-        case let .floatValue(value):
+        case let .numberValue(value):
             return "\(value)"
 
         case let .stringValue(value):

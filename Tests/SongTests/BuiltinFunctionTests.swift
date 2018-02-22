@@ -148,7 +148,7 @@ class BuiltinFunctionTests: XCTestCase {
         let dividedBy = Expression.call(name: "/", arguments: [.integerValue(10), .integerValue(5)])
         assertNoThrow {
             let result = try dividedBy.evaluate()
-            XCTAssertEqual(Expression.integerValue(2), result)
+            XCTAssertEqual(Expression.floatValue(2.0), result)
         }
     }
 
