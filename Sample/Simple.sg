@@ -2,18 +2,18 @@
 [x|xs].select(f) when f(x) = [x] + xs.select(f)
 [x|xs].select(f) = xs.select(f)
 
-let list = [-1, 1, -2, 3]
+list = [-1, 1, -2, 3]
 out(list)
 # [-1, 1, -2, 3]
 
-let positives = list.select(|x| x >= 0)
+positives = list.select(|x| x >= 0)
 out(positives)
 # [1, 3]
 
 min(x, y) when x < y = x
 min(_, y) = y
 
-let result = min(8, 4)
+result = min(8, 4)
 out(result)
 # 4
 

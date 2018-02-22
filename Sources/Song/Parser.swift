@@ -39,7 +39,6 @@ public func makeParser() -> ParserProtocol {
     let logicalOr = str("or")
     let logicalNot = str("not")
     let when = space >>> str("when") >>> space
-    let const = str("let") >>> space
     let assign = str("=") >>> skip
 
     let expression = Deferred()
@@ -124,7 +123,7 @@ public func makeParser() -> ParserProtocol {
 
     // Constants.
 
-    let constant = const >>> variableName.tag("variable") >>> assign >>> expression.tag("constBody")
+    let constant = variableName.tag("variable") >>> assign >>> expression.tag("constBody")
 
     // Terms.
 

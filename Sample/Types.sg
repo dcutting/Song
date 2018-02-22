@@ -9,8 +9,8 @@ function<T> [T].select(T -> Bool) -> [T]
     [x|xs].select(f) = xs.select(f)
 end
 
-let list: List<Numeric> = [-1, 1, -2, 3]
-let positives = list.select(|x| x >= 0)
+list: List<Numeric> = [-1, 1, -2, 3]
+positives = list.select(|x| x >= 0)
 print(positives)
 # [1, 3]
 
@@ -44,5 +44,5 @@ function<T> [T].partition(T -> Bool, [T], [T]) -> [[T], [T]]
 end
 
 print("What is your name?")
-let name = readLine()
+name = readLine()
 print("Hello \(name)")
