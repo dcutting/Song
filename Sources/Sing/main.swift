@@ -48,7 +48,7 @@ func log(_ str: Any? = nil) {
 var context: Context = [:]
 
 func dumpContext() {
-    dump(context as AnyObject)
+    print(context as AnyObject)
 }
 
 log("Song v0.1.0 🎵")
