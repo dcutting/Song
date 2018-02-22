@@ -5,7 +5,11 @@ class VariableTests: XCTestCase {
     
     let variable = Expression.variable("n")
     
-    func testDescription() {
+    func test_description_anyVariable() {
+        XCTAssertEqual("_", "\(Expression.anyVariable)")
+    }
+
+    func test_description_variable() {
         let result = "\(variable)"
         XCTAssertEqual("n", result)
     }
