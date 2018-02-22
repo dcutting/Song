@@ -152,6 +152,40 @@ class CallTests: XCTestCase {
         }
     }
 
+    func test_evaluateClosure_nonBooleanWhenClause_throws() {
+        let subfunction = Subfunction(name: "echo", patterns: [], when: .integerValue(1), body: .booleanValue(true))
+        let function = Expression.subfunction(subfunction)
+        assertNoThrow {
+            let closure = try function.evaluate()
+            let context: Context = ["echo": [closure]]
+            let call = Expression.call(name: "echo", arguments: [])
+            XCTAssertThrowsError(try call.evaluate(context: context))
+        }
+    }
+
+    func test_evaluateClosure_falseWhenClause_throws() {
+        let subfunction = Subfunction(name: "echo", patterns: [], when: .booleanValue(false), body: .booleanValue(true))
+        let function = Expression.subfunction(subfunction)
+        assertNoThrow {
+            let closure = try function.evaluate()
+            let context: Context = ["echo": [closure]]
+            let call = Expression.call(name: "echo", arguments: [])
+            XCTAssertThrowsError(try call.evaluate(context: context))
+        }
+    }
+
+    func test_evaluateClosure_trueWhenClause_throws() {
+        let subfunction = Subfunction(name: "echo", patterns: [], when: .booleanValue(true), body: .integerValue(9))
+        let function = Expression.subfunction(subfunction)
+        assertNoThrow {
+            let closure = try function.evaluate()
+            let context: Context = ["echo": [closure]]
+            let call = Expression.call(name: "echo", arguments: [])
+            let actual = try call.evaluate(context: context)
+            XCTAssertEqual(Expression.integerValue(9), actual)
+        }
+    }
+
     // TODO
 //    func testEvaluateClosureExtendsContextWithRecursiveReference() {
 //        let listVar = Expression.variable("list")
