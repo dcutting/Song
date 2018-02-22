@@ -75,7 +75,6 @@ while (true) {
                 if case .closure(let function, _) = expression {
                     if case .subfunction(let subfunction) = function {
                         if let name = subfunction.name {
-                            // TODO: this extends the context with the same closure if the user enters the closure's name.
                             context = extendContext(context: context, name: name, value: expression, replacing: false)
                         }
                     }
