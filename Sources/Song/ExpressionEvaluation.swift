@@ -62,13 +62,19 @@ extension Expression {
             guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
             let left = numbers.removeFirst()
             let right = numbers.removeFirst()
-            return .numberValue(left.dividedBy(right))
-        case "%":
+            return .numberValue(left.floatDividedBy(right))
+        case "mod":
             var numbers = try toNumbers(arguments: arguments, context: context)
             guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
             let left = numbers.removeFirst()
             let right = numbers.removeFirst()
             return .numberValue(try left.modulo(right))
+        case "div":
+            var numbers = try toNumbers(arguments: arguments, context: context)
+            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
+            let left = numbers.removeFirst()
+            let right = numbers.removeFirst()
+            return .numberValue(try left.integerDividedBy(right))
         case "+":
             var numbers = try toNumbers(arguments: arguments, context: context)
             guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }

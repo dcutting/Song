@@ -47,7 +47,7 @@ extension Number {
         }
     }
 
-    func dividedBy(_ other: Number) -> Number {
+    func floatDividedBy(_ other: Number) -> Number {
         switch (self, other) {
         case let (.int(lhsValue), .int(rhsValue)):
             return .float(FloatType(lhsValue) / FloatType(rhsValue))
@@ -57,6 +57,15 @@ extension Number {
             return .float(lhsValue / FloatType(rhsValue))
         case let (.float(lhsValue), .float(rhsValue)):
             return .float(lhsValue / rhsValue)
+        }
+    }
+
+    func integerDividedBy(_ other: Number) throws -> Number {
+        switch (self, other) {
+        case let (.int(lhsValue), .int(rhsValue)):
+            return .int(lhsValue / rhsValue)
+        default:
+            throw EvaluationError.signatureMismatch
         }
     }
 

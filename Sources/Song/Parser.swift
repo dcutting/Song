@@ -25,7 +25,8 @@ public func makeParser() -> ParserProtocol {
     stringChar.parser = backslash >>> (backslash | quote) | letter | digit | space | symbol
     let star = str("*")
     let slash = str("/")
-    let percent = str("%")
+    let div = str("div")
+    let mod = str("mod")
     let plus = str("+")
     let minus = str("-")
     let lessThanOrEqual = str("<=")
@@ -72,7 +73,10 @@ public func makeParser() -> ParserProtocol {
     let disjunctive = Deferred()
     let term = Deferred()
 
-    let multiplicative = term.tag("left") >>> (skip >>> (star | slash | percent).tag("op") >>> skip >>> term.tag("right")).recur.tag("ops")
+    let symbolicMultiplicativeOp = skip >>> (star | slash).tag("op") >>> skip
+    let wordMultiplicativeOp = space >>> (mod | div).tag("op") >>> space
+    let multiplicativeOp = symbolicMultiplicativeOp | wordMultiplicativeOp
+    let multiplicative = term.tag("left") >>> (multiplicativeOp >>> term.tag("right")).recur.tag("ops")
     let additive = multiplicative.tag("left") >>> (skip >>> (plus | minus).tag("op") >>> skip >>> multiplicative.tag("right")).recur.tag("ops")
     relational.parser = additive.tag("left") >>> (skip >>> (lessThanOrEqual | greaterThanOrEqual | lessThan | greaterThan).tag("op") >>> skip >>> relational.tag("right")).recur.tag("ops")
     equality.parser = relational.tag("left") >>> (space >>> (equalTo | notEqualTo).tag("op") >>> space >>> equality.tag("right")).recur.tag("ops")

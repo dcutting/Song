@@ -79,6 +79,13 @@ class ParserTests: XCTestCase {
                     ]),
                 .integerValue(5)
                 ]))
+        "12 div 5".becomes(.call(name: "div", arguments: [.integerValue(12), .integerValue(5)]))
+        "12 mod 5".becomes(.call(name: "mod", arguments: [.integerValue(12), .integerValue(5)]))
+
+        "12 div5".fails()
+        "12 mod5".fails()
+        "12div 5".fails()
+        "12mod 5".fails()
     }
 
     func test_wrappedExpressions() {

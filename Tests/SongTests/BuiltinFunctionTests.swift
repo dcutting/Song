@@ -152,18 +152,26 @@ class BuiltinFunctionTests: XCTestCase {
         }
     }
 
+    func test_div() {
+        let div = Expression.call(name: "div", arguments: [.integerValue(12), .integerValue(5)])
+        assertNoThrow {
+            let result = try div.evaluate()
+            XCTAssertEqual(Expression.integerValue(2), result)
+        }
+    }
+
     func test_modulo_oneArg_throws() {
-        let modulo = Expression.call(name: "%", arguments: [.integerValue(10)])
+        let modulo = Expression.call(name: "mod", arguments: [.integerValue(10)])
         XCTAssertThrowsError(try modulo.evaluate())
     }
 
     func test_module_manyArgs_throws() {
-        let module = Expression.call(name: "%", arguments: [.integerValue(10), .integerValue(2), .integerValue(4)])
+        let module = Expression.call(name: "mod", arguments: [.integerValue(10), .integerValue(2), .integerValue(4)])
         XCTAssertThrowsError(try module.evaluate())
     }
 
     func test_module_twoArgs() {
-        let modulo = Expression.call(name: "%", arguments: [.integerValue(10), .integerValue(3)])
+        let modulo = Expression.call(name: "mod", arguments: [.integerValue(10), .integerValue(3)])
         assertNoThrow {
             let result = try modulo.evaluate()
             XCTAssertEqual(Expression.integerValue(1), result)
