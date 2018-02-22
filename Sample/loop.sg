@@ -1,0 +1,10 @@
+#!/usr/bin/env song
+
+loop() = do
+  x = in("? ")
+  out("> ", x)
+  loop()
+end
+
+out("Echo!")
+loop()
