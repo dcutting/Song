@@ -1,0 +1,10 @@
+n.fib = n.fib(0, n)
+0.fib(a, _) = a
+n.fib(a, b) = (n-1).fib(b, a+b)
+
+0.times(_, r) = r
+x.times(f, _) = (x-1).times(f, f(1))
+x.times(f) = x.times(f, 0)
+
+999.times(|_| 80.fib)
+out(80.fib)
