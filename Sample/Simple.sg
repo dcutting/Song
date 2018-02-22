@@ -50,3 +50,7 @@ back.reversePrepend([x|xs]) = [x|back].reversePrepend(xs)
   right = xs.select(|x| x >= p)
   left.sort ++ [p] ++ right.sort
 end
+
+[].zip(_) = []
+_.zip([]) = []
+[x|xs].zip([y|ys]) = [[x,y]|xs.zip(ys)]
