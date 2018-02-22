@@ -89,7 +89,7 @@ public func makeParser() -> ParserProtocol {
     let namePrefix = underscore | lowercaseLetter
     let nameSuffix = letter | digit | underscore
     let name = namePrefix >>> nameSuffix.some.maybe
-    let variableName = name.tag("variableName") >>> skip
+    let variableName = name.tag("variableName")
     let functionName = name.tag("functionName")
 
     // Function calls.
@@ -103,7 +103,7 @@ public func makeParser() -> ParserProtocol {
 
     // Function declarations.
 
-    let parameter = (listConstructor | list | literalValue | variableName).tag("param")
+    let parameter = (literalValue | variableName).tag("param")
     let functionSubject = parameter.tag("subject")
     let parameters = parameter >>> (comma >>> parameter).recur
     let functionParameters = lParen >>> parameters.recur(0, 1).tag("params") >>> rParen
@@ -123,7 +123,7 @@ public func makeParser() -> ParserProtocol {
 
     // Constants.
 
-    let constant = variableName.tag("variable") >>> assign >>> expression.tag("constBody")
+    let constant = variableName.tag("variable") >>> skip >>> assign >>> expression.tag("constBody")
 
     // Terms.
 
