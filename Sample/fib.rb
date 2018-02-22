@@ -4,7 +4,7 @@ def _fib(n, a, b)
 end
 
 def fib(n)
-  _fib(n, 0, n)
+  _fib(n, 0, 1)
 end
 
 999.times do

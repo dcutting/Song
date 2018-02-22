@@ -6,7 +6,7 @@ func fib(_ n: Int64, _ a: Int64, _ b: Int64) -> Int64 {
 }
 
 func fib(_ n: Int64) -> Int64 {
-  return fib(n, 0, n)
+  return fib(n, 0, 1)
 }
 
 for _ in (1...999) {

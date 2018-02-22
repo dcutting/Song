@@ -1,4 +1,4 @@
-n.fib = n.fib(0, n)
+n.fib = n.fib(0, 1)
 0.fib(a, _) = a
 n.fib(a, b) = (n-1).fib(b, a+b)
 
