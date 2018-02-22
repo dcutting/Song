@@ -87,7 +87,7 @@ public func makeParser() -> ParserProtocol {
 
     // Atoms.
 
-    let namePrefix = underscore.maybe >>> lowercaseLetter
+    let namePrefix = underscore | lowercaseLetter
     let nameSuffix = letter | digit | underscore
     let name = namePrefix >>> nameSuffix.some.maybe
     let variableName = name.tag("variableName") >>> skip
@@ -124,7 +124,7 @@ public func makeParser() -> ParserProtocol {
 
     // Constants.
 
-    let constant = const >>> variableName >>> assign >>> expression.tag("constBody")
+    let constant = const >>> variableName.tag("variable") >>> assign >>> expression.tag("constBody")
 
     // Terms.
 

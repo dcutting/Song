@@ -17,7 +17,7 @@ extension Expression {
     public func evaluate(context: Context) throws -> Expression {
         switch self {
 
-        case .booleanValue, .numberValue, .stringValue, .closure:
+        case .booleanValue, .numberValue, .stringValue, .closure, .anyVariable:
             return self
 
         case let .list(exprs):
@@ -37,8 +37,8 @@ extension Expression {
         case let .subfunction(subfunction):
             return try evaluate(subfunction: subfunction, context: context)
 
-        case let .constant(name, value):
-            return .constant(name: name, value: try value.evaluate(context: context))
+        case let .constant(variable, value):
+            return .constant(variable: variable, value: try value.evaluate(context: context))
 
         case let .call(name: name, arguments: arguments):
             return try evaluateCall(name: name, arguments: arguments, context: context)
@@ -228,6 +228,8 @@ extension Expression {
         var extendedContext = context
         let evaluatedValue = try argument.evaluate(context: callingContext)
         switch parameter {
+        case .anyVariable:
+            () // Do nothing
         case .variable(let name):
             extendedContext = extendContext(context: extendedContext, name: name, value: evaluatedValue, replacing: true)
         case .listConstructor(var paramHeads, let paramTail):

@@ -26,9 +26,10 @@ public indirect enum Expression {
     case listConstructor([Expression], Expression)
 
     case variable(String)
+    case anyVariable
 
     case subfunction(Subfunction)
-    case constant(name: String, value: Expression)
+    case constant(variable: Expression, value: Expression)
     case closure(closure: Expression, context: Context)
 
     case call(name: String, arguments: [Expression])

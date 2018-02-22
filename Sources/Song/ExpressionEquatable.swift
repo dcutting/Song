@@ -18,6 +18,9 @@ public func ==(lhs: Expression, rhs: Expression) -> Bool {
 
     case let (.listConstructor(lhsHead, lhsTail), .listConstructor(rhsHead, rhsTail)):
         return lhsHead == rhsHead && lhsTail == rhsTail
+
+    case (.anyVariable, .anyVariable):
+        return true
         
     case let (.variable(lhsVariable), .variable(rhsVariable)):
         return lhsVariable == rhsVariable

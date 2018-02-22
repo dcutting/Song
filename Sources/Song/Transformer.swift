@@ -82,7 +82,8 @@ public func makeTransformer() -> Transformer<Expression> {
     // Atoms.
 
     t.rule(["variableName": .simple("v")]) {
-        .variable(try $0.str("v"))
+        let v = try $0.str("v")
+        return v == "_" ? .anyVariable : .variable(v)
     }
 
     t.rule(["functionName": .simple("name")]) {
@@ -142,8 +143,8 @@ public func makeTransformer() -> Transformer<Expression> {
 
     // Constants.
 
-    t.rule(["constBody": .simple("body"), "variableName": .simple("name")]) {
-        .constant(name: try $0.str("name"), value: try $0.val("body"))
+    t.rule(["constBody": .simple("body"), "variable": .simple("var")]) {
+        .constant(variable: try $0.val("var"), value: try $0.val("body"))
     }
 
     // Terms.

@@ -100,6 +100,7 @@ class ParserTests: XCTestCase {
     }
 
     func test_variables() {
+        "_".becomes(.anyVariable)
         "x".becomes(.variable("x"))
         "_x".becomes(.variable("_x"))
         "_private".becomes(.variable("_private"))
@@ -108,7 +109,6 @@ class ParserTests: XCTestCase {
         "goodName99".becomes(.variable("goodName99"))
         "good_".becomes(.variable("good_"))
 
-        "_".fails()
         "GoodName".fails()
         "9bottles".fails()
     }
@@ -148,8 +148,8 @@ class ParserTests: XCTestCase {
     }
 
     func test_constants() {
-        "let x = 5".becomes(.constant(name: "x", value: .integerValue(5)))
-        "let double = |x| x * 2".becomes(.constant(name: "double", value:
+        "let x = 5".becomes(.constant(variable: .variable("x"), value: .integerValue(5)))
+        "let double = |x| x * 2".becomes(.constant(variable: .variable("double"), value:
             .subfunction(Subfunction(name: nil,
                                      patterns: [.variable("x")],
                                      when: .booleanValue(true),

@@ -23,6 +23,9 @@ extension Expression: CustomStringConvertible {
             let heads = descriptions.joined(separator: ", ")
             return "[\(heads)|\(tail)]"
 
+        case .anyVariable:
+            return "_"
+
         case let .variable(variable):
             return "\(variable)"
 

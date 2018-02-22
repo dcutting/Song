@@ -79,8 +79,10 @@ while (true) {
                         }
                     }
                 }
-                if case .constant(let name, let value) = expression {
-                    context = extendContext(context: context, name: name, value: value, replacing: true)
+                if case .constant(let variable, let value) = expression {
+                    if case .variable(let name) = variable {
+                        context = extendContext(context: context, name: name, value: value, replacing: true)
+                    }
                 }
                 switch expression {
                 case .closure, .constant:

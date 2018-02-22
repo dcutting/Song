@@ -28,14 +28,14 @@ class ContextTests: XCTestCase {
     }
 
     func testIsEqual_deeper_same_returnsTrue() {
-        let left: Context = ["a": [.constant(name: "x", value: .stringValue("hi"))]]
-        let right: Context = ["a": [.constant(name: "x", value: .stringValue("hi"))]]
+        let left: Context = ["a": [.constant(variable: .variable("x"), value: .stringValue("hi"))]]
+        let right: Context = ["a": [.constant(variable: .variable("x"), value: .stringValue("hi"))]]
         XCTAssertTrue(Song.isEqual(lhsContext: left, rhsContext: right))
     }
 
     func testIsEqual_deeper_different_returnsFalse() {
-        let left: Context = ["a": [.constant(name: "x", value: .stringValue("hi"))]]
-        let right: Context = ["a": [.constant(name: "x", value: .stringValue("bye"))]]
+        let left: Context = ["a": [.constant(variable: .variable("x"), value: .stringValue("hi"))]]
+        let right: Context = ["a": [.constant(variable: .variable("x"), value: .stringValue("bye"))]]
         XCTAssertFalse(Song.isEqual(lhsContext: left, rhsContext: right))
     }
 }
