@@ -5,373 +5,141 @@ class BuiltinFunctionTests: XCTestCase {
 
     // Invalid types.
 
-    func test_arithmetic_nonIntegerValue_throws() {
-        let op = Expression.call(name: "+", arguments: [.integerValue(5), .stringValue("hi")])
-        XCTAssertThrowsError(try op.evaluate())
-    }
-
-    func test_logical_nonBooleanValue_throws() {
-        let op = Expression.call(name: "and", arguments: [.booleanValue(true), .stringValue("hi")])
-        XCTAssertThrowsError(try op.evaluate())
-    }
-
-    func test_logicalNot_nonBooleanValue_throws() {
-        let op = Expression.call(name: "not", arguments: [.stringValue("hi")])
-        XCTAssertThrowsError(try op.evaluate())
+    func test_invalidArgumentTypes() {
+        XCTAssertThrowsError(try Expression.call(name: "*", arguments: [.integerValue(5), .stringValue("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "/", arguments: [.integerValue(5), .stringValue("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "mod", arguments: [.integerValue(5), .stringValue("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "div", arguments: [.integerValue(5), .stringValue("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "+", arguments: [.integerValue(5), .stringValue("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "-", arguments: [.integerValue(5), .stringValue("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "<", arguments: [.integerValue(5), .stringValue("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: ">", arguments: [.integerValue(5), .stringValue("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "<=", arguments: [.integerValue(5), .stringValue("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: ">=", arguments: [.integerValue(5), .stringValue("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "eq", arguments: [.integerValue(5), .stringValue("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "neq", arguments: [.integerValue(5), .stringValue("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "and", arguments: [.booleanValue(true), .stringValue("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "or", arguments: [.booleanValue(true), .stringValue("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "not", arguments: [.stringValue("hi")]).evaluate())
     }
 
     // Invalid number of arguments.
 
-    func test_relational_notTwoArgs_throws() {
-        let op = Expression.call(name: "<", arguments: [.integerValue(3)])
-        XCTAssertThrowsError(try op.evaluate())
-    }
-
-    func test_logical_notTwoArgs_throws() {
-        let op = Expression.call(name: "and", arguments: [.booleanValue(true)])
-        XCTAssertThrowsError(try op.evaluate())
-    }
-
-    func test_logicalNot_notOneArg_throws() {
-        let op = Expression.call(name: "not", arguments: [.booleanValue(true), .booleanValue(true)])
-        XCTAssertThrowsError(try op.evaluate())
+    func test_invalidArgumentCount() {
+        XCTAssertThrowsError(try Expression.call(name: "*", arguments: [.integerValue(1)]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "*", arguments: [.integerValue(1), .integerValue(2), .integerValue(3)]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "/", arguments: [.integerValue(1)]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "/", arguments: [.integerValue(1), .integerValue(2), .integerValue(3)]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "mod", arguments: [.integerValue(1)]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "mod", arguments: [.integerValue(1), .integerValue(2), .integerValue(3)]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "div", arguments: [.integerValue(1)]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "div", arguments: [.integerValue(1), .integerValue(2), .integerValue(3)]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "+", arguments: [.integerValue(1)]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "+", arguments: [.integerValue(1), .integerValue(2), .integerValue(3)]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "-", arguments: [.integerValue(1)]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "-", arguments: [.integerValue(1), .integerValue(2), .integerValue(3)]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "<", arguments: [.integerValue(1)]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "<", arguments: [.integerValue(1), .integerValue(2), .integerValue(3)]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: ">", arguments: [.integerValue(1)]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: ">", arguments: [.integerValue(1), .integerValue(2), .integerValue(3)]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "<=", arguments: [.integerValue(1)]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "<=", arguments: [.integerValue(1), .integerValue(2), .integerValue(3)]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: ">=", arguments: [.integerValue(1)]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: ">=", arguments: [.integerValue(1), .integerValue(2), .integerValue(3)]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "eq", arguments: [.integerValue(1)]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "eq", arguments: [.integerValue(1), .integerValue(2), .integerValue(3)]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "neq", arguments: [.integerValue(1)]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "neq", arguments: [.integerValue(1), .integerValue(2), .integerValue(3)]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "and", arguments: [.booleanValue(true)]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "and", arguments: [.booleanValue(true), .booleanValue(true), .booleanValue(true)]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "or", arguments: [.booleanValue(true)]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "or", arguments: [.booleanValue(true), .booleanValue(true), .booleanValue(true)]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "not", arguments: []).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "not", arguments: [.booleanValue(true), .booleanValue(true)]).evaluate())
     }
 
     // Evaluates arguments.
 
-    func test_evaluatesArithmeticArgs() {
-        let left = Expression.variable("x")
-        let right = Expression.variable("y")
-        let op = Expression.call(name: "+", arguments: [left, right])
-        assertNoThrow {
-            let result = try op.evaluate(context: ["x": [.integerValue(9)], "y": [.integerValue(5)]])
-            XCTAssertEqual(Expression.integerValue(14), result)
-        }
-    }
+    func test_evaluatesArguments() {
+        let first = Expression.variable("x")
+        let second = Expression.variable("y")
+        let context: Context = ["x": [.integerValue(9)], "y": [.integerValue(5)]]
 
-    func test_evaluatesRelationalArgs() {
-        let left = Expression.variable("x")
-        let right = Expression.variable("y")
-        let op = Expression.call(name: "<", arguments: [left, right])
         assertNoThrow {
-            let result = try op.evaluate(context: ["x": [.integerValue(9)], "y": [.integerValue(5)]])
+            let op = try Expression.call(name: "*", arguments: [first, second]).evaluate(context: context)
+            XCTAssertEqual(Expression.integerValue(45), op)
+        }
+
+        assertNoThrow {
+            let op = try Expression.call(name: "/", arguments: [first, second]).evaluate(context: context)
+            XCTAssertEqual(Expression.floatValue(1.8), op)
+        }
+
+        assertNoThrow {
+            let op = try Expression.call(name: "mod", arguments: [first, second]).evaluate(context: context)
+            XCTAssertEqual(Expression.integerValue(4), op)
+        }
+
+        assertNoThrow {
+            let op = try Expression.call(name: "div", arguments: [first, second]).evaluate(context: context)
+            XCTAssertEqual(Expression.integerValue(1), op)
+        }
+
+        assertNoThrow {
+            let op = try Expression.call(name: "+", arguments: [first, second]).evaluate(context: context)
+            XCTAssertEqual(Expression.integerValue(14), op)
+        }
+
+        assertNoThrow {
+            let op = try Expression.call(name: "-", arguments: [first, second]).evaluate(context: context)
+            XCTAssertEqual(Expression.integerValue(4), op)
+        }
+
+        assertNoThrow {
+            let op = try Expression.call(name: "<", arguments: [first, second]).evaluate(context: context)
+            XCTAssertEqual(Expression.booleanValue(false), op)
+        }
+
+        assertNoThrow {
+            let op = try Expression.call(name: ">", arguments: [first, second]).evaluate(context: context)
+            XCTAssertEqual(Expression.booleanValue(true), op)
+        }
+
+        assertNoThrow {
+            let op = try Expression.call(name: "<=", arguments: [first, second]).evaluate(context: context)
+            XCTAssertEqual(Expression.booleanValue(false), op)
+        }
+
+        assertNoThrow {
+            let op = try Expression.call(name: ">=", arguments: [first, second]).evaluate(context: context)
+            XCTAssertEqual(Expression.booleanValue(true), op)
+        }
+
+        assertNoThrow {
+            let op = try Expression.call(name: "eq", arguments: [first, second]).evaluate(context: context)
+            XCTAssertEqual(Expression.booleanValue(false), op)
+        }
+
+        assertNoThrow {
+            let op = try Expression.call(name: "neq", arguments: [first, second]).evaluate(context: context)
+            XCTAssertEqual(Expression.booleanValue(true), op)
+        }
+
+        assertNoThrow {
+            let op = Expression.call(name: "and", arguments: [first, second])
+            let result = try op.evaluate(context: ["x": [.booleanValue(true)], "y": [.booleanValue(false)]])
             XCTAssertEqual(Expression.booleanValue(false), result)
         }
-    }
 
-    func test_evaluatesLogicalArgs() {
-        let left = Expression.variable("x")
-        let right = Expression.variable("y")
-        let op = Expression.call(name: "and", arguments: [left, right])
         assertNoThrow {
+            let op = Expression.call(name: "or", arguments: [first, second])
             let result = try op.evaluate(context: ["x": [.booleanValue(false)], "y": [.booleanValue(true)]])
-            XCTAssertEqual(Expression.booleanValue(false), result)
+            XCTAssertEqual(Expression.booleanValue(true), result)
         }
-    }
 
-    func test_evaluatesLogicalNotArgs() {
-        let arg = Expression.variable("x")
-        let op = Expression.call(name: "not", arguments: [arg])
         assertNoThrow {
+            let op = Expression.call(name: "not", arguments: [first])
             let result = try op.evaluate(context: ["x": [.booleanValue(false)]])
-            XCTAssertEqual(Expression.booleanValue(true), result)
-        }
-    }
-
-    // Arithmetic.
-
-    func test_plus_oneArgs_throws() {
-        let plus = Expression.call(name: "+", arguments: [.integerValue(5)])
-        XCTAssertThrowsError(try plus.evaluate())
-    }
-
-    func test_plus_manyArgs_throws() {
-        let plus = Expression.call(name: "+", arguments: [.integerValue(5), .integerValue(4), .integerValue(9)])
-        XCTAssertThrowsError(try plus.evaluate())
-    }
-
-    func test_plus_twoArgs() {
-        let plus = Expression.call(name: "+", arguments: [.integerValue(9), .integerValue(5)])
-        assertNoThrow {
-            let result = try plus.evaluate()
-            XCTAssertEqual(Expression.integerValue(14), result)
-        }
-    }
-
-    func test_minus_oneArgs_throws() {
-        let minus = Expression.call(name: "-", arguments: [.integerValue(5)])
-        XCTAssertThrowsError(try minus.evaluate())
-    }
-
-    func test_minus_manyArgs_throws() {
-        let minus = Expression.call(name: "-", arguments: [.integerValue(2), .integerValue(3), .integerValue(4)])
-        XCTAssertThrowsError(try minus.evaluate())
-    }
-
-    func test_minus_twoArgs() {
-        let minus = Expression.call(name: "-", arguments: [.integerValue(9), .integerValue(5)])
-        assertNoThrow {
-            let result = try minus.evaluate()
-            XCTAssertEqual(Expression.integerValue(4), result)
-        }
-    }
-
-    func test_times_oneArgs_throws() {
-        let times = Expression.call(name: "*", arguments: [.integerValue(5)])
-        XCTAssertThrowsError(try times.evaluate())
-    }
-
-    func test_times_manyArgs_throws() {
-        let times = Expression.call(name: "*", arguments: [.integerValue(5), .integerValue(3), .integerValue(2)])
-        XCTAssertThrowsError(try times.evaluate())
-    }
-
-    func test_times_twoArgs() {
-        let times = Expression.call(name: "*", arguments: [.integerValue(9), .integerValue(5)])
-        assertNoThrow {
-            let result = try times.evaluate()
-            XCTAssertEqual(Expression.integerValue(45), result)
-        }
-    }
-
-    func test_dividedBy_oneArg_throws() {
-        let dividedBy = Expression.call(name: "/", arguments: [.integerValue(10)])
-        XCTAssertThrowsError(try dividedBy.evaluate())
-    }
-
-    func test_dividedBy_manyArgs_throws() {
-        let dividedBy = Expression.call(name: "/", arguments: [.integerValue(10), .integerValue(2), .integerValue(4)])
-        XCTAssertThrowsError(try dividedBy.evaluate())
-    }
-
-    func test_dividedBy_twoArgs() {
-        let dividedBy = Expression.call(name: "/", arguments: [.integerValue(10), .integerValue(5)])
-        assertNoThrow {
-            let result = try dividedBy.evaluate()
-            XCTAssertEqual(Expression.floatValue(2.0), result)
-        }
-    }
-
-    func test_div() {
-        let div = Expression.call(name: "div", arguments: [.integerValue(12), .integerValue(5)])
-        assertNoThrow {
-            let result = try div.evaluate()
-            XCTAssertEqual(Expression.integerValue(2), result)
-        }
-    }
-
-    func test_modulo_oneArg_throws() {
-        let modulo = Expression.call(name: "mod", arguments: [.integerValue(10)])
-        XCTAssertThrowsError(try modulo.evaluate())
-    }
-
-    func test_module_manyArgs_throws() {
-        let module = Expression.call(name: "mod", arguments: [.integerValue(10), .integerValue(2), .integerValue(4)])
-        XCTAssertThrowsError(try module.evaluate())
-    }
-
-    func test_module_twoArgs() {
-        let modulo = Expression.call(name: "mod", arguments: [.integerValue(10), .integerValue(3)])
-        assertNoThrow {
-            let result = try modulo.evaluate()
-            XCTAssertEqual(Expression.integerValue(1), result)
-        }
-    }
-
-    // Relational.
-
-    func test_lessThan_leftLessThanRight_returnsTrue() {
-        let lessThan = Expression.call(name: "<", arguments: [.integerValue(2), .integerValue(3)])
-        assertNoThrow {
-            let result = try lessThan.evaluate()
-            XCTAssertEqual(Expression.booleanValue(true), result)
-        }
-    }
-
-    func test_lessThan_rightLessThanLeft_returnsFalse() {
-        let lessThan = Expression.call(name: "<", arguments: [.integerValue(4), .integerValue(3)])
-        assertNoThrow {
-            let result = try lessThan.evaluate()
-            XCTAssertEqual(Expression.booleanValue(false), result)
-        }
-    }
-
-    func test_greaterThan_leftLessThanRight_returnsFalse() {
-        let gt = Expression.call(name: ">", arguments: [.integerValue(2), .integerValue(3)])
-        assertNoThrow {
-            let result = try gt.evaluate()
-            XCTAssertEqual(Expression.booleanValue(false), result)
-        }
-    }
-
-    func test_greaterThan_rightLessThanLeft_returnsTrue() {
-        let gt = Expression.call(name: ">", arguments: [.integerValue(4), .integerValue(3)])
-        assertNoThrow {
-            let result = try gt.evaluate()
-            XCTAssertEqual(Expression.booleanValue(true), result)
-        }
-    }
-
-    func test_lessThanOrEqual_leftLessThanRight_returnsTrue() {
-        let lte = Expression.call(name: "<=", arguments: [.integerValue(2), .integerValue(3)])
-        assertNoThrow {
-            let result = try lte.evaluate()
-            XCTAssertEqual(Expression.booleanValue(true), result)
-        }
-    }
-
-    func test_lessThanOrEqual_rightLessThanLeft_returnsFalse() {
-        let lte = Expression.call(name: "<=", arguments: [.integerValue(4), .integerValue(3)])
-        assertNoThrow {
-            let result = try lte.evaluate()
-            XCTAssertEqual(Expression.booleanValue(false), result)
-        }
-    }
-
-    func test_lessThanOrEqual_equal_returnsTrue() {
-        let lte = Expression.call(name: "<=", arguments: [.integerValue(3), .integerValue(3)])
-        assertNoThrow {
-            let result = try lte.evaluate()
-            XCTAssertEqual(Expression.booleanValue(true), result)
-        }
-    }
-
-    func test_greaterThanOrEqual_leftLessThanRight_returnsFalse() {
-        let gte = Expression.call(name: ">=", arguments: [.integerValue(2), .integerValue(3)])
-        assertNoThrow {
-            let result = try gte.evaluate()
-            XCTAssertEqual(Expression.booleanValue(false), result)
-        }
-    }
-
-    func test_greaterThanOrEqual_rightLessThanLeft_returnsTrue() {
-        let gte = Expression.call(name: ">=", arguments: [.integerValue(4), .integerValue(3)])
-        assertNoThrow {
-            let result = try gte.evaluate()
-            XCTAssertEqual(Expression.booleanValue(true), result)
-        }
-    }
-
-    func test_greaterThanOrEqual_equal_returnsTrue() {
-        let gte = Expression.call(name: ">=", arguments: [.integerValue(3), .integerValue(3)])
-        assertNoThrow {
-            let result = try gte.evaluate()
-            XCTAssertEqual(Expression.booleanValue(true), result)
-        }
-    }
-
-    // Logical (binary).
-
-    func test_equalTo_equal_returnsTrue() {
-        let eq = Expression.call(name: "eq", arguments: [.integerValue(3), .integerValue(3)])
-        assertNoThrow {
-            let result = try eq.evaluate()
-            XCTAssertEqual(Expression.booleanValue(true), result)
-        }
-    }
-
-    func test_equalTo_notEqual_returnsFalse() {
-        let eq = Expression.call(name: "eq", arguments: [.integerValue(2), .integerValue(3)])
-        assertNoThrow {
-            let result = try eq.evaluate()
-            XCTAssertEqual(Expression.booleanValue(false), result)
-        }
-    }
-
-    func test_notEqualTo_equal_returnsFalse() {
-        let neq = Expression.call(name: "neq", arguments: [.integerValue(3), .integerValue(3)])
-        assertNoThrow {
-            let result = try neq.evaluate()
-            XCTAssertEqual(Expression.booleanValue(false), result)
-        }
-    }
-
-    func test_notEqualTo_notEqual_returnsTrue() {
-        let neq = Expression.call(name: "neq", arguments: [.integerValue(2), .integerValue(3)])
-        assertNoThrow {
-            let result = try neq.evaluate()
-            XCTAssertEqual(Expression.booleanValue(true), result)
-        }
-    }
-
-    func test_and_true_true_returnsTrue() {
-        let and = Expression.call(name: "and", arguments: [.booleanValue(true), .booleanValue(true)])
-        assertNoThrow {
-            let result = try and.evaluate()
-            XCTAssertEqual(Expression.booleanValue(true), result)
-        }
-    }
-
-    func test_and_true_false_returnsFalse() {
-        let and = Expression.call(name: "and", arguments: [.booleanValue(true), .booleanValue(false)])
-        assertNoThrow {
-            let result = try and.evaluate()
-            XCTAssertEqual(Expression.booleanValue(false), result)
-        }
-    }
-
-    func test_and_false_true_returnsFalse() {
-        let and = Expression.call(name: "and", arguments: [.booleanValue(false), .booleanValue(true)])
-        assertNoThrow {
-            let result = try and.evaluate()
-            XCTAssertEqual(Expression.booleanValue(false), result)
-        }
-    }
-
-    func test_and_false_false_returnsFalse() {
-        let and = Expression.call(name: "and", arguments: [.booleanValue(false), .booleanValue(false)])
-        assertNoThrow {
-            let result = try and.evaluate()
-            XCTAssertEqual(Expression.booleanValue(false), result)
-        }
-    }
-
-    func test_or_true_true_returnsTrue() {
-        let or = Expression.call(name: "or", arguments: [.booleanValue(true), .booleanValue(true)])
-        assertNoThrow {
-            let result = try or.evaluate()
-            XCTAssertEqual(Expression.booleanValue(true), result)
-        }
-    }
-
-    func test_or_true_false_returnsTrue() {
-        let or = Expression.call(name: "or", arguments: [.booleanValue(true), .booleanValue(false)])
-        assertNoThrow {
-            let result = try or.evaluate()
-            XCTAssertEqual(Expression.booleanValue(true), result)
-        }
-    }
-
-    func test_or_false_true_returnsTrue() {
-        let or = Expression.call(name: "or", arguments: [.booleanValue(false), .booleanValue(true)])
-        assertNoThrow {
-            let result = try or.evaluate()
-            XCTAssertEqual(Expression.booleanValue(true), result)
-        }
-    }
-
-    func test_or_false_false_returnsFalse() {
-        let or = Expression.call(name: "or", arguments: [.booleanValue(false), .booleanValue(false)])
-        assertNoThrow {
-            let result = try or.evaluate()
-            XCTAssertEqual(Expression.booleanValue(false), result)
-        }
-    }
-
-    // Logical (unary).
-
-    func test_not_true_returnsFalse() {
-        let not = Expression.call(name: "not", arguments: [.booleanValue(true)])
-        assertNoThrow {
-            let result = try not.evaluate()
-            XCTAssertEqual(Expression.booleanValue(false), result)
-        }
-    }
-
-    func test_not_false_returnsTrue() {
-        let not = Expression.call(name: "not", arguments: [.booleanValue(false)])
-        assertNoThrow {
-            let result = try not.evaluate()
             XCTAssertEqual(Expression.booleanValue(true), result)
         }
     }

@@ -124,11 +124,22 @@ extension Expression {
             let right = numbers.removeFirst()
             return .booleanValue(try !left.equalTo(right))
         case "and":
-            return try evaluateLogical(arguments: arguments, context: context) { a, b in a && b }
+            var bools = try toBools(arguments: arguments, context: context)
+            guard bools.count == 2 else { throw EvaluationError.signatureMismatch }
+            let left = bools.removeFirst()
+            let right = bools.removeFirst()
+            return .booleanValue(left && right)
         case "or":
-            return try evaluateLogical(arguments: arguments, context: context) { a, b in a || b }
+            var bools = try toBools(arguments: arguments, context: context)
+            guard bools.count == 2 else { throw EvaluationError.signatureMismatch }
+            let left = bools.removeFirst()
+            let right = bools.removeFirst()
+            return .booleanValue(left || right)
         case "not":
-            return try evaluateLogicalNot(arguments: arguments, context: context)
+            var bools = try toBools(arguments: arguments, context: context)
+            guard bools.count == 1 else { throw EvaluationError.signatureMismatch }
+            let left = bools.removeFirst()
+            return .booleanValue(!left)
         case "out":
             return try evaluateOut(arguments: arguments, context: context)
         default:
@@ -144,24 +155,6 @@ extension Expression {
             }
             return n
         }
-    }
-
-    private func evaluateLogical(arguments: [Expression], context: Context, callback: (Bool, Bool) -> Bool) throws -> Expression {
-        var bools = try toBools(arguments: arguments, context: context)
-        guard bools.count == 2 else { throw EvaluationError.signatureMismatch }
-        let first = bools.removeFirst()
-        let (result, _) = bools.reduce((true, first)) { a, n in
-            let (v, x) = a
-            return (v && callback(x, n), n)
-        }
-        return .booleanValue(result)
-    }
-
-    private func evaluateLogicalNot(arguments: [Expression], context: Context) throws -> Expression {
-        var bools = try toBools(arguments: arguments, context: context)
-        guard bools.count == 1 else { throw EvaluationError.signatureMismatch }
-        let value = bools.removeFirst()
-        return .booleanValue(!value)
     }
 
     private func toBools(arguments: [Expression], context: Context) throws -> [Bool] {
