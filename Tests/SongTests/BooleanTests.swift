@@ -6,15 +6,6 @@ class BooleanTests: XCTestCase {
     let trueBooleanValue = Expression.booleanValue(true)
     let falseBooleanValue = Expression.booleanValue(false)
     
-    func testConstructor() {
-        switch trueBooleanValue {
-        case .booleanValue:
-            XCTAssertTrue(true)
-        default:
-            XCTFail("not a boolean")
-        }
-    }
-    
     func testDescriptionTrue() {
         let result = "\(trueBooleanValue)"
         XCTAssertEqual("yes", result)

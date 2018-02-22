@@ -151,7 +151,8 @@ class CallTests: XCTestCase {
             XCTAssertThrowsError(try call.evaluate())
         }
     }
-    
+
+    // TODO
 //    func testEvaluateClosureExtendsContextWithRecursiveReference() {
 //        let listVar = Expression.variable("list")
 //        let isUnitValue = Expression.isUnit(listVar)

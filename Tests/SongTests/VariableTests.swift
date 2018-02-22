@@ -5,15 +5,6 @@ class VariableTests: XCTestCase {
     
     let variable = Expression.variable("n")
     
-    func testConstructor() {
-        switch variable {
-        case let .variable(token):
-            XCTAssertEqual("n", token)
-        default:
-            XCTFail("not a variable")
-        }
-    }
-    
     func testDescription() {
         let result = "\(variable)"
         XCTAssertEqual("n", result)
