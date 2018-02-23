@@ -1,6 +1,7 @@
-public enum EvaluationError: Error {
+public indirect enum EvaluationError: Error {
     case symbolNotFound(String)
     case signatureMismatch
+    case cannotEvaluate(Expression, EvaluationError)
     case notABoolean(Expression)
     case notANumber(Expression)
     case notAList(Expression)
@@ -15,36 +16,40 @@ extension Expression {
     }
     
     public func evaluate(context: Context) throws -> Expression {
-        switch self {
+        do {
+            switch self {
 
-        case .booleanValue, .numberValue, .stringValue, .closure, .anyVariable:
-            return self
+            case .booleanValue, .numberValue, .stringValue, .closure, .anyVariable:
+                return self
 
-        case let .list(exprs):
-            let evaluated = try exprs.map { try $0.evaluate(context: context) }
-            return .list(evaluated)
+            case let .list(exprs):
+                let evaluated = try exprs.map { try $0.evaluate(context: context) }
+                return .list(evaluated)
 
-        case let .listConstructor(heads, tail):
-            let evaluatedHeads = try heads.map { try $0.evaluate(context: context) }
-            let evaluatedTail = try tail.evaluate(context: context)
-            guard case var .list(items) = evaluatedTail else { throw EvaluationError.notAList(evaluatedTail) }
-            items.insert(contentsOf: evaluatedHeads, at: 0)
-            return .list(items)
+            case let .listConstructor(heads, tail):
+                let evaluatedHeads = try heads.map { try $0.evaluate(context: context) }
+                let evaluatedTail = try tail.evaluate(context: context)
+                guard case var .list(items) = evaluatedTail else { throw EvaluationError.notAList(evaluatedTail) }
+                items.insert(contentsOf: evaluatedHeads, at: 0)
+                return .list(items)
 
-        case let .variable(variable):
-            return try evaluateVariable(variable: variable, context)
+            case let .variable(variable):
+                return try evaluateVariable(variable: variable, context)
 
-        case let .subfunction(subfunction):
-            return try evaluate(subfunction: subfunction, context: context)
+            case let .subfunction(subfunction):
+                return try evaluate(subfunction: subfunction, context: context)
 
-        case let .constant(variable, value):
-            return .constant(variable: variable, value: try value.evaluate(context: context))
+            case let .constant(variable, value):
+                return .constant(variable: variable, value: try value.evaluate(context: context))
 
-        case let .call(name: name, arguments: arguments):
-            return try evaluateCall(name: name, arguments: arguments, context: context)
-            
-        case let .callAnonymous(subfunction, arguments):
-            return try evaluateCallAnonymous(closure: subfunction, arguments: arguments, callingContext: context)
+            case let .call(name: name, arguments: arguments):
+                return try evaluateCall(name: name, arguments: arguments, context: context)
+
+            case let .callAnonymous(subfunction, arguments):
+                return try evaluateCallAnonymous(closure: subfunction, arguments: arguments, callingContext: context)
+            }
+        } catch let error as EvaluationError {
+            throw EvaluationError.cannotEvaluate(self, error)
         }
     }
     
