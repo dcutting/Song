@@ -71,3 +71,88 @@ end
 [x|xs].extract(x) = [x] + xs.extract(x)
 [_|xs].extract(x) = xs.extract(x)
 [1,2,3,4,5].extract(2)
+
+
+
+x = 5
+foo(1) = 2
+foo(a) = do
+  y = 7
+  foo(4) = 8
+  out(x)
+  out(y)
+  foo(a-1) * foo(x) * y
+end
+foo(2)
+
+# Instead of let having a single binding and body expression, it should be a sequence of expressions.
+# Everything in the same scope would be appended to the let.
+# Subscopes ("do" keyword) would be a new "scope" expression with a new body.
+
+scope
+    assign x, 5
+    func foo, 1, 2
+    func foo, a, scope
+        assign y, 7
+        func foo, 4, 8
+        call out, x
+        call out, y
+        call *, foo(a-1), foo(x), y
+    call foo, 2
+
+
+# Old "let"
+
+let {
+    x=5
+    body=let {
+        foo=
+            subfunction {
+                patterns=[1]
+                body=2
+            }
+        body=let {
+            foo=
+                subfunction {
+                    patterns=[a]
+                    body=let {
+                        y=7
+                        let {
+                            foo=
+                                subfunction {
+                                    patterns=[4]
+                                    body=8
+                                }
+                                body=sequence {
+                                    call {
+                                        out(x)
+                                    },
+                                    sequence {
+                                        call {
+                                            out(y)
+                                        },
+                                        call {
+                                            * [foo(a-1), foo(x), y]
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            body=call {
+                foo [2]
+            }
+        }
+    }
+}
+
+"exp" = ?
+Read line
+If line is subfunction or assignment
+    line becomes new let statement with line as binding and empty body array
+    "exp" is new let statement
+else
+    "exp" is expression for that line
+end
+append "exp" to deepest body array
