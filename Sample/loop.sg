@@ -1,11 +1,5 @@
 #!/usr/bin/env song
 
-1.times(f) = f()
-x.times(f) when x > 1 = do
-  f()
-  (x-1).times(f)
-end
-
 loop() = do
   x = in("? ")
   out("> ", x)

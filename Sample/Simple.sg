@@ -46,11 +46,28 @@ back.reversePrepend([x|xs]) = [x|back].reversePrepend(xs)
 
 [].sort = []
 [p|xs].sort = do
-  left = xs.select(|x| x < p)
-  right = xs.select(|x| x >= p)
-  left.sort ++ [p] ++ right.sort
+  let {
+    left = xs.select(|x| x < p)
+    let {
+      right = xs.select(|x| x >= p)
+      let {
+        left.sort ++ [p] ++ right.sort
+      }
+    }
+  }
 end
 
 [].zip(_) = []
 _.zip([]) = []
 [x|xs].zip([y|ys]) = [[x,y]|xs.zip(ys)]
+
+1.times(f) = f()
+  x.times(f) when x > 1 = do
+  f()
+  (x-1).times(f)
+end
+
+[].extract(_) = []
+[x|xs].extract(x) = [x] + xs.extract(x)
+[_|xs].extract(x) = xs.extract(x)
+[1,2,3,4,5].extract(2)
