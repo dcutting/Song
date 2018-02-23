@@ -7,6 +7,7 @@ public indirect enum EvaluationError: Error {
     case notAList(Expression)
     case notAFunction(Expression)
     case invalidPattern(Expression)
+    case emptyScope(Expression)
 }
 
 extension Expression {
@@ -55,8 +56,8 @@ extension Expression {
         case let .callAnonymous(subfunction, arguments):
             return try evaluateCallAnonymous(closure: subfunction, arguments: arguments, callingContext: context)
 
-        case let .scope(expressions):
-            return try evaluateScope(expressions: expressions, context: context)
+        case let .scope(statements):
+            return try evaluateScope(scope: expression, statements: statements, context: context)
         }
     }
     
@@ -294,9 +295,13 @@ extension Expression {
         throw EvaluationError.signatureMismatch
     }
 
-    func evaluateScope(expressions: [Expression], context: Context) throws -> Expression {
-//        let letContext = extendContext(context: context, name: name, value: try binding.evaluate(context: context), replacing: true)
-//        return try body.evaluate(context: letContext)
-        return .scope(expressions)  // TODO: not this!
+    func evaluateScope(scope: Expression, statements: [Expression], context: Context) throws -> Expression {
+        guard statements.count > 0 else { throw EvaluationError.emptyScope(scope) }
+        var allStatements = statements
+        let last = allStatements.removeLast()
+        for statement in allStatements {
+            _ = try statement.evaluate(context: context)
+        }
+        return try last.evaluate(context: context)
     }
 }
