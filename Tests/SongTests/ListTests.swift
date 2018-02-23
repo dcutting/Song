@@ -43,4 +43,15 @@ class ListTests: XCTestCase {
             XCTAssertEqual(expected, actual)
         }
     }
+
+    func test_evaluate_concatenateLists() {
+        let left = Expression.list([.integerValue(1), .integerValue(2)])
+        let right = Expression.list([.integerValue(3), .integerValue(4)])
+        let call = Expression.call(name: "+", arguments: [left, right])
+        assertNoThrow {
+            let actual = try call.evaluate()
+            let expected = Expression.list([.integerValue(1), .integerValue(2), .integerValue(3), .integerValue(4)])
+            XCTAssertEqual(expected, actual)
+        }
+    }
 }
