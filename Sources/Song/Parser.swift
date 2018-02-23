@@ -89,7 +89,7 @@ public func makeParser() -> ParserProtocol {
     let functionSubject = parameter.tag("subject")
     let parameters = parameter >>> (comma >>> parameter).recur
     let functionParameters = lParen >>> parameters.recur(0, 1).tag("params") >>> rParen
-    let functionBody = (scope | expression.tag("body")) >>> skip
+    let functionBody = (scope | expression).tag("body") >>> skip
     let guardClause = (when >>> expression).maybe.tag("guard") >>> skip
     let subjectFunctionDecl = functionSubject >>> dot >>> functionName >>> functionParameters.maybe >>> guardClause >>> assign >>> functionBody
 
