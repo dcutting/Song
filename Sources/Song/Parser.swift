@@ -42,6 +42,7 @@ public func makeParser() -> ParserProtocol {
     let assign = str("=") >>> skip
 
     let expression = Deferred()
+    let scope = Deferred()
 
     // Lists.
 
@@ -64,6 +65,38 @@ public func makeParser() -> ParserProtocol {
 
     let literalValue = booleanValue | numericValue | stringValue | list | listConstructor
 
+    // Names.
+
+    let namePrefix = underscore | lowercaseLetter
+    let nameSuffix = letter | digit | underscore
+    let name = namePrefix >>> nameSuffix.some.maybe
+    let variableName = name.tag("variableName")
+    let functionName = name.tag("functionName")
+
+    // Function calls.
+
+    let wrappedExpression = lParen >>> expression.tag("wrapped") >>> rParen
+    let arg = expression.tag("arg")
+    let args = (arg >>> (comma >>> arg).recur).tag("args")
+    let freeFunctionCall = functionName >>> (lParen >>> args.maybe >>> skip >>> rParen)
+    let atom = wrappedExpression | freeFunctionCall | literalValue | variableName
+    let subjectFunctionCall = atom.tag("subject") >>> (dot >>> functionName >>> (lParen >>> args.maybe >>> rParen).maybe).some.tag("calls")
+    let functionCall = subjectFunctionCall | freeFunctionCall
+
+    // Function declarations.
+
+    let parameter = (literalValue | variableName).tag("param")
+    let functionSubject = parameter.tag("subject")
+    let parameters = parameter >>> (comma >>> parameter).recur
+    let functionParameters = lParen >>> parameters.recur(0, 1).tag("params") >>> rParen
+    let functionBody = (scope | expression.tag("body")) >>> skip
+    let guardClause = (when >>> expression).maybe.tag("guard") >>> skip
+    let subjectFunctionDecl = functionSubject >>> dot >>> functionName >>> functionParameters.maybe >>> guardClause >>> assign >>> functionBody
+
+    let freeFunctionDecl = functionName >>> functionParameters >>> guardClause >>> assign >>> functionBody
+
+    let functionDecl = subjectFunctionDecl | freeFunctionDecl
+
     // Expressions.
 
     let relational = Deferred()
@@ -84,61 +117,32 @@ public func makeParser() -> ParserProtocol {
 
     expression.parser = disjunctive.parser
 
-    // Atoms.
-
-    let namePrefix = underscore | lowercaseLetter
-    let nameSuffix = letter | digit | underscore
-    let name = namePrefix >>> nameSuffix.some.maybe
-    let variableName = name.tag("variableName")
-    let functionName = name.tag("functionName")
-
-    // Function calls.
-
-    let atom = Deferred()
-    let arg = expression.tag("arg")
-    let args = (arg >>> (comma >>> arg).recur).tag("args")
-    let freeFunctionCall = functionName >>> (lParen >>> args.maybe >>> skip >>> rParen)
-    let subjectFunctionCall = atom.tag("subject") >>> (dot >>> functionName >>> (lParen >>> args.maybe >>> rParen).maybe).some.tag("calls")
-    let functionCall = subjectFunctionCall | freeFunctionCall
-
-    // Function declarations.
-
-    let parameter = (literalValue | variableName).tag("param")
-    let functionSubject = parameter.tag("subject")
-    let parameters = parameter >>> (comma >>> parameter).recur
-    let functionParameters = lParen >>> parameters.recur(0, 1).tag("params") >>> rParen
-    let functionBody = expression.tag("body") >>> skip
-    let guardClause = (when >>> expression).maybe.tag("guard") >>> skip
-    let subjectFunctionDecl = functionSubject >>> dot >>> functionName >>> functionParameters.maybe >>> guardClause >>> assign >>> functionBody
-
-    let freeFunctionDecl = functionName >>> functionParameters >>> guardClause >>> assign >>> functionBody
-
-    let functionDecl = subjectFunctionDecl | freeFunctionDecl
-
     // Lambdas.
 
     let lambdaParameters = pipe >>> parameters.recur(0, 1).tag("params") >>> pipe
     let lambdaBody = expression.tag("lambdaBody") >>> skip
     let lambda = lambdaParameters >>> lambdaBody
 
+    // Terms.
+
+    let negatedTerm = logicalNot.tag("op") >>> space >>> term.tag("right")
+    term.parser = negatedTerm | functionCall | lambda | atom
+
     // Constants.
 
     let constant = variableName.tag("variable") >>> skip >>> assign >>> expression.tag("constBody")
 
-    // TODO: need scoped expression using "do" keyword
-//    let letExpr = (variableName.tag("variable") >>> skip >>> assign >>> expression.tag("body")).tag("let")
+    // Scopes.
 
-    // Terms.
-
-    let wrappedExpression = lParen >>> expression.tag("wrapped") >>> rParen
-    atom.parser = wrappedExpression | freeFunctionCall | literalValue | variableName
-
-    let negatedTerm = logicalNot.tag("op") >>> space >>> term.tag("right")
-    term.parser = negatedTerm | functionCall | lambda | /*scopeExpr |*/ atom
+    let statement = Deferred()
+    let scopeItem = statement.tag("arg")
+    let scopeItems = (scopeItem >>> (comma >>> scopeItem).recur).tag("scopeItems")
+    scope.parser = str("do") >>> space >>> scopeItems >>> skip >>> str("end")
+    statement.parser = scope | functionDecl | constant | expression
 
     // Root.
 
-    let root = functionDecl | constant | expression
+    let root = statement
 
     return root
 }

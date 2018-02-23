@@ -6,7 +6,7 @@ class ConstantTests: XCTestCase {
     func testDescription() {
         let constant = Expression.constant(variable: .variable("foo"), value: .stringValue("bar"))
         let actual = "\(constant)"
-        XCTAssertEqual("foo = \"bar\"", actual)
+        XCTAssertEqual("foo: \"bar\"", actual)
     }
 
     func testEvaluate() {

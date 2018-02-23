@@ -3,7 +3,7 @@ public typealias Context = [String: [Expression]]
 func contextDescription(context: Context) -> String {
     var contextPairs = Array<String>()
     for (key, value) in context {
-        contextPairs.append("\(key) = \(value)")
+        contextPairs.append("\(key): \(value)")
     }
     return contextPairs.sorted().joined(separator: ", ")
 }

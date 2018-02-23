@@ -147,6 +147,12 @@ public func makeTransformer() -> Transformer<Expression> {
         .constant(variable: try $0.val("var"), value: try $0.val("body"))
     }
 
+    // Scopes.
+
+    t.rule(["scopeItems": .series("scopeItems")]) {
+        .scope(try $0.vals("scopeItems"))
+    }
+
     // Terms.
 
     t.rule(["wrapped": .simple("e")]) {

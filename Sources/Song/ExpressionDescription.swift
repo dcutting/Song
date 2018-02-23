@@ -33,7 +33,7 @@ extension Expression: CustomStringConvertible {
             return descriptionSubfunction(subfunction: subfunction)
 
         case let .constant(name, value):
-            return "\(name) = \(value)"
+            return "\(name): \(value)"
 
         case let .closure(function, context):
             let contextList = contextDescription(context: context)
@@ -46,7 +46,7 @@ extension Expression: CustomStringConvertible {
             return descriptionCallAnonymous(closure: closure, arguments: arguments)
 
         case let .scope(expressions):
-            return "scope (" + expressions.map { "\($0)" }.joined(separator: "\n") + ")"
+            return "scope (" + expressions.map { "\($0)" }.joined(separator: ", ") + ")"
         }
     }
     
