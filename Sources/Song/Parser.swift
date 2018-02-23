@@ -125,13 +125,16 @@ public func makeParser() -> ParserProtocol {
 
     let constant = variableName.tag("variable") >>> skip >>> assign >>> expression.tag("constBody")
 
+    // TODO: need scoped expression using "do" keyword
+//    let letExpr = (variableName.tag("variable") >>> skip >>> assign >>> expression.tag("body")).tag("let")
+
     // Terms.
 
     let wrappedExpression = lParen >>> expression.tag("wrapped") >>> rParen
     atom.parser = wrappedExpression | freeFunctionCall | literalValue | variableName
 
     let negatedTerm = logicalNot.tag("op") >>> space >>> term.tag("right")
-    term.parser = negatedTerm | functionCall | lambda | atom
+    term.parser = negatedTerm | functionCall | lambda | /*scopeExpr |*/ atom
 
     // Root.
 

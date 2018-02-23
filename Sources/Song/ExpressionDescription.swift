@@ -44,6 +44,9 @@ extension Expression: CustomStringConvertible {
 
         case let .callAnonymous(closure, arguments):
             return descriptionCallAnonymous(closure: closure, arguments: arguments)
+
+        case let .scope(expressions):
+            return "scope (" + expressions.map { "\($0)" }.joined(separator: "\n") + ")"
         }
     }
     

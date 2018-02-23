@@ -24,16 +24,17 @@ public indirect enum Expression {
     case stringValue(String)
     case list([Expression])
     case listConstructor([Expression], Expression)
+    case closure(closure: Expression, context: Context)
 
     case variable(String)
     case anyVariable
+    case call(name: String, arguments: [Expression])
+    case callAnonymous(closure: Expression, arguments: [Expression])
 
     case subfunction(Subfunction)
     case constant(variable: Expression, value: Expression)
-    case closure(closure: Expression, context: Context)
 
-    case call(name: String, arguments: [Expression])
-    case callAnonymous(closure: Expression, arguments: [Expression])
+    case scope([Expression])
 }
 
 public extension Expression {

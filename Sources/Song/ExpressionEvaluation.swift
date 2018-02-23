@@ -54,6 +54,9 @@ extension Expression {
 
         case let .callAnonymous(subfunction, arguments):
             return try evaluateCallAnonymous(closure: subfunction, arguments: arguments, callingContext: context)
+
+        case let .scope(expressions):
+            return try evaluateScope(expressions: expressions, context: context)
         }
     }
     
@@ -289,5 +292,11 @@ extension Expression {
             } catch EvaluationError.signatureMismatch {}
         }
         throw EvaluationError.signatureMismatch
+    }
+
+    func evaluateScope(expressions: [Expression], context: Context) throws -> Expression {
+//        let letContext = extendContext(context: context, name: name, value: try binding.evaluate(context: context), replacing: true)
+//        return try body.evaluate(context: letContext)
+        return .scope(expressions)  // TODO: not this!
     }
 }
