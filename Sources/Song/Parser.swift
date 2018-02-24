@@ -130,7 +130,7 @@ public func makeParser() -> ParserProtocol {
 
     // Constants.
 
-    let constant = variableName.tag("variable") >>> skip >>> assign >>> expression.tag("constBody")
+    let constant = variableName.tag("variable") >>> skip >>> assign >>> (scope | expression).tag("constBody")
 
     // Scopes.
 
