@@ -20,7 +20,7 @@ public func makeParser() -> ParserProtocol {
     let lowercaseLetter = "abcdefghijklmnopqrstuvwxyz".match
     let uppercaseLetter = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".match
     let letter = lowercaseLetter | uppercaseLetter
-    let symbol = dot | pipe | comma | lBracket | rBracket | lParen | rParen | underscore
+    let symbol = dot | pipe | comma | lBracket | rBracket | lParen | rParen | underscore | "!@#$%^&*-=_+`~,.<>/?':;\\|[]{}".match
     let stringChar = Deferred()
     stringChar.parser = backslash >>> (backslash | quote) | letter | digit | space | symbol
     let star = str("*")
