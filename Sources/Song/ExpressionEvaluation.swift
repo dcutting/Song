@@ -300,12 +300,19 @@ extension Expression {
         var allStatements = statements
         let last = allStatements.removeLast()
         var scopeContext = context
+        var shadowedFunctions = Context()
+        var newFunctions = Context()
         for statement in allStatements {
             let result = try statement.evaluate(context: scopeContext)
             if case .closure(let function, _) = result {
                 if case .subfunction(let subfunction) = function {
                     if let name = subfunction.name {
-                        scopeContext = extendContext(context: scopeContext, name: name, value: result, replacing: false)
+                        if let shadowed = context[name] {
+                            shadowedFunctions[name] = shadowed
+                        }
+                        newFunctions = extendContext(context: newFunctions, name: name, value: result, replacing: false)
+                        let combined = newFunctions.merging(shadowedFunctions) { l, r in l + r }
+                        scopeContext[name] = combined[name]
                     }
                 }
             }
