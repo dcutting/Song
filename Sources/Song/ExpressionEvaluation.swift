@@ -299,9 +299,22 @@ extension Expression {
         guard statements.count > 0 else { throw EvaluationError.emptyScope(scope) }
         var allStatements = statements
         let last = allStatements.removeLast()
+        var scopeContext = context
         for statement in allStatements {
-            _ = try statement.evaluate(context: context)
+            let result = try statement.evaluate(context: scopeContext)
+            if case .closure(let function, _) = result {
+                if case .subfunction(let subfunction) = function {
+                    if let name = subfunction.name {
+                        scopeContext = extendContext(context: scopeContext, name: name, value: result, replacing: false)
+                    }
+                }
+            }
+            if case .constant(let variable, let value) = result {
+                if case .variable(let name) = variable {
+                    scopeContext = extendContext(context: scopeContext, name: name, value: value, replacing: true)
+                }
+            }
         }
-        return try last.evaluate(context: context)
+        return try last.evaluate(context: scopeContext)
     }
 }
