@@ -17,11 +17,13 @@ extension Expression {
     }
     
     public func evaluate(context: Context) throws -> Expression {
+        let result: Expression
         do {
-            return try evaluate(expression: self, context: context)
+            result = try evaluate(expression: self, context: context)
         } catch let error as EvaluationError {
             throw EvaluationError.cannotEvaluate(self, error)
         }
+        return result
     }
 
     private func evaluate(expression: Expression, context: Context) throws -> Expression {
@@ -90,11 +92,12 @@ extension Expression {
             return .numberValue(try left.integerDividedBy(right))
         case "+":
             guard arguments.count == 2 else { throw EvaluationError.signatureMismatch }
+            let result: Expression
             do {
                 var numbers = try toNumbers(arguments: arguments, context: context)
                 let left = numbers.removeFirst()
                 let right = numbers.removeFirst()
-                return .numberValue(left.plus(right))
+                result = .numberValue(left.plus(right))
             } catch EvaluationError.notANumber {
                 var lists = arguments
                 let left = lists.removeFirst()
@@ -102,11 +105,12 @@ extension Expression {
                 if
                     case let .list(leftList) = try left.evaluate(context: context),
                     case let .list(rightList) = try right.evaluate(context: context) {
-                    return .list(leftList + rightList)
+                    result = .list(leftList + rightList)
                 } else {
                     throw EvaluationError.signatureMismatch
                 }
             }
+            return result
         case "-":
             var numbers = try toNumbers(arguments: arguments, context: context)
             guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
