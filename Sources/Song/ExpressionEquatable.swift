@@ -40,6 +40,9 @@ public func ==(lhs: Expression, rhs: Expression) -> Bool {
     case let (.callAnonymous(lhsClosure, lhsArguments), .callAnonymous(rhsClosure, rhsArguments)):
         return lhsClosure == rhsClosure && lhsArguments == rhsArguments
 
+    case let (.scope(lhsExpressions), .scope(rhsExpressions)):
+        return lhsExpressions == rhsExpressions
+
     default:
         return false
     }
