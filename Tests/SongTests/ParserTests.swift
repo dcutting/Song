@@ -157,6 +157,8 @@ class ParserTests: XCTestCase {
                                      patterns: [.variable("x")],
                                      when: .booleanValue(true),
                                      body: .call(name: "*", arguments: [.variable("x"), .integerValue(2)])))))
+
+        "2 = 5".fails()
     }
 
     func test_lambdas() {
