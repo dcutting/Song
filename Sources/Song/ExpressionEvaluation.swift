@@ -95,12 +95,18 @@ extension Expression {
             guard arguments.count == 2 else { throw EvaluationError.signatureMismatch }
             let result: Expression
             do {
-                result = try plusNumbers(arguments: arguments, context: context)
+                result = try numberOp(arguments: arguments, context: context) {
+                     .numberValue($0.plus($1))
+                }
             } catch EvaluationError.notANumber {
                 do {
-                    result = try plusLists(arguments: arguments, context: context)
+                    result = try listOp(arguments: arguments, context: context) {
+                        .list($0 + $1)
+                    }
                 } catch EvaluationError.notAList {
-                    result = try plusStrings(arguments: arguments, context: context)
+                    result = try stringOp(arguments: arguments, context: context) {
+                        .stringValue($0 + $1)
+                    }
                 }
             }
             return result
@@ -135,17 +141,43 @@ extension Expression {
             let right = numbers.removeFirst()
             return .booleanValue(left.greaterThanOrEqualTo(right))
         case "eq":
-            var numbers = try toNumbers(arguments: arguments, context: context)
-            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
-            let left = numbers.removeFirst()
-            let right = numbers.removeFirst()
-            return .booleanValue(try left.equalTo(right))
+            guard arguments.count == 2 else { throw EvaluationError.signatureMismatch }
+            let result: Expression
+            do {
+                result = try numberOp(arguments: arguments, context: context) {
+                    try .booleanValue($0.equalTo($1))
+                }
+            } catch EvaluationError.notANumber {
+                do {
+                    result = try listOp(arguments: arguments, context: context) {
+                        .booleanValue($0 == $1)
+                    }
+                } catch EvaluationError.notAList {
+                    result = try stringOp(arguments: arguments, context: context) {
+                        .booleanValue($0 == $1)
+                    }
+                }
+            }
+            return result
         case "neq":
-            var numbers = try toNumbers(arguments: arguments, context: context)
-            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
-            let left = numbers.removeFirst()
-            let right = numbers.removeFirst()
-            return .booleanValue(try !left.equalTo(right))
+            guard arguments.count == 2 else { throw EvaluationError.signatureMismatch }
+            let result: Expression
+            do {
+                result = try numberOp(arguments: arguments, context: context) {
+                    try .booleanValue(!$0.equalTo($1))
+                }
+            } catch EvaluationError.notANumber {
+                do {
+                    result = try listOp(arguments: arguments, context: context) {
+                        .booleanValue($0 != $1)
+                    }
+                } catch EvaluationError.notAList {
+                    result = try stringOp(arguments: arguments, context: context) {
+                        .booleanValue($0 != $1)
+                    }
+                }
+            }
+            return result
         case "and":
             var bools = try toBools(arguments: arguments, context: context)
             guard bools.count == 2 else { throw EvaluationError.signatureMismatch }
@@ -170,25 +202,11 @@ extension Expression {
         }
     }
 
-    private func plusNumbers(arguments: [Expression], context: Context) throws -> Expression {
-        var numbers = arguments
-        let left = try extractNumber(numbers.removeFirst(), context: context)
-        let right = try extractNumber(numbers.removeFirst(), context: context)
-        return .numberValue(left.plus(right))
-    }
-
     private func extractNumber(_ expression: Expression, context: Context) throws -> Number {
         if case .numberValue(let number) = try expression.evaluate(context: context) {
             return number
         }
         throw EvaluationError.notANumber(expression)
-    }
-
-    private func plusLists(arguments: [Expression], context: Context) throws -> Expression {
-        var lists = arguments
-        let left = try extractList(lists.removeFirst(), context: context)
-        let right = try extractList(lists.removeFirst(), context: context)
-        return .list(left + right)
     }
 
     private func extractList(_ expression: Expression, context: Context) throws -> [Expression] {
@@ -198,18 +216,32 @@ extension Expression {
         throw EvaluationError.notAList(expression)
     }
 
-    private func plusStrings(arguments: [Expression], context: Context) throws -> Expression {
-        var strings = arguments
-        let left = try extractString(strings.removeFirst(), context: context)
-        let right = try extractString(strings.removeFirst(), context: context)
-        return .stringValue(left + right)
-    }
-
     private func extractString(_ expression: Expression, context: Context) throws -> String {
         if case .stringValue(let string) = try expression.evaluate(context: context) {
             return string
         }
         throw EvaluationError.notAString(expression)
+    }
+
+    private func numberOp(arguments: [Expression], context: Context, callback: (Number, Number) throws -> Expression) throws -> Expression {
+        var numbers = arguments
+        let left = try extractNumber(numbers.removeFirst(), context: context)
+        let right = try extractNumber(numbers.removeFirst(), context: context)
+        return try callback(left, right)
+    }
+
+    private func listOp(arguments: [Expression], context: Context, callback: ([Expression], [Expression]) throws -> Expression) throws -> Expression {
+        var lists = arguments
+        let left = try extractList(lists.removeFirst(), context: context)
+        let right = try extractList(lists.removeFirst(), context: context)
+        return try callback(left, right)
+    }
+
+    private func stringOp(arguments: [Expression], context: Context, callback: (String, String) -> Expression) throws -> Expression {
+        var strings = arguments
+        let left = try extractString(strings.removeFirst(), context: context)
+        let right = try extractString(strings.removeFirst(), context: context)
+        return callback(left, right)
     }
 
     private func toNumbers(arguments: [Expression], context: Context) throws -> [Number] {
