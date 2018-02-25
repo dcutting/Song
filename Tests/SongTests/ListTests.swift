@@ -10,7 +10,7 @@ class ListTests: XCTestCase {
 
     func testDescription_nonEmptyList() {
         let list = Expression.list([.integerValue(4), .booleanValue(false)])
-        XCTAssertEqual("[4, no]", "\(list)")
+        XCTAssertEqual("[4, No]", "\(list)")
     }
 
     func testEquatable_same_returnsTrue() {
@@ -60,11 +60,11 @@ class ListTests: XCTestCase {
         let right = Expression.list([.integerValue(1), .integerValue(2)])
 
         assertNoThrow {
-            let call = Expression.call(name: "eq", arguments: [left, right])
+            let call = Expression.call(name: "Eq", arguments: [left, right])
             XCTAssertEqual(Expression.booleanValue(true), try call.evaluate())
         }
         assertNoThrow {
-            let call = Expression.call(name: "neq", arguments: [left, right])
+            let call = Expression.call(name: "Neq", arguments: [left, right])
             XCTAssertEqual(Expression.booleanValue(false), try call.evaluate())
         }
     }
@@ -74,11 +74,11 @@ class ListTests: XCTestCase {
         let right = Expression.list([.integerValue(1), .integerValue(2)])
 
         assertNoThrow {
-            let call = Expression.call(name: "eq", arguments: [left, right])
+            let call = Expression.call(name: "Eq", arguments: [left, right])
             XCTAssertEqual(Expression.booleanValue(false), try call.evaluate())
         }
         assertNoThrow {
-            let call = Expression.call(name: "neq", arguments: [left, right])
+            let call = Expression.call(name: "Neq", arguments: [left, right])
             XCTAssertEqual(Expression.booleanValue(true), try call.evaluate())
         }
     }

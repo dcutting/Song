@@ -8,7 +8,7 @@ class FunctionTests: XCTestCase {
 
     func testDescriptionNamedFunction() {
         let result = "\(makeNamedFunction())"
-        XCTAssertEqual("foo(a, b) when yes = x", result)
+        XCTAssertEqual("foo(a, b) When Yes = x", result)
     }
 
     func testEvaluateNamedFunction() {

@@ -15,7 +15,7 @@ class OutTests: XCTestCase {
         let context: Context = ["a": [.integerValue(5)]]
         let string = Expression.closure(closure: function, context: context)
         let actual = string.out()
-        XCTAssertEqual("foo() when yes = 99", actual)
+        XCTAssertEqual("foo() When Yes = 99", actual)
     }
 
     func testOut_integerValue() {

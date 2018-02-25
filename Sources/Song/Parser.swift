@@ -27,21 +27,23 @@ public func makeParser() -> ParserProtocol {
     stringChar.parser = backslash >>> (backslash | quote) | letter | digit | space | symbol
     let star = str("*")
     let slash = str("/")
-    let div = str("div")
-    let mod = str("mod")
+    let div = str("Div")
+    let mod = str("Mod")
     let plus = str("+")
     let minus = str("-")
     let lessThanOrEqual = str("<=")
     let greaterThanOrEqual = str(">=")
     let lessThan = str("<")
     let greaterThan = str(">")
-    let equalTo = str("eq")
-    let notEqualTo = str("neq")
-    let logicalAnd = str("and")
-    let logicalOr = str("or")
-    let logicalNot = str("not")
-    let when = space >>> str("when") >>> space
+    let equalTo = str("Eq")
+    let notEqualTo = str("Neq")
+    let logicalAnd = str("And")
+    let logicalOr = str("Or")
+    let logicalNot = str("Not")
+    let when = space >>> str("When") >>> space
     let assign = str("=") >>> skip
+    let start = str("Do")
+    let end = str("End")
 
     let expression = Deferred()
     let scope = Deferred()
@@ -59,8 +61,8 @@ public func makeParser() -> ParserProtocol {
 
     // Literals.
 
-    let trueValue = str("yes").tag("true")
-    let falseValue = str("no").tag("false")
+    let trueValue = str("Yes").tag("true")
+    let falseValue = str("No").tag("false")
     let booleanValue = trueValue | falseValue
     let integerValue = (minus.maybe >>> digit.some).tag("integer")
     let floatValue = (minus.maybe >>> digit.some >>> dot >>> digit.some).tag("float")
@@ -142,7 +144,7 @@ public func makeParser() -> ParserProtocol {
     let scopeItem = skip >>> statement.tag("arg")
     let scopeStatementDelimiter = skip >>> (comma | newline) >>> skip
     let scopeItems = (scopeItem >>> (scopeStatementDelimiter >>> scopeItem).recur).tag("scopeItems")
-    scope.parser = str("{") >>> skipSpaceAndNewlines >>> scopeItems >>> skipSpaceAndNewlines >>> str("}")
+    scope.parser = start >>> (space | newline) >>> skipSpaceAndNewlines >>> scopeItems >>> (space | newline) >>> skipSpaceAndNewlines >>> end
     statement.parser = scope | functionDecl | constant | expression
 
     // Root.

@@ -8,12 +8,12 @@ class BooleanTests: XCTestCase {
     
     func testDescriptionTrue() {
         let result = "\(trueBooleanValue)"
-        XCTAssertEqual("yes", result)
+        XCTAssertEqual("Yes", result)
     }
     
     func testDescriptionFalse() {
         let result = "\(falseBooleanValue)"
-        XCTAssertEqual("no", result)
+        XCTAssertEqual("No", result)
     }
     
     func testEvaluateTrue() {

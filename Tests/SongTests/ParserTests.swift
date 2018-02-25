@@ -4,8 +4,8 @@ import Song
 class ParserTests: XCTestCase {
 
     func test_booleans() {
-        "yes".becomes(.booleanValue(true))
-        "no".becomes(.booleanValue(false))
+        "Yes".becomes(.booleanValue(true))
+        "No".becomes(.booleanValue(false))
     }
 
     func test_integers() {
@@ -34,9 +34,9 @@ class ParserTests: XCTestCase {
 
     func test_lists() {
         "[]".becomes(.list([]))
-        "[1,no]".becomes(.list([.integerValue(1), .booleanValue(false)]))
-        "[ 1 , yes , \"hi\" ]".becomes(.list([.integerValue(1), .booleanValue(true), .stringValue("hi")]))
-        "[[1,2],[no,4], [], \"hi\"]".becomes(.list([
+        "[1,No]".becomes(.list([.integerValue(1), .booleanValue(false)]))
+        "[ 1 , Yes , \"hi\" ]".becomes(.list([.integerValue(1), .booleanValue(true), .stringValue("hi")]))
+        "[[1,2],[No,4], [], \"hi\"]".becomes(.list([
             .list([.integerValue(1), .integerValue(2)]),
             .list([.booleanValue(false), .integerValue(4)]),
             .list([]),
@@ -46,7 +46,7 @@ class ParserTests: XCTestCase {
 [
   1 ,
 
-  no
+  No
 ]
 """.becomes(.list([.integerValue(1), .booleanValue(false)]))
     }
@@ -55,7 +55,7 @@ class ParserTests: XCTestCase {
         "[x|xs]".becomes(.listConstructor([.variable("x")], .variable("xs")))
         "[x,y|xs]".becomes(.listConstructor([.variable("x"), .variable("y")], .variable("xs")))
         "[ 1 , x | xs ]".becomes(.listConstructor([.integerValue(1), .variable("x")], .variable("xs")))
-        "[yes|2]".becomes(.listConstructor([.booleanValue(true)], .integerValue(2)))
+        "[Yes|2]".becomes(.listConstructor([.booleanValue(true)], .integerValue(2)))
         "[ f(x) | g(x) ]".becomes(.listConstructor([.call(name: "f", arguments: [.variable("x")])],
                                                    .call(name: "g", arguments: [.variable("x")])))
         "[1,2|[3,4|[5,6]]]".becomes(.listConstructor(
@@ -87,32 +87,32 @@ class ParserTests: XCTestCase {
                     ]),
                 .integerValue(5)
                 ]))
-        "12 div 5".becomes(.call(name: "div", arguments: [.integerValue(12), .integerValue(5)]))
-        "12 mod 5".becomes(.call(name: "mod", arguments: [.integerValue(12), .integerValue(5)]))
-        "x eq 5".becomes(.call(name: "eq", arguments: [.variable("x"), .integerValue(5)]))
+        "12 Div 5".becomes(.call(name: "Div", arguments: [.integerValue(12), .integerValue(5)]))
+        "12 Mod 5".becomes(.call(name: "Mod", arguments: [.integerValue(12), .integerValue(5)]))
+        "x Eq 5".becomes(.call(name: "Eq", arguments: [.variable("x"), .integerValue(5)]))
 
-        "12 div5".fails()
-        "12 mod5".fails()
-        "12div 5".fails()
-        "12mod 5".fails()
+        "12 Div5".fails()
+        "12 Mod5".fails()
+        "12Div 5".fails()
+        "12Mod 5".fails()
     }
 
     func test_equality() {
-        "4 neq 8".becomes(.call(name: "neq", arguments: [.integerValue(4), .integerValue(8)]))
-        "\"hi\" neq \"ho\"".becomes(.call(name: "neq", arguments: [.stringValue("hi"), .stringValue("ho")]))
-        "[4] neq [7]".becomes(.call(name: "neq", arguments: [.list([.integerValue(4)]), .list([.integerValue(7)])]))
+        "4 Neq 8".becomes(.call(name: "Neq", arguments: [.integerValue(4), .integerValue(8)]))
+        "\"hi\" Neq \"ho\"".becomes(.call(name: "Neq", arguments: [.stringValue("hi"), .stringValue("ho")]))
+        "[4] Neq [7]".becomes(.call(name: "Neq", arguments: [.list([.integerValue(4)]), .list([.integerValue(7)])]))
 
-        "4 eq 3".becomes(.call(name: "eq", arguments: [.integerValue(4), .integerValue(3)]))
-        "4 eq [7]".becomes(.call(name: "eq", arguments: [.integerValue(4), .list([.integerValue(7)])]))
-        "4 eq \"hi\"".becomes(.call(name: "eq", arguments: [.integerValue(4), .stringValue("hi")]))
+        "4 Eq 3".becomes(.call(name: "Eq", arguments: [.integerValue(4), .integerValue(3)]))
+        "4 Eq [7]".becomes(.call(name: "Eq", arguments: [.integerValue(4), .list([.integerValue(7)])]))
+        "4 Eq \"hi\"".becomes(.call(name: "Eq", arguments: [.integerValue(4), .stringValue("hi")]))
 
-        "\"hi\" eq \"ho\"".becomes(.call(name: "eq", arguments: [.stringValue("hi"), .stringValue("ho")]))
-        "\"hi\" eq [7]".becomes(.call(name: "eq", arguments: [.stringValue("hi"), .list([.integerValue(7)])]))
-        "\"hi\" eq 3".becomes(.call(name: "eq", arguments: [.stringValue("hi"), .integerValue(3)]))
+        "\"hi\" Eq \"ho\"".becomes(.call(name: "Eq", arguments: [.stringValue("hi"), .stringValue("ho")]))
+        "\"hi\" Eq [7]".becomes(.call(name: "Eq", arguments: [.stringValue("hi"), .list([.integerValue(7)])]))
+        "\"hi\" Eq 3".becomes(.call(name: "Eq", arguments: [.stringValue("hi"), .integerValue(3)]))
 
-        "[7] eq [7]".becomes(.call(name: "eq", arguments: [.list([.integerValue(7)]), .list([.integerValue(7)])]))
-        "[7] eq 3".becomes(.call(name: "eq", arguments: [.list([.integerValue(7)]), .integerValue(3)]))
-        "[7] eq \"hi\"".becomes(.call(name: "eq", arguments: [.list([.integerValue(7)]), .stringValue("hi")]))
+        "[7] Eq [7]".becomes(.call(name: "Eq", arguments: [.list([.integerValue(7)]), .list([.integerValue(7)])]))
+        "[7] Eq 3".becomes(.call(name: "Eq", arguments: [.list([.integerValue(7)]), .integerValue(3)]))
+        "[7] Eq \"hi\"".becomes(.call(name: "Eq", arguments: [.list([.integerValue(7)]), .stringValue("hi")]))
     }
 
     func test_wrappedExpressions() {
@@ -150,13 +150,13 @@ class ParserTests: XCTestCase {
         "a.foo = a".becomes(
             .subfunction(Subfunction(name: "foo", patterns: [.variable("a")], when: .booleanValue(true), body: .variable("a")))
         )
-        "a.foo when a < 50 = a".becomes(
+        "a.foo When a < 50 = a".becomes(
             .subfunction(Subfunction(name: "foo",
                                      patterns: [.variable("a")],
                                      when: .call(name: "<", arguments: [.variable("a"), .integerValue(50)]),
                                      body: .variable("a")))
         )
-        "a.foo() when a < 50 = a".becomes(
+        "a.foo() When a < 50 = a".becomes(
             .subfunction(Subfunction(name: "foo",
                                      patterns: [.variable("a")],
                                      when: .call(name: "<", arguments: [.variable("a"), .integerValue(50)]),
@@ -257,51 +257,54 @@ class ParserTests: XCTestCase {
     }
 
     func test_scopes() {
-        "{ _ }".becomes(.scope([.anyVariable]))
-        "{ 1 }".becomes(.scope([.integerValue(1)]))
-        "{ 1, x }".becomes(.scope([.integerValue(1), .variable("x")]))
-        "{ x = 5, x }".becomes(.scope([.constant(variable: .variable("x"), value: .integerValue(5)), .variable("x")]))
-        "{ x.inc = x+1, 7.inc }".becomes(.scope([
+        "Do _ End".becomes(.scope([.anyVariable]))
+        "Do 1 End".becomes(.scope([.integerValue(1)]))
+        "Do 1, x End".becomes(.scope([.integerValue(1), .variable("x")]))
+        "Do x = 5, x End".becomes(.scope([.constant(variable: .variable("x"), value: .integerValue(5)), .variable("x")]))
+        "Do x.inc = x+1, 7.inc End".becomes(.scope([
             .subfunction(Subfunction(name: "inc", patterns: [.variable("x")], when: .booleanValue(true), body: .call(name: "+", arguments: [.variable("x"), .integerValue(1)]))),
             .call(name: "inc", arguments: [.integerValue(7)])]))
 
 """
-{1
+Do 1
 2
-3}
+3 End
 """.becomes(.scope([.integerValue(1), .integerValue(2), .integerValue(3)]))
 """
-{
+Do
   1
   2
   3
-}
+End
 """.becomes(.scope([.integerValue(1), .integerValue(2), .integerValue(3)]))
 """
-{1
-2,3}
+Do 1
+2,3 End
 """.becomes(.scope([.integerValue(1), .integerValue(2), .integerValue(3)]))
 """
-{
+Do
   1
   2
   3
-}
+End
 """.becomes(.scope([.integerValue(1), .integerValue(2), .integerValue(3)]))
 """
-{
+Do
   1,2
   3
-}
+End
 """.becomes(.scope([.integerValue(1), .integerValue(2), .integerValue(3)]))
 
 """
-{
+Do
   1,
   2,
   3
-}
+End
 """.fails()
-        "{}".fails()
+
+        "DoEnd".fails()
+        "Do End".fails()
+        "Do1End".fails()
     }
 }

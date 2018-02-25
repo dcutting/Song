@@ -4,7 +4,7 @@ extension Expression: CustomStringConvertible {
         switch self {
             
         case let .booleanValue(value):
-            return value ? "yes" : "no"
+            return value ? "Yes" : "No"
             
         case let .numberValue(value):
             return "\(value)"
@@ -53,7 +53,7 @@ extension Expression: CustomStringConvertible {
     func descriptionSubfunction(subfunction: Subfunction) -> String {
         let parametersList = subfunction.patterns.map { "\($0)" }.joined(separator: ", ")
         if let funcName = subfunction.name {
-            return "\(funcName)(\(parametersList)) when \(subfunction.when) = \(subfunction.body)"
+            return "\(funcName)(\(parametersList)) When \(subfunction.when) = \(subfunction.body)"
         }
         return "λ(\(parametersList)) = \(subfunction.body)"
     }

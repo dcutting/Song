@@ -79,13 +79,13 @@ extension Expression {
             let left = numbers.removeFirst()
             let right = numbers.removeFirst()
             return .numberValue(left.floatDividedBy(right))
-        case "mod":
+        case "Mod":
             var numbers = try toNumbers(arguments: arguments, context: context)
             guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
             let left = numbers.removeFirst()
             let right = numbers.removeFirst()
             return .numberValue(try left.modulo(right))
-        case "div":
+        case "Div":
             var numbers = try toNumbers(arguments: arguments, context: context)
             guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
             let left = numbers.removeFirst()
@@ -140,7 +140,7 @@ extension Expression {
             let left = numbers.removeFirst()
             let right = numbers.removeFirst()
             return .booleanValue(left.greaterThanOrEqualTo(right))
-        case "eq":
+        case "Eq":
             guard arguments.count == 2 else { throw EvaluationError.signatureMismatch }
             let result: Expression
             do {
@@ -159,7 +159,7 @@ extension Expression {
                 }
             }
             return result
-        case "neq":
+        case "Neq":
             guard arguments.count == 2 else { throw EvaluationError.signatureMismatch }
             let result: Expression
             do {
@@ -178,19 +178,19 @@ extension Expression {
                 }
             }
             return result
-        case "and":
+        case "And":
             var bools = try toBools(arguments: arguments, context: context)
             guard bools.count == 2 else { throw EvaluationError.signatureMismatch }
             let left = bools.removeFirst()
             let right = bools.removeFirst()
             return .booleanValue(left && right)
-        case "or":
+        case "Or":
             var bools = try toBools(arguments: arguments, context: context)
             guard bools.count == 2 else { throw EvaluationError.signatureMismatch }
             let left = bools.removeFirst()
             let right = bools.removeFirst()
             return .booleanValue(left || right)
-        case "not":
+        case "Not":
             var bools = try toBools(arguments: arguments, context: context)
             guard bools.count == 1 else { throw EvaluationError.signatureMismatch }
             let left = bools.removeFirst()

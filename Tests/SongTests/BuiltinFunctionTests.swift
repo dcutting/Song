@@ -76,12 +76,12 @@ class BuiltinFunctionTests: XCTestCase {
         }
 
         assertNoThrow {
-            let op = try Expression.call(name: "mod", arguments: [first, second]).evaluate(context: context)
+            let op = try Expression.call(name: "Mod", arguments: [first, second]).evaluate(context: context)
             XCTAssertEqual(Expression.integerValue(4), op)
         }
 
         assertNoThrow {
-            let op = try Expression.call(name: "div", arguments: [first, second]).evaluate(context: context)
+            let op = try Expression.call(name: "Div", arguments: [first, second]).evaluate(context: context)
             XCTAssertEqual(Expression.integerValue(1), op)
         }
 
@@ -116,29 +116,29 @@ class BuiltinFunctionTests: XCTestCase {
         }
 
         assertNoThrow {
-            let op = try Expression.call(name: "eq", arguments: [first, second]).evaluate(context: context)
+            let op = try Expression.call(name: "Eq", arguments: [first, second]).evaluate(context: context)
             XCTAssertEqual(Expression.booleanValue(false), op)
         }
 
         assertNoThrow {
-            let op = try Expression.call(name: "neq", arguments: [first, second]).evaluate(context: context)
+            let op = try Expression.call(name: "Neq", arguments: [first, second]).evaluate(context: context)
             XCTAssertEqual(Expression.booleanValue(true), op)
         }
 
         assertNoThrow {
-            let op = Expression.call(name: "and", arguments: [first, second])
+            let op = Expression.call(name: "And", arguments: [first, second])
             let result = try op.evaluate(context: ["x": [.booleanValue(true)], "y": [.booleanValue(false)]])
             XCTAssertEqual(Expression.booleanValue(false), result)
         }
 
         assertNoThrow {
-            let op = Expression.call(name: "or", arguments: [first, second])
+            let op = Expression.call(name: "Or", arguments: [first, second])
             let result = try op.evaluate(context: ["x": [.booleanValue(false)], "y": [.booleanValue(true)]])
             XCTAssertEqual(Expression.booleanValue(true), result)
         }
 
         assertNoThrow {
-            let op = Expression.call(name: "not", arguments: [first])
+            let op = Expression.call(name: "Not", arguments: [first])
             let result = try op.evaluate(context: ["x": [.booleanValue(false)]])
             XCTAssertEqual(Expression.booleanValue(true), result)
         }
