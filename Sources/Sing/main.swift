@@ -61,6 +61,9 @@ while (true) {
     }
     guard let thisLine = getLine() else { break }
 
+    if thisLine.trimmingCharacters(in: .whitespaces).hasPrefix("#") {
+        continue
+    }
     if thisLine == "" {
         continue
     }
@@ -71,7 +74,7 @@ while (true) {
 
     multilines.append(thisLine)
 
-    let line = multilines.joined(separator: "\n")
+    let line = multilines.joined()
 
     let result = parser.parse(line)
     let (ist, remainder) = result
