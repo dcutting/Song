@@ -172,6 +172,37 @@ class ParserTests: XCTestCase {
                                      body: .listConstructor([.call(name: "f", arguments: [.variable("x")])],
                                                             .call(name: "map", arguments: [.variable("xs"), .variable("f")]))))
         )
+"""
+a.foo =
+ 5
+""".becomes(.subfunction(Subfunction(name: "foo", patterns: [.variable("a")], when: .booleanValue(true), body: .integerValue(5))))
+"""
+foo() =
+5
+""".becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .booleanValue(true), body: .integerValue(5))))
+("foo() =" + " " + "\n5").becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .booleanValue(true), body: .integerValue(5))))
+"""
+foo() =
+  5
+""".becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .booleanValue(true), body: .integerValue(5))))
+"""
+foo() = Do
+  5
+End
+""".becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .booleanValue(true), body: .scope([.integerValue(5)]))))
+"""
+foo() =
+Do
+  5
+End
+""".becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .booleanValue(true), body: .scope([.integerValue(5)]))))
+"""
+foo() = Do 5
+End
+""".becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .booleanValue(true), body: .scope([.integerValue(5)]))))
+"""
+foo() = Do 5 End
+""".becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .booleanValue(true), body: .scope([.integerValue(5)]))))
     }
 
     func test_constants() {

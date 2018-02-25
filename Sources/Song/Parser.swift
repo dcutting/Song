@@ -6,8 +6,9 @@ public func makeParser() -> ParserProtocol {
 
     let newline = str("\n")
     let space = " \t".match.some
+    let spaceOrNewline = space | newline
     let skip = space.maybe
-    let skipSpaceAndNewlines = (space | newline).maybe
+    let skipSpaceAndNewlines = spaceOrNewline.some.maybe
     let dot = str(".")
     let pipe = str("|") >>> skip
     let comma = skip >>> str(",") >>> skip
@@ -41,8 +42,8 @@ public func makeParser() -> ParserProtocol {
     let logicalAnd = str("And")
     let logicalOr = str("Or")
     let logicalNot = str("Not")
-    let when = space >>> str("When") >>> space
-    let assign = str("=") >>> skip
+    let when = spaceOrNewline >>> str("When") >>> spaceOrNewline
+    let assign = str("=")
     let start = str("Do")
     let end = str("End")
 
@@ -96,11 +97,11 @@ public func makeParser() -> ParserProtocol {
     let functionSubject = parameter.tag("subject")
     let parameters = parameter >>> (comma >>> parameter).recur
     let functionParameters = lParen >>> parameters.recur(0, 1).tag("params") >>> rParen
-    let functionBody = (scope | expression).tag("body") >>> skip
+    let functionBody = skip >>> (scope | expression).tag("body") >>> skip
     let guardClause = (when >>> expression).maybe.tag("guard") >>> skip
-    let subjectFunctionDecl = functionSubject >>> dot >>> functionName >>> functionParameters.maybe >>> guardClause >>> assign >>> functionBody
+    let subjectFunctionDecl = functionSubject >>> dot >>> functionName >>> functionParameters.maybe >>> guardClause >>> assign >>> skipSpaceAndNewlines >>> functionBody
 
-    let freeFunctionDecl = functionName >>> functionParameters >>> guardClause >>> assign >>> functionBody
+    let freeFunctionDecl = functionName >>> functionParameters >>> guardClause >>> assign >>> skipSpaceAndNewlines >>> functionBody
 
     let functionDecl = subjectFunctionDecl | freeFunctionDecl
 
@@ -112,32 +113,32 @@ public func makeParser() -> ParserProtocol {
     let disjunctive = Deferred()
     let term = Deferred()
 
-    let symbolicMultiplicativeOp = skip >>> (star | slash).tag("op") >>> skip
-    let wordMultiplicativeOp = space >>> (mod | div).tag("op") >>> space
+    let symbolicMultiplicativeOp = skipSpaceAndNewlines >>> (star | slash).tag("op") >>> skipSpaceAndNewlines
+    let wordMultiplicativeOp = spaceOrNewline >>> (mod | div).tag("op") >>> spaceOrNewline
     let multiplicativeOp = symbolicMultiplicativeOp | wordMultiplicativeOp
     let multiplicative = term.tag("left") >>> (multiplicativeOp >>> term.tag("right")).recur.tag("ops")
-    let additive = multiplicative.tag("left") >>> (skip >>> (plus | minus).tag("op") >>> skip >>> multiplicative.tag("right")).recur.tag("ops")
-    relational.parser = additive.tag("left") >>> (skip >>> (lessThanOrEqual | greaterThanOrEqual | lessThan | greaterThan).tag("op") >>> skip >>> relational.tag("right")).recur.tag("ops")
-    equality.parser = relational.tag("left") >>> (space >>> (equalTo | notEqualTo).tag("op") >>> space >>> equality.tag("right")).recur.tag("ops")
-    conjunctive.parser = equality.tag("left") >>> (space >>> logicalAnd.tag("op") >>> space >>> conjunctive.tag("right")).recur.tag("ops")
-    disjunctive.parser = conjunctive.tag("left") >>> (space >>> logicalOr.tag("op") >>> space >>> disjunctive.tag("right")).recur.tag("ops")
+    let additive = multiplicative.tag("left") >>> (skipSpaceAndNewlines >>> (plus | minus).tag("op") >>> skipSpaceAndNewlines >>> multiplicative.tag("right")).recur.tag("ops")
+    relational.parser = additive.tag("left") >>> (skipSpaceAndNewlines >>> (lessThanOrEqual | greaterThanOrEqual | lessThan | greaterThan).tag("op") >>> skipSpaceAndNewlines >>> relational.tag("right")).recur.tag("ops")
+    equality.parser = relational.tag("left") >>> (spaceOrNewline >>> (equalTo | notEqualTo).tag("op") >>> spaceOrNewline >>> equality.tag("right")).recur.tag("ops")
+    conjunctive.parser = equality.tag("left") >>> (spaceOrNewline >>> logicalAnd.tag("op") >>> spaceOrNewline >>> conjunctive.tag("right")).recur.tag("ops")
+    disjunctive.parser = conjunctive.tag("left") >>> (spaceOrNewline >>> logicalOr.tag("op") >>> spaceOrNewline >>> disjunctive.tag("right")).recur.tag("ops")
 
     expression.parser = disjunctive.parser
 
     // Lambdas.
 
     let lambdaParameters = pipe >>> parameters.recur(0, 1).tag("params") >>> pipe
-    let lambdaBody = expression.tag("lambdaBody") >>> skip
+    let lambdaBody = expression.tag("lambdaBody") >>> skipSpaceAndNewlines
     let lambda = lambdaParameters >>> lambdaBody
 
     // Terms.
 
-    let negatedTerm = logicalNot.tag("op") >>> space >>> term.tag("right")
+    let negatedTerm = logicalNot.tag("op") >>> spaceOrNewline >>> term.tag("right")
     term.parser = negatedTerm | functionCall | lambda | atom
 
     // Constants.
 
-    let constant = variableName.tag("variable") >>> skip >>> assign >>> (scope | expression).tag("constBody")
+    let constant = variableName.tag("variable") >>> skipSpaceAndNewlines >>> assign >>> skipSpaceAndNewlines >>> (scope | expression).tag("constBody")
 
     // Scopes.
 
@@ -145,8 +146,8 @@ public func makeParser() -> ParserProtocol {
     let scopeItem = skip >>> statement.tag("arg")
     let delimiterOrNewline = skip >>> ((delimiter.maybe >>> skip >>> newline) | delimiter)
     let scopeItems = (scopeItem >>> (delimiterOrNewline >>> scopeItem).recur).tag("scopeItems") >>> delimiter.maybe
-    scope.parser = start >>> (space | newline) >>> skipSpaceAndNewlines >>> scopeItems >>> (space | newline) >>> skipSpaceAndNewlines >>> end
-    statement.parser = scope | functionDecl | constant | expression
+    scope.parser = start >>> spaceOrNewline >>> skipSpaceAndNewlines >>> scopeItems >>> spaceOrNewline >>> skipSpaceAndNewlines >>> end
+    statement.parser = skip >>> (scope | functionDecl | constant | expression)
 
     // Root.
 

@@ -59,7 +59,7 @@ while (true) {
     if interactive {
         print(prompt, terminator: "")
     }
-    guard let thisLine = getLine()?.trimmingCharacters(in: .whitespacesAndNewlines) else { break }
+    guard let thisLine = getLine() else { break }
 
     if thisLine == "" {
         continue
