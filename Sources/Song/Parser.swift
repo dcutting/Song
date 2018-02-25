@@ -11,8 +11,8 @@ public func makeParser() -> ParserProtocol {
     let dot = str(".")
     let pipe = str("|") >>> skip
     let comma = skip >>> str(",") >>> skip
-    let lBracket = str("[") >>> skip
-    let rBracket = str("]") >>> skip
+    let lBracket = str("[")
+    let rBracket = str("]")
     let lParen = str("(") >>> skip
     let rParen = str(")")
     let quote = str("\"")
@@ -49,7 +49,7 @@ public func makeParser() -> ParserProtocol {
     // Lists.
 
     let item = expression.tag("item")
-    let list = lBracket >>> (item >>> (comma >>> item).recur).recur.tag("list") >>> rBracket
+    let list = lBracket >>> skip >>> (item >>> (comma >>> item).recur).recur.tag("list") >>> skip >>> rBracket
 
     let heads = (skip >>> item >>> (comma >>> item >>> skip).recur).tag("heads")
     let tail = expression.tag("tail")
@@ -63,9 +63,9 @@ public func makeParser() -> ParserProtocol {
     let integerValue = (minus.maybe >>> digit.some).tag("integer")
     let floatValue = (minus.maybe >>> digit.some >>> dot >>> digit.some).tag("float")
     let numericValue = floatValue | integerValue
-    let stringValue = quote >>> stringChar.recur.tag("string") >>> quote >>> skip
+    let stringValue = quote >>> stringChar.recur.tag("string") >>> quote
 
-    let literalValue = booleanValue | numericValue | stringValue | list | listConstructor
+    let literalValue = stringValue | list | listConstructor | numericValue | booleanValue
 
     // Names.
 

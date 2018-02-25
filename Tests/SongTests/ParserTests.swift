@@ -89,6 +89,24 @@ class ParserTests: XCTestCase {
         "12mod 5".fails()
     }
 
+    func test_equality() {
+        "4 neq 8".becomes(.call(name: "neq", arguments: [.integerValue(4), .integerValue(8)]))
+        "\"hi\" neq \"ho\"".becomes(.call(name: "neq", arguments: [.stringValue("hi"), .stringValue("ho")]))
+        "[4] neq [7]".becomes(.call(name: "neq", arguments: [.list([.integerValue(4)]), .list([.integerValue(7)])]))
+
+        "4 eq 3".becomes(.call(name: "eq", arguments: [.integerValue(4), .integerValue(3)]))
+        "4 eq [7]".becomes(.call(name: "eq", arguments: [.integerValue(4), .list([.integerValue(7)])]))
+        "4 eq \"hi\"".becomes(.call(name: "eq", arguments: [.integerValue(4), .stringValue("hi")]))
+
+        "\"hi\" eq \"ho\"".becomes(.call(name: "eq", arguments: [.stringValue("hi"), .stringValue("ho")]))
+        "\"hi\" eq [7]".becomes(.call(name: "eq", arguments: [.stringValue("hi"), .list([.integerValue(7)])]))
+        "\"hi\" eq 3".becomes(.call(name: "eq", arguments: [.stringValue("hi"), .integerValue(3)]))
+
+        "[7] eq [7]".becomes(.call(name: "eq", arguments: [.list([.integerValue(7)]), .list([.integerValue(7)])]))
+        "[7] eq 3".becomes(.call(name: "eq", arguments: [.list([.integerValue(7)]), .integerValue(3)]))
+        "[7] eq \"hi\"".becomes(.call(name: "eq", arguments: [.list([.integerValue(7)]), .stringValue("hi")]))
+    }
+
     func test_wrappedExpressions() {
         "1+2*3".becomes(.call(name: "+", arguments: [
             .integerValue(1),
