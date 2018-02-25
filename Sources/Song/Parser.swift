@@ -4,8 +4,10 @@ public func makeParser() -> ParserProtocol {
 
     // Punctuation.
 
+    let newline = str("\n")
     let space = " \t".match.some
     let skip = space.maybe
+    let skipSpaceAndNewlines = (space | newline).maybe
     let dot = str(".")
     let pipe = str("|") >>> skip
     let comma = skip >>> str(",") >>> skip
@@ -135,9 +137,10 @@ public func makeParser() -> ParserProtocol {
     // Scopes.
 
     let statement = Deferred()
-    let scopeItem = statement.tag("arg")
-    let scopeItems = (scopeItem >>> (comma >>> scopeItem).recur).tag("scopeItems")
-    scope.parser = str("do") >>> space >>> scopeItems >>> skip >>> str("end")
+    let scopeItem = skip >>> statement.tag("arg")
+    let scopeStatementDelimiter = skip >>> (comma | newline) >>> skip
+    let scopeItems = (scopeItem >>> (scopeStatementDelimiter >>> scopeItem).recur).tag("scopeItems")
+    scope.parser = str("{") >>> skipSpaceAndNewlines >>> scopeItems >>> skipSpaceAndNewlines >>> str("}")
     statement.parser = scope | functionDecl | constant | expression
 
     // Root.

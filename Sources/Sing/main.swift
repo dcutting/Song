@@ -53,21 +53,31 @@ func dumpContext() {
 
 log("Song v0.1.0 🎵")
 
+var multilines = [String]()
+
 while (true) {
     if interactive {
         print(prompt, terminator: "")
     }
-    guard let line = getLine()?.trimmingCharacters(in: .whitespacesAndNewlines) else { break }
-    if line == "" {
+    guard let thisLine = getLine()?.trimmingCharacters(in: .whitespacesAndNewlines) else { break }
+
+    if thisLine == "" {
         continue
     }
-    if line == "?" {
+    if thisLine == "?" {
         dumpContext()
         continue
     }
+
+    multilines.append(thisLine)
+
+    let line = multilines.joined(separator: "\n")
+
     let result = parser.parse(line)
     let (ist, remainder) = result
+//    print("  \(remainder), \(multilines), \(parsedLastCharacter)")
     if remainder.text.isEmpty {
+        multilines.removeAll()
         do {
             let ast = try transformer.transform(result)
             do {
@@ -114,13 +124,14 @@ while (true) {
             log("\(remainder)")
             log()
         }
-    } else {
+    } else if !parsedLastCharacter {
         print("Syntax error at position \(remainder.index): \(remainder.text)")
         if verbose {
             log()
             log(makeReport(result: ist))
             log()
         }
+        multilines.removeAll()
     }
 }
 log("\n👏")
