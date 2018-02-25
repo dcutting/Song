@@ -28,4 +28,15 @@ class StringTests: XCTestCase {
             XCTAssertEqual(string, actual)
         }
     }
+
+    func test_evaluate_concatenateStrings() {
+        assertNoThrow {
+            let left = Expression.stringValue("hello")
+            let right = Expression.stringValue(" world")
+            let call = Expression.call(name: "+", arguments: [left, right])
+            let actual = try call.evaluate()
+            let expected = Expression.stringValue("hello world")
+            XCTAssertEqual(expected, actual)
+        }
+    }
 }

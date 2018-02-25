@@ -53,7 +53,7 @@ extension Expression {
             return .constant(variable: variable, value: try value.evaluate(context: context))
 
         case let .call(name: name, arguments: arguments):
-            return try evaluateCall(name: name, arguments: arguments, context: context)
+            return try evaluateCall(expression: expression, name: name, arguments: arguments, context: context)
 
         case let .callAnonymous(subfunction, arguments):
             return try evaluateCallAnonymous(closure: subfunction, arguments: arguments, callingContext: context)
@@ -63,7 +63,7 @@ extension Expression {
         }
     }
     
-    func evaluateCall(name: String, arguments: [Expression], context: Context) throws -> Expression {
+    func evaluateCall(expression: Expression, name: String, arguments: [Expression], context: Context) throws -> Expression {
 
         switch name {
         case "*":
@@ -99,15 +99,28 @@ extension Expression {
                 let right = numbers.removeFirst()
                 result = .numberValue(left.plus(right))
             } catch EvaluationError.notANumber {
-                var lists = arguments
-                let left = lists.removeFirst()
-                let right = lists.removeFirst()
-                if
-                    case let .list(leftList) = try left.evaluate(context: context),
-                    case let .list(rightList) = try right.evaluate(context: context) {
-                    result = .list(leftList + rightList)
-                } else {
-                    throw EvaluationError.signatureMismatch
+                do {
+                    var lists = arguments
+                    let left = lists.removeFirst()
+                    let right = lists.removeFirst()
+                    if
+                        case let .list(leftList) = try left.evaluate(context: context),
+                        case let .list(rightList) = try right.evaluate(context: context) {
+                        result = .list(leftList + rightList)
+                    } else {
+                        throw EvaluationError.notAList(expression)
+                    }
+                } catch EvaluationError.notAList {
+                    var strings = arguments
+                    let left = strings.removeFirst()
+                    let right = strings.removeFirst()
+                    if
+                        case let .stringValue(leftString) = try left.evaluate(context: context),
+                        case let .stringValue(rightString) = try right.evaluate(context: context) {
+                        result = .stringValue(leftString + rightString)
+                    } else {
+                        throw EvaluationError.signatureMismatch
+                    }
                 }
             }
             return result
