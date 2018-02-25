@@ -259,7 +259,10 @@ class ParserTests: XCTestCase {
     func test_scopes() {
         "Do _ End".becomes(.scope([.anyVariable]))
         "Do 1 End".becomes(.scope([.integerValue(1)]))
+        "Do 1, End".becomes(.scope([.integerValue(1)]))
         "Do 1, x End".becomes(.scope([.integerValue(1), .variable("x")]))
+        "Do 1 , x End".becomes(.scope([.integerValue(1), .variable("x")]))
+        "Do 1, x, End".becomes(.scope([.integerValue(1), .variable("x")]))
         "Do x = 5, x End".becomes(.scope([.constant(variable: .variable("x"), value: .integerValue(5)), .variable("x")]))
         "Do x.inc = x+1, 7.inc End".becomes(.scope([
             .subfunction(Subfunction(name: "inc", patterns: [.variable("x")], when: .booleanValue(true), body: .call(name: "+", arguments: [.variable("x"), .integerValue(1)]))),
@@ -290,21 +293,29 @@ End
 """.becomes(.scope([.integerValue(1), .integerValue(2), .integerValue(3)]))
 """
 Do
-  1,2
+  1 , 2
   3
 End
 """.becomes(.scope([.integerValue(1), .integerValue(2), .integerValue(3)]))
-
 """
 Do
   1,
   2,
   3
 End
-""".fails()
+""".becomes(.scope([.integerValue(1), .integerValue(2), .integerValue(3)]))
+"""
+Do
+  1,
+  2,
+  3,
+End
+""".becomes(.scope([.integerValue(1), .integerValue(2), .integerValue(3)]))
 
         "DoEnd".fails()
         "Do End".fails()
+        "Do , End".fails()
+        "Do,End".fails()
         "Do1End".fails()
     }
 }

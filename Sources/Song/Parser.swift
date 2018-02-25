@@ -11,6 +11,7 @@ public func makeParser() -> ParserProtocol {
     let dot = str(".")
     let pipe = str("|") >>> skip
     let comma = skip >>> str(",") >>> skip
+    let delimiter = str(",")
     let lBracket = str("[")
     let rBracket = str("]")
     let lParen = str("(") >>> skip
@@ -142,8 +143,8 @@ public func makeParser() -> ParserProtocol {
 
     let statement = Deferred()
     let scopeItem = skip >>> statement.tag("arg")
-    let scopeStatementDelimiter = skip >>> (comma | newline) >>> skip
-    let scopeItems = (scopeItem >>> (scopeStatementDelimiter >>> scopeItem).recur).tag("scopeItems")
+    let delimiterOrNewline = skip >>> ((delimiter.maybe >>> skip >>> newline) | delimiter)
+    let scopeItems = (scopeItem >>> (delimiterOrNewline >>> scopeItem).recur).tag("scopeItems") >>> delimiter.maybe
     scope.parser = start >>> (space | newline) >>> skipSpaceAndNewlines >>> scopeItems >>> (space | newline) >>> skipSpaceAndNewlines >>> end
     statement.parser = scope | functionDecl | constant | expression
 
