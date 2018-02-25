@@ -63,7 +63,7 @@ public func makeParser() -> ParserProtocol {
     let integerValue = (minus.maybe >>> digit.some).tag("integer")
     let floatValue = (minus.maybe >>> digit.some >>> dot >>> digit.some).tag("float")
     let numericValue = floatValue | integerValue
-    let stringValue = quote >>> stringChar.recur.tag("string") >>> quote
+    let stringValue = quote >>> stringChar.some.maybe.tag("string") >>> quote
 
     let literalValue = stringValue | list | listConstructor | numericValue | booleanValue
 
