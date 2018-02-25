@@ -5,6 +5,7 @@ public indirect enum EvaluationError: Error {
     case notABoolean(Expression)
     case notANumber(Expression)
     case notAList(Expression)
+    case notAString(Expression)
     case notAFunction(Expression)
     case invalidPattern(Expression)
     case emptyScope(Expression)
@@ -94,33 +95,12 @@ extension Expression {
             guard arguments.count == 2 else { throw EvaluationError.signatureMismatch }
             let result: Expression
             do {
-                var numbers = try toNumbers(arguments: arguments, context: context)
-                let left = numbers.removeFirst()
-                let right = numbers.removeFirst()
-                result = .numberValue(left.plus(right))
+                result = try plusNumbers(arguments: arguments, context: context)
             } catch EvaluationError.notANumber {
                 do {
-                    var lists = arguments
-                    let left = lists.removeFirst()
-                    let right = lists.removeFirst()
-                    if
-                        case let .list(leftList) = try left.evaluate(context: context),
-                        case let .list(rightList) = try right.evaluate(context: context) {
-                        result = .list(leftList + rightList)
-                    } else {
-                        throw EvaluationError.notAList(expression)
-                    }
+                    result = try plusLists(arguments: arguments, context: context)
                 } catch EvaluationError.notAList {
-                    var strings = arguments
-                    let left = strings.removeFirst()
-                    let right = strings.removeFirst()
-                    if
-                        case let .stringValue(leftString) = try left.evaluate(context: context),
-                        case let .stringValue(rightString) = try right.evaluate(context: context) {
-                        result = .stringValue(leftString + rightString)
-                    } else {
-                        throw EvaluationError.signatureMismatch
-                    }
+                    result = try plusStrings(arguments: arguments, context: context)
                 }
             }
             return result
@@ -188,6 +168,48 @@ extension Expression {
         default:
             return try evaluateUserFunction(name: name, arguments: arguments, context: context)
         }
+    }
+
+    private func plusNumbers(arguments: [Expression], context: Context) throws -> Expression {
+        var numbers = arguments
+        let left = try extractNumber(numbers.removeFirst(), context: context)
+        let right = try extractNumber(numbers.removeFirst(), context: context)
+        return .numberValue(left.plus(right))
+    }
+
+    private func extractNumber(_ expression: Expression, context: Context) throws -> Number {
+        if case .numberValue(let number) = try expression.evaluate(context: context) {
+            return number
+        }
+        throw EvaluationError.notANumber(expression)
+    }
+
+    private func plusLists(arguments: [Expression], context: Context) throws -> Expression {
+        var lists = arguments
+        let left = try extractList(lists.removeFirst(), context: context)
+        let right = try extractList(lists.removeFirst(), context: context)
+        return .list(left + right)
+    }
+
+    private func extractList(_ expression: Expression, context: Context) throws -> [Expression] {
+        if case .list(let list) = try expression.evaluate(context: context) {
+            return list
+        }
+        throw EvaluationError.notAList(expression)
+    }
+
+    private func plusStrings(arguments: [Expression], context: Context) throws -> Expression {
+        var strings = arguments
+        let left = try extractString(strings.removeFirst(), context: context)
+        let right = try extractString(strings.removeFirst(), context: context)
+        return .stringValue(left + right)
+    }
+
+    private func extractString(_ expression: Expression, context: Context) throws -> String {
+        if case .stringValue(let string) = try expression.evaluate(context: context) {
+            return string
+        }
+        throw EvaluationError.notAString(expression)
     }
 
     private func toNumbers(arguments: [Expression], context: Context) throws -> [Number] {

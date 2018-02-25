@@ -54,4 +54,32 @@ class ListTests: XCTestCase {
             XCTAssertEqual(expected, actual)
         }
     }
+
+    func test_evaluate_equalLists() {
+        let left = Expression.list([.integerValue(1), .integerValue(2)])
+        let right = Expression.list([.integerValue(1), .integerValue(2)])
+
+        assertNoThrow {
+            let call = Expression.call(name: "eq", arguments: [left, right])
+            XCTAssertEqual(Expression.booleanValue(true), try call.evaluate())
+        }
+        assertNoThrow {
+            let call = Expression.call(name: "neq", arguments: [left, right])
+            XCTAssertEqual(Expression.booleanValue(false), try call.evaluate())
+        }
+    }
+
+    func test_evaluate_unequalLists() {
+        let left = Expression.list([.integerValue(1)])
+        let right = Expression.list([.integerValue(1), .integerValue(2)])
+
+        assertNoThrow {
+            let call = Expression.call(name: "eq", arguments: [left, right])
+            XCTAssertEqual(Expression.booleanValue(false), try call.evaluate())
+        }
+        assertNoThrow {
+            let call = Expression.call(name: "neq", arguments: [left, right])
+            XCTAssertEqual(Expression.booleanValue(true), try call.evaluate())
+        }
+    }
 }
