@@ -6,6 +6,7 @@ class ParserTests: XCTestCase {
     func test_booleans() {
         "Yes".becomes(.booleanValue(true))
         "No".becomes(.booleanValue(false))
+        " Yes ".becomes(.booleanValue(true))
     }
 
     func test_integers() {
@@ -13,6 +14,7 @@ class ParserTests: XCTestCase {
         "-21".becomes(.integerValue(-21))
         "0".becomes(.integerValue(0))
         "-0".becomes(.integerValue(0))
+        " 99 ".becomes(.integerValue(99))
 
         "9d".fails()
     }
@@ -21,6 +23,7 @@ class ParserTests: XCTestCase {
         "0.1".becomes(.floatValue(0.1))
         "-9.1".becomes(.floatValue(-9.1))
         "0.001".becomes(.floatValue(0.001))
+        " 0.001 ".becomes(.floatValue(0.001))
 
         ".1".fails()
     }
@@ -30,10 +33,12 @@ class ParserTests: XCTestCase {
         "\"hello world\"".becomes(.stringValue("hello world"))
         "\"\\\"Hi,\\\" I said\"".becomes(.stringValue("\"Hi,\" I said"))
         "\"a\\\\backslash\"".becomes(.stringValue("a\\backslash"))
+        " \"hello world\" ".becomes(.stringValue("hello world"))
     }
 
     func test_lists() {
         "[]".becomes(.list([]))
+        " [] ".becomes(.list([]))
         "[1,No]".becomes(.list([.integerValue(1), .booleanValue(false)]))
         "[ 1 , Yes , \"hi\" ]".becomes(.list([.integerValue(1), .booleanValue(true), .stringValue("hi")]))
         "[[1,2],[No,4], [], \"hi\"]".becomes(.list([

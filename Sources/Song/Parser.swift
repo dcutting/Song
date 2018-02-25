@@ -151,7 +151,7 @@ public func makeParser() -> ParserProtocol {
 
     // Root.
 
-    let root = statement
+    let root = statement >>> skip
 
     return root
 }
