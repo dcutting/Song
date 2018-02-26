@@ -339,6 +339,12 @@ extension Expression {
             }
             let argTail = Expression.list(argItems)
             extendedContext = try matchAndExtend(context: extendedContext, parameter: paramTail, argument: argTail, callingContext: callingContext)
+        case .list(let paramItems):
+            guard case let .list(argItems) = evaluatedValue else { throw EvaluationError.signatureMismatch }
+            guard paramItems.count == argItems.count else { throw EvaluationError.signatureMismatch }
+            for (p, a) in zip(paramItems, argItems) {
+                extendedContext = try matchAndExtend(context: extendedContext, parameter: p, argument: a, callingContext: callingContext)
+            }
         default:
             if parameter != evaluatedValue {
                 throw EvaluationError.signatureMismatch
