@@ -12,7 +12,10 @@ public func ==(lhs: Expression, rhs: Expression) -> Bool {
 
     case let (.character(lhsValue), .character(rhsValue)):
         return lhsValue == rhsValue
-        
+
+    case let (.stringValue(lhsValue), .stringValue(rhsValue)):
+        return lhsValue == rhsValue
+
     case let (.list(lhsExprs), .list(rhsExprs)):
         return lhsExprs == rhsExprs
 

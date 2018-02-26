@@ -17,6 +17,9 @@ extension Expression: CustomStringConvertible {
             return "\"\(escaped)\""
             
         case let .list(exprs):
+            if exprs.isEmpty {
+                return "[]"
+            }
             do {
                 let value = try convertToString(characters: exprs)
                 let escaped = value.replacingOccurrences(of: "\"", with: "\\\"")
