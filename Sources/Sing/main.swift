@@ -18,7 +18,7 @@ if args.count > 1 {
 
     lines = [String]()
     contents.enumerateLines({ (line, stop) -> () in
-        lines?.append(line)
+        lines?.append("\(line)\n")
     })
     if let line = lines?.first, line.hasPrefix("#!") {
         lines?.removeFirst()
@@ -33,7 +33,7 @@ func getLine() -> String? {
         }
         return nil
     }
-    return readLine()
+    return readLine(strippingNewline: false)
 }
 
 let parser = makeParser()
@@ -64,21 +64,21 @@ while (true) {
     if thisLine.trimmingCharacters(in: .whitespaces).hasPrefix("#") {
         continue
     }
-    if thisLine == "" {
+    if thisLine.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
         continue
     }
-    if thisLine == "?" {
+    if thisLine.trimmingCharacters(in: .whitespacesAndNewlines) == "?" {
         dumpContext()
         continue
     }
 
     multilines.append(thisLine)
 
-    let line = multilines.joined()
+    let line = multilines.joined()//separator: "\n")
 
     let result = parser.parse(line)
     let (ist, remainder) = result
-//    print("  \(remainder), \(multilines), \(parsedLastCharacter)")
+    print("  \(line), \(remainder), \(multilines), \(parsedLastCharacter)")
     if remainder.text.isEmpty {
         multilines.removeAll()
         do {

@@ -147,11 +147,11 @@ public func makeParser() -> ParserProtocol {
     let delimiterOrNewline = skip >>> ((delimiter.maybe >>> skip >>> newline) | delimiter)
     let scopeItems = (scopeItem >>> (delimiterOrNewline >>> scopeItem).recur).tag("scopeItems") >>> delimiter.maybe
     scope.parser = start >>> spaceOrNewline >>> skipSpaceAndNewlines >>> scopeItems >>> spaceOrNewline >>> skipSpaceAndNewlines >>> end
-    statement.parser = skip >>> (scope | functionDecl | constant | expression)
+    statement.parser = skipSpaceAndNewlines >>> (scope | functionDecl | constant | expression)
 
     // Root.
 
-    let root = statement >>> skip
+    let root = statement >>> skipSpaceAndNewlines
 
     return root
 }
