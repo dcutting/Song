@@ -20,6 +20,7 @@ public func makeParser() -> ParserProtocol {
     let quote = str("\"")
     let backslash = str("\\")
     let underscore = str("_")
+    let questionMark = str("?")
     let digit = (0...9).match
     let lowercaseLetter = "abcdefghijklmnopqrstuvwxyz".match
     let uppercaseLetter = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".match
@@ -76,7 +77,7 @@ public func makeParser() -> ParserProtocol {
     // Names.
 
     let namePrefix = underscore | lowercaseLetter
-    let nameSuffix = letter | digit | underscore
+    let nameSuffix = letter | digit | underscore | questionMark
     let name = namePrefix >>> nameSuffix.some.maybe
     let variableName = name.tag("variableName")
     let functionName = name.tag("functionName")
