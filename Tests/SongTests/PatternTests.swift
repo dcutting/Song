@@ -119,6 +119,11 @@ class PatternTests: XCTestCase {
         }
     }
 
+    func test_nestedList_argumentNotAList_fails() {
+        let call = Expression.call(name: "zip", arguments: [.integerValue(1)])
+        XCTAssertThrowsError(try call.evaluate(context: context))
+    }
+
     func test_listConstructorLiteral_insufficentItemsToMatch_evaluates() {
         let call = Expression.call(name: "listConstructorVariableFunc", arguments: [.list([.integerValue(1)])])
         XCTAssertThrowsError(try call.evaluate(context: context))
