@@ -21,6 +21,7 @@ public indirect enum Expression {
 
     case booleanValue(Bool)
     case numberValue(Number)
+    case character(Character)
     case stringValue(String)
     case list([Expression])
     case listConstructor([Expression], Expression)

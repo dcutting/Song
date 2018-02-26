@@ -9,14 +9,23 @@ extension Expression: CustomStringConvertible {
         case let .numberValue(value):
             return "\(value)"
 
+        case let .character(value):
+            return "\(value)"
+
         case let .stringValue(value):
             let escaped = value.replacingOccurrences(of: "\"", with: "\\\"")
             return "\"\(escaped)\""
             
         case let .list(exprs):
-            let descriptions = exprs.map { "\($0)" }
-            let joined = descriptions.joined(separator: ", ")
-            return "[\(joined)]"
+            do {
+                let value = try convertToString(characters: exprs)
+                let escaped = value.replacingOccurrences(of: "\"", with: "\\\"")
+                return "\"\(escaped)\""
+            } catch {
+                let descriptions = exprs.map { "\($0)" }
+                let joined = descriptions.joined(separator: ", ")
+                return "[\(joined)]"
+            }
 
         case let .listConstructor(head, tail):
             let descriptions = head.map { "\($0)" }
@@ -48,6 +57,16 @@ extension Expression: CustomStringConvertible {
         case let .scope(expressions):
             return "scope (" + expressions.map { "\($0)" }.joined(separator: ", ") + ")"
         }
+    }
+
+    func convertToString(characters: [Expression]) throws -> String {
+        let chars: [Character] = try characters.map { item in
+            if case .character(let c) = item {
+                return c
+            }
+            throw EvaluationError.notACharacter
+        }
+        return String(chars)
     }
     
     func descriptionSubfunction(subfunction: Subfunction) -> String {

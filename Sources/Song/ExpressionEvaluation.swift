@@ -5,6 +5,7 @@ public indirect enum EvaluationError: Error {
     case notABoolean(Expression)
     case notANumber(Expression)
     case notAList(Expression)
+    case notACharacter
     case notAString(Expression)
     case notAFunction(Expression)
     case invalidPattern(Expression)
@@ -30,7 +31,7 @@ extension Expression {
     private func evaluate(expression: Expression, context: Context) throws -> Expression {
         switch expression {
 
-        case .booleanValue, .numberValue, .stringValue, .closure, .anyVariable:
+        case .booleanValue, .numberValue, .character, .stringValue, .closure, .anyVariable:
             return expression
 
         case let .list(exprs):
