@@ -3,13 +3,41 @@ import Song
 
 class PatternTests: XCTestCase {
 
-    let intLiteralFunc = Expression.subfunction(Subfunction(name: "intLiteralFunc", patterns: [.integerValue(2)], when: .booleanValue(true), body: .stringValue("ok")))
-    let variableFunc = Expression.subfunction(Subfunction(name: "variableFunc", patterns: [.variable("x")], when: .booleanValue(true), body: .variable("x")))
-    lazy var context: Context = ["intLiteralFunc": [intLiteralFunc], "variableFunc": [variableFunc]]
+    lazy var context: Context = [
+        "anyParameterFunc": [Expression.subfunction(Subfunction(name: "anyParameterFunc", patterns: [.anyVariable], when: .booleanValue(true), body: .stringValue("ok")))],
+        "intLiteralFunc": [Expression.subfunction(Subfunction(name: "intLiteralFunc", patterns: [.integerValue(2)], when: .booleanValue(true), body: .stringValue("ok")))],
+        "listLiteralFunc": [Expression.subfunction(Subfunction(name: "listLiteralFunc", patterns: [.list([.integerValue(1), .integerValue(2)])], when: .booleanValue(true), body: .stringValue("ok")))],
+        "variableFunc": [Expression.subfunction(Subfunction(name: "variableFunc", patterns: [.variable("x")], when: .booleanValue(true), body: .variable("x")))],
+        "listConstructorListeralFunc": [Expression.subfunction(Subfunction(name: "listConstructorListeralFunc", patterns: [.listConstructor([.integerValue(1)], .list([.integerValue(2)]))], when: .booleanValue(true), body: .stringValue("ok")))],
+    ]
 
-    func test_literalMatches_evaluates() {
+    func test_anyMatch_evaluates() {
+        assertNoThrow {
+            let call = Expression.call(name: "anyParameterFunc", arguments: [.integerValue(2)])
+            let actual = try call.evaluate(context: context)
+            XCTAssertEqual(Expression.stringValue("ok"), actual)
+        }
+    }
+
+    func test_intLiteralMatches_evaluates() {
         assertNoThrow {
             let call = Expression.call(name: "intLiteralFunc", arguments: [.integerValue(2)])
+            let actual = try call.evaluate(context: context)
+            XCTAssertEqual(Expression.stringValue("ok"), actual)
+        }
+    }
+
+    func test_listLiteralMatches_evaluates() {
+        assertNoThrow {
+            let call = Expression.call(name: "listLiteralFunc", arguments: [.list([.integerValue(1), .integerValue(2)])])
+            let actual = try call.evaluate(context: context)
+            XCTAssertEqual(Expression.stringValue("ok"), actual)
+        }
+    }
+
+    func test_listConstructorLiteralMatches_evaluates() {
+        assertNoThrow {
+            let call = Expression.call(name: "listConstructorListeralFunc", arguments: [.list([.integerValue(1), .integerValue(2)])])
             let actual = try call.evaluate(context: context)
             XCTAssertEqual(Expression.stringValue("ok"), actual)
         }
