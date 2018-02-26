@@ -216,4 +216,9 @@ class CallTests: XCTestCase {
             XCTAssertEqual(Expression.integerValue(7), result)
         }
     }
+
+    func test_call_missingSymbol() {
+        let call = Expression.call(name: "noSuchFunction", arguments: [])
+        XCTAssertThrowsError(try call.evaluate())
+    }
 }
