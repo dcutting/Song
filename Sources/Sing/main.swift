@@ -22,6 +22,7 @@ func parse(arguments: [String]) throws {
 }
 
 var lines: [String]?
+var lineNumber = 0
 
 do {
     let args = CommandLine.arguments
@@ -50,6 +51,7 @@ func getLine() -> String? {
     if let l = lines {
         if l.count > 0 {
             let line = lines?.removeFirst()
+            lineNumber += 1
             return line
         }
         return nil
@@ -155,7 +157,12 @@ while (true) {
             log()
         }
     } else if !parsedLastCharacter {
-        print("Syntax error at position \(remainder.index): \(remainder.text.trimmingCharacters(in: .whitespacesAndNewlines))")
+        let remainder = remainder.text.trimmingCharacters(in: .whitespacesAndNewlines)
+        if interactive {
+            print("Syntax error: \(remainder)")
+        } else {
+            print("Syntax error on line \(lineNumber): \(remainder)")
+        }
         if verbose {
             log()
             log(makeReport(result: ist))
