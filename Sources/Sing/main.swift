@@ -7,6 +7,7 @@ var interactive = true
 var filename: String?
 var verbose = false
 let prompt = "➤ "
+let incompletePrompt = "┇ "
 
 func parse(arguments: [String]) throws {
     let argsParser = ArgumentParser(usage: "<options>", overview: "the Song functional language")
@@ -77,7 +78,11 @@ var multilines = [String]()
 
 while (true) {
     if interactive {
-        print(prompt, terminator: "")
+        if multilines.isEmpty {
+            print(prompt, terminator: "")
+        } else {
+            print(incompletePrompt, terminator: "")
+        }
     }
     guard let thisLine = getLine() else { break }
 
@@ -94,7 +99,7 @@ while (true) {
 
     multilines.append(thisLine)
 
-    let line = multilines.joined()//separator: "\n")
+    let line = multilines.joined()
 
     let result = parser.parse(line)
     let (ist, remainder) = result
@@ -150,7 +155,7 @@ while (true) {
             log()
         }
     } else if !parsedLastCharacter {
-        print("Syntax error at position \(remainder.index): \(remainder.text)")
+        print("Syntax error at position \(remainder.index): \(remainder.text.trimmingCharacters(in: .whitespacesAndNewlines))")
         if verbose {
             log()
             log(makeReport(result: ist))
