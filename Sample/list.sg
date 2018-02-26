@@ -96,6 +96,9 @@ list.partition(f) = list.partition(f, [], [])
 [[], []].zip = []
 [[x|xs], [y|ys]].zip = [[x, y]] + [xs, ys].zip
 
+[].zip([]) = []
+[x|xs].zip([y|ys]) = [[x, y]] + xs.zip(ys)
+
 [[], []].zipWith(f) = []
 [[x|xs], [y|ys]].zipWith(f) = [x.f(y)] + [xs, ys].zipWith(f)
 
