@@ -104,9 +104,11 @@ list.partition(f) = list.partition(f, [], [])
 
 list.palindrome? = list Eq list.reverse
 
-a = [5,1,34,1]
+a = [1,2,3,4,5,10,9,8,7,6]
 out(a)
 b = a.reverse
 out(b)
-c = a.partition(|x| x > 10)
+c = a.partition(|x| x > 5)
 out(c)
+d = a.zip(a.reverse)
+out(d)
