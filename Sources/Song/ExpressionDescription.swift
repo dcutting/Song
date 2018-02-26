@@ -12,10 +12,6 @@ extension Expression: CustomStringConvertible {
         case let .character(value):
             return "\(value)"
 
-        case let .stringValue(value):
-            let escaped = value.replacingOccurrences(of: "\"", with: "\\\"")
-            return "\"\(escaped)\""
-            
         case let .list(exprs):
             if exprs.isEmpty {
                 return "[]"

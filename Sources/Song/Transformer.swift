@@ -51,8 +51,7 @@ public func makeTransformer() -> Transformer<Expression> {
         var value = try $0.str("s")
         value = value.replacingOccurrences(of: "\\\\", with: "\\")
         value = value.replacingOccurrences(of: "\\\"", with: "\"")
-        let chars = Array(value).map { Expression.character($0) }
-        return .list(chars)
+        return .stringValue(value)
     }
 
     // Expressions.

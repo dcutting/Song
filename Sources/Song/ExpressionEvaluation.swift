@@ -31,7 +31,7 @@ extension Expression {
     private func evaluate(expression: Expression, context: Context) throws -> Expression {
         switch expression {
 
-        case .booleanValue, .numberValue, .character, .stringValue, .closure, .anyVariable:
+        case .booleanValue, .numberValue, .character, .closure, .anyVariable:
             return expression
 
         case let .list(exprs):
@@ -100,14 +100,8 @@ extension Expression {
                      .numberValue($0.plus($1))
                 }
             } catch EvaluationError.notANumber {
-                do {
-                    result = try listOp(arguments: arguments, context: context) {
-                        .list($0 + $1)
-                    }
-                } catch EvaluationError.notAList {
-                    result = try stringOp(arguments: arguments, context: context) {
-                        .stringValue($0 + $1)
-                    }
+                result = try listOp(arguments: arguments, context: context) {
+                    .list($0 + $1)
                 }
             }
             return result
@@ -149,14 +143,8 @@ extension Expression {
                     try .booleanValue($0.equalTo($1))
                 }
             } catch EvaluationError.notANumber {
-                do {
-                    result = try listOp(arguments: arguments, context: context) {
-                        .booleanValue($0 == $1)
-                    }
-                } catch EvaluationError.notAList {
-                    result = try stringOp(arguments: arguments, context: context) {
-                        .booleanValue($0 == $1)
-                    }
+                result = try listOp(arguments: arguments, context: context) {
+                    .booleanValue($0 == $1)
                 }
             }
             return result
@@ -168,14 +156,8 @@ extension Expression {
                     try .booleanValue(!$0.equalTo($1))
                 }
             } catch EvaluationError.notANumber {
-                do {
-                    result = try listOp(arguments: arguments, context: context) {
-                        .booleanValue($0 != $1)
-                    }
-                } catch EvaluationError.notAList {
-                    result = try stringOp(arguments: arguments, context: context) {
-                        .booleanValue($0 != $1)
-                    }
+                result = try listOp(arguments: arguments, context: context) {
+                    .booleanValue($0 != $1)
                 }
             }
             return result
@@ -217,13 +199,6 @@ extension Expression {
         throw EvaluationError.notAList(expression)
     }
 
-    private func extractString(_ expression: Expression, context: Context) throws -> String {
-        if case .stringValue(let string) = try expression.evaluate(context: context) {
-            return string
-        }
-        throw EvaluationError.notAString(expression)
-    }
-
     private func numberOp(arguments: [Expression], context: Context, callback: (Number, Number) throws -> Expression) throws -> Expression {
         var numbers = arguments
         let left = try extractNumber(numbers.removeFirst(), context: context)
@@ -236,13 +211,6 @@ extension Expression {
         let left = try extractList(lists.removeFirst(), context: context)
         let right = try extractList(lists.removeFirst(), context: context)
         return try callback(left, right)
-    }
-
-    private func stringOp(arguments: [Expression], context: Context, callback: (String, String) -> Expression) throws -> Expression {
-        var strings = arguments
-        let left = try extractString(strings.removeFirst(), context: context)
-        let right = try extractString(strings.removeFirst(), context: context)
-        return callback(left, right)
     }
 
     private func toNumbers(arguments: [Expression], context: Context) throws -> [Number] {
