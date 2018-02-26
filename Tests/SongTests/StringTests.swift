@@ -39,4 +39,32 @@ class StringTests: XCTestCase {
             XCTAssertEqual(expected, actual)
         }
     }
+
+    func test_evaluate_equalStrings() {
+        let left = Expression.stringValue("hello world")
+        let right = Expression.stringValue("hello world")
+
+        assertNoThrow {
+            let call = Expression.call(name: "Eq", arguments: [left, right])
+            XCTAssertEqual(Expression.booleanValue(true), try call.evaluate())
+        }
+        assertNoThrow {
+            let call = Expression.call(name: "Neq", arguments: [left, right])
+            XCTAssertEqual(Expression.booleanValue(false), try call.evaluate())
+        }
+    }
+
+    func test_evaluate_unequalStrings() {
+        let left = Expression.stringValue("hello world")
+        let right = Expression.stringValue("goodbye world")
+
+        assertNoThrow {
+            let call = Expression.call(name: "Eq", arguments: [left, right])
+            XCTAssertEqual(Expression.booleanValue(false), try call.evaluate())
+        }
+        assertNoThrow {
+            let call = Expression.call(name: "Neq", arguments: [left, right])
+            XCTAssertEqual(Expression.booleanValue(true), try call.evaluate())
+        }
+    }
 }
