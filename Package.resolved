@@ -2,6 +2,15 @@
   "object": {
     "pins": [
       {
+        "package": "SwiftPM",
+        "repositoryURL": "https://github.com/apple/swift-package-manager.git",
+        "state": {
+          "branch": null,
+          "revision": "90abb3c4c9415afee34291e66e655c58a1902784",
+          "version": "0.1.0"
+        }
+      },
+      {
         "package": "Syft",
         "repositoryURL": "https://github.com/dcutting/Syft.git",
         "state": {

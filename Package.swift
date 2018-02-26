@@ -9,12 +9,13 @@ let package = Package(
         .library(name: "Song", targets: ["Song"])
     ],
     dependencies: [
-        .package(url: "https://github.com/dcutting/Syft.git", .branch("develop"))
+        .package(url: "https://github.com/dcutting/Syft.git", .branch("develop")),
+        .package(url: "https://github.com/apple/swift-package-manager.git", from: "0.1.0"),
     ],
     targets: [
         .target(
             name: "Sing",
-            dependencies: ["Song"]),
+            dependencies: ["Song", "Utility"]),
         .target(
             name: "Song",
             dependencies: ["Syft"]),

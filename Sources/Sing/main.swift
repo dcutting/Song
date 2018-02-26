@@ -1,16 +1,36 @@
 import Foundation
+import Utility
 import Song
 import Syft
 
-let verbose = true
+var interactive = true
+var filename: String?
+var verbose = false
 let prompt = "➤ "
+
+func parse(arguments: [String]) throws {
+    let argsParser = ArgumentParser(usage: "<options>", overview: "the Song functional language")
+    let verboseArg: OptionArgument<Bool> = argsParser.add(option: "--verbose", shortName: "-v", kind: Bool.self, usage: "Verbose logging")
+    let filenameArg = argsParser.add(positional: "filename", kind: String.self, optional: true)
+
+    let arguments = Array(arguments.dropFirst())
+    let parsedArguments = try argsParser.parse(arguments)
+
+    verbose = parsedArguments.get(verboseArg) ?? false
+    filename = parsedArguments.get(filenameArg)
+}
 
 var lines: [String]?
 
-var interactive = true
-let args = CommandLine.arguments
-if args.count > 1 {
-    let filename = args[1]
+do {
+    let args = CommandLine.arguments
+    try parse(arguments: args)
+} catch {
+    print(error)
+    exit(1)
+}
+
+if let filename = filename {
     interactive = false
 
     let contents = try NSString(contentsOfFile: filename,
@@ -78,7 +98,9 @@ while (true) {
 
     let result = parser.parse(line)
     let (ist, remainder) = result
-    print("  \(line), \(remainder), \(multilines), \(parsedLastCharacter)")
+    if verbose {
+        print("  \(line), \(remainder), \(multilines), \(parsedLastCharacter)")
+    }
     if remainder.text.isEmpty {
         multilines.removeAll()
         do {
