@@ -3,7 +3,7 @@
 
 Song is **alpha** quality and is not intended for production use.
 
-![Remix](Docs/Song.png)
+![Song](Docs/song.png)
 
 # Song
 
