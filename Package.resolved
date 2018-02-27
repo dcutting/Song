@@ -2,6 +2,24 @@
   "object": {
     "pins": [
       {
+        "package": "LineNoise",
+        "repositoryURL": "https://github.com/dcutting/linenoise-swift.git",
+        "state": {
+          "branch": "master",
+          "revision": "afc897c02b030af7333105c4fedcd843a8339238",
+          "version": null
+        }
+      },
+      {
+        "package": "Nimble",
+        "repositoryURL": "https://github.com/Quick/Nimble.git",
+        "state": {
+          "branch": null,
+          "revision": "22800b0954c89344bb8c87f8ab93378076716fb7",
+          "version": "7.0.3"
+        }
+      },
+      {
         "package": "SwiftPM",
         "repositoryURL": "https://github.com/apple/swift-package-manager.git",
         "state": {

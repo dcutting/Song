@@ -11,11 +11,12 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/dcutting/Syft.git", .branch("develop")),
         .package(url: "https://github.com/apple/swift-package-manager.git", from: "0.1.0"),
+        .package(url: "https://github.com/dcutting/linenoise-swift.git", .branch("master")),
     ],
     targets: [
         .target(
             name: "Sing",
-            dependencies: ["Song", "Utility"]),
+            dependencies: ["Song", "Utility", "LineNoise"]),
         .target(
             name: "Song",
             dependencies: ["Syft"]),

@@ -2,12 +2,15 @@ import Foundation
 import Utility
 import Song
 import Syft
+import LineNoise
+
+dump(ProcessInfo.processInfo.environment)
 
 var interactive = true
 var filename: String?
 var verbose = false
-let prompt = "➤ "
-let incompletePrompt = "┇ "
+let prompt = "> "
+let incompletePrompt = ". "
 
 func parse(arguments: [String]) throws {
     let argsParser = ArgumentParser(usage: "<options>", overview: "the Song functional language")
@@ -21,8 +24,18 @@ func parse(arguments: [String]) throws {
     filename = parsedArguments.get(filenameArg)
 }
 
+#if Xcode
+    let builtWithXcode = true
+#else
+    let builtWithXcode = false
+#endif
+
+let lineNoise = LineNoise()
+lineNoise.preserveHistoryEdits = true
+
 var lines: [String]?
 var lineNumber = 0
+var multilines = [String]()
 
 do {
     let args = CommandLine.arguments
@@ -56,7 +69,25 @@ func getLine() -> String? {
         }
         return nil
     }
-    return readLine(strippingNewline: false)
+    while (true) {
+        do {
+            let nextPrompt = multilines.isEmpty ? prompt : incompletePrompt
+            let line: String?
+            if !builtWithXcode && lineNoise.mode == .supportedTTY {
+                line = try lineNoise.getLine(prompt: nextPrompt)
+                print()
+            } else {
+                print(nextPrompt, terminator: "")
+                line = readLine(strippingNewline: true)
+            }
+            return line
+        } catch LinenoiseError.CTRL_C {
+            print("^C")
+        } catch {
+            print(error)
+            exit(1)
+        }
+    }
 }
 
 let parser = makeParser()
@@ -76,22 +107,17 @@ func dumpContext() {
 
 log("Song v0.1.0 🎵")
 
-var multilines = [String]()
-
 while (true) {
-    if interactive {
-        if multilines.isEmpty {
-            print(prompt, terminator: "")
-        } else {
-            print(incompletePrompt, terminator: "")
-        }
-    }
+
     guard let thisLine = getLine() else { break }
 
-    if thisLine.trimmingCharacters(in: .whitespaces).hasPrefix("#") {
+    if thisLine.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
         continue
     }
-    if thisLine.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
+
+    lineNoise.addHistory(thisLine)
+
+    if thisLine.trimmingCharacters(in: .whitespaces).hasPrefix("#") {
         continue
     }
     if thisLine.trimmingCharacters(in: .whitespacesAndNewlines) == "?" {
@@ -101,7 +127,7 @@ while (true) {
 
     multilines.append(thisLine)
 
-    let line = multilines.joined()
+    let line = multilines.joined(separator: "\n")
 
     let result = parser.parse(line)
     let (ist, remainder) = result
@@ -174,4 +200,4 @@ while (true) {
         multilines.removeAll()
     }
 }
-log("\n👏")
+log("👏")
