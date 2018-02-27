@@ -3,6 +3,12 @@ import Song
 
 class OutTests: XCTestCase {
 
+    func testOut_characterValue_doesNotIncludeQuotes() {
+        let char = Expression.character("A")
+        let actual = char.out()
+        XCTAssertEqual("A", actual)
+    }
+
     func testOut_stringValue_doesNotIncludeQuotes() {
         let string = Expression.stringValue("foo")
         let actual = string.out()
