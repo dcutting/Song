@@ -1,17 +1,3 @@
-public indirect enum EvaluationError: Error {
-    case symbolNotFound(String)
-    case signatureMismatch
-    case cannotEvaluate(Expression, EvaluationError)
-    case notABoolean(Expression)
-    case notANumber(Expression)
-    case notAList(Expression)
-    case notACharacter
-    case notAString(Expression)
-    case notAFunction(Expression)
-    case invalidPattern(Expression)
-    case emptyScope(Expression)
-}
-
 extension Expression {
     
     public func evaluate() throws -> Expression {
@@ -61,7 +47,7 @@ extension Expression {
             return try evaluateCallAnonymous(closure: subfunction, arguments: arguments, callingContext: context)
 
         case let .scope(statements):
-            return try evaluateScope(scope: expression, statements: statements, context: context)
+            return try evaluateScope(statements: statements, context: context)
         }
     }
     
@@ -240,7 +226,7 @@ extension Expression {
         }
         try subfunction.patterns.forEach { pattern in
             if case .numberValue(Number.float) = pattern {
-                throw EvaluationError.invalidPattern(pattern)
+                throw EvaluationError.patternsCannotBeFloats(pattern)
             }
         }
         return .closure(closure: expression, context: finalContext)
@@ -341,8 +327,8 @@ extension Expression {
         throw EvaluationError.signatureMismatch
     }
 
-    func evaluateScope(scope: Expression, statements: [Expression], context: Context) throws -> Expression {
-        guard statements.count > 0 else { throw EvaluationError.emptyScope(scope) }
+    func evaluateScope(statements: [Expression], context: Context) throws -> Expression {
+        guard statements.count > 0 else { throw EvaluationError.emptyScope }
         var allStatements = statements
         let last = allStatements.removeLast()
         var scopeContext = context

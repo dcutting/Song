@@ -132,8 +132,8 @@ while (true) {
                 default:
                     log(expression)
                 }
-            } catch {
-                print(error)
+            } catch let error as EvaluationError {
+                print(format(error: error))
                 if verbose {
                     log()
                     log("Context:")
@@ -143,6 +143,9 @@ while (true) {
                     dump(ast)
                     log()
                 }
+            } catch {
+                print("Fatal error: \(error)")
+                exit(1)
             }
         } catch {
             print("Internal transform error:")
