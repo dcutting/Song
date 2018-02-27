@@ -125,17 +125,23 @@ extension Expression {
             guard arguments.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
             let result: Expression
             do {
-                result = try numberOp(arguments: arguments, context: context) {
-                    try .booleanValue($0.equalTo($1))
+                result = try booleanOp(arguments: arguments, context: context) {
+                    .booleanValue($0 == $1)
                 }
-            } catch EvaluationError.notANumber {
+            } catch EvaluationError.notABoolean {
                 do {
-                    result = try booleanOp(arguments: arguments, context: context) {
-                        .booleanValue($0 == $1)
+                    result = try numberOp(arguments: arguments, context: context) {
+                        try .booleanValue($0.equalTo($1))
                     }
-                } catch EvaluationError.notABoolean {
-                    result = try listOp(arguments: arguments, context: context) {
-                        .booleanValue($0 == $1)
+                } catch EvaluationError.notANumber {
+                    do {
+                        result = try characterOp(arguments: arguments, context: context) {
+                            .booleanValue($0 == $1)
+                        }
+                    } catch EvaluationError.notACharacter {
+                        result = try listOp(arguments: arguments, context: context) {
+                            .booleanValue($0 == $1)
+                        }
                     }
                 }
             }
@@ -182,6 +188,13 @@ extension Expression {
         throw EvaluationError.notABoolean(expression)
     }
 
+    private func extractCharacter(_ expression: Expression, context: Context) throws -> Character {
+        if case .character(let value) = try expression.evaluate(context: context) {
+            return value
+        }
+        throw EvaluationError.notACharacter
+    }
+
     private func extractList(_ expression: Expression, context: Context) throws -> [Expression] {
         if case .list(let list) = try expression.evaluate(context: context) {
             return list
@@ -197,9 +210,16 @@ extension Expression {
     }
 
     private func booleanOp(arguments: [Expression], context: Context, callback: (Bool, Bool) throws -> Expression) throws -> Expression {
-        var numbers = arguments
-        let left = try extractBool(numbers.removeFirst(), context: context)
-        let right = try extractBool(numbers.removeFirst(), context: context)
+        var bools = arguments
+        let left = try extractBool(bools.removeFirst(), context: context)
+        let right = try extractBool(bools.removeFirst(), context: context)
+        return try callback(left, right)
+    }
+
+    private func characterOp(arguments: [Expression], context: Context, callback: (Character, Character) throws -> Expression) throws -> Expression {
+        var chars = arguments
+        let left = try extractCharacter(chars.removeFirst(), context: context)
+        let right = try extractCharacter(chars.removeFirst(), context: context)
         return try callback(left, right)
     }
 

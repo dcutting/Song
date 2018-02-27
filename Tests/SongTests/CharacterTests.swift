@@ -19,4 +19,32 @@ class CharacterTests: XCTestCase {
             XCTAssertEqual(char, try char.evaluate())
         }
     }
+
+    func test_eq_equal_returnsYes() {
+        assertNoThrow {
+            let call = Expression.call(name: "Eq", arguments: [.character("A"), .character("A")])
+            XCTAssertEqual(Expression.booleanValue(true), try call.evaluate())
+        }
+    }
+
+    func test_eq_unequal_returnsNo() {
+        assertNoThrow {
+            let call = Expression.call(name: "Eq", arguments: [.character("A"), .character("Z")])
+            XCTAssertEqual(Expression.booleanValue(false), try call.evaluate())
+        }
+    }
+
+    func test_notEq_equal_returnsNo() {
+        assertNoThrow {
+            let call = Expression.call(name: "Neq", arguments: [.character("A"), .character("A")])
+            XCTAssertEqual(Expression.booleanValue(false), try call.evaluate())
+        }
+    }
+
+    func test_notEq_unequal_returnsYes() {
+        assertNoThrow {
+            let call = Expression.call(name: "Neq", arguments: [.character("A"), .character("Z")])
+            XCTAssertEqual(Expression.booleanValue(true), try call.evaluate())
+        }
+    }
 }
