@@ -129,24 +129,21 @@ extension Expression {
                     try .booleanValue($0.equalTo($1))
                 }
             } catch EvaluationError.notANumber {
-                result = try listOp(arguments: arguments, context: context) {
-                    .booleanValue($0 == $1)
+                do {
+                    result = try booleanOp(arguments: arguments, context: context) {
+                        .booleanValue($0 == $1)
+                    }
+                } catch EvaluationError.notABoolean {
+                    result = try listOp(arguments: arguments, context: context) {
+                        .booleanValue($0 == $1)
+                    }
                 }
             }
             return result
         case "Neq":
-            guard arguments.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
-            let result: Expression
-            do {
-                result = try numberOp(arguments: arguments, context: context) {
-                    try .booleanValue(!$0.equalTo($1))
-                }
-            } catch EvaluationError.notANumber {
-                result = try listOp(arguments: arguments, context: context) {
-                    .booleanValue($0 != $1)
-                }
-            }
-            return result
+            let equalCall = Expression.call(name: "Eq", arguments: arguments)
+            let notCall = Expression.call(name: "Not", arguments: [equalCall])
+            return try notCall.evaluate(context: context)
         case "And":
             var bools = try toBools(arguments: arguments, context: context)
             guard bools.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
@@ -178,6 +175,13 @@ extension Expression {
         throw EvaluationError.notANumber(expression)
     }
 
+    private func extractBool(_ expression: Expression, context: Context) throws -> Bool {
+        if case .booleanValue(let value) = try expression.evaluate(context: context) {
+            return value
+        }
+        throw EvaluationError.notABoolean(expression)
+    }
+
     private func extractList(_ expression: Expression, context: Context) throws -> [Expression] {
         if case .list(let list) = try expression.evaluate(context: context) {
             return list
@@ -189,6 +193,13 @@ extension Expression {
         var numbers = arguments
         let left = try extractNumber(numbers.removeFirst(), context: context)
         let right = try extractNumber(numbers.removeFirst(), context: context)
+        return try callback(left, right)
+    }
+
+    private func booleanOp(arguments: [Expression], context: Context, callback: (Bool, Bool) throws -> Expression) throws -> Expression {
+        var numbers = arguments
+        let left = try extractBool(numbers.removeFirst(), context: context)
+        let right = try extractBool(numbers.removeFirst(), context: context)
         return try callback(left, right)
     }
 
