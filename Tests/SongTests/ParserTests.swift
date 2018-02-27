@@ -29,9 +29,12 @@ class ParserTests: XCTestCase {
     }
 
     func test_characters() {
-        "'A'".becomes(.character(Character("A")))
-        "' '".becomes(.character(Character(" ")))
+        "'A'".becomes(.character("A"))
+        "' '".becomes(.character(" "))
+        "'\\''".becomes(.character("'"))
+        "'\\\\'".becomes(.character("\\"))
         "'AB'".fails()
+        "'''".fails()
     }
 
     func test_strings() {

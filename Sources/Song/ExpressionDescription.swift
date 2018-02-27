@@ -10,7 +10,9 @@ extension Expression: CustomStringConvertible {
             return "\(value)"
 
         case let .character(value):
-            return "\(value)"
+            let string = "\(value)"
+            let escaped = string.replacingOccurrences(of: "\'", with: "\\\'")
+            return "'\(escaped)'"
 
         case let .list(exprs):
             if exprs.isEmpty {

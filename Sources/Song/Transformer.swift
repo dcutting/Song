@@ -48,14 +48,19 @@ public func makeTransformer() -> Transformer<Expression> {
     }
 
     t.rule(["character": .simple("c")]) {
-        .character(Character(try $0.str("c")))
+        return .character(Character(unescape(try $0.str("c"))))
     }
 
     t.rule(["string": .simple("s")]) {
-        var value = try $0.str("s")
-        value = value.replacingOccurrences(of: "\\\\", with: "\\")
-        value = value.replacingOccurrences(of: "\\\"", with: "\"")
-        return .stringValue(value)
+        return .stringValue(unescape(try $0.str("s")))
+    }
+
+    func unescape(_ value: String) -> String {
+        var string = value
+        string = string.replacingOccurrences(of: "\\\\", with: "\\")
+        string = string.replacingOccurrences(of: "\\\"", with: "\"")
+        string = string.replacingOccurrences(of: "\\\'", with: "'")
+        return string
     }
 
     // Expressions.

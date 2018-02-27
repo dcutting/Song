@@ -26,9 +26,11 @@ public func makeParser() -> ParserProtocol {
     let lowercaseLetter = "abcdefghijklmnopqrstuvwxyz".match
     let uppercaseLetter = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".match
     let letter = lowercaseLetter | uppercaseLetter
-    let symbol = dot | pipe | comma | lBracket | rBracket | lParen | rParen | underscore | "!@#$%^&*-=_+`~,.<>/?':;\\|[]{}".match
-    let stringChar = Deferred()
-    stringChar.parser = backslash >>> (backslash | quote) | letter | digit | space | symbol
+    let symbol = dot | pipe | comma | lBracket | rBracket | lParen | rParen | underscore | "!@#$%^&*-=_+`~,.<>/?:;\\|[]{}".match
+    let textualCharacter = letter | digit | space | symbol
+    let literalCharacter = backslash >>> (backslash | singleQuote) | textualCharacter
+    let literalString = Deferred()
+    literalString.parser = backslash >>> (backslash | quote) | textualCharacter
     let star = str("*")
     let slash = str("/")
     let div = str("Div")
@@ -71,8 +73,8 @@ public func makeParser() -> ParserProtocol {
     let integerValue = (minus.maybe >>> digit.some).tag("integer")
     let floatValue = (minus.maybe >>> digit.some >>> dot >>> digit.some).tag("float")
     let numericValue = floatValue | integerValue
-    let characterValue = singleQuote >>> stringChar.tag("character") >>> singleQuote
-    let stringValue = quote >>> stringChar.some.maybe.tag("string") >>> quote
+    let characterValue = singleQuote >>> literalCharacter.tag("character") >>> singleQuote
+    let stringValue = quote >>> literalString.some.maybe.tag("string") >>> quote
 
     let literalValue = stringValue | characterValue | list | listConstructor | numericValue | booleanValue
 
