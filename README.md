@@ -198,6 +198,13 @@ x = [3, 4]
 # [1, 2, 3, 4]
 ```
 
+The `Eq`/`Neq` operators work for lists too:
+
+```
+[1, 2, 3] Eq [1, 2, 3]
+# Yes
+```
+
 ### Characters
 
 Individual character literals look like this:
