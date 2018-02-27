@@ -46,6 +46,8 @@ public func makeParser() -> ParserProtocol {
     let logicalAnd = str("And")
     let logicalOr = str("Or")
     let logicalNot = str("Not")
+    let yes = str("Yes")
+    let no = str("No")
     let when = spaceOrNewline >>> str("When") >>> spaceOrNewline
     let assign = str("=")
     let start = str("Do")
@@ -67,8 +69,8 @@ public func makeParser() -> ParserProtocol {
 
     // Literals.
 
-    let trueValue = str("Yes").tag("true")
-    let falseValue = str("No").tag("false")
+    let trueValue = yes.tag("true")
+    let falseValue = no.tag("false")
     let booleanValue = trueValue | falseValue
     let integerValue = (minus.maybe >>> digit.some).tag("integer")
     let floatValue = (minus.maybe >>> digit.some >>> dot >>> digit.some).tag("float")
