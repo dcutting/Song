@@ -392,6 +392,16 @@ With list destructuring, you can write functions that process entire lists. This
 ```
 [].length = 0
 [_|xs].length = 1 + xs.length
+
+[5, 6, 7].length
+# 3
+```
+
+Because strings are just lists of characters, you can use list destructuring to process strings too:
+
+```
+"hello".length
+# 5
 ```
 
 And patterns can be nested as needed for more complex matches:
