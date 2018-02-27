@@ -89,7 +89,7 @@ Use CTRL-D to exit the REPL.
 You can also run Song scripts:
 
 ```
-song fib.sg
+$ song fib.sg
 ```
 
 And you can put a [shebang](https://en.wikipedia.org/wiki/Shebang_(Unix)) at the top of your script to run it directly (don't forget to `chmod` your script to make it executable):
@@ -140,14 +140,14 @@ If you mix integers and floats in your arithmetic, you'll always get a float res
 # 6.2
 ```
 
-And if you use operators that don't guarantee an integer result, you'll always get a float:
+And if you divide numbers, you'll also get a float:
 
 ```
 5 / 2
 # 2.5
 ```
 
-If you want to do integer division, you can use `5 Div 2` and `5 Mod 2` (but using those with floats will cause an error).
+If you want to do integer division, use `5 Div 2` and `5 Mod 2` (but using those with floats will cause an error).
 
 You can compare numbers:
 
@@ -230,6 +230,16 @@ And you can use the string literal syntax as shorthand to create strings:
 # equivalent to ['h', 'e', 'l', 'l', 'o']
 ```
 
+Because strings are just lists of characters, you can also concatenate them and test them for equality:
+
+```
+"hello" + " world"
+# "hello world"
+
+"hello" Eq "world"
+# No
+```
+
 ## Variables
 
 You can assign values to variables:
@@ -238,6 +248,23 @@ You can assign values to variables:
 x = 5
 y = 9
 z = x < y
+```
+
+Names must start with a lowercase letter (or an underscore), followed by any combination of lowercase/uppercase letters or digits. You can also use underscores and question marks. Names like this are valid:
+
+```
+x
+_x2
+numberOfApples
+visible?
+```
+
+But these aren't:
+
+```
+5names
+BigName
+symbols@
 ```
 
 ## Functions
@@ -287,6 +314,12 @@ plus(3, 4)
 # 5
 ```
 
+The names of functions follow the same rules as variables:
+
+```
+x.even? = x Mod 2 Eq 0
+```
+
 ### Patterns
 
 Song uses pattern matching to decide which function to call, and as a way of binding arguments to parameters.
@@ -318,7 +351,7 @@ This will only match calls where the argument is the value `1`:
 # error, no match found
 ```
 
-Note that since floats cannot be tested for equality, you cannot use literal floats in patterns either.
+Note that since floats cannot be tested for equality, you cannot use literal floats in patterns.
 
 To do more powerful computation, you can use the list constructor syntax to destructure lists into a head and tail:
 
@@ -329,7 +362,14 @@ To do more powerful computation, you can use the list constructor syntax to dest
 # 5
 ```
 
-In cases like this where you only care about part of the pattern, you can use underscores to ignore other matches:
+```
+[x|xs].tail = xs
+
+[5, 6, 7].tail
+# [6, 7]
+```
+
+In cases where you only care about part of the pattern, you can use underscores to ignore other matches:
 
 ```
 [x|_].head = x
@@ -347,14 +387,14 @@ If you want to match more than just the head, you can add more parameters:
 # 2
 ```
 
-You can now write functions that process entire lists. This function calculates the length of a list:
+With list destructuring, you can write functions that process entire lists. This function calculates the length of a list:
 
 ```
 [].length = 0
 [_|xs].length = 1 + xs.length
 ```
 
-Patterns can be nested as needed:
+And patterns can be nested as needed for more complex matches:
 
 ```
 [[], []].zip = []
@@ -455,4 +495,4 @@ out("hello", " world ", 99)
 # "hello world 99"
 ```
 
-Song cannot currently read input, so you'll need to include all data in your script.
+Song cannot currently read input, so you'll need to include all data in your script. But I'm working on it. ;)
