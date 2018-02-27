@@ -28,9 +28,9 @@ public func makeParser() -> ParserProtocol {
     let letter = lowercaseLetter | uppercaseLetter
     let symbol = dot | pipe | comma | lBracket | rBracket | lParen | rParen | underscore | "!@#$%^&*-=_+`~,.<>/?:;\\|[]{}".match
     let textualCharacter = letter | digit | space | symbol
-    let literalCharacter = backslash >>> (backslash | singleQuote) | textualCharacter
+    let literalCharacter = backslash >>> (backslash | singleQuote) | textualCharacter | quote
     let literalString = Deferred()
-    literalString.parser = backslash >>> (backslash | quote) | textualCharacter
+    literalString.parser = backslash >>> (backslash | quote) | textualCharacter | singleQuote
     let star = str("*")
     let slash = str("/")
     let div = str("Div")

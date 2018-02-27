@@ -32,6 +32,7 @@ class ParserTests: XCTestCase {
         "'A'".becomes(.character("A"))
         "' '".becomes(.character(" "))
         "'\\''".becomes(.character("'"))
+        "'\"'".becomes(.character("\""))
         "'\\\\'".becomes(.character("\\"))
         "'AB'".fails()
         "'''".fails()
@@ -39,6 +40,7 @@ class ParserTests: XCTestCase {
 
     func test_strings() {
         "\"\"".becomes(.stringValue(""))
+        "\"'\"".becomes(.stringValue("'"))
         "\"hello world\"".becomes(.stringValue("hello world"))
         "\"\\\"Hi,\\\" I said\"".becomes(.stringValue("\"Hi,\" I said"))
         "\"a\\\\backslash\"".becomes(.stringValue("a\\backslash"))
