@@ -65,7 +65,7 @@ extension Number {
         case let (.int(lhsValue), .int(rhsValue)):
             return .int(lhsValue / rhsValue)
         default:
-            throw EvaluationError.signatureMismatch
+            throw EvaluationError.numericMismatch
         }
     }
 
@@ -74,7 +74,7 @@ extension Number {
         case let (.int(lhsValue), .int(rhsValue)):
             return .int(lhsValue % rhsValue)
         default:
-            throw EvaluationError.signatureMismatch
+            throw EvaluationError.numericMismatch
         }
     }
 
@@ -135,7 +135,7 @@ extension Number {
         case let (.int(lhsValue), .int(rhsValue)):
             return lhsValue == rhsValue
         default:
-            throw EvaluationError.signatureMismatch
+            throw EvaluationError.numericMismatch
         }
     }
 }

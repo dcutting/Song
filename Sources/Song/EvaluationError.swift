@@ -7,6 +7,7 @@ public indirect enum EvaluationError: Error {
     case notAList(Expression)
     case notAFunction(Expression)
     case patternsCannotBeFloats(Expression)
+    case numericMismatch
     case emptyScope
     case notACharacter
 }
@@ -33,6 +34,8 @@ private func format(error: EvaluationError, indent: Int) -> String {
         return "💥  need a function, not \(expr)".indented(by: indent)
     case .patternsCannotBeFloats(let expr):
         return "💥  patterns cannot be floats: \(expr)".indented(by: indent)
+    case .numericMismatch:
+        return "💥  can only use integers here".indented(by: indent)
     case .emptyScope:
         return "💥  Do/End cannot be empty".indented(by: indent)
     case .notACharacter:
