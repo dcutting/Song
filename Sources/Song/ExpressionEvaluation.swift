@@ -56,30 +56,30 @@ extension Expression {
         switch name {
         case "*":
             var numbers = try toNumbers(arguments: arguments, context: context)
-            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
+            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
             let left = numbers.removeFirst()
             let right = numbers.removeFirst()
             return .numberValue(left.times(right))
         case "/":
             var numbers = try toNumbers(arguments: arguments, context: context)
-            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
+            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
             let left = numbers.removeFirst()
             let right = numbers.removeFirst()
             return .numberValue(left.floatDividedBy(right))
         case "Mod":
             var numbers = try toNumbers(arguments: arguments, context: context)
-            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
+            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
             let left = numbers.removeFirst()
             let right = numbers.removeFirst()
             return .numberValue(try left.modulo(right))
         case "Div":
             var numbers = try toNumbers(arguments: arguments, context: context)
-            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
+            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
             let left = numbers.removeFirst()
             let right = numbers.removeFirst()
             return .numberValue(try left.integerDividedBy(right))
         case "+":
-            guard arguments.count == 2 else { throw EvaluationError.signatureMismatch }
+            guard arguments.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
             let result: Expression
             do {
                 result = try numberOp(arguments: arguments, context: context) {
@@ -93,36 +93,36 @@ extension Expression {
             return result
         case "-":
             var numbers = try toNumbers(arguments: arguments, context: context)
-            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
+            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
             let left = numbers.removeFirst()
             let right = numbers.removeFirst()
             return .numberValue(left.minus(right))
         case "<":
             var numbers = try toNumbers(arguments: arguments, context: context)
-            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
+            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
             let left = numbers.removeFirst()
             let right = numbers.removeFirst()
             return .booleanValue(left.lessThan(right))
         case ">":
             var numbers = try toNumbers(arguments: arguments, context: context)
-            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
+            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
             let left = numbers.removeFirst()
             let right = numbers.removeFirst()
             return .booleanValue(left.greaterThan(right))
         case "<=":
             var numbers = try toNumbers(arguments: arguments, context: context)
-            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
+            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
             let left = numbers.removeFirst()
             let right = numbers.removeFirst()
             return .booleanValue(left.lessThanOrEqualTo(right))
         case ">=":
             var numbers = try toNumbers(arguments: arguments, context: context)
-            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch }
+            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
             let left = numbers.removeFirst()
             let right = numbers.removeFirst()
             return .booleanValue(left.greaterThanOrEqualTo(right))
         case "Eq":
-            guard arguments.count == 2 else { throw EvaluationError.signatureMismatch }
+            guard arguments.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
             let result: Expression
             do {
                 result = try numberOp(arguments: arguments, context: context) {
@@ -135,7 +135,7 @@ extension Expression {
             }
             return result
         case "Neq":
-            guard arguments.count == 2 else { throw EvaluationError.signatureMismatch }
+            guard arguments.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
             let result: Expression
             do {
                 result = try numberOp(arguments: arguments, context: context) {
@@ -149,19 +149,19 @@ extension Expression {
             return result
         case "And":
             var bools = try toBools(arguments: arguments, context: context)
-            guard bools.count == 2 else { throw EvaluationError.signatureMismatch }
+            guard bools.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
             let left = bools.removeFirst()
             let right = bools.removeFirst()
             return .booleanValue(left && right)
         case "Or":
             var bools = try toBools(arguments: arguments, context: context)
-            guard bools.count == 2 else { throw EvaluationError.signatureMismatch }
+            guard bools.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
             let left = bools.removeFirst()
             let right = bools.removeFirst()
             return .booleanValue(left || right)
         case "Not":
             var bools = try toBools(arguments: arguments, context: context)
-            guard bools.count == 1 else { throw EvaluationError.signatureMismatch }
+            guard bools.count == 1 else { throw EvaluationError.signatureMismatch(arguments) }
             let left = bools.removeFirst()
             return .booleanValue(!left)
         case "out":
@@ -257,7 +257,7 @@ extension Expression {
             let extendedContext = try matchParameters(closureContext: closureContext, callingContext: callingContext, parameters: subfunction.patterns, arguments: arguments)
             let whenEvaluated = try subfunction.when.evaluate(context: extendedContext)
             guard case .booleanValue = whenEvaluated else { throw EvaluationError.notABoolean(subfunction.when) }
-            guard case .booleanValue(true) = whenEvaluated else { throw EvaluationError.signatureMismatch }
+            guard case .booleanValue(true) = whenEvaluated else { throw EvaluationError.signatureMismatch(arguments) }
             let finalContext = callingContext.merging(extendedContext) { l, r in r }
             return try subfunction.body.evaluate(context: finalContext)
         default:
@@ -266,8 +266,8 @@ extension Expression {
     }
 
     private func matchParameters(closureContext: Context, callingContext: Context, parameters: [Expression], arguments: [Expression]) throws -> Context {
-        guard parameters.count <= arguments.count else { throw EvaluationError.signatureMismatch }
-        guard arguments.count <= parameters.count else { throw EvaluationError.signatureMismatch }
+        guard parameters.count <= arguments.count else { throw EvaluationError.signatureMismatch(arguments) }
+        guard arguments.count <= parameters.count else { throw EvaluationError.signatureMismatch(arguments) }
 
         var extendedContext = closureContext
         for (p, a) in zip(parameters, arguments) {
@@ -285,8 +285,8 @@ extension Expression {
         case .variable(let name):
             extendedContext = extendContext(context: extendedContext, name: name, value: evaluatedValue, replacing: true)
         case .listConstructor(var paramHeads, let paramTail):
-            guard case var .list(argItems) = evaluatedValue else { throw EvaluationError.signatureMismatch }
-            guard argItems.count >= paramHeads.count else { throw EvaluationError.signatureMismatch }
+            guard case var .list(argItems) = evaluatedValue else { throw EvaluationError.signatureMismatch([argument]) }
+            guard argItems.count >= paramHeads.count else { throw EvaluationError.signatureMismatch([argument]) }
             while paramHeads.count > 0 {
                 let paramHead = paramHeads.removeFirst()
                 let argHead = argItems.removeFirst()
@@ -295,14 +295,14 @@ extension Expression {
             let argTail = Expression.list(argItems)
             extendedContext = try matchAndExtend(context: extendedContext, parameter: paramTail, argument: argTail, callingContext: callingContext)
         case .list(let paramItems):
-            guard case let .list(argItems) = evaluatedValue else { throw EvaluationError.signatureMismatch }
-            guard paramItems.count == argItems.count else { throw EvaluationError.signatureMismatch }
+            guard case let .list(argItems) = evaluatedValue else { throw EvaluationError.signatureMismatch([argument]) }
+            guard paramItems.count == argItems.count else { throw EvaluationError.signatureMismatch([argument]) }
             for (p, a) in zip(paramItems, argItems) {
                 extendedContext = try matchAndExtend(context: extendedContext, parameter: p, argument: a, callingContext: callingContext)
             }
         default:
             if parameter != evaluatedValue {
-                throw EvaluationError.signatureMismatch
+                throw EvaluationError.signatureMismatch([argument])
             }
         }
         return extendedContext
@@ -324,7 +324,7 @@ extension Expression {
                 return try evaluateCallAnonymous(closure: expr, arguments: arguments, callingContext: context)
             } catch EvaluationError.signatureMismatch {}
         }
-        throw EvaluationError.signatureMismatch
+        throw EvaluationError.signatureMismatch(arguments)
     }
 
     func evaluateScope(statements: [Expression], context: Context) throws -> Expression {

@@ -1,7 +1,7 @@
 public indirect enum EvaluationError: Error {
     case cannotEvaluate(Expression, EvaluationError)
     case symbolNotFound(String)
-    case signatureMismatch
+    case signatureMismatch([Expression])
     case notABoolean(Expression)
     case notANumber(Expression)
     case notAList(Expression)
@@ -22,8 +22,8 @@ private func format(error: EvaluationError, indent: Int) -> String {
         return format(scope: expr, inner: inner, indent: indent)
     case .symbolNotFound(let symbol):
         return "💥  unknown symbol: \(symbol)".indented(by: indent)
-    case .signatureMismatch:
-        return "💥  no matching pattern found".indented(by: indent)
+    case .signatureMismatch(let arguments):
+        return "💥  no pattern matches arguments: \(arguments)".indented(by: indent)
     case .notABoolean(let expr):
         return "💥  need a boolean, not \(expr)".indented(by: indent)
     case .notANumber(let expr):
