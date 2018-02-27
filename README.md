@@ -1,5 +1,5 @@
-[![Travis](https://travis-ci.org/dcutting/Song.svg)](https://travis-ci.org/dcutting/Song)
-[![Coverage Status](https://coveralls.io/repos/github/dcutting/Song/badge.svg)](https://coveralls.io/github/dcutting/Song)
+[![Travis](https://img.shields.io/travis/dcutting/Song.svg)](https://travis-ci.org/dcutting/Song)
+[![Coverage Status](https://img.shields.io/coveralls/github/dcutting/Song.svg)](https://coveralls.io/github/dcutting/Song)
 
 Song is **alpha** quality and is not intended for production use.
 
