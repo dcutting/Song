@@ -17,6 +17,7 @@ public func makeParser() -> ParserProtocol {
     let rBracket = str("]")
     let lParen = str("(") >>> skip
     let rParen = str(")")
+    let singleQuote = str("'")
     let quote = str("\"")
     let backslash = str("\\")
     let underscore = str("_")
@@ -70,9 +71,10 @@ public func makeParser() -> ParserProtocol {
     let integerValue = (minus.maybe >>> digit.some).tag("integer")
     let floatValue = (minus.maybe >>> digit.some >>> dot >>> digit.some).tag("float")
     let numericValue = floatValue | integerValue
+    let characterValue = singleQuote >>> stringChar.tag("character") >>> singleQuote
     let stringValue = quote >>> stringChar.some.maybe.tag("string") >>> quote
 
-    let literalValue = stringValue | list | listConstructor | numericValue | booleanValue
+    let literalValue = stringValue | characterValue | list | listConstructor | numericValue | booleanValue
 
     // Names.
 

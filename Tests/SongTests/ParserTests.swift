@@ -28,6 +28,12 @@ class ParserTests: XCTestCase {
         ".1".fails()
     }
 
+    func test_characters() {
+        "'A'".becomes(.character(Character("A")))
+        "' '".becomes(.character(Character(" ")))
+        "'AB'".fails()
+    }
+
     func test_strings() {
         "\"\"".becomes(.stringValue(""))
         "\"hello world\"".becomes(.stringValue("hello world"))

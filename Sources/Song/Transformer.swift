@@ -47,6 +47,10 @@ public func makeTransformer() -> Transformer<Expression> {
         return .floatValue(float)
     }
 
+    t.rule(["character": .simple("c")]) {
+        .character(Character(try $0.str("c")))
+    }
+
     t.rule(["string": .simple("s")]) {
         var value = try $0.str("s")
         value = value.replacingOccurrences(of: "\\\\", with: "\\")
