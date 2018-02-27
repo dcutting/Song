@@ -3,9 +3,11 @@
 
 Song is **alpha** quality and is not intended for production use.
 
+![Remix](Docs/Song.png)
+
 # Song
 
-Song is a terse, functional programming language.
+Song is a terse functional programming language.
 
 Here's a program that calculates Fibonacci numbers:
 
@@ -18,11 +20,52 @@ n.fib = (n-2).fib + (n-1).fib
 # 13
 ```
 
-Song has no loops and no if statements. Instead, you use recursion and pattern matching. There are no reference types, everything is a value.
+Song has no loops and no if statements. Instead, you use recursion and pattern matching. There are no reference types: everything is a value.
 
 Here are some more complex examples:
 
 ```
+list.drop(0) = list
+[x|xs].drop(n) When n > 0 = xs.drop(n-1)
+
+[1, 2, 3].drop(1)
+# [2, 3]
+```
+
+```
+list.take(0) = []
+[].take(n) = []
+[x|xs].take(n) When n > 0 = [x] + xs.take(n-1)
+
+[1, 2, 3].take(2)
+# [1, 2]
+```
+
+```
+list.slice(i, n) = list.drop(i).take(n)
+
+[1, 2, 3, 4, 5].slice(1, 2)
+# [2, 3]
+```
+
+```
+[].reverse = []
+[x|xs].reverse = xs.reverse + [x]
+
+[1, 2, 3].reverse
+# [3, 2, 1]
+```
+
+```
+list.push(x) = list + [x]
+list.pop = list.pop(1)
+list.pop(n) = list.reverse.drop(n).reverse
+
+[1, 2, 3].push(4)
+# [1, 2, 3, 4]
+
+[1, 2, 3].pop
+# [1, 2]
 ```
 
 ## Using Song
@@ -117,7 +160,7 @@ You can compare numbers:
 4 <= 3 # No
 ```
 
-But you cannot test floats for equality, since floating point numbers are imprecise.
+But you cannot test floats for equality, since floating point numbers are imprecise:
 
 ```
 4.0 Eq 4.0 # error
