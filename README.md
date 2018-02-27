@@ -129,6 +129,9 @@ Song numbers can be integers or floats. You can do arithmetic with them as you'd
 5 + 4 * -2
 # -3
 
+(5 + 4) * -2
+# -18
+
 3.4 / 2.0
 # 1.7
 ```
