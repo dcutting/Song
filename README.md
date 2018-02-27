@@ -208,7 +208,7 @@ The `Eq`/`Neq` operators work for lists too:
 # Yes
 ```
 
-### Characters
+### Characters (and Strings)
 
 Individual character literals look like this:
 
@@ -265,7 +265,7 @@ visible?
 But these aren't:
 
 ```
-5names
+7names
 BigName
 symbols@
 ```
@@ -290,8 +290,8 @@ Note that in the subject syntax, the parentheses are optional if there's only on
 These two function calls are also equivalent:
 
 ```
-inc(1)
-1.inc
+inc(5)
+5.inc
 ```
 
 Again, the parentheses are optional for the subject syntax.
@@ -504,7 +504,7 @@ x.inc = Do y = x+1, y End
 You can print things to stdout using the `out()` built-in function:
 
 ```
-out("hello", " world ", 99)
+out("hello", "world", 99)
 # "hello world 99"
 ```
 
