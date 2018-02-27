@@ -4,8 +4,6 @@ import Song
 import Syft
 import LineNoise
 
-dump(ProcessInfo.processInfo.environment)
-
 var interactive = true
 var filename: String?
 var verbose = false
