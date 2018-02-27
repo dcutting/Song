@@ -3,7 +3,7 @@
 
 Song is **alpha** quality and is not intended for production use.
 
-![Song](Docs/song.png)
+<img src="Docs/song.png" width="100" alt="Song" align="right"/>
 
 # Song
 
