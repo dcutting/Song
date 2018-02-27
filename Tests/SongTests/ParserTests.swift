@@ -78,6 +78,13 @@ class ParserTests: XCTestCase {
                 [.integerValue(3), .integerValue(4)],
                 .list([.integerValue(5), .integerValue(6)])
             )))
+"""
+[
+ x, y
+ |
+ xs
+]
+""".becomes(.listConstructor([.variable("x"), .variable("y")], .variable("xs")))
 
         "[|xs]".fails()
         "[x|]".fails()
@@ -161,6 +168,16 @@ class ParserTests: XCTestCase {
         "foo(a) = a".becomes(
             .subfunction(Subfunction(name: "foo", patterns: [.variable("a")], when: .booleanValue(true), body: .variable("a")))
         )
+"""
+foo(a,
+    b) = a
+""".becomes(.subfunction(Subfunction(name: "foo", patterns: [.variable("a"), .variable("b")], when: .booleanValue(true), body: .variable("a"))))
+"""
+foo(
+  a,
+  b
+) = a
+""".becomes(.subfunction(Subfunction(name: "foo", patterns: [.variable("a"), .variable("b")], when: .booleanValue(true), body: .variable("a"))))
         "a.foo = a".becomes(
             .subfunction(Subfunction(name: "foo", patterns: [.variable("a")], when: .booleanValue(true), body: .variable("a")))
         )

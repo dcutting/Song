@@ -11,7 +11,7 @@ public func makeParser() -> ParserProtocol {
     let skipSpaceAndNewlines = spaceOrNewline.some.maybe
     let dot = str(".")
     let pipe = str("|") >>> skip
-    let comma = skip >>> str(",") >>> skip
+    let comma = str(",")
     let delimiter = str(",")
     let lBracket = str("[")
     let rBracket = str("]")
@@ -63,9 +63,9 @@ public func makeParser() -> ParserProtocol {
     let listItems = listItem >>> (listItemDelimiter >>> listItem).recur
     let list = lBracket >>> skipSpaceAndNewlines >>> listItems.recur.tag("list") >>> skipSpaceAndNewlines >>> rBracket
 
-    let heads = (skip >>> listItem >>> (comma >>> listItem >>> skip).recur).tag("heads")
+    let heads = listItems.tag("heads")
     let tail = expression.tag("tail")
-    let listConstructor = lBracket >>> heads >>> skip >>> pipe >>> skip >>> tail >>> skip >>> rBracket
+    let listConstructor = lBracket >>> skipSpaceAndNewlines >>> heads >>> skipSpaceAndNewlines >>> pipe >>> skipSpaceAndNewlines >>> tail >>> skipSpaceAndNewlines >>> rBracket
 
     // Literals.
 
@@ -92,7 +92,8 @@ public func makeParser() -> ParserProtocol {
 
     let wrappedExpression = lParen >>> expression.tag("wrapped") >>> rParen
     let arg = expression.tag("arg")
-    let args = (arg >>> (comma >>> arg).recur).tag("args")
+    let argumentDelimiter = skipSpaceAndNewlines >>> comma >>> skipSpaceAndNewlines
+    let args = skipSpaceAndNewlines >>> (arg >>> (argumentDelimiter >>> arg).recur).tag("args") >>> skipSpaceAndNewlines
     let freeFunctionCall = functionName >>> (lParen >>> args.maybe >>> skip >>> rParen)
     let atom = wrappedExpression | freeFunctionCall | literalValue | variableName
     let subjectFunctionCall = atom.tag("subject") >>> (dot >>> functionName >>> (lParen >>> args.maybe >>> rParen).maybe).some.tag("calls")
@@ -102,8 +103,9 @@ public func makeParser() -> ParserProtocol {
 
     let parameter = (literalValue | variableName).tag("param")
     let functionSubject = parameter.tag("subject")
-    let parameters = parameter >>> (comma >>> parameter).recur
-    let functionParameters = lParen >>> parameters.recur(0, 1).tag("params") >>> rParen
+    let parameterDelimiter = skipSpaceAndNewlines >>> comma >>> skipSpaceAndNewlines
+    let parameters = parameter >>> (parameterDelimiter >>> parameter).recur
+    let functionParameters = skipSpaceAndNewlines >>> lParen >>> skipSpaceAndNewlines >>> parameters.recur(0, 1).tag("params") >>> skipSpaceAndNewlines >>> rParen
     let functionBody = skip >>> (scope | expression).tag("body") >>> skip
     let guardClause = (when >>> expression).maybe.tag("guard") >>> skip
     let subjectFunctionDecl = functionSubject >>> dot >>> functionName >>> functionParameters.maybe >>> guardClause >>> assign >>> skipSpaceAndNewlines >>> functionBody
