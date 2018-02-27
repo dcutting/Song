@@ -2,7 +2,12 @@ import XCTest
 import Song
 
 class StringTests: XCTestCase {
-    
+
+    func test_description_emptyString_returnsEmptyList() {
+        let string = Expression.stringValue("")
+        XCTAssertEqual("[]", "\(string)")
+    }
+
     func test_description_withoutQuotes() {
         let string = Expression.stringValue("hello")
         let actual = "\(string)"
