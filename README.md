@@ -117,6 +117,13 @@ You can compare numbers:
 4 <= 3 # No
 ```
 
+But you cannot test floats for equality, since floating point numbers are imprecise.
+
+```
+4.0 Eq 4.0 # error
+4.0 < 5.0 # Yes
+```
+
 ### Lists
 
 Lists are how you combine simple values into more complex values. Items can be different types:
@@ -260,6 +267,8 @@ This will only match calls where the argument is the value `1`:
 2.fib
 # error, no match found
 ```
+
+Note that since floats cannot be tested for equality, you cannot use literal floats in patterns either.
 
 To do more powerful computation, you can use the list constructor syntax to destructure lists into a head and tail:
 
