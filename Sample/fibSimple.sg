@@ -1,0 +1,7 @@
+#!/usr/bin/env song
+
+0.fib = 0
+1.fib = 1
+n.fib = (n-2).fib + (n-1).fib
+
+out(7.fib)
