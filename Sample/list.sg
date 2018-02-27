@@ -46,7 +46,7 @@ list.pop = list.pop(1)
 list.pop(n) = list.reverse.drop(n).reverse
 
 [].map(f) = []
-[x|xs].map(f) = [x.f] + xs.map(f)
+[x|xs].map(f) = [f(x)|xs.map(f)]
 
 [].inject(acc, f) = acc
 [x|xs].inject(acc, f) = xs.inject(acc.f(x), f)
@@ -112,3 +112,13 @@ c = a.partition(|x| x > 5)
 out(c)
 d = a.zip(a.reverse)
 out(d)
+
+'a'.up = 'A'
+'b'.up = 'B'
+'c'.up = 'C'
+
+string.up = string.map(up)
+
+e = "ab"
+out(e)
+out(e.up)
