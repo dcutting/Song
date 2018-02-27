@@ -186,9 +186,9 @@ while (true) {
     } else if !parsedLastCharacter {
         let remainder = remainder.text.trimmingCharacters(in: .whitespacesAndNewlines)
         if interactive {
-            print("Syntax error: \(remainder)")
+            print("💥  syntax error: \(remainder)")
         } else {
-            print("Syntax error on line \(lineNumber): \(remainder)")
+            print("💥  syntax error on line \(lineNumber): \(remainder)")
         }
         if verbose {
             log()
