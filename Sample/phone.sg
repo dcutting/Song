@@ -1,0 +1,27 @@
+#!/usr/bin/env song
+
+[].map(f) = []
+[x|xs].map(f) = [f(x)|xs.map(f)]
+
+[].flatten = []
+[[x|xs]|ys].flatten = [x|xs].flatten + ys.flatten
+[x|xs].flatten = [x|xs.flatten]
+
+'0'.letters = "0"
+'1'.letters = "1"
+'2'.letters = "abc"
+'3'.letters = "def"
+'4'.letters = "ghi"
+'5'.letters = "jkl"
+'6'.letters = "mno"
+'7'.letters = "pqrs"
+'8'.letters = "tuv"
+'9'.letters = "wxyz"
+
+[].phone = []
+[x].phone = x.letters
+[x|xs].phone = x.letters.map(|n| xs.phone.map(|p| n+p)).flatten
+
+combinations = "935".phone
+
+out(combinations)
