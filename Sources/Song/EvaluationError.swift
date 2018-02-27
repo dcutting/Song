@@ -37,7 +37,7 @@ private func format(error: EvaluationError, indent: Int) -> String {
     case .numericMismatch:
         return "💥  can only use integers here".indented(by: indent)
     case .emptyScope:
-        return "💥  Do/End cannot be empty".indented(by: indent)
+        return "💥  Do/End must contain at least one expression".indented(by: indent)
     case .notACharacter:
         return "💥  need a character".indented(by: indent)
     }
@@ -55,7 +55,7 @@ private func makeNextIndent(indent: Int) -> Int {
     return indent + tabIndent
 }
 
-extension String {
+private extension String {
     func indented(by: Int) -> String {
         guard by > 0 else { return self }
         return (" " + self).indented(by: by-1)
