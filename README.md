@@ -89,7 +89,7 @@ Song v0.1.0 🎵
 >
 ```
 
-Use the `--verbose` flag to get additional AST dumps when things go wrong in the REPL. Use CTRL-D to exit the REPL.
+Use the `--verbose` flag to get additional AST dumps when things go wrong in the REPL. Use CTRL-D to exit.
 
 There are also a few extra commands for use inside the REPL. Type `?` to get a dump of the current context (declared variables and functions), and `?del SYMBOL` to delete symbols from the context. This will save you restarting the REPL when you add things you didn't mean to.
 
