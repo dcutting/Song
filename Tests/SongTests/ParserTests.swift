@@ -11,6 +11,7 @@ class ParserTests: XCTestCase {
 
     func test_integers() {
         "99".becomes(.integerValue(99))
+        "+99".becomes(.integerValue(99))
         "-21".becomes(.integerValue(-21))
         "0".becomes(.integerValue(0))
         "-0".becomes(.integerValue(0))
@@ -21,6 +22,7 @@ class ParserTests: XCTestCase {
 
     func test_floats() {
         "0.1".becomes(.floatValue(0.1))
+        "+0.1".becomes(.floatValue(0.1))
         "-9.1".becomes(.floatValue(-9.1))
         "0.001".becomes(.floatValue(0.001))
         " 0.001 ".becomes(.floatValue(0.001))
@@ -146,6 +148,10 @@ class ParserTests: XCTestCase {
         "(1+2)*3".becomes(.call(name: "*", arguments: [
             .call(name: "+", arguments: [.integerValue(1), .integerValue(2)]),
             .integerValue(3)
+            ]))
+        "(5-+2)*-3".becomes(.call(name: "*", arguments: [
+            .call(name: "-", arguments: [.integerValue(5), .integerValue(2)]),
+            .integerValue(-3)
             ]))
     }
 
