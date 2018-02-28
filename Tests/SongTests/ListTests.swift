@@ -82,4 +82,53 @@ class ListTests: XCTestCase {
             XCTAssertEqual(Expression.booleanValue(true), try call.evaluate())
         }
     }
+
+    func test_eq_containsFloats_throws() {
+        let a = Expression.list([.floatValue(5.0)])
+        let b = Expression.list([.floatValue(5.0)])
+        let eq = Expression.call(name: "Eq", arguments: [a, b])
+        XCTAssertThrowsError(try eq.evaluate())
+    }
+
+    func test_evaluate_equalNestedLists() {
+        let left = Expression.list([.list([.integerValue(9), .booleanValue(false)]), .integerValue(1), .stringValue("ok")])
+        let right = Expression.list([.list([.integerValue(9), .booleanValue(false)]), .integerValue(1), .stringValue("ok")])
+
+        assertNoThrow {
+            let call = Expression.call(name: "Eq", arguments: [left, right])
+            XCTAssertEqual(Expression.booleanValue(true), try call.evaluate())
+        }
+        assertNoThrow {
+            let call = Expression.call(name: "Neq", arguments: [left, right])
+            XCTAssertEqual(Expression.booleanValue(false), try call.evaluate())
+        }
+    }
+
+    func test_evaluate_almostEqualNestedLists() {
+        let left = Expression.list([.list([.integerValue(8), .booleanValue(false)]), .integerValue(1), .stringValue("ok")])
+        let right = Expression.list([.list([.integerValue(9), .booleanValue(false)]), .integerValue(1), .stringValue("ok")])
+
+        assertNoThrow {
+            let call = Expression.call(name: "Eq", arguments: [left, right])
+            XCTAssertEqual(Expression.booleanValue(false), try call.evaluate())
+        }
+        assertNoThrow {
+            let call = Expression.call(name: "Neq", arguments: [left, right])
+            XCTAssertEqual(Expression.booleanValue(true), try call.evaluate())
+        }
+    }
+
+    func test_evaluate_unequalNestedLists() {
+        let left = Expression.list([.list([.booleanValue(false)]), .integerValue(1), .stringValue("ok")])
+        let right = Expression.list([.list([.integerValue(9), .booleanValue(false)]), .stringValue("ok")])
+
+        assertNoThrow {
+            let call = Expression.call(name: "Eq", arguments: [left, right])
+            XCTAssertEqual(Expression.booleanValue(false), try call.evaluate())
+        }
+        assertNoThrow {
+            let call = Expression.call(name: "Neq", arguments: [left, right])
+            XCTAssertEqual(Expression.booleanValue(true), try call.evaluate())
+        }
+    }
 }

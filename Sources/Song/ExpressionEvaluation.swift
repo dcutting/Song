@@ -122,30 +122,7 @@ extension Expression {
             let right = numbers.removeFirst()
             return .booleanValue(left.greaterThanOrEqualTo(right))
         case "Eq":
-            guard arguments.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
-            let result: Expression
-            do {
-                result = try booleanOp(arguments: arguments, context: context) {
-                    .booleanValue($0 == $1)
-                }
-            } catch EvaluationError.notABoolean {
-                do {
-                    result = try numberOp(arguments: arguments, context: context) {
-                        try .booleanValue($0.equalTo($1))
-                    }
-                } catch EvaluationError.notANumber {
-                    do {
-                        result = try characterOp(arguments: arguments, context: context) {
-                            .booleanValue($0 == $1)
-                        }
-                    } catch EvaluationError.notACharacter {
-                        result = try listOp(arguments: arguments, context: context) {
-                            .booleanValue($0 == $1)
-                        }
-                    }
-                }
-            }
-            return result
+            return try evaluateEq(arguments: arguments, context: context)
         case "Neq":
             let equalCall = Expression.call(name: "Eq", arguments: arguments)
             let notCall = Expression.call(name: "Not", arguments: [equalCall])
@@ -172,6 +149,40 @@ extension Expression {
         default:
             return try evaluateUserFunction(name: name, arguments: arguments, context: context)
         }
+    }
+
+    private func evaluateEq(arguments: [Expression], context: Context) throws -> Expression {
+        guard arguments.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
+        let result: Expression
+        do {
+            result = try booleanOp(arguments: arguments, context: context) {
+                .booleanValue($0 == $1)
+            }
+        } catch EvaluationError.notABoolean {
+            do {
+                result = try numberOp(arguments: arguments, context: context) {
+                    try .booleanValue($0.equalTo($1))
+                }
+            } catch EvaluationError.notANumber {
+                do {
+                    result = try characterOp(arguments: arguments, context: context) {
+                        .booleanValue($0 == $1)
+                    }
+                } catch EvaluationError.notACharacter {
+                    result = try listOp(arguments: arguments, context: context) { left, right in
+                        guard left.count == right.count else { return .booleanValue(false) }
+                        for (l, r) in zip(left, right) {
+                            let lrEq = try evaluateEq(arguments: [l, r], context: context)
+                            if case .booleanValue(false) = lrEq {
+                                return .booleanValue(false)
+                            }
+                        }
+                        return .booleanValue(true)
+                    }
+                }
+            }
+        }
+        return result
     }
 
     private func extractNumber(_ expression: Expression, context: Context) throws -> Number {

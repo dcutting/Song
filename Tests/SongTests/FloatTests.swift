@@ -16,4 +16,11 @@ class FloatTests: XCTestCase {
             XCTAssertEqual(float, actual)
         }
     }
+
+    func test_eq_throws() {
+        let a = Expression.floatValue(5.0)
+        let b = Expression.floatValue(5.0)
+        let eq = Expression.call(name: "Eq", arguments: [a, b])
+        XCTAssertThrowsError(try eq.evaluate())
+    }
 }
