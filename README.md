@@ -25,6 +25,7 @@ Song has no loops and no if statements. Instead, you use recursion and pattern m
 Here are some more complex examples:
 
 ```
+# Drop the first n items from a list
 list.drop(0) = list
 [x|xs].drop(n) When n > 0 = xs.drop(n-1)
 
@@ -33,6 +34,7 @@ list.drop(0) = list
 ```
 
 ```
+# Take the first n items from a list
 list.take(0) = []
 [].take(n) = []
 [x|xs].take(n) When n > 0 = [x] + xs.take(n-1)
@@ -42,6 +44,7 @@ list.take(0) = []
 ```
 
 ```
+# Extract a slice from the middle of a list
 list.slice(i, n) = list.drop(i).take(n)
 
 [1, 2, 3, 4, 5].slice(1, 2)
@@ -49,6 +52,7 @@ list.slice(i, n) = list.drop(i).take(n)
 ```
 
 ```
+# Reverse a list
 [].reverse = []
 [x|xs].reverse = xs.reverse + [x]
 
@@ -57,6 +61,7 @@ list.slice(i, n) = list.drop(i).take(n)
 ```
 
 ```
+# Push and pop items from the end of a list
 list.push(x) = list + [x]
 list.pop = list.pop(1)
 list.pop(n) = list.reverse.drop(n).reverse
