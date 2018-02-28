@@ -122,6 +122,18 @@ while (true) {
         dumpContext()
         continue
     }
+    if thisLine.trimmingCharacters(in: .whitespacesAndNewlines).hasPrefix("?del ") {
+        var tokens = thisLine.components(separatedBy: .whitespaces)
+        guard tokens.count > 1 else {
+            print("Try \"?del SYMBOL [...]\"")
+            continue
+        }
+        tokens.removeFirst()
+        for token in tokens {
+            context.removeValue(forKey: String(token))
+        }
+        continue
+    }
 
     multilines.append(thisLine)
 
