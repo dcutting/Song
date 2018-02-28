@@ -91,6 +91,24 @@ Song v0.1.0 🎵
 
 Use CTRL-D to exit the REPL.
 
+There are also a few extra commands when using the REPL. Type `?` to get a dump of the current context (declared variables and functions), and `?del SYMBOL` to delete symbols from the context. This will save you restarting the REPL when you add things you didn't mean to.
+
+```
+Song v0.2.0 🎵
+> x = 5
+> ?
+{
+    x =     (
+        5
+    );
+}
+> ?del x
+> ?
+{
+}
+>
+```
+
 You can also run Song scripts:
 
 ```
