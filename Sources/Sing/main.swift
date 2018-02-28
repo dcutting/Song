@@ -103,7 +103,7 @@ func dumpContext() {
     print(context as AnyObject)
 }
 
-log("Song v0.1.0 🎵")
+log("Song v0.2.0 🎵")
 
 while (true) {
 
