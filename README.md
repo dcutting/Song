@@ -283,11 +283,12 @@ Free functions have all parameters and arguments in parentheses after the functi
 
 Subject functions have the first argument appearing before the function name with dot notation.
 
-These two function declarations are equivalent:
+These function declarations are equivalent:
 
 ```
 inc(x) = x+1
 x.inc = x+1
+x.inc() = x+1
 ```
 
 Note that in the subject syntax, the parentheses are optional if there's only one parameter.
@@ -297,6 +298,7 @@ These two function calls are also equivalent:
 ```
 inc(5)
 5.inc
+5.inc()
 ```
 
 Again, the parentheses are optional for the subject syntax.
@@ -320,6 +322,13 @@ plus(3, 4)
 # 7
 2.plus(3)
 # 5
+```
+
+If you're allergic to parentheses, the subject function syntax is convenient for chaining together multiple function calls. These expressions are equivalent:
+
+```
+plus(inc(fib(5)), 10)
+5.fib.inc.plus(10)
 ```
 
 The names of functions follow the same rules as variables:
