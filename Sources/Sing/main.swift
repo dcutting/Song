@@ -4,22 +4,25 @@ import Song
 import Syft
 import LineNoise
 
-var interactive = true
-var filename: String?
 var verbose = false
+var filename: String?
+var scriptArgs = [String]()
+
+var interactive = true
 let prompt = "> "
 let incompletePrompt = ". "
 
 func parse(arguments: [String]) throws {
-    let argsParser = ArgumentParser(usage: "<options>", overview: "the Song functional language")
+    let argsParser = ArgumentParser(usage: "<options> [filename]", overview: "the Song functional language")
     let verboseArg: OptionArgument<Bool> = argsParser.add(option: "--verbose", shortName: "-v", kind: Bool.self, usage: "Verbose logging")
-    let filenameArg = argsParser.add(positional: "filename", kind: String.self, optional: true)
+    let scriptArgsArg = argsParser.add(positional: "filename", kind: [String].self, optional: true, usage: "Song script to run and arguments to pass to it")
 
     let arguments = Array(arguments.dropFirst())
     let parsedArguments = try argsParser.parse(arguments)
 
     verbose = parsedArguments.get(verboseArg) ?? false
-    filename = parsedArguments.get(filenameArg)
+    scriptArgs = parsedArguments.get(scriptArgsArg) ?? []
+    filename = scriptArgs.first
 }
 
 #if Xcode
@@ -97,7 +100,8 @@ func log(_ str: Any? = nil) {
     }
 }
 
-var context: Context = [:]
+let songArgs = scriptArgs.map { Expression.stringValue($0) }
+var context: Context = ["args": [.list(songArgs)]]
 
 func dumpContext() {
     print(context as AnyObject)
