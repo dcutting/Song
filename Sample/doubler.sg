@@ -1,0 +1,7 @@
+#!/usr/bin/env song
+
+[_,b|_].second = b
+
+x.double = x*2
+
+args.second.number.double.out
