@@ -132,7 +132,11 @@ public func makeTransformer() -> Transformer<Expression> {
         try $0.val("param")
     }
 
-    t.rule(["functionName": .simple("name"), "body": .simple("body"), "guard": .simple("guard"), "subject": .simple("subject")]) {
+    t.rule(["subject": .simple("subject"), "functionName": .simple("name"), "guard": .simple("guard"), "body": .simple("body")]) {
+        .subfunction(try transformFunction(args: $0))
+    }
+
+    t.rule(["subject": .simple("subject"), "functionName": .simple("name"), "params": .series("params"), "guard": .simple("guard"), "body": .simple("body")]) {
         .subfunction(try transformFunction(args: $0))
     }
 
@@ -140,13 +144,9 @@ public func makeTransformer() -> Transformer<Expression> {
         .subfunction(try transformFunction(args: $0))
     }
 
-    t.rule(["subject": .simple("subject"), "functionName": .simple("name"), "body": .simple("body"), "guard": .simple("guard"), "params": .series("params")]) {
-        .subfunction(try transformFunction(args: $0))
-    }
-
     // Lambdas.
 
-    t.rule(["lambdaBody": .simple("body"), "params": .series("params")]) {
+    t.rule(["params": .series("params"), "lambdaBody": .simple("body")]) {
         .subfunction(try transformFunction(args: $0))
     }
 
