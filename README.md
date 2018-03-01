@@ -490,9 +490,9 @@ x.apply(f) = f(x)
 # 10
 ```
 
-Note the lambda syntax uses pipes `|` to specify parameters. Lambdas can have as many parameters as you like, although they must have at least one.
+Note the lambda syntax uses pipes `|` to specify parameters.
 
-Lambdas don't just have to be passed as arguments. They can also live on their own in a variable:
+They don't just have to be passed as arguments. They can also live on their own in a variable:
 
 ```
 double = |x| x*2
@@ -522,6 +522,15 @@ double(5)
 
 5.double
 # 10
+```
+
+Lambdas can have as many parameters as you like. Although unusual, you can even make lambdas with no arguments using the double pipe syntax:
+
+```
+x = || "hello"
+
+x()
+# "hello"
 ```
 
 ## `Do`/`End` scopes
