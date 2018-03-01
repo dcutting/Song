@@ -54,6 +54,8 @@ public func makeParser() -> ParserProtocol {
     let end = str("End")
 
     let expression = Deferred()
+    let wrappedExpression = lParen >>> expression.tag("wrapped") >>> rParen
+
     let scope = Deferred()
 
     // Lists.
@@ -90,13 +92,12 @@ public func makeParser() -> ParserProtocol {
 
     // Function calls.
 
-    let wrappedExpression = lParen >>> expression.tag("wrapped") >>> rParen
     let arg = expression.tag("arg")
     let argumentDelimiter = skipSpaceAndNewlines >>> comma >>> skipSpaceAndNewlines
     let args = skipSpaceAndNewlines >>> (arg >>> (argumentDelimiter >>> arg).recur).tag("args") >>> skipSpaceAndNewlines
     let freeFunctionCall = functionName >>> (lParen >>> args.maybe >>> skip >>> rParen)
-    let atom = wrappedExpression | freeFunctionCall | literalValue | variableName
-    let subjectFunctionCall = atom.tag("subject") >>> (dot >>> functionName >>> (lParen >>> args.maybe >>> rParen).maybe).some.tag("calls")
+    let subject = wrappedExpression | freeFunctionCall | literalValue | variableName
+    let subjectFunctionCall = subject.tag("subject") >>> (dot >>> functionName >>> (lParen >>> args.maybe >>> rParen).maybe).some.tag("calls")
     let functionCall = subjectFunctionCall | freeFunctionCall
 
     // Function declarations.
@@ -113,6 +114,12 @@ public func makeParser() -> ParserProtocol {
     let freeFunctionDecl = functionName >>> functionParameters >>> guardClause >>> assign >>> skipSpaceAndNewlines >>> functionBody
 
     let functionDecl = subjectFunctionDecl | freeFunctionDecl
+
+    // Lambdas.
+
+    let lambdaParameters = pipe >>> parameters.recur(0, 1).tag("params") >>> pipe
+    let lambdaBody = expression.tag("lambdaBody") >>> skipSpaceAndNewlines
+    let lambda = lambdaParameters >>> lambdaBody
 
     // Expressions.
 
@@ -134,16 +141,10 @@ public func makeParser() -> ParserProtocol {
 
     expression.parser = disjunctive.parser
 
-    // Lambdas.
-
-    let lambdaParameters = pipe >>> parameters.recur(0, 1).tag("params") >>> pipe
-    let lambdaBody = expression.tag("lambdaBody") >>> skipSpaceAndNewlines
-    let lambda = lambdaParameters >>> lambdaBody
-
     // Terms.
 
     let negatedTerm = logicalNot.tag("op") >>> spaceOrNewline >>> term.tag("right")
-    term.parser = negatedTerm | functionCall | lambda | atom
+    term.parser = negatedTerm | scope | functionCall | lambda | subject
 
     // Constants.
 
@@ -156,7 +157,7 @@ public func makeParser() -> ParserProtocol {
     let delimiterOrNewline = skip >>> ((delimiter.maybe >>> skip >>> newline) | delimiter)
     let scopeItems = (scopeItem >>> (delimiterOrNewline >>> scopeItem).recur).tag("scopeItems") >>> delimiter.maybe
     scope.parser = start >>> spaceOrNewline >>> skipSpaceAndNewlines >>> scopeItems >>> spaceOrNewline >>> skipSpaceAndNewlines >>> end
-    statement.parser = skipSpaceAndNewlines >>> (scope | functionDecl | constant | expression)
+    statement.parser = skipSpaceAndNewlines >>> (functionDecl | constant | expression)
 
     // Root.
 
@@ -164,3 +165,4 @@ public func makeParser() -> ParserProtocol {
 
     return root
 }
+

@@ -337,6 +337,7 @@ foo() = Do 5 End
         "Do x.inc = x+1, 7.inc End".becomes(.scope([
             .subfunction(Subfunction(name: "inc", patterns: [.variable("x")], when: .booleanValue(true), body: .call(name: "+", arguments: [.variable("x"), .integerValue(1)]))),
             .call(name: "inc", arguments: [.integerValue(7)])]))
+        "Do 1, Do Do 2, 3 End, 4, End, End".becomes(.scope([.integerValue(1), .scope([.scope([.integerValue(2), .integerValue(3)]), .integerValue(4)])]))
 
 """
 Do 1
@@ -387,5 +388,11 @@ End
         "Do , End".fails()
         "Do,End".fails()
         "Do1End".fails()
+    }
+
+    func test_unusualFunctionCalls() {
+        "(1 < 10).negate".becomes(.call(name: "negate", arguments: [.call(name: "<", arguments: [.integerValue(1), .integerValue(10)])]))
+        "(Do 5, 8 End).inc".becomes(.call(name: "inc", arguments: [.scope([.integerValue(5), .integerValue(8)])]))
+        "(inc(1)).inc".becomes(.call(name: "inc", arguments: [.call(name: "inc", arguments: [.integerValue(1)])]))
     }
 }
