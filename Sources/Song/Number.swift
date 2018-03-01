@@ -9,13 +9,15 @@ public enum Number {
 extension Number {
 
     static func convert(from value: String) throws -> Number {
+        let result: Number
         if let int = IntType(value) {
-            return Number.int(int)
+            result = Number.int(int)
         } else if let float = FloatType(value) {
-            return Number.float(float)
+            result = Number.float(float)
         } else {
             throw EvaluationError.numericMismatch
         }
+        return result
     }
 }
 
