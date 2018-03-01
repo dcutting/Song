@@ -115,6 +115,7 @@ class ParserTests: XCTestCase {
         "12 Div 5".becomes(.call(name: "Div", arguments: [.integerValue(12), .integerValue(5)]))
         "12 Mod 5".becomes(.call(name: "Mod", arguments: [.integerValue(12), .integerValue(5)]))
         "x Eq 5".becomes(.call(name: "Eq", arguments: [.variable("x"), .integerValue(5)]))
+        "Do 2, 5 < 7 End And Do Yes End".becomes(.call(name: "And", arguments: [.scope([.integerValue(2), .call(name: "<", arguments: [.integerValue(5), .integerValue(7)])]), .scope([.booleanValue(true)])]))
 
         "12 Div5".fails()
         "12 Mod5".fails()
@@ -394,5 +395,25 @@ End
         "(1 < 10).negate".becomes(.call(name: "negate", arguments: [.call(name: "<", arguments: [.integerValue(1), .integerValue(10)])]))
         "(Do 5, 8 End).inc".becomes(.call(name: "inc", arguments: [.scope([.integerValue(5), .integerValue(8)])]))
         "(inc(1)).inc".becomes(.call(name: "inc", arguments: [.call(name: "inc", arguments: [.integerValue(1)])]))
+//        "5.lessThan()(4)".becomes(.callAnonymous(closure: .call(name: "lessThan", arguments: [.integerValue(5)]), arguments: [.integerValue(4)]))
+        "(5.lessThan())(4)".becomes(.callAnonymous(closure: .call(name: "lessThan", arguments: [.integerValue(5)]), arguments: [.integerValue(4)]))
+        "(5.lessThan)(4)".becomes(.callAnonymous(closure: .call(name: "lessThan", arguments: [.integerValue(5)]), arguments: [.integerValue(4)]))
+//        "lessThan(5)(4)".becomes(.callAnonymous(closure: .call(name: "lessThan", arguments: [.integerValue(5)]), arguments: [.integerValue(4)]))
+        "(|x| x+1)(4)".becomes(
+            .callAnonymous(
+                closure: .subfunction(Subfunction(name: nil,
+                                                  patterns: [.variable("x")],
+                                                  when: .booleanValue(true),
+                                                  body: .call(name: "+", arguments: [.variable("x"), .integerValue(1)])
+                )),
+                arguments: [.integerValue(4)]))
+//        "4.(|x| x+1)".becomes(
+//            .callAnonymous(
+//                closure: .subfunction(Subfunction(name: nil,
+//                                                  patterns: [.variable("x")],
+//                                                  when: .booleanValue(true),
+//                                                  body: .call(name: "+", arguments: [.variable("x"), .integerValue(1)])
+//                )),
+//                arguments: [.integerValue(4)]))
     }
 }

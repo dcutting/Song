@@ -96,9 +96,11 @@ public func makeParser() -> ParserProtocol {
     let argumentDelimiter = skipSpaceAndNewlines >>> comma >>> skipSpaceAndNewlines
     let args = skipSpaceAndNewlines >>> (arg >>> (argumentDelimiter >>> arg).recur).tag("args") >>> skipSpaceAndNewlines
     let freeFunctionCall = functionName >>> (lParen >>> args.maybe >>> skip >>> rParen)
+    let anonymousFunctionCall = Deferred()
     let subject = wrappedExpression | freeFunctionCall | literalValue | variableName
     let subjectFunctionCall = subject.tag("subject") >>> (dot >>> functionName >>> (lParen >>> args.maybe >>> rParen).maybe).some.tag("calls")
-    let functionCall = subjectFunctionCall | freeFunctionCall
+    anonymousFunctionCall.parser = subject.tag("anonSubject") >>> (lParen >>> args.maybe >>> rParen)
+    let functionCall = subjectFunctionCall | freeFunctionCall | anonymousFunctionCall
 
     // Function declarations.
 
@@ -166,3 +168,22 @@ public func makeParser() -> ParserProtocol {
     return root
 }
 
+/*
+
+ wrappedExpression = ( >>> expression >>> )
+ subject = wrappedExpression | freeFunctionCall | literalValue | variableName
+ expression = term op term
+ term = not term | functionCall | subject
+ scope = Do [statement] End
+ statement = scope | functionDecl | constant | expression
+
+ wrappedExpression = ( >>> expression >>> )
+ subject = wrappedExpression | freeFunctionCall | literalValue | variableName
+ expression = term op term
+ term = not term | scope | functionCall | lambda | subject
+ scope = Do [statement] End
+ statement = functionDecl | constant | expression
+
+
+
+ */
