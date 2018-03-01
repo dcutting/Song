@@ -266,6 +266,20 @@ Because strings are just lists of characters, you can also concatenate them and 
 # No
 ```
 
+If you have a number represented as a string, you can use the builtin `number` function to convert it to a number:
+
+```
+x = "99"
+x.number
+# 99
+
+y = "-3.1"
+y.number
+# -3.1
+```
+
+But this will throw an error if your string cannot be converted to a number.
+
 ## Variables
 
 You can assign values to variables:
@@ -540,4 +554,21 @@ out("hello", "world", 99)
 # "hello world 99"
 ```
 
-Song cannot currently read input, so you'll need to include all data in your script. But I'm working on it. ;)
+Song cannot currently read input from stdin or files, so you'll need to include most data in your script. But I'm working on it. ;)
+
+Scripts can, however, read arguments from the command-line:
+
+```
+#!/usr/bin/env song
+
+[_,b|_].second = b
+
+x.double = x*2
+
+args.second.number.double.out
+```
+
+```
+$ song doubler.sg 9
+18
+```
