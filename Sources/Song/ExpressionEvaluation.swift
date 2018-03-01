@@ -146,9 +146,10 @@ extension Expression {
             return .booleanValue(!left)
         case "number":
             var numbers = arguments
+            guard numbers.count == 1 else { throw EvaluationError.signatureMismatch(arguments) }
             let left = numbers.removeFirst()
             do {
-                let string = try left.asString()
+                let string = try left.evaluate(context: context).asString()
                 let number = try Number.convert(from: string)
                 return Expression.numberValue(number)
             } catch EvaluationError.numericMismatch {
