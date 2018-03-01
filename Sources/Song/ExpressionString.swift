@@ -1,11 +1,13 @@
 extension Expression {
 
     func asString() throws -> String {
+        let result: String
         if case .list(let characters) = self {
-            return try convertToString(characters: characters)
+            result = try convertToString(characters: characters)
         } else {
             throw EvaluationError.notAList(self)
         }
+        return result
     }
 
     func convertToString(characters: [Expression]) throws -> String {

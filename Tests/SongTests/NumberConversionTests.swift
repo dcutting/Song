@@ -28,9 +28,20 @@ class NumberConversionTests: XCTestCase {
         }
     }
 
-    func test_number_invalid_throws() {
+    func test_number_invalidNumber_throws() {
         let input = "hello"
         let call = Expression.call(name: "number", arguments: [.stringValue(input)])
+        XCTAssertThrowsError(try call.evaluate())
+    }
+
+    func test_number_invalidString_throws() {
+        let input = Expression.list([.character("9"), .integerValue(99)]) // This is a list that doesn't contain only characters (i.e., not a string).
+        let call = Expression.call(name: "number", arguments: [input])
+        XCTAssertThrowsError(try call.evaluate())
+    }
+
+    func test_number_invalidType_throws() {
+        let call = Expression.call(name: "number", arguments: [.integerValue(99)])
         XCTAssertThrowsError(try call.evaluate())
     }
 
