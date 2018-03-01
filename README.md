@@ -524,7 +524,16 @@ double(5)
 # 10
 ```
 
-Lambdas can have as many parameters as you like. Although unusual, you can even make lambdas with no arguments using the double pipe syntax:
+Lambdas can have as many parameters as you like, separated by commas:
+
+```
+lessThan = |x, y| x < y
+
+lessThan(4, 5)
+# Yes
+```
+
+Although unusual, you can even make lambdas with no arguments using the double pipe syntax:
 
 ```
 x = || "hello"
