@@ -1,0 +1,5 @@
+#!/usr/bin/env song
+
+[_,b|_].second = b
+
+out("Hello", args.second)
