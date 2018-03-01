@@ -6,4 +6,6 @@ n.fib(a, b) = (n-1).fib(b, a+b)
 
 [_,b|_].second = b
 
+i = args.second.number
+
 out(args.second.fib)

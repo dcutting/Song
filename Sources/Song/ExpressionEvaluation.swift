@@ -144,6 +144,16 @@ extension Expression {
             guard bools.count == 1 else { throw EvaluationError.signatureMismatch(arguments) }
             let left = bools.removeFirst()
             return .booleanValue(!left)
+        case "number":
+            var numbers = arguments
+            let left = numbers.removeFirst()
+            do {
+                let string = try left.asString()
+                let number = try Number.convert(from: string)
+                return Expression.numberValue(number)
+            } catch EvaluationError.numericMismatch {
+                throw EvaluationError.notANumber(left)
+            }
         case "out":
             return try evaluateOut(arguments: arguments, context: context)
         default:

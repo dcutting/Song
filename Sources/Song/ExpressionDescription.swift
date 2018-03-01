@@ -60,16 +60,6 @@ extension Expression: CustomStringConvertible {
         }
     }
 
-    func convertToString(characters: [Expression]) throws -> String {
-        let chars: [Character] = try characters.map { item in
-            if case .character(let c) = item {
-                return c
-            }
-            throw EvaluationError.notACharacter
-        }
-        return String(chars)
-    }
-    
     func descriptionSubfunction(subfunction: Subfunction) -> String {
         let parametersList = subfunction.patterns.map { "\($0)" }.joined(separator: ", ")
         if let funcName = subfunction.name {

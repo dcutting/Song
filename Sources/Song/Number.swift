@@ -8,6 +8,19 @@ public enum Number {
 
 extension Number {
 
+    static func convert(from value: String) throws -> Number {
+        if let int = IntType(value) {
+            return Number.int(int)
+        } else if let float = FloatType(value) {
+            return Number.float(float)
+        } else {
+            throw EvaluationError.numericMismatch
+        }
+    }
+}
+
+extension Number {
+
     func plus(_ other: Number) -> Number {
         switch (self, other) {
         case let (.int(lhsValue), .int(rhsValue)):
