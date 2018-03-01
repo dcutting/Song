@@ -335,6 +335,7 @@ foo() = Do 5 End
         "Do 1 , x End".becomes(.scope([.integerValue(1), .variable("x")]))
         "Do 1, x, End".becomes(.scope([.integerValue(1), .variable("x")]))
         "Do x = 5, x End".becomes(.scope([.constant(variable: .variable("x"), value: .integerValue(5)), .variable("x")]))
+        "Do |x| x End".becomes(.scope([.subfunction(Subfunction(name: nil, patterns: [.variable("x")], when: .booleanValue(true), body: .variable("x")))]))
         "Do x.inc = x+1, 7.inc End".becomes(.scope([
             .subfunction(Subfunction(name: "inc", patterns: [.variable("x")], when: .booleanValue(true), body: .call(name: "+", arguments: [.variable("x"), .integerValue(1)]))),
             .call(name: "inc", arguments: [.integerValue(7)])]))
@@ -394,11 +395,13 @@ End
     func test_unusualFunctionCalls() {
         "(1 < 10).negate".becomes(.call(name: "negate", arguments: [.call(name: "<", arguments: [.integerValue(1), .integerValue(10)])]))
         "(Do 5, 8 End).inc".becomes(.call(name: "inc", arguments: [.scope([.integerValue(5), .integerValue(8)])]))
+        "(Do |x| x+1 End)(5)".becomes(.callAnonymous(closure: .scope([.subfunction(Subfunction(name: nil, patterns: [.variable("x")], when: .booleanValue(true), body: .call(name: "+", arguments: [.variable("x"), .integerValue(1)])))]), arguments: [.integerValue(5)]))
         "(inc(1)).inc".becomes(.call(name: "inc", arguments: [.call(name: "inc", arguments: [.integerValue(1)])]))
+        "(x)()".becomes(.callAnonymous(closure: .variable("x"), arguments: []))
 //        "5.lessThan()(4)".becomes(.callAnonymous(closure: .call(name: "lessThan", arguments: [.integerValue(5)]), arguments: [.integerValue(4)]))
         "(5.lessThan())(4)".becomes(.callAnonymous(closure: .call(name: "lessThan", arguments: [.integerValue(5)]), arguments: [.integerValue(4)]))
         "(5.lessThan)(4)".becomes(.callAnonymous(closure: .call(name: "lessThan", arguments: [.integerValue(5)]), arguments: [.integerValue(4)]))
-//        "lessThan(5)(4)".becomes(.callAnonymous(closure: .call(name: "lessThan", arguments: [.integerValue(5)]), arguments: [.integerValue(4)]))
+        "lessThan(5)(4)".becomes(.callAnonymous(closure: .call(name: "lessThan", arguments: [.integerValue(5)]), arguments: [.integerValue(4)]))
         "(|x| x+1)(4)".becomes(
             .callAnonymous(
                 closure: .subfunction(Subfunction(name: nil,
@@ -408,6 +411,14 @@ End
                 )),
                 arguments: [.integerValue(4)]))
 //        "4.(|x| x+1)".becomes(
+//            .callAnonymous(
+//                closure: .subfunction(Subfunction(name: nil,
+//                                                  patterns: [.variable("x")],
+//                                                  when: .booleanValue(true),
+//                                                  body: .call(name: "+", arguments: [.variable("x"), .integerValue(1)])
+//                )),
+//                arguments: [.integerValue(4)]))
+//        "4.(|x| x+1)()".becomes(
 //            .callAnonymous(
 //                closure: .subfunction(Subfunction(name: nil,
 //                                                  patterns: [.variable("x")],

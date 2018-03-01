@@ -100,7 +100,7 @@ public func makeParser() -> ParserProtocol {
     let subject = wrappedExpression | freeFunctionCall | literalValue | variableName
     let subjectFunctionCall = subject.tag("subject") >>> (dot >>> functionName >>> (lParen >>> args.maybe >>> rParen).maybe).some.tag("calls")
     anonymousFunctionCall.parser = subject.tag("anonSubject") >>> (lParen >>> args.maybe >>> rParen)
-    let functionCall = subjectFunctionCall | freeFunctionCall | anonymousFunctionCall
+    let functionCall = anonymousFunctionCall | subjectFunctionCall | freeFunctionCall
 
     // Function declarations.
 
@@ -120,7 +120,7 @@ public func makeParser() -> ParserProtocol {
     // Lambdas.
 
     let lambdaParameters = pipe >>> parameters.recur(0, 1).tag("params") >>> pipe
-    let lambdaBody = expression.tag("lambdaBody") >>> skipSpaceAndNewlines
+    let lambdaBody = expression.tag("lambdaBody")
     let lambda = lambdaParameters >>> lambdaBody
 
     // Expressions.
@@ -159,7 +159,7 @@ public func makeParser() -> ParserProtocol {
     let delimiterOrNewline = skip >>> ((delimiter.maybe >>> skip >>> newline) | delimiter)
     let scopeItems = (scopeItem >>> (delimiterOrNewline >>> scopeItem).recur).tag("scopeItems") >>> delimiter.maybe
     scope.parser = start >>> spaceOrNewline >>> skipSpaceAndNewlines >>> scopeItems >>> spaceOrNewline >>> skipSpaceAndNewlines >>> end
-    statement.parser = skipSpaceAndNewlines >>> (functionDecl | constant | expression)
+    statement.parser = skipSpaceAndNewlines >>> (functionDecl | lambda | constant | expression)
 
     // Root.
 
