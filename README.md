@@ -266,7 +266,7 @@ Because strings are just lists of characters, you can also concatenate them and 
 # No
 ```
 
-If you have a number represented as a string, you can use the builtin `number` function to convert it to a number:
+If you have a number represented as a string, you can use the built-in `number` function to convert it to a number:
 
 ```
 x = "99"
