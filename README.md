@@ -325,7 +325,7 @@ x.inc() = x+1
 
 Note that in the subject syntax, the parentheses are optional if there's only one parameter.
 
-These two function calls are also equivalent:
+These function calls are also equivalent:
 
 ```
 inc(5)
