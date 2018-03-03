@@ -266,7 +266,7 @@ Because strings are just lists of characters, you can also concatenate them and 
 # No
 ```
 
-If you have a number represented as a string, you can use the builtin `number` function to convert it to a number:
+If you have a number represented as a string, you can use the built-in `number` function to convert it to a number:
 
 ```
 x = "99"
@@ -325,7 +325,7 @@ x.inc() = x+1
 
 Note that in the subject syntax, the parentheses are optional if there's only one parameter.
 
-These two function calls are also equivalent:
+These function calls are also equivalent:
 
 ```
 inc(5)
@@ -490,9 +490,9 @@ x.apply(f) = f(x)
 # 10
 ```
 
-Note the lambda syntax uses pipes `|` to specify parameters. Lambdas can have as many parameters as you like, although they must have at least one.
+Note the lambda syntax uses pipes `|` to specify parameters.
 
-Lambdas don't just have to be passed as arguments. They can also live on their own in a variable:
+They don't just have to be passed as arguments. They can also live on their own in a variable:
 
 ```
 double = |x| x*2
@@ -522,6 +522,24 @@ double(5)
 
 5.double
 # 10
+```
+
+Lambdas can have as many parameters as you like, separated by commas:
+
+```
+lessThan = |x, y| x < y
+
+lessThan(4, 5)
+# Yes
+```
+
+Although unusual, you can even make lambdas with no arguments using the double pipe syntax:
+
+```
+x = || "hello"
+
+x()
+# "hello"
 ```
 
 ## `Do`/`End` scopes
