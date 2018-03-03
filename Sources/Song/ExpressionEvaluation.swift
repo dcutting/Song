@@ -93,10 +93,16 @@ extension Expression {
             return result
         case "-":
             var numbers = try toNumbers(arguments: arguments, context: context)
-            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
-            let left = numbers.removeFirst()
-            let right = numbers.removeFirst()
-            return .numberValue(left.minus(right))
+            if numbers.count == 1 {
+                let right = numbers.removeFirst()
+                return .numberValue(right.negate())
+            } else if numbers.count == 2 {
+                let left = numbers.removeFirst()
+                let right = numbers.removeFirst()
+                return .numberValue(left.minus(right))
+            } else {
+                throw EvaluationError.signatureMismatch(arguments)
+            }
         case "<":
             var numbers = try toNumbers(arguments: arguments, context: context)
             guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }

@@ -119,4 +119,14 @@ class NumberTests: XCTestCase {
     func test_truncate_int() {
         XCTAssertEqual(Number.int(5), Number.int(5).truncate())
     }
+
+    func test_negate_int() {
+        XCTAssertEqual(Number.int(-5), Number.int(5).negate())
+        XCTAssertEqual(Number.int(5), Number.int(-5).negate())
+    }
+
+    func test_negate_float() {
+        XCTAssertEqual(Number.float(-5.4), Number.float(5.4).negate())
+        XCTAssertEqual(Number.float(5.4), Number.float(-5.4).negate())
+    }
 }

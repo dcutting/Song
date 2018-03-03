@@ -74,8 +74,8 @@ public func makeParser() -> ParserProtocol {
     let trueValue = yes.tag("true")
     let falseValue = no.tag("false")
     let booleanValue = trueValue | falseValue
-    let integerValue = ((minus | plus).maybe >>> digit.some).tag("integer")
-    let floatValue = ((minus | plus).maybe >>> digit.some >>> dot >>> digit.some).tag("float")
+    let integerValue = digit.some.tag("integer")
+    let floatValue = (digit.some >>> dot >>> digit.some).tag("float")
     let numericValue = floatValue | integerValue
     let characterValue = singleQuote >>> literalCharacter.tag("character") >>> singleQuote
     let stringValue = quote >>> literalString.some.maybe.tag("string") >>> quote
@@ -145,8 +145,10 @@ public func makeParser() -> ParserProtocol {
 
     // Terms.
 
-    let negatedTerm = logicalNot.tag("op") >>> spaceOrNewline >>> term.tag("right")
-    term.parser = negatedTerm | scope | functionCall | lambda | subject
+    let negateOp = (logicalNot.tag("op") >>> spaceOrNewline) | minus.tag("op")
+    let negateTerm = negateOp >>> term.tag("right")
+    let plusTerm = plus >>> term
+    term.parser = negateTerm | plusTerm | scope | functionCall | lambda | subject
 
     // Constants.
 

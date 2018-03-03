@@ -36,7 +36,7 @@ class BuiltinFunctionTests: XCTestCase {
         XCTAssertThrowsError(try Expression.call(name: "Div", arguments: [.integerValue(1), .integerValue(2), .integerValue(3)]).evaluate())
         XCTAssertThrowsError(try Expression.call(name: "+", arguments: [.integerValue(1)]).evaluate())
         XCTAssertThrowsError(try Expression.call(name: "+", arguments: [.integerValue(1), .integerValue(2), .integerValue(3)]).evaluate())
-        XCTAssertThrowsError(try Expression.call(name: "-", arguments: [.integerValue(1)]).evaluate())
+        XCTAssertThrowsError(try Expression.call(name: "-", arguments: []).evaluate())
         XCTAssertThrowsError(try Expression.call(name: "-", arguments: [.integerValue(1), .integerValue(2), .integerValue(3)]).evaluate())
         XCTAssertThrowsError(try Expression.call(name: "<", arguments: [.integerValue(1)]).evaluate())
         XCTAssertThrowsError(try Expression.call(name: "<", arguments: [.integerValue(1), .integerValue(2), .integerValue(3)]).evaluate())
@@ -93,6 +93,11 @@ class BuiltinFunctionTests: XCTestCase {
         assertNoThrow {
             let op = try Expression.call(name: "-", arguments: [first, second]).evaluate(context: context)
             XCTAssertEqual(Expression.integerValue(4), op)
+        }
+
+        assertNoThrow {
+            let op = try Expression.call(name: "-", arguments: [first]).evaluate(context: context)
+            XCTAssertEqual(Expression.integerValue(-9), op)
         }
 
         assertNoThrow {

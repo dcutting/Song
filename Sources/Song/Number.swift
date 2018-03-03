@@ -154,6 +154,15 @@ extension Number {
         }
     }
 
+    func negate() -> Number {
+        switch self {
+        case .int(let value):
+            return .int(-value)
+        case .float(let value):
+            return .float(-value)
+        }
+    }
+
     func truncate() -> Number {
         switch self {
         case .int:

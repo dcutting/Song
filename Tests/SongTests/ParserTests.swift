@@ -12,9 +12,9 @@ class ParserTests: XCTestCase {
     func test_integers() {
         "99".becomes(.integerValue(99))
         "+99".becomes(.integerValue(99))
-        "-21".becomes(.integerValue(-21))
+        "-21".becomes(.call(name: "-", arguments: [.integerValue(21)]))
         "0".becomes(.integerValue(0))
-        "-0".becomes(.integerValue(0))
+        "-0".becomes(.call(name: "-", arguments: [.integerValue(0)]))
         " 99 ".becomes(.integerValue(99))
 
         "9d".fails()
@@ -23,7 +23,7 @@ class ParserTests: XCTestCase {
     func test_floats() {
         "0.1".becomes(.floatValue(0.1))
         "+0.1".becomes(.floatValue(0.1))
-        "-9.1".becomes(.floatValue(-9.1))
+        "-9.1".becomes(.call(name: "-", arguments: [.floatValue(9.1)]))
         "0.001".becomes(.floatValue(0.001))
         " 0.001 ".becomes(.floatValue(0.001))
 
@@ -152,7 +152,7 @@ class ParserTests: XCTestCase {
             ]))
         "(5-+2)*-3".becomes(.call(name: "*", arguments: [
             .call(name: "-", arguments: [.integerValue(5), .integerValue(2)]),
-            .integerValue(-3)
+            .call(name: "-", arguments: [.integerValue(3)])
             ]))
     }
 
@@ -262,6 +262,17 @@ foo() = Do 5 End
         "|x| x".becomes(.subfunction(Subfunction(name: nil, patterns: [.variable("x")], when: .booleanValue(true), body: .variable("x"))))
         "|_| 5".becomes(.subfunction(Subfunction(name: nil, patterns: [.anyVariable], when: .booleanValue(true), body: .integerValue(5))))
         "|| 5".becomes(.subfunction(Subfunction(name: nil, patterns: [], when: .booleanValue(true), body: .integerValue(5))))
+    }
+
+    func test_negations() {
+        "+5".becomes(.integerValue(5))
+        "-5".becomes(.call(name: "-", arguments: [.integerValue(5)]))
+        "-x".becomes(.call(name: "-", arguments: [.variable("x")]))
+        "-foo(1)".becomes(.call(name: "-", arguments: [.call(name: "foo", arguments: [.integerValue(1)])]))
+        "--x".becomes(.call(name: "-", arguments: [.call(name: "-", arguments: [.variable("x")])]))
+        "Not x".becomes(.call(name: "Not", arguments: [.variable("x")]))
+        "Not Not x".becomes(.call(name: "Not", arguments: [.call(name: "Not", arguments: [.variable("x")])]))
+        "9--5".becomes(.call(name: "-", arguments: [.integerValue(9), .call(name: "-", arguments: [.integerValue(5)])]))
     }
 
     func test_calls() {
