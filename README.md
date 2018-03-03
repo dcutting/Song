@@ -175,6 +175,16 @@ And if you divide numbers, you'll also get a float:
 
 If you want to do integer division, use `5 Div 2` and `5 Mod 2` (but using those with floats will cause an error).
 
+Converting floats to integers can be done with the built-in `truncate` function:
+
+```
+5.4.truncate
+# 5
+
+-3.9.truncate
+# -3
+```
+
 You can compare numbers:
 
 ```
