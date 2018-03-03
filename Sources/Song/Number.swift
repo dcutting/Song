@@ -153,6 +153,15 @@ extension Number {
             throw EvaluationError.numericMismatch
         }
     }
+
+    func truncate() -> Number {
+        switch self {
+        case .int:
+            return self
+        case .float(let value):
+            return .int(IntType(value))
+        }
+    }
 }
 
 extension Number: Equatable, CustomStringConvertible {

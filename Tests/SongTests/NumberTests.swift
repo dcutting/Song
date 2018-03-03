@@ -108,4 +108,15 @@ class NumberTests: XCTestCase {
         XCTAssertNotEqual(Number.int(5), Number.float(5.0))
         XCTAssertNotEqual(Number.float(5.0), Number.int(5))
     }
+
+    func test_truncate_float() {
+        XCTAssertEqual(Number.int(5), Number.float(5.1).truncate())
+        XCTAssertEqual(Number.int(5), Number.float(5.9).truncate())
+        XCTAssertEqual(Number.int(-5), Number.float(-5.1).truncate())
+        XCTAssertEqual(Number.int(-5), Number.float(-5.9).truncate())
+    }
+
+    func test_truncate_int() {
+        XCTAssertEqual(Number.int(5), Number.int(5).truncate())
+    }
 }

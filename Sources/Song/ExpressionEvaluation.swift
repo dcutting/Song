@@ -155,6 +155,11 @@ extension Expression {
             } catch EvaluationError.numericMismatch {
                 throw EvaluationError.notANumber(left)
             }
+        case "truncate":
+            var numbers = try toNumbers(arguments: arguments, context: context)
+            guard numbers.count == 1 else { throw EvaluationError.signatureMismatch(arguments) }
+            let left = numbers.removeFirst()
+            return .numberValue(left.truncate())
         case "out":
             return try evaluateOut(arguments: arguments, context: context)
         default:
