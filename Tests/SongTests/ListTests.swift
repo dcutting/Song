@@ -35,7 +35,7 @@ class ListTests: XCTestCase {
             .variable("x")
             ])
         assertNoThrow {
-            let actual = try list.evaluate(context: ["x": [.booleanValue(false)]])
+            let actual = try list.evaluate(context: ["x": .booleanValue(false)])
             let expected = Expression.list([
                 .integerValue(5),
                 .booleanValue(false)

@@ -18,10 +18,10 @@ class OutTests: XCTestCase {
     func testOut_closureValue_doesNotIncludeContext() {
         let subfunction = Subfunction(name: "foo", patterns: [], when: .booleanValue(true), body: .integerValue(99))
         let function = Expression.subfunction(subfunction)
-        let context: Context = ["a": [.integerValue(5)]]
-        let string = Expression.closure(closure: function, context: context)
+        let context: Context = ["a": .integerValue(5)]
+        let string = Expression.closure("foo", [function], context)
         let actual = string.out()
-        XCTAssertEqual("foo() When Yes = 99", actual)
+        XCTAssertEqual("[foo() When Yes = 99]", actual)
     }
 
     func testOut_integerValue() {

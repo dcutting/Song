@@ -35,7 +35,7 @@ class ScopeTests: XCTestCase {
 
     func test_capturesCallingContext() {
         assertNoThrow {
-            let context: Context = ["x": [.integerValue(9)]]
+            let context: Context = ["x": .integerValue(9)]
             let scope = Expression.scope([.variable("x")])
             XCTAssertEqual(Expression.integerValue(9), try scope.evaluate(context: context))
         }
@@ -43,7 +43,7 @@ class ScopeTests: XCTestCase {
 
     func test_localConstsOverrideCallingContext() {
         assertNoThrow {
-            let context: Context = ["x": [.integerValue(9)]]
+            let context: Context = ["x": .integerValue(9)]
             let scope = Expression.scope([
                 .constant(variable: .variable("x"), value: .integerValue(5)),
                 .variable("x")
@@ -54,7 +54,7 @@ class ScopeTests: XCTestCase {
 
     func test_multipleLocalConstsOverrideEachOther() {
         assertNoThrow {
-            let context: Context = ["x": [.integerValue(9)]]
+            let context: Context = ["x": .integerValue(9)]
             let scope = Expression.scope([
                 .constant(variable: .variable("x"), value: .integerValue(5)),
                 .constant(variable: .variable("x"), value: .integerValue(2)),
@@ -77,12 +77,11 @@ class ScopeTests: XCTestCase {
 
     func test_matchesAgainstLocalFunctionsLexicallyThenOuterFunctionsLexically() {
 
-        let context: Context = [
-            "foo": [
-                makeFoo(.integerValue(9), .stringValue("N I N E")),
-                makeFoo(.variable("x"), .variable("x"))
-            ]
-        ]
+        let fooA = makeFoo(.integerValue(9), .stringValue("N I N E"))
+        let fooB = makeFoo(.variable("x"), .variable("x"))
+
+        let contextA: Context = ["foo": try! fooA.evaluate()]
+        let context: Context = ["foo": try! fooB.evaluate(context: contextA)]
 
         let inScope = [
             makeFoo(.integerValue(9), .stringValue("nine")),

@@ -4,30 +4,30 @@ import Song
 class PatternTests: XCTestCase {
 
     lazy var context: Context = [
-        "anyVariableFunc": [Expression.subfunction(Subfunction(name: "anyVariableFunc", patterns: [.anyVariable], when: .booleanValue(true), body: .stringValue("ok")))],
-        "booleanLiteralFunc": [Expression.subfunction(Subfunction(name: "booleanLiteralFunc", patterns: [.booleanValue(false)], when: .booleanValue(true), body: .stringValue("ok")))],
-        "numberLiteralFunc": [Expression.subfunction(Subfunction(name: "numberLiteralFunc", patterns: [.integerValue(2)], when: .booleanValue(true), body: .stringValue("ok")))],
-        "listLiteralFunc": [Expression.subfunction(Subfunction(name: "listLiteralFunc", patterns: [.list([.integerValue(1), .integerValue(2)])], when: .booleanValue(true), body: .stringValue("ok")))],
-        "listConstructorLiteralFunc": [Expression.subfunction(Subfunction(name: "listConstructorLiteralFunc", patterns: [.listConstructor([.integerValue(1)], .list([.integerValue(2)]))], when: .booleanValue(true), body: .stringValue("ok")))],
-        "listConstructorVariableFunc": [Expression.subfunction(Subfunction(name: "listConstructorVariableFunc", patterns: [.listConstructor([.integerValue(1), .integerValue(2)], .list([.variable("xs")]))], when: .booleanValue(true), body: .stringValue("ok")))],
-        "nestedListConstructorLiteralFunc": [Expression.subfunction(Subfunction(name: "nestedListConstructorLiteralFunc", patterns: [.listConstructor([.list([.integerValue(1)])], .list([.integerValue(2)]))], when: .booleanValue(true), body: .stringValue("ok")))],
-        "zip": [
-            Expression.subfunction(Subfunction(name: "zip", patterns: [.list([.list([]), .list([])])], when: .booleanValue(true), body: .list([]))),
-            Expression.subfunction(Subfunction(name: "zip",
-                                               patterns: [.list([
-                                                .listConstructor([.variable("x")], .variable("xs")),
-                                                .listConstructor([.variable("y")], .variable("ys"))
-                                                ])],
-                                               when: .booleanValue(true),
-                                               body:
-                .call(name: "+", arguments: [
-                    .list([.list([.variable("x"), .variable("y")])]),
-                    .call(name: "zip", arguments: [.list([.variable("xs"), .variable("ys")])])
-                    ])
-            ))],
-        "variableFunc": [Expression.subfunction(Subfunction(name: "variableFunc", patterns: [.variable("x")], when: .booleanValue(true), body: .variable("x")))],
+        "anyVariableFunc": Expression.subfunction(Subfunction(name: "anyVariableFunc", patterns: [.anyVariable], when: .booleanValue(true), body: .stringValue("ok"))),
+        "booleanLiteralFunc": Expression.subfunction(Subfunction(name: "booleanLiteralFunc", patterns: [.booleanValue(false)], when: .booleanValue(true), body: .stringValue("ok"))),
+        "numberLiteralFunc": Expression.subfunction(Subfunction(name: "numberLiteralFunc", patterns: [.integerValue(2)], when: .booleanValue(true), body: .stringValue("ok"))),
+        "listLiteralFunc": Expression.subfunction(Subfunction(name: "listLiteralFunc", patterns: [.list([.integerValue(1), .integerValue(2)])], when: .booleanValue(true), body: .stringValue("ok"))),
+        "listConstructorLiteralFunc": Expression.subfunction(Subfunction(name: "listConstructorLiteralFunc", patterns: [.listConstructor([.integerValue(1)], .list([.integerValue(2)]))], when: .booleanValue(true), body: .stringValue("ok"))),
+        "listConstructorVariableFunc": Expression.subfunction(Subfunction(name: "listConstructorVariableFunc", patterns: [.listConstructor([.integerValue(1), .integerValue(2)], .list([.variable("xs")]))], when: .booleanValue(true), body: .stringValue("ok"))),
+        "nestedListConstructorLiteralFunc": Expression.subfunction(Subfunction(name: "nestedListConstructorLiteralFunc", patterns: [.listConstructor([.list([.integerValue(1)])], .list([.integerValue(2)]))], when: .booleanValue(true), body: .stringValue("ok"))),
+//TODO
+//        "zip": [
+//            Expression.subfunction(Subfunction(name: "zip", patterns: [.list([.list([]), .list([])])], when: .booleanValue(true), body: .list([]))),
+//            Expression.subfunction(Subfunction(name: "zip",
+//                                               patterns: [.list([
+//                                                .listConstructor([.variable("x")], .variable("xs")),
+//                                                .listConstructor([.variable("y")], .variable("ys"))
+//                                                ])],
+//                                               when: .booleanValue(true),
+//                                               body:
+//                .call(name: "+", arguments: [
+//                    .list([.list([.variable("x"), .variable("y")])]),
+//                    .call(name: "zip", arguments: [.list([.variable("xs"), .variable("ys")])])
+//                    ])
+//            ))],
+//        "variableFunc": [Expression.subfunction(Subfunction(name: "variableFunc", patterns: [.variable("x")], when: .booleanValue(true), body: .variable("x")))],
     ]
-    //                                                              [[x, y]] + [xs, ys].zip
 
     func test_literal_wrongType_fails() {
         let call = Expression.call(name: "numberLiteralFunc", arguments: [.stringValue("two")])

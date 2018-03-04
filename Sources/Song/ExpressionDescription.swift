@@ -45,7 +45,7 @@ extension Expression: CustomStringConvertible {
         case let .constant(name, value):
             return "\(name): \(value)"
 
-        case let .closure(function, context):
+        case let .closure(_, function, context):
             let contextList = contextDescription(context: context)
             return "[(\(contextList)) \(function)]"
 

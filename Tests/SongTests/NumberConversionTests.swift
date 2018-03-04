@@ -13,7 +13,7 @@ class NumberConversionTests: XCTestCase {
 
     func test_number_expressionEvaluatingToInt_returnsInt() {
         assertNoThrow {
-            let context: Context = ["x": [.stringValue("-5")]]
+            let context: Context = ["x": .stringValue("-5")]
             let variable = Expression.variable("x")
             let call = Expression.call(name: "number", arguments: [variable])
             XCTAssertEqual(.integerValue(-5), try call.evaluate(context: context))

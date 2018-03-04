@@ -101,7 +101,7 @@ func log(_ str: Any? = nil) {
 }
 
 let songArgs = scriptArgs.map { Expression.stringValue($0) }
-var context: Context = ["args": [.list(songArgs)]]
+var context: Context = ["args": .list(songArgs)]
 
 func dumpContext() {
     print(context as AnyObject)
@@ -154,16 +154,14 @@ while (true) {
             let ast = try transformer.transform(result)
             do {
                 let expression = try ast.evaluate(context: context)
-                if case .closure(let function, _) = expression {
-                    if case .subfunction(let subfunction) = function {
-                        if let name = subfunction.name {
-                            context = extendContext(context: context, name: name, value: expression, replacing: false)
-                        }
+                if case .closure(let name, _, _) = expression {
+                    if let name = name {
+                        context = extendContext(context: context, name: name, value: expression)
                     }
                 }
                 if case .constant(let variable, let value) = expression {
                     if case .variable(let name) = variable {
-                        context = extendContext(context: context, name: name, value: value, replacing: true)
+                        context = extendContext(context: context, name: name, value: value)
                     }
                 }
                 switch expression {

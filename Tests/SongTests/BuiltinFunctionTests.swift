@@ -63,7 +63,7 @@ class BuiltinFunctionTests: XCTestCase {
     func test_evaluatesArguments() {
         let first = Expression.variable("x")
         let second = Expression.variable("y")
-        let context: Context = ["x": [.integerValue(9)], "y": [.integerValue(5)]]
+        let context: Context = ["x": .integerValue(9), "y": .integerValue(5)]
 
         assertNoThrow {
             let op = try Expression.call(name: "*", arguments: [first, second]).evaluate(context: context)
@@ -132,19 +132,19 @@ class BuiltinFunctionTests: XCTestCase {
 
         assertNoThrow {
             let op = Expression.call(name: "And", arguments: [first, second])
-            let result = try op.evaluate(context: ["x": [.booleanValue(true)], "y": [.booleanValue(false)]])
+            let result = try op.evaluate(context: ["x": .booleanValue(true), "y": .booleanValue(false)])
             XCTAssertEqual(Expression.booleanValue(false), result)
         }
 
         assertNoThrow {
             let op = Expression.call(name: "Or", arguments: [first, second])
-            let result = try op.evaluate(context: ["x": [.booleanValue(false)], "y": [.booleanValue(true)]])
+            let result = try op.evaluate(context: ["x": .booleanValue(false), "y": .booleanValue(true)])
             XCTAssertEqual(Expression.booleanValue(true), result)
         }
 
         assertNoThrow {
             let op = Expression.call(name: "Not", arguments: [first])
-            let result = try op.evaluate(context: ["x": [.booleanValue(false)]])
+            let result = try op.evaluate(context: ["x": .booleanValue(false)])
             XCTAssertEqual(Expression.booleanValue(true), result)
         }
     }

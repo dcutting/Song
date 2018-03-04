@@ -39,7 +39,7 @@ class ListConstructorTests: XCTestCase {
     func test_evaluate_evaluatesHeadsAndTail() {
         let cons = Expression.listConstructor([.variable("x")], .list([.variable("y")]))
         assertNoThrow {
-            let actual = try cons.evaluate(context: ["x": [.stringValue("hi")], "y": [.integerValue(1)]])
+            let actual = try cons.evaluate(context: ["x": .stringValue("hi"), "y": .integerValue(1)])
             XCTAssertEqual(Expression.list([.stringValue("hi"), .integerValue(1)]), actual)
         }
     }

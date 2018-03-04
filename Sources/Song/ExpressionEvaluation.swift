@@ -284,31 +284,52 @@ extension Expression {
     }
 
     private func evaluate(expression: Expression, subfunction: Subfunction, context: Context) throws -> Expression {
+
+        try validatePatterns(subfunction)
+
         var finalContext = context
-        if let name = subfunction.name {
+        let name = subfunction.name
+        var existingClauses = [Expression]()
+        var existingContext = Context()
+
+        if let name = name, let existingClosure = context[name] {
+            guard case let .closure(_, clauses, closureContext) = existingClosure else {
+                throw EvaluationError.notAClosure(expression)
+            }
+            existingClauses = clauses
+            existingContext = closureContext
             finalContext.removeValue(forKey: name)
         }
+        existingClauses.append(expression)
+        finalContext.merge(existingContext) { l, r in l }
+        return .closure(name, existingClauses, finalContext)
+    }
+
+    private func validatePatterns(_ subfunction: Subfunction) throws {
         try subfunction.patterns.forEach { pattern in
             if case .numberValue(Number.float) = pattern {
                 throw EvaluationError.patternsCannotBeFloats(pattern)
             }
         }
-        return .closure(closure: expression, context: finalContext)
     }
 
     func evaluateVariable(variable: String, _ context: Context) throws -> Expression {
         guard
-            let values = context[variable],
-            let value = values.first
+            let value = context[variable]
             else { throw EvaluationError.symbolNotFound(variable) }
         return value
     }
-    
+
     func evaluateCallAnonymous(closure: Expression, arguments: [Expression], callingContext: Context) throws -> Expression {
         let evaluatedClosure = try closure.evaluate(context: callingContext)
         switch evaluatedClosure {
-        case let .closure(function, closureContext):
-            return try evaluateCallFunction(function: function, closureContext: closureContext, arguments: arguments, callingContext: callingContext, closure: evaluatedClosure)
+        case let .closure(_, functions, closureContext):
+            for function in functions {
+                do {
+                    return try evaluateCallFunction(function: function, closureContext: closureContext, arguments: arguments, callingContext: callingContext, closure: evaluatedClosure)
+                } catch EvaluationError.signatureMismatch {}
+            }
+            throw EvaluationError.signatureMismatch(arguments)
         default:
             throw EvaluationError.notAFunction(closure)
         }
@@ -347,7 +368,8 @@ extension Expression {
         case .anyVariable:
             () // Do nothing
         case .variable(let name):
-            extendedContext = extendContext(context: extendedContext, name: name, value: evaluatedValue, replacing: true)
+            // NOTE: this shadows existing names.
+            extendedContext = extendContext(context: extendedContext, name: name, value: evaluatedValue)
         case .listConstructor(var paramHeads, let paramTail):
             guard case var .list(argItems) = evaluatedValue else { throw EvaluationError.signatureMismatch([argument]) }
             guard argItems.count >= paramHeads.count else { throw EvaluationError.signatureMismatch([argument]) }
@@ -381,40 +403,34 @@ extension Expression {
 
     private func evaluateUserFunction(name: String, arguments: [Expression], context: Context) throws -> Expression {
         guard
-            let exprs = context[name]
+            let expr = context[name]
             else { throw EvaluationError.symbolNotFound(name) }
-        for expr in exprs {
-            do {
-                return try evaluateCallAnonymous(closure: expr, arguments: arguments, callingContext: context)
-            } catch EvaluationError.signatureMismatch {}
-        }
-        throw EvaluationError.signatureMismatch(arguments)
+        return try evaluateCallAnonymous(closure: expr, arguments: arguments, callingContext: context)
     }
 
+    // TODO: this code needs to be merged with the REPL code in main somehow.
     func evaluateScope(statements: [Expression], context: Context) throws -> Expression {
         guard statements.count > 0 else { throw EvaluationError.emptyScope }
         var allStatements = statements
         let last = allStatements.removeLast()
         var scopeContext = context
-        var shadowedFunctions = Context()
+//        var shadowedFunctions = Context()
         var newFunctions = Context()
         for statement in allStatements {
             let result = try statement.evaluate(context: scopeContext)
-            if case .closure(let function, _) = result {
-                if case .subfunction(let subfunction) = function {
-                    if let name = subfunction.name {
-                        if let shadowed = context[name] {
-                            shadowedFunctions[name] = shadowed
-                        }
-                        newFunctions = extendContext(context: newFunctions, name: name, value: result, replacing: false)
-                        let combined = newFunctions.merging(shadowedFunctions) { l, r in l + r }
-                        scopeContext[name] = combined[name]
-                    }
+            if case .closure(let name, _, _) = result {
+                if let name = name {
+//                    if let shadowed = context[name] {
+//                        shadowedFunctions[name] = shadowed
+//                    }
+                    newFunctions = extendContext(context: newFunctions, name: name, value: result)
+//                    let combined = newFunctions.merging(shadowedFunctions) { l, r in l + r }
+                    scopeContext[name] = newFunctions[name]// combined[name]
                 }
             }
             if case .constant(let variable, let value) = result {
                 if case .variable(let name) = variable {
-                    scopeContext = extendContext(context: scopeContext, name: name, value: value, replacing: true)
+                    scopeContext = extendContext(context: scopeContext, name: name, value: value)
                 }
             }
         }

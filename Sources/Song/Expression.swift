@@ -24,7 +24,7 @@ public indirect enum Expression {
     case character(Character)
     case list([Expression])
     case listConstructor([Expression], Expression)
-    case closure(closure: Expression, context: Context)
+    case closure(String?, [Expression], Context)
 
     case variable(String)
     case anyVariable

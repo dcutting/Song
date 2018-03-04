@@ -31,8 +31,8 @@ public func ==(lhs: Expression, rhs: Expression) -> Bool {
     case let (.constant(lhsName, lhsValue), .constant(rhsName, rhsValue)):
         return lhsName == rhsName && lhsValue == rhsValue
 
-    case let (.closure(lhsFunction, lhsContext), .closure(rhsFunction, rhsContext)):
-        return lhsFunction == rhsFunction && isEqual(lhsContext: lhsContext, rhsContext: rhsContext)
+    case let (.closure(lhsName, lhsFunctions, lhsContext), .closure(rhsName, rhsFunctions, rhsContext)):
+        return lhsName == rhsName && lhsFunctions == rhsFunctions && isEqual(lhsContext: lhsContext, rhsContext: rhsContext)
 
     case let (.call(lhsName, lhsArguments), .call(rhsName, rhsArguments)):
         return lhsName == rhsName && lhsArguments == rhsArguments

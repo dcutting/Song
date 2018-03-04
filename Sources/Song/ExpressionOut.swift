@@ -11,7 +11,7 @@ public extension Expression {
             } catch {
                 return "\(self)"
             }
-        case let .closure(value, _):
+        case let .closure(_, value, _):
             return "\(value)"
         default:
             return "\(self)"

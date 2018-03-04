@@ -9,7 +9,7 @@ class CallTests: XCTestCase {
             let closure = try Expression.subfunction(subfunction).evaluate()
             let call = Expression.callAnonymous(closure: closure, arguments: [Expression.integerValue(99), Expression.integerValue(100)])
             let result = "\(call)"
-            XCTAssertEqual("[() echo(x, y) When Yes = x](99, 100)", result)
+            XCTAssertEqual("[() [echo(x, y) When Yes = x]](99, 100)", result)
         }
     }
 
@@ -62,7 +62,7 @@ class CallTests: XCTestCase {
     }
 
     func testEvaluateCallingInvalidClosure() {
-        let closure = Expression.closure(closure: Expression.integerValue(5), context: Context())
+        let closure = Expression.closure(nil, [.integerValue(5)], Context())
         let call = Expression.callAnonymous(closure: closure, arguments: [])
         XCTAssertThrowsError(try call.evaluate())
     }
@@ -73,7 +73,7 @@ class CallTests: XCTestCase {
             let function = Expression.subfunction(subfunction)
             let closure = try function.evaluate()
             let call = Expression.callAnonymous(closure: Expression.variable("f"), arguments: [])
-            let result = try call.evaluate(context: ["f": [closure]])
+            let result = try call.evaluate(context: ["f": closure])
             XCTAssertEqual(Expression.integerValue(5), result)
         }
     }
@@ -93,7 +93,7 @@ class CallTests: XCTestCase {
         let subfunction = Subfunction(name: "getX", patterns: [], when: .booleanValue(true), body: .variable("x"))
         let function = Expression.subfunction(subfunction)
         assertNoThrow {
-            let closure = try function.evaluate(context: ["x": [.integerValue(7)]])
+            let closure = try function.evaluate(context: ["x": .integerValue(7)])
             let call = Expression.callAnonymous(closure: closure, arguments: [])
             let result = try call.evaluate()
             XCTAssertEqual(Expression.integerValue(7), result)
@@ -106,7 +106,7 @@ class CallTests: XCTestCase {
         assertNoThrow {
             let closure = try function.evaluate()
             let call = Expression.callAnonymous(closure: closure, arguments: [])
-            XCTAssertEqual(Expression.integerValue(7), try call.evaluate(context: ["x": [.integerValue(7)]]))
+            XCTAssertEqual(Expression.integerValue(7), try call.evaluate(context: ["x": .integerValue(7)]))
         }
     }
     
@@ -127,7 +127,7 @@ class CallTests: XCTestCase {
         assertNoThrow {
             let closure = try function.evaluate()
             let call = Expression.callAnonymous(closure: closure, arguments: [Expression.variable("y")])
-            let result = try call.evaluate(context: ["y": [.integerValue(15)]])
+            let result = try call.evaluate(context: ["y": .integerValue(15)])
             XCTAssertEqual(Expression.integerValue(15), result)
         }
     }
@@ -157,7 +157,7 @@ class CallTests: XCTestCase {
         let function = Expression.subfunction(subfunction)
         assertNoThrow {
             let closure = try function.evaluate()
-            let context: Context = ["echo": [closure]]
+            let context: Context = ["echo": closure]
             let call = Expression.call(name: "echo", arguments: [])
             XCTAssertThrowsError(try call.evaluate(context: context))
         }
@@ -168,7 +168,7 @@ class CallTests: XCTestCase {
         let function = Expression.subfunction(subfunction)
         assertNoThrow {
             let closure = try function.evaluate()
-            let context: Context = ["echo": [closure]]
+            let context: Context = ["echo": closure]
             let call = Expression.call(name: "echo", arguments: [])
             XCTAssertThrowsError(try call.evaluate(context: context))
         }
@@ -179,7 +179,7 @@ class CallTests: XCTestCase {
         let function = Expression.subfunction(subfunction)
         assertNoThrow {
             let closure = try function.evaluate()
-            let context: Context = ["echo": [closure]]
+            let context: Context = ["echo": closure]
             let call = Expression.call(name: "echo", arguments: [])
             let actual = try call.evaluate(context: context)
             XCTAssertEqual(Expression.integerValue(9), actual)
