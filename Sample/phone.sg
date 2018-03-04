@@ -1,6 +1,6 @@
 #!/usr/bin/env song
 
-[].map(f) = []
+[].map(_) = []
 [x|xs].map(f) = [f(x)|xs.map(f)]
 
 [].flatten = []
@@ -20,7 +20,7 @@
 
 [].phone = []
 [x].phone = x.letters
-[x|xs].phone = x.letters.map(|n| xs.phone.map(|p| n+p)).flatten
+[x|xs].phone = x.letters.map(|n| xs.phone.map(|p| [n, p]))
 
 combinations = "935".phone
 
