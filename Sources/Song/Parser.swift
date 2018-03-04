@@ -170,6 +170,39 @@ public func makeParser() -> ParserProtocol {
     return root
 }
 
+func makeFuncCall() -> ParserProtocol {
+
+    let dot = str(".")
+    let comma = str(",")
+    let pipe = str("|")
+    let lParen = str("(")
+    let rParen = str(")")
+
+    let int = "0123456789".match.some.tag("int")
+    let name = "abcdefghijklmnopqrstuvwxyz".match.some.tag("var")
+    let literal = int
+
+    let call = Deferred()
+    let expression = Deferred()
+    let wrappedExpression = lParen >>> expression >>> rParen
+    let callable = Deferred()
+
+    let arg = expression.tag("arg")
+    let args = (arg >>> (comma >>> arg).recur).tag("args").recur(0, 1)
+
+    let lambda = (pipe >>> args >>> pipe >>> expression.tag("body")).tag("lambda")
+    let wrappedLambda = lParen >>> lambda >>> rParen
+    let called = (callable >>> (lParen >>> args.tag("do") >>> rParen).recur).tag("called")
+    let subject = called | literal | wrappedExpression
+    call.parser = subject.tag("subject") >>> (dot >>> called).recur.tag("chain")
+
+    callable.parser = name | wrappedLambda | wrappedExpression
+
+    expression.parser = call | callable | lambda | literal | wrappedExpression
+
+    return call
+}
+
 /*
 
  wrappedExpression = ( >>> expression >>> )

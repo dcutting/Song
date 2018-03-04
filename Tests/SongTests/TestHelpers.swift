@@ -1,11 +1,30 @@
 import XCTest
-import Song
+@testable import Song
 
 func assertNoThrow(file: StaticString = #file, line: UInt = #line, _ closure: () throws -> Void) {
     do {
         try closure()
     } catch {
         XCTFail("\(error)", file: file, line: line)
+    }
+}
+
+extension String {
+
+    func ok(file: StaticString = #file, line: UInt = #line) {
+        let parser = makeFuncCall()
+        let (_, remainder) = parser.parse(self)
+        if !remainder.text.isEmpty {
+            XCTFail(remainder.text, file: file, line: line)
+        }
+    }
+
+    func bad(file: StaticString = #file, line: UInt = #line) {
+        let parser = makeFuncCall()
+        let (_, remainder) = parser.parse(self)
+        if remainder.text.isEmpty {
+            XCTFail("should not parse", file: file, line: line)
+        }
     }
 }
 
