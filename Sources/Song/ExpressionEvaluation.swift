@@ -414,18 +414,20 @@ extension Expression {
         var allStatements = statements
         let last = allStatements.removeLast()
         var scopeContext = context
-//        var shadowedFunctions = Context()
-        var newFunctions = Context()
+        var shadowedFunctions = Set<String>()
         for statement in allStatements {
+            if case .subfunction(let subfunction) = statement {
+                if let name = subfunction.name {
+                    if !shadowedFunctions.contains(name) {
+                        scopeContext.removeValue(forKey: name)
+                    }
+                    shadowedFunctions.insert(name)
+                }
+            }
             let result = try statement.evaluate(context: scopeContext)
             if case .closure(let name, _, _) = result {
                 if let name = name {
-//                    if let shadowed = context[name] {
-//                        shadowedFunctions[name] = shadowed
-//                    }
-                    newFunctions = extendContext(context: newFunctions, name: name, value: result)
-//                    let combined = newFunctions.merging(shadowedFunctions) { l, r in l + r }
-                    scopeContext[name] = newFunctions[name]// combined[name]
+                    scopeContext = extendContext(context: scopeContext, name: name, value: result)
                 }
             }
             if case .constant(let variable, let value) = result {

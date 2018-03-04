@@ -186,27 +186,6 @@ class CallTests: XCTestCase {
         }
     }
 
-    // TODO
-//    func testEvaluateClosureExtendsContextWithRecursiveReference() {
-//        let listVar = Expression.variable("list")
-//        let isUnitValue = Expression.isUnit(listVar)
-//        let zero = Expression.integerValue(0)
-//        let one = Expression.integerValue(1)
-//        let second = Expression.second(listVar)
-//        let recursiveCall = Expression.callAnonymous(closure: .variable("length"), arguments: [second])
-//        let otherwise = Expression.call(name: "+", arguments: [one, recursiveCall])
-//        let lengthBody = Expression.conditional(condition: isUnitValue, then: zero, otherwise: otherwise)
-//        let subfunction = Subfunction(name: "length", patterns: [.variable("list")], when: .booleanValue(true), body: lengthBody)
-//        let lengthFunc = Expression.subfunction(subfunction)
-//        assertNoThrow {
-//            let lengthClosure = try lengthFunc.evaluate()
-//            let list = Expression.list([.integerValue(5)])
-//            let lengthCall = Expression.callAnonymous(closure: lengthClosure, arguments: [list])
-//            let result = try lengthCall.evaluate(context: ["length": [lengthClosure]])
-//            XCTAssertEqual(Expression.integerValue(1), result)
-//        }
-//    }
-    
     func testEvaluateLambda() {
         let subfunction = Subfunction(name: nil, patterns: [.variable("x")], when: .booleanValue(true), body: .variable("x"))
         assertNoThrow {
