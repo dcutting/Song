@@ -479,6 +479,18 @@ And patterns can be nested as needed for more complex matches:
 # [[1, 'a'], [2, 'b'], [3, 'c']]
 ```
 
+If you use the same variable name several times in a pattern, the values that match them are required to be equal:
+
+```
+list.startsWith?([]) = Yes
+[x|xs].startsWith?([x|ps]) = xs.startsWith?(ps)
+_.startsWith?(_) = No
+
+"hello".startsWith?("he")
+```
+
+As usual, if the values that match these variables are floats, the pattern match will throw an error because floats are not equatable.
+
 ### When
 
 Sometimes you need a bit more discrimination than pure patterns can provide. The `When` clause applies an additional constraint on a function that a caller must match.
