@@ -117,7 +117,9 @@ while (true) {
         continue
     }
 
-    lineNoise.addHistory(thisLine)
+    if interactive {
+        lineNoise.addHistory(thisLine)
+    }
 
     if thisLine.trimmingCharacters(in: .whitespaces).hasPrefix("#") {
         continue
@@ -181,6 +183,9 @@ while (true) {
                     dump(ast)
                     log()
                 }
+                if !interactive {
+                    exit(1)
+                }
             } catch {
                 print("Fatal error: \(error)")
                 exit(1)
@@ -196,6 +201,9 @@ while (true) {
             log()
             log("\(remainder)")
             log()
+            if !interactive {
+                exit(1)
+            }
         }
     } else if !parsedLastCharacter {
         let remainder = remainder.text.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -208,6 +216,9 @@ while (true) {
             log()
             log(makeReport(result: ist))
             log()
+        }
+        if !interactive {
+            exit(1)
         }
         multilines.removeAll()
     }
