@@ -610,7 +610,9 @@ You can also write scopes on one line using commas:
 x.inc = Do y = x+1, y End
 ```
 
-You can declare functions inside scopes. If the last statement in your scope is a function or variable declaration, it will be exported out of the scope for use in subsequent code. Otherwise, any declarations within a scope are local to the scope only:
+As you can see above, you can declare things inside scopes; in fact this is the main reason to use them.
+
+But it's worth noting that if the last statement in your scope is a function or variable declaration, it will be exported out of the scope for use in subsequent code:
 
 ```
 Do
@@ -618,7 +620,11 @@ Do
 End
 foo
 # 99
+```
 
+If the declaration is not the return value of the scope, then it will be local to the scope only:
+
+```
 Do
   foo = 99
   foo + 1
@@ -639,7 +645,7 @@ End
 # 45
 ```
 
-Scopes evaluate to the value of their last statement. If that statment is a declaration of a new clause for a function that already exists, Song will combine the clauses into the same function:
+But if the scope's return value is a declaration of a new clause for a function that already exists, Song will combine the clauses into the same function:
 
 ```
 x.size When x < 10 = "small"
