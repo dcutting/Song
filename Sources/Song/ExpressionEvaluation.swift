@@ -368,7 +368,16 @@ extension Expression {
         case .anyVariable:
             () // Do nothing
         case .variable(let name):
-            // NOTE: this shadows existing names.
+            if let existingValue = extendedContext[name] {
+                if case .numberValue(let numberValue) = existingValue {
+                    if case .float = numberValue {
+                        throw EvaluationError.patternsCannotBeFloats(argument)
+                    }
+                }
+                if existingValue != evaluatedValue {
+                    throw EvaluationError.signatureMismatch([argument])
+                }
+            }
             extendedContext = extendContext(context: extendedContext, name: name, value: evaluatedValue)
         case .listConstructor(var paramHeads, let paramTail):
             guard case var .list(argItems) = evaluatedValue else { throw EvaluationError.signatureMismatch([argument]) }
@@ -387,7 +396,7 @@ extension Expression {
                 extendedContext = try matchAndExtend(context: extendedContext, parameter: p, argument: a, callingContext: callingContext)
             }
         default:
-            if parameter != evaluatedValue {
+            if parameter != evaluatedValue {    // NOTE: should this use Eq operator instead of Swift equality?
                 throw EvaluationError.signatureMismatch([argument])
             }
         }

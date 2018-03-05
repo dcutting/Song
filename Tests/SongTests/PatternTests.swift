@@ -23,6 +23,12 @@ class PatternTests: XCTestCase {
                         .call(name: "zip", arguments: [.list([.variable("xs"), .variable("ys")])])
                         ])),
         Subfunction(name: "variableFunc", patterns: [.variable("x")], when: .booleanValue(true), body: .variable("x")),
+        Subfunction(name: "repeatedVariableFunc", patterns: [.variable("x"), .variable("x")], when: .booleanValue(true), body: .variable("x")),
+        Subfunction(name: "repeatedNestedVariableFunc",
+                    patterns: [.listConstructor([.variable("x")], .anyVariable),
+                               .listConstructor([.variable("x")], .anyVariable)],
+                    when: .booleanValue(true),
+                    body: .variable("x")),
     ]
 
     var context = Context()
@@ -142,6 +148,48 @@ class PatternTests: XCTestCase {
             let call = Expression.call(name: "variableFunc", arguments: [.integerValue(2)])
             let actual = try call.evaluate(context: context)
             XCTAssertEqual(Expression.integerValue(2), actual)
+        }
+    }
+
+    func test_repeatedVariable_unequal_throws() {
+        let call = Expression.call(name: "repeatedVariableFunc", arguments: [.integerValue(2), .integerValue(3)])
+        XCTAssertThrowsError(try call.evaluate(context: context))
+    }
+
+    func test_repeatedVariable_equal_binds() {
+        assertNoThrow {
+            let call = Expression.call(name: "repeatedVariableFunc", arguments: [.integerValue(2), .integerValue(2)])
+            XCTAssertEqual(.integerValue(2), try call.evaluate(context: context))
+        }
+    }
+
+    func test_repeatedVariable_float_throws() {
+        let call = Expression.call(name: "repeatedVariableFunc", arguments: [.floatValue(4.1), .floatValue(4.1)])
+        XCTAssertThrowsError(try call.evaluate(context: context))
+    }
+
+    func test_repeatedVariable_shadowsExistingVariable_overridesButSucceeds() {
+        assertNoThrow {
+            context["x"] = .integerValue(5)
+            let call = Expression.call(name: "repeatedVariableFunc", arguments: [.integerValue(2), .integerValue(2)])
+            let actual = try call.evaluate(context: context)
+            XCTAssertEqual(.integerValue(2), actual)
+        }
+    }
+
+    func test_repeatedVariable_nested_unequal_throws() {
+        let call = Expression.call(name: "repeatedNestedVariableFunc", arguments: [
+            .list([.integerValue(5)]), .list([.integerValue(3)])
+            ])
+        XCTAssertThrowsError(try call.evaluate(context: context))
+    }
+
+    func test_repeatedVariable_nested_equal_binds() {
+        assertNoThrow {
+            let call = Expression.call(name: "repeatedNestedVariableFunc", arguments: [
+                .list([.integerValue(5)]), .list([.integerValue(5)])
+                ])
+            XCTAssertEqual(.integerValue(5), try call.evaluate(context: context))
         }
     }
 }
