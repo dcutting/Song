@@ -528,6 +528,13 @@ double = |x| x*2
 # 10
 ```
 
+You can even treat them as "literal functions":
+
+```
+(|x| x+1)(5)
+# 6
+```
+
 As with named functions, you can call lambdas using free or subject syntax:
 
 ```
@@ -558,6 +565,18 @@ x()
 # "hello"
 ```
 
+Anywhere you can pass a lambda as an argument, you can also pass a named function:
+
+```
+[].length = 0
+[_|xs].length = 1 + xs.length
+
+x.apply(f) = f(x)
+
+[1, 2, 3].apply(length)
+# 3
+```
+
 ## `Do`/`End` scopes
 
 Sometimes you want to break your functions into a few statements to make them easier to read. You can do this with scopes:
@@ -578,6 +597,54 @@ You can also write scopes on one line using commas:
 ```
 x.inc = Do y = x+1, y End
 ```
+
+You can declare functions inside scopes. If the last statement in your scope is a function or variable declaration, it will be exported out of the scope for use in subsequent code. Otherwise, any declarations within a scope are local to the scope only:
+
+```
+Do
+  foo = 99
+End
+foo
+# 99
+
+Do
+  foo = 99
+  foo + 1
+End
+foo
+# error, unknown symbol
+```
+
+If your scoped declaration has the same name as an existing declaration outside the scope, the outer one will become unavailable within the scope:
+
+```
+foo = 99
+
+Do
+  foo = 45
+  foo
+End
+# 45
+```
+
+Scopes evaluate to the value of their last statement. If that statment is a declaration of a new clause for a function that already exists, Song will combine the clauses into the same function:
+
+```
+x.size When x < 10 = "small"
+x.size When x < 100 = "large"
+
+1000.size
+# error
+
+Do
+  x.size = "enormous"
+End
+
+1000.size
+# "enormous"
+```
+
+This may or may not be what you intend. In general, it is easiest to reason about scopes that don't shadow existing declarations.
 
 ## Input and output
 
