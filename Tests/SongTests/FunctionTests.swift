@@ -11,13 +11,18 @@ class FunctionTests: XCTestCase {
         XCTAssertEqual("foo(a, b) When Yes = x", result)
     }
 
-    func testEvaluateNamedFunction() {
+    func test_evaluate_namedFunction_returnsClosure() {
         let context: Context = ["x": .integerValue(5)]
         assertNoThrow {
-            let result = try namedFunction.evaluate(context: context)
-            let closure = Expression.closure("foo", [namedFunction], context)
-            XCTAssertEqual(closure, result)
+            let actual = try namedFunction.evaluate(context: context)
+            let expected = Expression.closure("foo", [namedFunction], context)
+            XCTAssertEqual(expected, actual)
         }
+    }
+
+    func test_evaluate_namedFunction_shadowsExistingNonClosure_throws() {
+        let context: Context = ["foo": .integerValue(5)]
+        XCTAssertThrowsError(try namedFunction.evaluate(context: context))
     }
 
     func test_evaluate_patternIsAFloat_throws() {
