@@ -104,6 +104,10 @@ list.partition(f) = list.partition(f, [], [])
 
 list.palindrome? = list Eq list.reverse
 
+list.startsWith?([]) = Yes
+[x|xs].startsWith?([x|ps]) = xs.startsWith?(ps)
+_.startsWith?(_) = No
+
 a = [1,2,3,4,5,10,9,8,7,6]
 out(a)
 b = a.reverse
