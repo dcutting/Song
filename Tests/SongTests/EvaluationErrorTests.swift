@@ -24,6 +24,11 @@ Evaluation error
         XCTAssertEqual("Evaluation error\n 💥  no pattern matches arguments: [1]", format(error: error))
     }
 
+    func test_notAClosure() {
+        let error = EvaluationError.notAClosure(.integerValue(1))
+        XCTAssertEqual("Evaluation error\n 💥  need a closure, not 1", format(error: error))
+    }
+
     func test_notABoolean() {
         let error = EvaluationError.notABoolean(.integerValue(1))
         XCTAssertEqual("Evaluation error\n 💥  need a boolean, not 1", format(error: error))
