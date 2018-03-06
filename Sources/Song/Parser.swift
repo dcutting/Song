@@ -265,6 +265,7 @@ public func makeCallTransformer() -> Transformer<Expression> {
         .variable(try $0.str("name"))
     }
 
+    // TODO: needed?
     t.rule(["args": .series("args")]) {
         .list(try $0.vals("args"))
     }
@@ -273,6 +274,7 @@ public func makeCallTransformer() -> Transformer<Expression> {
         .call(name: try $0.str("name"), arguments: [])
     }
 
+    // TODO: args should be simple or series?
     t.rule(["functionName": .simple("name"), "args": .series("args")]) {
         .call(name: try $0.str("name"), arguments: try $0.vals("args"))
     }
@@ -301,6 +303,7 @@ public func makeCallTransformer() -> Transformer<Expression> {
         return .callAnonymous(closure: expr, arguments: [head])
     }
 
+    // TODO: args should be simple or series?
     t.rule(["head": .simple("head"), "anonCall": .simple("expr"), "args": .series("args")]) {
         let head = try $0.val("head")
         let expr = try $0.val("expr")
@@ -308,11 +311,12 @@ public func makeCallTransformer() -> Transformer<Expression> {
         return .callAnonymous(closure: .callAnonymous(closure: expr, arguments: [head]), arguments: args)
     }
 
-    t.rule(["anonCall": .simple("anon"), "args": .simple("args")]) {
-        guard case .list(let args) = try $0.val("args") else { throw SongTransformError.unknown }
+    t.rule(["anonCall": .simple("anon"), "args": .series("args")]) {
+        let args = try $0.vals("args")
         return .callAnonymous(closure: try $0.val("anon"), arguments: args)
     }
 
+    // TODO: args should be simple or series?
     t.rule(["anonCall": .simple("args")]) {
         guard case .list(let args) = try $0.val("args") else { throw SongTransformError.unknown }
         let dummy = Expression.booleanValue(false)
@@ -331,9 +335,9 @@ public func makeCallTransformer() -> Transformer<Expression> {
         try reduce(try $0.vals("calls"))
     }
 
-    t.rule(["trailCalls": .simple("call")]) {
-        try $0.val("call")
-    }
+//    t.rule(["trailCalls": .simple("call")]) {
+//        try $0.val("call")
+//    }
 
     t.rule(["dotCall": .series("calls")]) {
         try reduce(try $0.vals("calls"))
