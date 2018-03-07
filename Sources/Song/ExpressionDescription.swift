@@ -49,7 +49,7 @@ extension Expression: CustomStringConvertible {
             let contextList = contextDescription(context: context)
             return "[(\(contextList)) \(function)]"
 
-        case let .call(name: name, arguments: arguments):
+        case let .call(name, arguments):
             return descriptionCall(name: name, arguments: arguments)
 
         case let .callAnon(closure, arguments):

@@ -40,7 +40,7 @@ extension Expression {
         case let .constant(variable, value):
             return .constant(variable: variable, value: try value.evaluate(context: context))
 
-        case let .call(name: name, arguments: arguments):
+        case let .call(name, arguments):
             return try evaluateCall(expression: expression, name: name, arguments: arguments, context: context)
 
         case let .callAnon(subfunction, arguments):
@@ -130,8 +130,8 @@ extension Expression {
         case "Eq":
             return try evaluateEq(arguments: arguments, context: context)
         case "Neq":
-            let equalCall = Expression.call(name: "Eq", arguments: arguments)
-            let notCall = Expression.call(name: "Not", arguments: [equalCall])
+            let equalCall = Expression.call("Eq", arguments)
+            let notCall = Expression.call("Not", [equalCall])
             return try notCall.evaluate(context: context)
         case "And":
             var bools = try toBools(arguments: arguments, context: context)

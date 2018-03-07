@@ -38,7 +38,7 @@ class StringTests: XCTestCase {
         assertNoThrow {
             let left = Expression.stringValue("hello")
             let right = Expression.stringValue(" world")
-            let call = Expression.call(name: "+", arguments: [left, right])
+            let call = Expression.call("+", [left, right])
             let actual = try call.evaluate()
             let expected = Expression.stringValue("hello world")
             XCTAssertEqual(expected, actual)
@@ -50,11 +50,11 @@ class StringTests: XCTestCase {
         let right = Expression.stringValue("hello world")
 
         assertNoThrow {
-            let call = Expression.call(name: "Eq", arguments: [left, right])
+            let call = Expression.call("Eq", [left, right])
             XCTAssertEqual(Expression.bool(true), try call.evaluate())
         }
         assertNoThrow {
-            let call = Expression.call(name: "Neq", arguments: [left, right])
+            let call = Expression.call("Neq", [left, right])
             XCTAssertEqual(Expression.bool(false), try call.evaluate())
         }
     }
@@ -64,11 +64,11 @@ class StringTests: XCTestCase {
         let right = Expression.stringValue("goodbye world")
 
         assertNoThrow {
-            let call = Expression.call(name: "Eq", arguments: [left, right])
+            let call = Expression.call("Eq", [left, right])
             XCTAssertEqual(Expression.bool(false), try call.evaluate())
         }
         assertNoThrow {
-            let call = Expression.call(name: "Neq", arguments: [left, right])
+            let call = Expression.call("Neq", [left, right])
             XCTAssertEqual(Expression.bool(true), try call.evaluate())
         }
     }

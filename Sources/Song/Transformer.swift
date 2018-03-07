@@ -66,7 +66,7 @@ public func makeTransformer() -> Transformer<Expression> {
     // Expressions.
 
     t.rule(["right": .simple("right"), "op": .simple("op")]) {
-        .call(name: try $0.str("op"), arguments: [try $0.val("right")])
+        .call(try $0.str("op"), [try $0.val("right")])
     }
 
     t.rule(["left": .simple("left"), "ops": .series("ops")]) {
@@ -78,13 +78,13 @@ public func makeTransformer() -> Transformer<Expression> {
             throw SongTransformError.notAFunctionCall
         }
         arguments.insert(left, at: 0)
-        let firstFuncCall = Expression.call(name: name, arguments: arguments)
+        let firstFuncCall = Expression.call(name, arguments)
         return try ops.reduce(firstFuncCall) { acc, next in
             guard case .call(let name, var arguments) = next else {
                 throw SongTransformError.notAFunctionCall
             }
             arguments.insert(acc, at: 0)
-            return Expression.call(name: name, arguments: arguments)
+            return Expression.call(name, arguments)
         }
     }
 
@@ -96,7 +96,7 @@ public func makeTransformer() -> Transformer<Expression> {
     }
 
     t.rule(["functionName": .simple("name")]) {
-        .call(name: try $0.str("name"), arguments: [])
+        .call(try $0.str("name"), [])
     }
 
     // Function calls.
@@ -106,7 +106,7 @@ public func makeTransformer() -> Transformer<Expression> {
     }
 
     t.rule(["functionName": .simple("name"), "args": .series("args")]) {
-        .call(name: try $0.str("name"), arguments: try $0.vals("args"))
+        .call(try $0.str("name"), try $0.vals("args"))
     }
 
     t.rule(["param": .simple("param")]) {
@@ -124,31 +124,31 @@ public func makeTransformer() -> Transformer<Expression> {
     t.rule(["head": .simple("head"), "nameCall": .simple("call")]) {
         let head = try $0.val("head")
         guard case let .call(name, arguments) = try $0.val("call") else { throw SongTransformError.notAFunctionCall }
-        return .call(name: name, arguments: [head] + arguments)
+        return .call(name, [head] + arguments)
     }
 
     t.rule(["head": .simple("head"), "anonCall": .simple("expr")]) {
         let head = try $0.val("head")
         let expr = try $0.val("expr")
-        return .callAnon(closure: expr, arguments: [head])
+        return .callAnon(expr, [head])
     }
 
     t.rule(["head": .simple("head"), "anonCall": .simple("expr"), "args": .series("args")]) {
         let head = try $0.val("head")
         let expr = try $0.val("expr")
         let args = try $0.vals("args")
-        return .callAnon(closure: .callAnon(closure: expr, arguments: [head]), arguments: args)
+        return .callAnon(.callAnon(expr, [head]), args)
     }
 
     t.rule(["anonCall": .simple("anon"), "args": .series("args")]) {
         let args = try $0.vals("args")
-        return .callAnon(closure: try $0.val("anon"), arguments: args)
+        return .callAnon(try $0.val("anon"), args)
     }
 
     t.rule(["anonCall": .simple("args")]) {
         guard case .list(let args) = try $0.val("args") else { throw SongTransformError.unknown }
         let dummy = Expression.bool(false)
-        return .callAnon(closure: dummy, arguments: args)
+        return .callAnon(dummy, args)
     }
 
     t.rule(["nameCall": .simple("call")]) {
@@ -209,9 +209,9 @@ func reduce(_ calls: [Expression]) throws -> Expression {
     try calls.forEach { call in
         switch call {
         case let .callAnon(_, args):
-            result = .callAnon(closure: result, arguments: args)
+            result = .callAnon(result, args)
         case let .call(name, args):
-            result = .call(name: name, arguments: [result] + args)
+            result = .call(name, [result] + args)
         default:
             throw SongTransformError.notAFunctionCall
         }

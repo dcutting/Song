@@ -32,28 +32,28 @@ class BooleanTests: XCTestCase {
 
     func test_eq_equal_returnsYes() {
         assertNoThrow {
-            let call = Expression.call(name: "Eq", arguments: [trueBooleanValue, trueBooleanValue])
+            let call = Expression.call("Eq", [trueBooleanValue, trueBooleanValue])
             XCTAssertEqual(Expression.bool(true), try call.evaluate())
         }
     }
 
     func test_eq_unequal_returnsNo() {
         assertNoThrow {
-            let call = Expression.call(name: "Eq", arguments: [falseBooleanValue, trueBooleanValue])
+            let call = Expression.call("Eq", [falseBooleanValue, trueBooleanValue])
             XCTAssertEqual(Expression.bool(false), try call.evaluate())
         }
     }
 
     func test_notEq_equal_returnsNo() {
         assertNoThrow {
-            let call = Expression.call(name: "Neq", arguments: [trueBooleanValue, trueBooleanValue])
+            let call = Expression.call("Neq", [trueBooleanValue, trueBooleanValue])
             XCTAssertEqual(Expression.bool(false), try call.evaluate())
         }
     }
 
     func test_notEq_unequal_returnsYes() {
         assertNoThrow {
-            let call = Expression.call(name: "Neq", arguments: [falseBooleanValue, trueBooleanValue])
+            let call = Expression.call("Neq", [falseBooleanValue, trueBooleanValue])
             XCTAssertEqual(Expression.bool(true), try call.evaluate())
         }
     }

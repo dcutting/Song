@@ -31,7 +31,7 @@ class ListTests: XCTestCase {
 
     func test_evaluate_nonEmptyList_returnsListOfAllEvaluatedItems() {
         let list = Expression.list([
-            .call(name: "+", arguments: [.integerValue(2), .integerValue(3)]),
+            .call("+", [.integerValue(2), .integerValue(3)]),
             .variable("x")
             ])
         assertNoThrow {
@@ -47,7 +47,7 @@ class ListTests: XCTestCase {
     func test_evaluate_concatenateLists() {
         let left = Expression.list([.integerValue(1), .integerValue(2)])
         let right = Expression.list([.integerValue(3), .integerValue(4)])
-        let call = Expression.call(name: "+", arguments: [left, right])
+        let call = Expression.call("+", [left, right])
         assertNoThrow {
             let actual = try call.evaluate()
             let expected = Expression.list([.integerValue(1), .integerValue(2), .integerValue(3), .integerValue(4)])
@@ -60,11 +60,11 @@ class ListTests: XCTestCase {
         let right = Expression.list([.integerValue(1), .integerValue(2)])
 
         assertNoThrow {
-            let call = Expression.call(name: "Eq", arguments: [left, right])
+            let call = Expression.call("Eq", [left, right])
             XCTAssertEqual(Expression.bool(true), try call.evaluate())
         }
         assertNoThrow {
-            let call = Expression.call(name: "Neq", arguments: [left, right])
+            let call = Expression.call("Neq", [left, right])
             XCTAssertEqual(Expression.bool(false), try call.evaluate())
         }
     }
@@ -74,11 +74,11 @@ class ListTests: XCTestCase {
         let right = Expression.list([.integerValue(1), .integerValue(2)])
 
         assertNoThrow {
-            let call = Expression.call(name: "Eq", arguments: [left, right])
+            let call = Expression.call("Eq", [left, right])
             XCTAssertEqual(Expression.bool(false), try call.evaluate())
         }
         assertNoThrow {
-            let call = Expression.call(name: "Neq", arguments: [left, right])
+            let call = Expression.call("Neq", [left, right])
             XCTAssertEqual(Expression.bool(true), try call.evaluate())
         }
     }
@@ -86,7 +86,7 @@ class ListTests: XCTestCase {
     func test_eq_containsFloats_throws() {
         let a = Expression.list([.floatValue(5.0)])
         let b = Expression.list([.floatValue(5.0)])
-        let eq = Expression.call(name: "Eq", arguments: [a, b])
+        let eq = Expression.call("Eq", [a, b])
         XCTAssertThrowsError(try eq.evaluate())
     }
 
@@ -95,11 +95,11 @@ class ListTests: XCTestCase {
         let right = Expression.list([.list([.integerValue(9), .bool(false)]), .integerValue(1), .stringValue("ok")])
 
         assertNoThrow {
-            let call = Expression.call(name: "Eq", arguments: [left, right])
+            let call = Expression.call("Eq", [left, right])
             XCTAssertEqual(Expression.bool(true), try call.evaluate())
         }
         assertNoThrow {
-            let call = Expression.call(name: "Neq", arguments: [left, right])
+            let call = Expression.call("Neq", [left, right])
             XCTAssertEqual(Expression.bool(false), try call.evaluate())
         }
     }
@@ -109,11 +109,11 @@ class ListTests: XCTestCase {
         let right = Expression.list([.list([.integerValue(9), .bool(false)]), .integerValue(1), .stringValue("ok")])
 
         assertNoThrow {
-            let call = Expression.call(name: "Eq", arguments: [left, right])
+            let call = Expression.call("Eq", [left, right])
             XCTAssertEqual(Expression.bool(false), try call.evaluate())
         }
         assertNoThrow {
-            let call = Expression.call(name: "Neq", arguments: [left, right])
+            let call = Expression.call("Neq", [left, right])
             XCTAssertEqual(Expression.bool(true), try call.evaluate())
         }
     }
@@ -123,11 +123,11 @@ class ListTests: XCTestCase {
         let right = Expression.list([.list([.integerValue(9), .bool(false)]), .stringValue("ok")])
 
         assertNoThrow {
-            let call = Expression.call(name: "Eq", arguments: [left, right])
+            let call = Expression.call("Eq", [left, right])
             XCTAssertEqual(Expression.bool(false), try call.evaluate())
         }
         assertNoThrow {
-            let call = Expression.call(name: "Neq", arguments: [left, right])
+            let call = Expression.call("Neq", [left, right])
             XCTAssertEqual(Expression.bool(true), try call.evaluate())
         }
     }

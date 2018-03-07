@@ -22,28 +22,28 @@ class CharacterTests: XCTestCase {
 
     func test_eq_equal_returnsYes() {
         assertNoThrow {
-            let call = Expression.call(name: "Eq", arguments: [.char("A"), .char("A")])
+            let call = Expression.call("Eq", [.char("A"), .char("A")])
             XCTAssertEqual(Expression.bool(true), try call.evaluate())
         }
     }
 
     func test_eq_unequal_returnsNo() {
         assertNoThrow {
-            let call = Expression.call(name: "Eq", arguments: [.char("A"), .char("Z")])
+            let call = Expression.call("Eq", [.char("A"), .char("Z")])
             XCTAssertEqual(Expression.bool(false), try call.evaluate())
         }
     }
 
     func test_notEq_equal_returnsNo() {
         assertNoThrow {
-            let call = Expression.call(name: "Neq", arguments: [.char("A"), .char("A")])
+            let call = Expression.call("Neq", [.char("A"), .char("A")])
             XCTAssertEqual(Expression.bool(false), try call.evaluate())
         }
     }
 
     func test_notEq_unequal_returnsYes() {
         assertNoThrow {
-            let call = Expression.call(name: "Neq", arguments: [.char("A"), .char("Z")])
+            let call = Expression.call("Neq", [.char("A"), .char("Z")])
             XCTAssertEqual(Expression.bool(true), try call.evaluate())
         }
     }

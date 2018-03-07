@@ -18,9 +18,9 @@ class PatternTests: XCTestCase {
                         .listCons([.variable("y")], .variable("ys"))
                         ])],
                     when: .bool(true),
-                    body: .call(name: "+", arguments: [
+                    body: .call("+", [
                         .list([.list([.variable("x"), .variable("y")])]),
-                        .call(name: "zip", arguments: [.list([.variable("xs"), .variable("ys")])])
+                        .call("zip", [.list([.variable("xs"), .variable("ys")])])
                         ])),
         Subfunction(name: "variableFunc", patterns: [.variable("x")], when: .bool(true), body: .variable("x")),
         Subfunction(name: "repeatedVariableFunc", patterns: [.variable("x"), .variable("x")], when: .bool(true), body: .variable("x")),
@@ -38,18 +38,18 @@ class PatternTests: XCTestCase {
     }
 
     func test_literal_wrongType_fails() {
-        let call = Expression.call(name: "numberLiteralFunc", arguments: [.stringValue("two")])
+        let call = Expression.call("numberLiteralFunc", [.stringValue("two")])
         XCTAssertThrowsError(try call.evaluate(context: context))
     }
 
     func test_literal_arityMismatch_fails() {
-        let call = Expression.call(name: "numberLiteralFunc", arguments: [.integerValue(2), .integerValue(3)])
+        let call = Expression.call("numberLiteralFunc", [.integerValue(2), .integerValue(3)])
         XCTAssertThrowsError(try call.evaluate(context: context))
     }
 
     func test_anyVariable_match_evaluates() {
         assertNoThrow {
-            let call = Expression.call(name: "anyVariableFunc", arguments: [.integerValue(2)])
+            let call = Expression.call("anyVariableFunc", [.integerValue(2)])
             let actual = try call.evaluate(context: context)
             XCTAssertEqual(Expression.stringValue("ok"), actual)
         }
@@ -57,46 +57,46 @@ class PatternTests: XCTestCase {
 
     func test_boolLiteral_match_evaluates() {
         assertNoThrow {
-            let call = Expression.call(name: "booleanLiteralFunc", arguments: [.bool(false)])
+            let call = Expression.call("booleanLiteralFunc", [.bool(false)])
             let actual = try call.evaluate(context: context)
             XCTAssertEqual(Expression.stringValue("ok"), actual)
         }
     }
 
     func test_boolLiteral_noMatch_fails() {
-        let call = Expression.call(name: "booleanLiteralFunc", arguments: [.bool(true)])
+        let call = Expression.call("booleanLiteralFunc", [.bool(true)])
         XCTAssertThrowsError(try call.evaluate(context: context))
     }
 
     func test_numberLiteral_match_evaluates() {
         assertNoThrow {
-            let call = Expression.call(name: "numberLiteralFunc", arguments: [.integerValue(2)])
+            let call = Expression.call("numberLiteralFunc", [.integerValue(2)])
             let actual = try call.evaluate(context: context)
             XCTAssertEqual(Expression.stringValue("ok"), actual)
         }
     }
 
     func test_numberLiteral_noMatch_fails() {
-        let call = Expression.call(name: "numberLiteralFunc", arguments: [.integerValue(3)])
+        let call = Expression.call("numberLiteralFunc", [.integerValue(3)])
         XCTAssertThrowsError(try call.evaluate(context: context))
     }
 
     func test_listLiteral_match_evaluates() {
         assertNoThrow {
-            let call = Expression.call(name: "listLiteralFunc", arguments: [.list([.integerValue(1), .integerValue(2)])])
+            let call = Expression.call("listLiteralFunc", [.list([.integerValue(1), .integerValue(2)])])
             let actual = try call.evaluate(context: context)
             XCTAssertEqual(Expression.stringValue("ok"), actual)
         }
     }
 
     func test_listLiteral_noMatch_fails() {
-        let call = Expression.call(name: "listLiteralFunc", arguments: [.list([.integerValue(1)])])
+        let call = Expression.call("listLiteralFunc", [.list([.integerValue(1)])])
         XCTAssertThrowsError(try call.evaluate(context: context))
     }
 
     func test_listConstructorLiteral_match_evaluates() {
         assertNoThrow {
-            let call = Expression.call(name: "listConstructorLiteralFunc", arguments: [.list([.integerValue(1), .integerValue(2)])])
+            let call = Expression.call("listConstructorLiteralFunc", [.list([.integerValue(1), .integerValue(2)])])
             let actual = try call.evaluate(context: context)
             XCTAssertEqual(Expression.stringValue("ok"), actual)
         }
@@ -104,7 +104,7 @@ class PatternTests: XCTestCase {
 
     func test_nestedListConstructorLiteral_match_evaluates() {
         assertNoThrow {
-            let call = Expression.call(name: "nestedListConstructorLiteralFunc", arguments: [.list([.list([.integerValue(1)]), .integerValue(2)])])
+            let call = Expression.call("nestedListConstructorLiteralFunc", [.list([.list([.integerValue(1)]), .integerValue(2)])])
             let actual = try call.evaluate(context: context)
             XCTAssertEqual(Expression.stringValue("ok"), actual)
         }
@@ -113,7 +113,7 @@ class PatternTests: XCTestCase {
     func test_nestedList_match_evaluates() {
         assertNoThrow {
 
-            let call = Expression.call(name: "zip", arguments: [
+            let call = Expression.call("zip", [
                 .list([
                     .list([.integerValue(1), .integerValue(2)]),
                     .list([.integerValue(3), .integerValue(4)])
@@ -129,42 +129,42 @@ class PatternTests: XCTestCase {
     }
 
     func test_nestedList_argumentNotAList_fails() {
-        let call = Expression.call(name: "zip", arguments: [.integerValue(1)])
+        let call = Expression.call("zip", [.integerValue(1)])
         XCTAssertThrowsError(try call.evaluate(context: context))
     }
 
     func test_listConstructorLiteral_insufficentItemsToMatch_evaluates() {
-        let call = Expression.call(name: "listConstructorVariableFunc", arguments: [.list([.integerValue(1)])])
+        let call = Expression.call("listConstructorVariableFunc", [.list([.integerValue(1)])])
         XCTAssertThrowsError(try call.evaluate(context: context))
     }
 
     func test_listConstructorLiteral_argumentNotAList_evaluates() {
-        let call = Expression.call(name: "listConstructorLiteralFunc", arguments: [.integerValue(1)])
+        let call = Expression.call("listConstructorLiteralFunc", [.integerValue(1)])
         XCTAssertThrowsError(try call.evaluate(context: context))
     }
 
     func test_variable_match_evaluates() {
         assertNoThrow {
-            let call = Expression.call(name: "variableFunc", arguments: [.integerValue(2)])
+            let call = Expression.call("variableFunc", [.integerValue(2)])
             let actual = try call.evaluate(context: context)
             XCTAssertEqual(Expression.integerValue(2), actual)
         }
     }
 
     func test_repeatedVariable_unequal_throws() {
-        let call = Expression.call(name: "repeatedVariableFunc", arguments: [.integerValue(2), .integerValue(3)])
+        let call = Expression.call("repeatedVariableFunc", [.integerValue(2), .integerValue(3)])
         XCTAssertThrowsError(try call.evaluate(context: context))
     }
 
     func test_repeatedVariable_equal_binds() {
         assertNoThrow {
-            let call = Expression.call(name: "repeatedVariableFunc", arguments: [.integerValue(2), .integerValue(2)])
+            let call = Expression.call("repeatedVariableFunc", [.integerValue(2), .integerValue(2)])
             XCTAssertEqual(.integerValue(2), try call.evaluate(context: context))
         }
     }
 
     func test_repeatedVariable_float_throws() {
-        let call = Expression.call(name: "repeatedVariableFunc", arguments: [.floatValue(4.1), .floatValue(4.1)])
+        let call = Expression.call("repeatedVariableFunc", [.floatValue(4.1), .floatValue(4.1)])
         XCTAssertThrowsError(try call.evaluate(context: context))
     }
 
@@ -177,14 +177,14 @@ class PatternTests: XCTestCase {
 
             context = try declareSubfunctions([Expression.subfunction(foo)], in: context)
             
-            let call = Expression.call(name: "foo", arguments: [.integerValue(2), .integerValue(2)])
+            let call = Expression.call("foo", [.integerValue(2), .integerValue(2)])
             let actual = try call.evaluate(context: context)
             XCTAssertEqual(.integerValue(2), actual)
         }
     }
 
     func test_repeatedVariable_nested_unequal_throws() {
-        let call = Expression.call(name: "repeatedNestedVariableFunc", arguments: [
+        let call = Expression.call("repeatedNestedVariableFunc", [
             .list([.integerValue(5)]), .list([.integerValue(3)])
             ])
         XCTAssertThrowsError(try call.evaluate(context: context))
@@ -192,7 +192,7 @@ class PatternTests: XCTestCase {
 
     func test_repeatedVariable_nested_equal_binds() {
         assertNoThrow {
-            let call = Expression.call(name: "repeatedNestedVariableFunc", arguments: [
+            let call = Expression.call("repeatedNestedVariableFunc", [
                 .list([.integerValue(5)]), .list([.integerValue(5)])
                 ])
             XCTAssertEqual(.integerValue(5), try call.evaluate(context: context))

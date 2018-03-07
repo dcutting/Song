@@ -11,7 +11,7 @@ class ConstantTests: XCTestCase {
 
     func testEvaluate() {
         assertNoThrow {
-            let constant = Expression.constant(variable: .variable("foo"), value: .call(name: "+", arguments: [.integerValue(4), .integerValue(2)]))
+            let constant = Expression.constant(variable: .variable("foo"), value: .call("+", [.integerValue(4), .integerValue(2)]))
             let actual = try constant.evaluate()
             let expected = Expression.constant(variable: .variable("foo"), value: .integerValue(6))
             XCTAssertEqual(expected, actual)

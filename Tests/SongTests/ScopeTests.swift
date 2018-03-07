@@ -28,7 +28,7 @@ class ScopeTests: XCTestCase {
 
     func test_oneCompoundStatement_returnsEvaluatedStatement() {
         assertNoThrow {
-            let scope = Expression.scope([.call(name: "+", arguments: [.integerValue(9), .integerValue(3)])])
+            let scope = Expression.scope([.call("+", [.integerValue(9), .integerValue(3)])])
             XCTAssertEqual(Expression.integerValue(12), try scope.evaluate())
         }
     }
@@ -85,7 +85,7 @@ class ScopeTests: XCTestCase {
         let inScope = [
             makeFoo(.integerValue(9), .stringValue("nine")),
             makeFoo(.variable("x"),
-                    when: .call(name: ">", arguments: [.variable("x"), .integerValue(100)]),
+                    when: .call(">", [.variable("x"), .integerValue(100)]),
                     .stringValue("BIG")),
             makeFoo(.integerValue(2), .stringValue("two"))
         ]
@@ -115,6 +115,6 @@ class ScopeTests: XCTestCase {
     }
 
     private func callFoo(_ argument: Expression) -> Expression {
-        return .call(name: "foo", arguments: [argument])
+        return .call("foo", [argument])
     }
 }

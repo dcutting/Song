@@ -32,21 +32,21 @@ class OutTests: XCTestCase {
 
     func test_evaluate_noArguments_emptyString() {
         assertNoThrow {
-            let call = Expression.call(name: "out", arguments: [])
+            let call = Expression.call("out", [])
             XCTAssertEqual(Expression.stringValue(""), try call.evaluate())
         }
     }
 
     func test_evaluate_oneArgument_descriptionOfArgument() {
         assertNoThrow {
-            let call = Expression.call(name: "out", arguments: [.integerValue(99)])
+            let call = Expression.call("out", [.integerValue(99)])
             XCTAssertEqual(Expression.stringValue("99"), try call.evaluate())
         }
     }
 
     func test_evaluate_multipleArguments_joinsWithSpace() {
         assertNoThrow {
-            let call = Expression.call(name: "out", arguments: [.integerValue(99), .stringValue("is in"), .list([.bool(true), .integerValue(99)])])
+            let call = Expression.call("out", [.integerValue(99), .stringValue("is in"), .list([.bool(true), .integerValue(99)])])
             XCTAssertEqual(Expression.stringValue("99 is in [Yes, 99]"), try call.evaluate())
         }
     }
