@@ -28,7 +28,7 @@ extension Expression: CustomStringConvertible {
                 return "[\(joined)]"
             }
 
-        case let .listConstructor(head, tail):
+        case let .listCons(head, tail):
             let descriptions = head.map { "\($0)" }
             let heads = descriptions.joined(separator: ", ")
             return "[\(heads)|\(tail)]"

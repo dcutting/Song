@@ -24,7 +24,7 @@ extension Expression {
             let evaluated = try exprs.map { try $0.evaluate(context: context) }
             return .list(evaluated)
 
-        case let .listConstructor(heads, tail):
+        case let .listCons(heads, tail):
             let evaluatedHeads = try heads.map { try $0.evaluate(context: context) }
             let evaluatedTail = try tail.evaluate(context: context)
             guard case var .list(items) = evaluatedTail else { throw EvaluationError.notAList(evaluatedTail) }
@@ -382,7 +382,7 @@ extension Expression {
             }
             patternEqualityContext[name] = evaluatedValue
             extendedContext = extendContext(context: extendedContext, name: name, value: evaluatedValue)
-        case .listConstructor(var paramHeads, let paramTail):
+        case .listCons(var paramHeads, let paramTail):
             guard case var .list(argItems) = evaluatedValue else { throw EvaluationError.signatureMismatch([argument]) }
             guard argItems.count >= paramHeads.count else { throw EvaluationError.signatureMismatch([argument]) }
             while paramHeads.count > 0 {

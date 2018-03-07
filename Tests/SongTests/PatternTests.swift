@@ -8,14 +8,14 @@ class PatternTests: XCTestCase {
         Subfunction(name: "booleanLiteralFunc", patterns: [.bool(false)], when: .bool(true), body: .stringValue("ok")),
         Subfunction(name: "numberLiteralFunc", patterns: [.integerValue(2)], when: .bool(true), body: .stringValue("ok")),
         Subfunction(name: "listLiteralFunc", patterns: [.list([.integerValue(1), .integerValue(2)])], when: .bool(true), body: .stringValue("ok")),
-        Subfunction(name: "listConstructorLiteralFunc", patterns: [.listConstructor([.integerValue(1)], .list([.integerValue(2)]))], when: .bool(true), body: .stringValue("ok")),
-        Subfunction(name: "listConstructorVariableFunc", patterns: [.listConstructor([.integerValue(1), .integerValue(2)], .list([.variable("xs")]))], when: .bool(true), body: .stringValue("ok")),
-        Subfunction(name: "nestedListConstructorLiteralFunc", patterns: [.listConstructor([.list([.integerValue(1)])], .list([.integerValue(2)]))], when: .bool(true), body: .stringValue("ok")),
+        Subfunction(name: "listConstructorLiteralFunc", patterns: [.listCons([.integerValue(1)], .list([.integerValue(2)]))], when: .bool(true), body: .stringValue("ok")),
+        Subfunction(name: "listConstructorVariableFunc", patterns: [.listCons([.integerValue(1), .integerValue(2)], .list([.variable("xs")]))], when: .bool(true), body: .stringValue("ok")),
+        Subfunction(name: "nestedListConstructorLiteralFunc", patterns: [.listCons([.list([.integerValue(1)])], .list([.integerValue(2)]))], when: .bool(true), body: .stringValue("ok")),
         Subfunction(name: "zip", patterns: [.list([.list([]), .list([])])], when: .bool(true), body: .list([])),
         Subfunction(name: "zip",
                     patterns: [.list([
-                        .listConstructor([.variable("x")], .variable("xs")),
-                        .listConstructor([.variable("y")], .variable("ys"))
+                        .listCons([.variable("x")], .variable("xs")),
+                        .listCons([.variable("y")], .variable("ys"))
                         ])],
                     when: .bool(true),
                     body: .call(name: "+", arguments: [
@@ -25,8 +25,8 @@ class PatternTests: XCTestCase {
         Subfunction(name: "variableFunc", patterns: [.variable("x")], when: .bool(true), body: .variable("x")),
         Subfunction(name: "repeatedVariableFunc", patterns: [.variable("x"), .variable("x")], when: .bool(true), body: .variable("x")),
         Subfunction(name: "repeatedNestedVariableFunc",
-                    patterns: [.listConstructor([.variable("x")], .anyVariable),
-                               .listConstructor([.variable("x")], .anyVariable)],
+                    patterns: [.listCons([.variable("x")], .anyVariable),
+                               .listCons([.variable("x")], .anyVariable)],
                     when: .bool(true),
                     body: .variable("x")),
     ]

@@ -23,7 +23,7 @@ public indirect enum Expression {
     case number(Number)
     case char(Character)
     case list([Expression])
-    case listConstructor([Expression], Expression)
+    case listCons([Expression], Expression)
     case closure(String?, [Expression], Context)
 
     case variable(String)

@@ -22,7 +22,7 @@ public func makeTransformer() -> Transformer<Expression> {
     }
 
     t.rule(["heads": .series("heads"), "tail": .simple("tail")]) {
-        .listConstructor(try $0.vals("heads"), try $0.val("tail"))
+        .listCons(try $0.vals("heads"), try $0.val("tail"))
     }
 
     // Literals.

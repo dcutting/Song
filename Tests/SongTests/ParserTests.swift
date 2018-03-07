@@ -70,15 +70,15 @@ class ParserTests: XCTestCase {
     }
 
     func test_listConstructors() {
-        "[x|xs]".becomes(.listConstructor([.variable("x")], .variable("xs")))
-        "[x,y|xs]".becomes(.listConstructor([.variable("x"), .variable("y")], .variable("xs")))
-        "[ 1 , x | xs ]".becomes(.listConstructor([.integerValue(1), .variable("x")], .variable("xs")))
-        "[Yes|2]".becomes(.listConstructor([.bool(true)], .integerValue(2)))
-        "[ f(x) | g(x) ]".becomes(.listConstructor([.call(name: "f", arguments: [.variable("x")])],
+        "[x|xs]".becomes(.listCons([.variable("x")], .variable("xs")))
+        "[x,y|xs]".becomes(.listCons([.variable("x"), .variable("y")], .variable("xs")))
+        "[ 1 , x | xs ]".becomes(.listCons([.integerValue(1), .variable("x")], .variable("xs")))
+        "[Yes|2]".becomes(.listCons([.bool(true)], .integerValue(2)))
+        "[ f(x) | g(x) ]".becomes(.listCons([.call(name: "f", arguments: [.variable("x")])],
                                                    .call(name: "g", arguments: [.variable("x")])))
-        "[1,2|[3,4|[5,6]]]".becomes(.listConstructor(
+        "[1,2|[3,4|[5,6]]]".becomes(.listCons(
             [.integerValue(1), .integerValue(2)],
-            .listConstructor(
+            .listCons(
                 [.integerValue(3), .integerValue(4)],
                 .list([.integerValue(5), .integerValue(6)])
             )))
@@ -88,7 +88,7 @@ class ParserTests: XCTestCase {
  |
  xs
 ]
-""".becomes(.listConstructor([.variable("x"), .variable("y")], .variable("xs")))
+""".becomes(.listCons([.variable("x"), .variable("y")], .variable("xs")))
 
         "[|xs]".fails()
         "[x|]".fails()
@@ -207,9 +207,9 @@ foo(
         )
         "[x|xs].map(f) = [f(x)|xs.map(f)]".becomes(
             .subfunction(Subfunction(name: "map",
-                                     patterns: [.listConstructor([.variable("x")], .variable("xs")), .variable("f")],
+                                     patterns: [.listCons([.variable("x")], .variable("xs")), .variable("f")],
                                      when: .bool(true),
-                                     body: .listConstructor([.call(name: "f", arguments: [.variable("x")])],
+                                     body: .listCons([.call(name: "f", arguments: [.variable("x")])],
                                                             .call(name: "map", arguments: [.variable("xs"), .variable("f")]))))
         )
 """
@@ -269,7 +269,7 @@ foo() = Do 5 End
  |
  x
 """.becomes(.subfunction(Subfunction(name: nil, patterns: [.variable("x"), .variable("y")], when: .bool(true), body: .variable("x"))))
-        "|[x|xs], y| x".becomes(.subfunction(Subfunction(name: nil, patterns: [.listConstructor([.variable("x")], .variable("xs")), .variable("y")], when: .bool(true), body: .variable("x"))))
+        "|[x|xs], y| x".becomes(.subfunction(Subfunction(name: nil, patterns: [.listCons([.variable("x")], .variable("xs")), .variable("y")], when: .bool(true), body: .variable("x"))))
         "|_| 5".becomes(.subfunction(Subfunction(name: nil, patterns: [.anyVariable], when: .bool(true), body: .integerValue(5))))
         "|| 5".becomes(.subfunction(Subfunction(name: nil, patterns: [], when: .bool(true), body: .integerValue(5))))
     }
