@@ -50,7 +50,7 @@ Evaluation error
     }
 
     func test_patternsCannotBeFloats() {
-        let error = EvaluationError.patternsCannotBeFloats(.floatValue(2.0))
+        let error = EvaluationError.patternsCannotBeFloats(.float(2.0))
         XCTAssertEqual("Evaluation error\n 💥  patterns cannot be floats: 2.0", format(error: error))
     }
 

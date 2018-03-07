@@ -21,11 +21,11 @@ class ParserTests: XCTestCase {
     }
 
     func test_floats() {
-        "0.1".becomes(.floatValue(0.1))
-        "+0.1".becomes(.floatValue(0.1))
-        "-9.1".becomes(.call("-", [.floatValue(9.1)]))
-        "0.001".becomes(.floatValue(0.001))
-        " 0.001 ".becomes(.floatValue(0.001))
+        "0.1".becomes(.float(0.1))
+        "+0.1".becomes(.float(0.1))
+        "-9.1".becomes(.call("-", [.float(9.1)]))
+        "0.001".becomes(.float(0.001))
+        " 0.001 ".becomes(.float(0.001))
 
         ".1".fails()
     }

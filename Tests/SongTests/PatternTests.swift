@@ -164,7 +164,7 @@ class PatternTests: XCTestCase {
     }
 
     func test_repeatedVariable_float_throws() {
-        let call = Expression.call("repeatedVariableFunc", [.floatValue(4.1), .floatValue(4.1)])
+        let call = Expression.call("repeatedVariableFunc", [.float(4.1), .float(4.1)])
         XCTAssertThrowsError(try call.evaluate(context: context))
     }
 

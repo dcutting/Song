@@ -84,8 +84,8 @@ class ListTests: XCTestCase {
     }
 
     func test_eq_containsFloats_throws() {
-        let a = Expression.list([.floatValue(5.0)])
-        let b = Expression.list([.floatValue(5.0)])
+        let a = Expression.list([.float(5.0)])
+        let b = Expression.list([.float(5.0)])
         let eq = Expression.call("Eq", [a, b])
         XCTAssertThrowsError(try eq.evaluate())
     }

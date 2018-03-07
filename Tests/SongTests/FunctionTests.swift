@@ -26,7 +26,7 @@ class FunctionTests: XCTestCase {
     }
 
     func test_evaluate_patternIsAFloat_throws() {
-        let subfunction = Subfunction(name: "foo", patterns: [.floatValue(1.0)], when: .bool(true), body: .bool(true))
+        let subfunction = Subfunction(name: "foo", patterns: [.float(1.0)], when: .bool(true), body: .bool(true))
         let function = Expression.subfunction(subfunction)
         XCTAssertThrowsError(try function.evaluate())
     }

@@ -24,7 +24,7 @@ class NumberConversionTests: XCTestCase {
         assertNoThrow {
             let input = "0.2"
             let call = Expression.call("number", [.stringValue(input)])
-            XCTAssertEqual(.floatValue(0.2), try call.evaluate())
+            XCTAssertEqual(.float(0.2), try call.evaluate())
         }
     }
 

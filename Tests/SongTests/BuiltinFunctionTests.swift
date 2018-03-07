@@ -72,7 +72,7 @@ class BuiltinFunctionTests: XCTestCase {
 
         assertNoThrow {
             let op = try Expression.call("/", [first, second]).evaluate(context: context)
-            XCTAssertEqual(Expression.floatValue(1.8), op)
+            XCTAssertEqual(Expression.float(1.8), op)
         }
 
         assertNoThrow {

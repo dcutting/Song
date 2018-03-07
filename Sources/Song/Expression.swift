@@ -43,7 +43,7 @@ public extension Expression {
         return .number(Number.int(int))
     }
 
-    public static func floatValue(_ float: FloatType) -> Expression {
+    public static func float(_ float: FloatType) -> Expression {
         return .number(Number.float(float))
     }
 

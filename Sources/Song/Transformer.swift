@@ -44,7 +44,7 @@ public func makeTransformer() -> Transformer<Expression> {
     t.rule(["float": .simple("f")]) {
         let f = try $0.str("f")
         guard let float = FloatType(f) else { throw SongTransformError.notNumeric(f) }
-        return .floatValue(float)
+        return .float(float)
     }
 
     t.rule(["character": .simple("c")]) {
