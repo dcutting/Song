@@ -17,7 +17,7 @@ extension Expression {
     private func evaluate(expression: Expression, context: Context) throws -> Expression {
         switch expression {
 
-        case .bool, .number, .character, .closure, .anyVariable:
+        case .bool, .number, .char, .closure, .anyVariable:
             return expression
 
         case let .list(exprs):
@@ -222,7 +222,7 @@ extension Expression {
     }
 
     private func extractCharacter(_ expression: Expression, context: Context) throws -> Character {
-        if case .character(let value) = try expression.evaluate(context: context) {
+        if case .char(let value) = try expression.evaluate(context: context) {
             return value
         }
         throw EvaluationError.notACharacter

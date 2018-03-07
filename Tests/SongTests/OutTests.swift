@@ -4,7 +4,7 @@ import Song
 class OutTests: XCTestCase {
 
     func testOut_characterValue_doesNotIncludeQuotes() {
-        let char = Expression.character("A")
+        let char = Expression.char("A")
         let actual = char.out()
         XCTAssertEqual("A", actual)
     }

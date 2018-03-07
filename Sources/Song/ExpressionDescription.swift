@@ -9,7 +9,7 @@ extension Expression: CustomStringConvertible {
         case let .number(value):
             return "\(value)"
 
-        case let .character(value):
+        case let .char(value):
             let string = "\(value)"
             let escaped = string.replacingOccurrences(of: "\'", with: "\\\'")
             return "'\(escaped)'"

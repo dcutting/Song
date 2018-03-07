@@ -35,7 +35,7 @@ class NumberConversionTests: XCTestCase {
     }
 
     func test_number_invalidString_throws() {
-        let input = Expression.list([.character("9"), .integerValue(99)]) // This is a list that doesn't contain only characters (i.e., not a string).
+        let input = Expression.list([.char("9"), .integerValue(99)]) // This is a list that doesn't contain only characters (i.e., not a string).
         let call = Expression.call(name: "number", arguments: [input])
         XCTAssertThrowsError(try call.evaluate())
     }

@@ -21,7 +21,7 @@ public indirect enum Expression {
 
     case bool(Bool)
     case number(Number)
-    case character(Character)
+    case char(Character)
     case list([Expression])
     case listConstructor([Expression], Expression)
     case closure(String?, [Expression], Context)
@@ -48,7 +48,7 @@ public extension Expression {
     }
 
     public static func stringValue(_ string: String) -> Expression {
-        let chars = Array(string).map { Expression.character($0) }
+        let chars = Array(string).map { Expression.char($0) }
         return .list(chars)
     }
 }

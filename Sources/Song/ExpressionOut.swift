@@ -2,7 +2,7 @@ public extension Expression {
 
     public func out() -> String {
         switch self {
-        case let .character(char):
+        case let .char(char):
             return "\(char)"
         case let .list(exprs):
             do {

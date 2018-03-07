@@ -12,7 +12,7 @@ extension Expression {
 
     func convertToString(characters: [Expression]) throws -> String {
         let chars: [Character] = try characters.map { item in
-            if case .character(let c) = item {
+            if case .char(let c) = item {
                 return c
             }
             throw EvaluationError.notACharacter
