@@ -4,7 +4,7 @@ import Song
 class PatternTests: XCTestCase {
 
     lazy var functions: [Subfunction] = [
-        Subfunction(name: "anyVariableFunc", patterns: [.anyVariable], when: .bool(true), body: .stringValue("ok")),
+        Subfunction(name: "anyVariableFunc", patterns: [.ignore], when: .bool(true), body: .stringValue("ok")),
         Subfunction(name: "booleanLiteralFunc", patterns: [.bool(false)], when: .bool(true), body: .stringValue("ok")),
         Subfunction(name: "numberLiteralFunc", patterns: [.integerValue(2)], when: .bool(true), body: .stringValue("ok")),
         Subfunction(name: "listLiteralFunc", patterns: [.list([.integerValue(1), .integerValue(2)])], when: .bool(true), body: .stringValue("ok")),
@@ -25,8 +25,8 @@ class PatternTests: XCTestCase {
         Subfunction(name: "variableFunc", patterns: [.variable("x")], when: .bool(true), body: .variable("x")),
         Subfunction(name: "repeatedVariableFunc", patterns: [.variable("x"), .variable("x")], when: .bool(true), body: .variable("x")),
         Subfunction(name: "repeatedNestedVariableFunc",
-                    patterns: [.listCons([.variable("x")], .anyVariable),
-                               .listCons([.variable("x")], .anyVariable)],
+                    patterns: [.listCons([.variable("x")], .ignore),
+                               .listCons([.variable("x")], .ignore)],
                     when: .bool(true),
                     body: .variable("x")),
     ]

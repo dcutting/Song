@@ -33,7 +33,7 @@ extension Expression: CustomStringConvertible {
             let heads = descriptions.joined(separator: ", ")
             return "[\(heads)|\(tail)]"
 
-        case .anyVariable:
+        case .ignore:
             return "_"
 
         case let .variable(variable):

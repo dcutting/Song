@@ -27,7 +27,7 @@ public indirect enum Expression {
     case closure(String?, [Expression], Context)
 
     case variable(String)
-    case anyVariable
+    case ignore
     case call(name: String, arguments: [Expression])
     case callAnonymous(closure: Expression, arguments: [Expression])
 

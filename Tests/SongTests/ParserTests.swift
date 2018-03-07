@@ -157,7 +157,7 @@ class ParserTests: XCTestCase {
     }
 
     func test_variables() {
-        "_".becomes(.anyVariable)
+        "_".becomes(.ignore)
         "x".becomes(.variable("x"))
         "_x".becomes(.variable("_x"))
         "_private".becomes(.variable("_private"))
@@ -248,7 +248,7 @@ foo() = Do 5 End
     func test_constants() {
         "x = 5".becomes(.constant(variable: .variable("x"), value: .integerValue(5)))
         "x=5".becomes(.constant(variable: .variable("x"), value: .integerValue(5)))
-        "_ = 5".becomes(.constant(variable: .anyVariable, value: .integerValue(5)))
+        "_ = 5".becomes(.constant(variable: .ignore, value: .integerValue(5)))
         "double = |x| x * 2".becomes(.constant(variable: .variable("double"), value:
             .subfunction(Subfunction(name: nil,
                                      patterns: [.variable("x")],
@@ -270,7 +270,7 @@ foo() = Do 5 End
  x
 """.becomes(.subfunction(Subfunction(name: nil, patterns: [.variable("x"), .variable("y")], when: .bool(true), body: .variable("x"))))
         "|[x|xs], y| x".becomes(.subfunction(Subfunction(name: nil, patterns: [.listCons([.variable("x")], .variable("xs")), .variable("y")], when: .bool(true), body: .variable("x"))))
-        "|_| 5".becomes(.subfunction(Subfunction(name: nil, patterns: [.anyVariable], when: .bool(true), body: .integerValue(5))))
+        "|_| 5".becomes(.subfunction(Subfunction(name: nil, patterns: [.ignore], when: .bool(true), body: .integerValue(5))))
         "|| 5".becomes(.subfunction(Subfunction(name: nil, patterns: [], when: .bool(true), body: .integerValue(5))))
     }
 
@@ -356,7 +356,7 @@ foo(
     }
 
     func test_scopes() {
-        "Do _ End".becomes(.scope([.anyVariable]))
+        "Do _ End".becomes(.scope([.ignore]))
         "Do 1 End".becomes(.scope([.integerValue(1)]))
         "Do 1, End".becomes(.scope([.integerValue(1)]))
         "Do 1, x End".becomes(.scope([.integerValue(1), .variable("x")]))

@@ -17,7 +17,7 @@ extension Expression {
     private func evaluate(expression: Expression, context: Context) throws -> Expression {
         switch expression {
 
-        case .bool, .number, .char, .closure, .anyVariable:
+        case .bool, .number, .char, .closure, .ignore:
             return expression
 
         case let .list(exprs):
@@ -367,7 +367,7 @@ extension Expression {
         var patternEqualityContext = patternEqualityContext
         let evaluatedValue = try argument.evaluate(context: callingContext)
         switch parameter {
-        case .anyVariable:
+        case .ignore:
             () // Do nothing
         case .variable(let name):
             if let existingValue = patternEqualityContext[name] {

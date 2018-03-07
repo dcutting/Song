@@ -19,7 +19,7 @@ public func ==(lhs: Expression, rhs: Expression) -> Bool {
     case let (.listCons(lhsHead, lhsTail), .listCons(rhsHead, rhsTail)):
         return lhsHead == rhsHead && lhsTail == rhsTail
 
-    case (.anyVariable, .anyVariable):
+    case (.ignore, .ignore):
         return true
         
     case let (.variable(lhsVariable), .variable(rhsVariable)):
