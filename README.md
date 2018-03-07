@@ -489,7 +489,7 @@ _.startsWith?(_) = No
 "hello".startsWith?("he")
 ```
 
-As usual, if the values that match these variables are floats, the pattern match will throw an error because floats are not equatable.
+As usual, if the values that match pattern variables are floats, the pattern match will throw an error because floats are not equatable.
 
 ### When
 
