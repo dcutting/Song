@@ -260,6 +260,16 @@ foo() = Do 5 End
 
     func test_lambdas() {
         "|x| x".becomes(.subfunction(Subfunction(name: nil, patterns: [.variable("x")], when: .booleanValue(true), body: .variable("x"))))
+        "| x , y | x".becomes(.subfunction(Subfunction(name: nil, patterns: [.variable("x"), .variable("y")], when: .booleanValue(true), body: .variable("x"))))
+"""
+ |
+ x
+ ,
+ y
+ |
+ x
+""".becomes(.subfunction(Subfunction(name: nil, patterns: [.variable("x"), .variable("y")], when: .booleanValue(true), body: .variable("x"))))
+        "|[x|xs], y| x".becomes(.subfunction(Subfunction(name: nil, patterns: [.listConstructor([.variable("x")], .variable("xs")), .variable("y")], when: .booleanValue(true), body: .variable("x"))))
         "|_| 5".becomes(.subfunction(Subfunction(name: nil, patterns: [.anyVariable], when: .booleanValue(true), body: .integerValue(5))))
         "|| 5".becomes(.subfunction(Subfunction(name: nil, patterns: [], when: .booleanValue(true), body: .integerValue(5))))
     }

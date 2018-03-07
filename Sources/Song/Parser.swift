@@ -90,6 +90,10 @@ public func makeParser() -> ParserProtocol {
     let variableName = name.tag("variableName")
     let functionName = name.tag("functionName")
 
+    let parameter = (literalValue | variableName).tag("param")
+    let parameterDelimiter = skipSpaceAndNewlines >>> comma >>> skipSpaceAndNewlines
+    let parameters = parameter >>> (parameterDelimiter >>> parameter).recur
+
     // Function calls.
 
 //    let arg = expression.tag("arg")
@@ -114,9 +118,9 @@ public func makeParser() -> ParserProtocol {
 //    let lambdaBody = expression.tag("lambdaBody")
 //    let lambda = lambdaParameters >>> lambdaBody
 
-    let lambdaParameter = variableName
-    let lambdaParameters = lambdaParameter >>> (comma >>> lambdaParameter).recur
-    let lambda = (pipe >>> lambdaParameters.recur(0, 1).tag("params") >>> pipe >>> expression.tag("body")).tag("lambda")
+//    let lambdaParameter = variableName
+//    let lambdaParameters = lambdaParameter >>> (comma >>> lambdaParameter).recur
+    let lambda = (pipe >>> skipSpaceAndNewlines >>> parameters.recur(0, 1).tag("params") >>> skipSpaceAndNewlines >>> pipe >>> skipSpaceAndNewlines >>> expression.tag("body")).tag("lambda")
 
     let argument = expression
     let arguments = argument >>> (argumentDelimiter >>> argument).recur
@@ -143,10 +147,7 @@ public func makeParser() -> ParserProtocol {
 
     // Function declarations.
 
-    let parameter = (literalValue | variableName).tag("param")
     let functionSubject = parameter.tag("subject")
-    let parameterDelimiter = skipSpaceAndNewlines >>> comma >>> skipSpaceAndNewlines
-    let parameters = parameter >>> (parameterDelimiter >>> parameter).recur
     let functionParameters = skipSpaceAndNewlines >>> lParen >>> skipSpaceAndNewlines >>> parameters.recur(0, 1).tag("params") >>> skipSpaceAndNewlines >>> rParen
     let functionBody = skip >>> expression.tag("body") >>> skip
     let guardClause = (when >>> expression).maybe.tag("guard") >>> skip
