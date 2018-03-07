@@ -29,7 +29,7 @@ func declareSubfunctions(_ subfunctions: [Expression]) throws -> Context {
 extension String {
 
     func ok(file: StaticString = #file, line: UInt = #line) {
-        let parser = makeFuncCall()
+        let parser = makeParser()
         let (_, remainder) = parser.parse(self)
         if !remainder.text.isEmpty {
             XCTFail(remainder.text, file: file, line: line)
@@ -37,7 +37,7 @@ extension String {
     }
 
     func bad(file: StaticString = #file, line: UInt = #line) {
-        let parser = makeFuncCall()
+        let parser = makeParser()
         let (_, remainder) = parser.parse(self)
         if remainder.text.isEmpty {
             XCTFail("should not parse", file: file, line: line)

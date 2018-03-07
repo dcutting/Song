@@ -102,39 +102,38 @@ public func makeParser() -> ParserProtocol {
 //    anonymousFunctionCall.parser = subject.tag("anonSubject") >>> (lParen >>> args.maybe >>> rParen)
 //    let functionCall = anonymousFunctionCall | subjectFunctionCall | freeFunctionCall
 
-    let literal = integerValue
-    let variable = name.tag("variableName")
-    let value = Deferred()
-    let lambda = Deferred()
+//    let literal = integerValue
+//    let variable = name.tag("variableName")
+//    let value = Deferred()
+//    let lambda = Deferred()
     let call = Deferred()
-    let wrappedValue = lParen >>> value >>> rParen
-    value.parser = wrappedValue | call | lambda | literal | variable
-
-    let param = variable
-    let params = param >>> (comma >>> param).recur
-
-    let arg = value
-    let args = arg >>> (comma >>> arg).recur
-    let wrappedArgs = lParen >>> args.recur.tag("args") >>> rParen
+//    let wrappedValue = lParen >>> value >>> rParen
+//    value.parser = wrappedValue | call | lambda | literal | variable
 
 //    let lambdaParameters = pipe >>> parameters.recur(0, 1).tag("params") >>> pipe
 //    let lambdaBody = expression.tag("lambdaBody")
 //    let lambda = lambdaParameters >>> lambdaBody
 
-    lambda.parser = (pipe >>> params.tag("params") >>> pipe >>> value.tag("body")).tag("lambda")
+    let lambdaParameter = variableName
+    let lambdaParameters = lambdaParameter >>> (comma >>> lambdaParameter).recur
+    let lambda = (pipe >>> lambdaParameters.tag("params") >>> pipe >>> expression.tag("body")).tag("lambda")
 
-    let callable = call | variable | lambda
+    let argument = expression
+    let arguments = argument >>> (comma >>> argument).recur
+    let wrappedArguments = lParen >>> arguments.recur.tag("args") >>> rParen
+
+    let callable = call | variableName | lambda
 
     let groupName = name.tag("functionName")
     let groupAnon = lParen >>> callable >>> rParen
-    let groupAnonCall = groupAnon.tag("anonCall") >>> wrappedArgs.maybe
-    let groupAnonCallWithArgs = groupAnon.tag("anonCall") >>> wrappedArgs
-    let groupNameCall = groupName >>> wrappedArgs
-    let trailCalls = (lParen >>> args.recur.tag("args") >>> rParen).tag("anonCall").recur
+    let groupAnonCall = groupAnon.tag("anonCall") >>> wrappedArguments.maybe
+    let groupAnonCallWithArgs = groupAnon.tag("anonCall") >>> wrappedArguments
+    let groupNameCall = groupName >>> wrappedArguments
+    let trailCalls = (lParen >>> arguments.recur.tag("args") >>> rParen).tag("anonCall").recur
     let dotGroupCall = groupNameCall.tag("nameCall") | groupAnonCall
     let headGroupCall = groupNameCall.tag("nameCall") | groupAnonCallWithArgs
-    let group = dotGroupCall | groupName.tag("nameCall") | wrappedValue
-    let dotHead = (headGroupCall >>> trailCalls).tag("trailCalls") | wrappedValue | variable | literal | lambda
+    let group = dotGroupCall | groupName.tag("nameCall") | wrappedExpression
+    let dotHead = (headGroupCall >>> trailCalls).tag("trailCalls") | wrappedExpression | variableName | literalValue | lambda
     let dotGroup = dot >>> group
     let dotCall = dotHead.tag("head") >>> dotGroup >>> trailCalls >>> (dotGroup >>> trailCalls).recur
 
@@ -149,7 +148,7 @@ public func makeParser() -> ParserProtocol {
     let parameterDelimiter = skipSpaceAndNewlines >>> comma >>> skipSpaceAndNewlines
     let parameters = parameter >>> (parameterDelimiter >>> parameter).recur
     let functionParameters = skipSpaceAndNewlines >>> lParen >>> skipSpaceAndNewlines >>> parameters.recur(0, 1).tag("params") >>> skipSpaceAndNewlines >>> rParen
-    let functionBody = skip >>> (scope | expression).tag("body") >>> skip
+    let functionBody = skip >>> expression.tag("body") >>> skip
     let guardClause = (when >>> expression).maybe.tag("guard") >>> skip
     let subjectFunctionDecl = functionSubject >>> dot >>> functionName >>> functionParameters.maybe >>> guardClause >>> assign >>> skipSpaceAndNewlines >>> functionBody
 
@@ -182,11 +181,11 @@ public func makeParser() -> ParserProtocol {
     let negateOp = (logicalNot.tag("op") >>> spaceOrNewline) | minus.tag("op")
     let negateTerm = negateOp >>> term.tag("right")
     let plusTerm = plus >>> term
-    term.parser = negateTerm | plusTerm | scope | /*call |*/ lambda | value
+    term.parser = negateTerm | plusTerm | scope | call | lambda | variableName | literalValue | wrappedExpression
 
     // Constants.
 
-    let constant = variableName.tag("variable") >>> skipSpaceAndNewlines >>> assign >>> skipSpaceAndNewlines >>> (scope | expression).tag("constBody")
+    let constant = variableName.tag("variable") >>> skipSpaceAndNewlines >>> assign >>> skipSpaceAndNewlines >>> expression.tag("constBody")
 
     // Scopes.
 
@@ -195,7 +194,8 @@ public func makeParser() -> ParserProtocol {
     let delimiterOrNewline = skip >>> ((delimiter.maybe >>> skip >>> newline) | delimiter)
     let scopeItems = (scopeItem >>> (delimiterOrNewline >>> scopeItem).recur).tag("scopeItems") >>> delimiter.maybe
     scope.parser = start >>> spaceOrNewline >>> skipSpaceAndNewlines >>> scopeItems >>> spaceOrNewline >>> skipSpaceAndNewlines >>> end
-    statement.parser = skipSpaceAndNewlines >>> (functionDecl | lambda | constant | expression)
+    let declaration = functionDecl | constant
+    statement.parser = skipSpaceAndNewlines >>> (declaration | expression)
 
     // Root.
 
