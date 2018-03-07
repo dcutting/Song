@@ -37,8 +37,8 @@ extension Expression {
         case let .subfunction(subfunction):
             return try evaluate(expression: expression, subfunction: subfunction, context: context)
 
-        case let .constant(variable, value):
-            return .constant(variable: variable, value: try value.evaluate(context: context))
+        case let .assign(variable, value):
+            return .assign(variable: variable, value: try value.evaluate(context: context))
 
         case let .call(name, arguments):
             return try evaluateCall(expression: expression, name: name, arguments: arguments, context: context)
@@ -442,7 +442,7 @@ extension Expression {
                     scopeContext = extendContext(context: scopeContext, name: name, value: result)
                 }
             }
-            if case .constant(let variable, let value) = result {
+            if case .assign(let variable, let value) = result {
                 if case .variable(let name) = variable {
                     scopeContext = extendContext(context: scopeContext, name: name, value: value)
                 }

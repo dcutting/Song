@@ -161,13 +161,13 @@ while (true) {
                         context = extendContext(context: context, name: name, value: expression)
                     }
                 }
-                if case .constant(let variable, let value) = expression {
+                if case .assign(let variable, let value) = expression {
                     if case .variable(let name) = variable {
                         context = extendContext(context: context, name: name, value: value)
                     }
                 }
                 switch expression {
-                case .closure, .constant:
+                case .closure, .assign:
                     () // Do nothing.
                 default:
                     log(expression)

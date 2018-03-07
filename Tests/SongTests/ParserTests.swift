@@ -246,10 +246,10 @@ foo() = Do 5 End
     }
 
     func test_constants() {
-        "x = 5".becomes(.constant(variable: .variable("x"), value: .integerValue(5)))
-        "x=5".becomes(.constant(variable: .variable("x"), value: .integerValue(5)))
-        "_ = 5".becomes(.constant(variable: .ignore, value: .integerValue(5)))
-        "double = |x| x * 2".becomes(.constant(variable: .variable("double"), value:
+        "x = 5".becomes(.assign(variable: .variable("x"), value: .integerValue(5)))
+        "x=5".becomes(.assign(variable: .variable("x"), value: .integerValue(5)))
+        "_ = 5".becomes(.assign(variable: .ignore, value: .integerValue(5)))
+        "double = |x| x * 2".becomes(.assign(variable: .variable("double"), value:
             .subfunction(Subfunction(name: nil,
                                      patterns: [.variable("x")],
                                      when: .bool(true),
@@ -362,7 +362,7 @@ foo(
         "Do 1, x End".becomes(.scope([.integerValue(1), .variable("x")]))
         "Do 1 , x End".becomes(.scope([.integerValue(1), .variable("x")]))
         "Do 1, x, End".becomes(.scope([.integerValue(1), .variable("x")]))
-        "Do x = 5, x End".becomes(.scope([.constant(variable: .variable("x"), value: .integerValue(5)), .variable("x")]))
+        "Do x = 5, x End".becomes(.scope([.assign(variable: .variable("x"), value: .integerValue(5)), .variable("x")]))
         "Do |x| x End".becomes(.scope([.subfunction(Subfunction(name: nil, patterns: [.variable("x")], when: .bool(true), body: .variable("x")))]))
         "Do x.inc = x+1, 7.inc End".becomes(.scope([
             .subfunction(Subfunction(name: "inc", patterns: [.variable("x")], when: .bool(true), body: .call("+", [.variable("x"), .integerValue(1)]))),

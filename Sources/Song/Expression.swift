@@ -32,7 +32,7 @@ public indirect enum Expression {
     case callAnon(Expression, [Expression])
 
     case subfunction(Subfunction)
-    case constant(variable: Expression, value: Expression)
+    case assign(variable: Expression, value: Expression)
 
     case scope([Expression])
 }

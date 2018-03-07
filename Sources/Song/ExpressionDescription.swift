@@ -42,7 +42,7 @@ extension Expression: CustomStringConvertible {
         case let .subfunction(subfunction):
             return descriptionSubfunction(subfunction: subfunction)
 
-        case let .constant(name, value):
+        case let .assign(name, value):
             return "\(name): \(value)"
 
         case let .closure(_, function, context):

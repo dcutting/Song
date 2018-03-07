@@ -45,7 +45,7 @@ class ScopeTests: XCTestCase {
         assertNoThrow {
             let context: Context = ["x": .integerValue(9)]
             let scope = Expression.scope([
-                .constant(variable: .variable("x"), value: .integerValue(5)),
+                .assign(variable: .variable("x"), value: .integerValue(5)),
                 .variable("x")
                 ])
             XCTAssertEqual(Expression.integerValue(5), try scope.evaluate(context: context))
@@ -56,9 +56,9 @@ class ScopeTests: XCTestCase {
         assertNoThrow {
             let context: Context = ["x": .integerValue(9)]
             let scope = Expression.scope([
-                .constant(variable: .variable("x"), value: .integerValue(5)),
-                .constant(variable: .variable("x"), value: .integerValue(2)),
-                .constant(variable: .variable("x"), value: .integerValue(99)),
+                .assign(variable: .variable("x"), value: .integerValue(5)),
+                .assign(variable: .variable("x"), value: .integerValue(2)),
+                .assign(variable: .variable("x"), value: .integerValue(99)),
                 .variable("x")
                 ])
             XCTAssertEqual(Expression.integerValue(99), try scope.evaluate(context: context))

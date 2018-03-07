@@ -28,7 +28,7 @@ public func ==(lhs: Expression, rhs: Expression) -> Bool {
     case let (.subfunction(lhsSubfunction), .subfunction(rhsSubfunction)):
         return lhsSubfunction == rhsSubfunction
 
-    case let (.constant(lhsName, lhsValue), .constant(rhsName, rhsValue)):
+    case let (.assign(lhsName, lhsValue), .assign(rhsName, rhsValue)):
         return lhsName == rhsName && lhsValue == rhsValue
 
     case let (.closure(lhsName, lhsFunctions, lhsContext), .closure(rhsName, rhsFunctions, rhsContext)):
