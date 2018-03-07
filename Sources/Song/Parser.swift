@@ -93,7 +93,7 @@ public func makeParser() -> ParserProtocol {
     // Function calls.
 
 //    let arg = expression.tag("arg")
-//    let argumentDelimiter = skipSpaceAndNewlines >>> comma >>> skipSpaceAndNewlines
+    let argumentDelimiter = skipSpaceAndNewlines >>> comma >>> skipSpaceAndNewlines
 //    let args = skipSpaceAndNewlines >>> (arg >>> (argumentDelimiter >>> arg).recur).tag("args") >>> skipSpaceAndNewlines
 //    let freeFunctionCall = functionName >>> (lParen >>> args.maybe >>> skip >>> rParen)
 //    let anonymousFunctionCall = Deferred()
@@ -119,8 +119,8 @@ public func makeParser() -> ParserProtocol {
     let lambda = (pipe >>> lambdaParameters.recur(0, 1).tag("params") >>> pipe >>> expression.tag("body")).tag("lambda")
 
     let argument = expression
-    let arguments = argument >>> (comma >>> argument).recur
-    let wrappedArguments = lParen >>> arguments.recur.tag("args") >>> rParen
+    let arguments = argument >>> (argumentDelimiter >>> argument).recur
+    let wrappedArguments = lParen >>> skipSpaceAndNewlines >>> arguments.recur.tag("args") >>> skipSpaceAndNewlines >>> rParen
 
     let callable = call | variableName | lambda
 

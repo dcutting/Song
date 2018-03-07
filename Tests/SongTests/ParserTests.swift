@@ -284,6 +284,13 @@ foo() = Do 5 End
         "foo(x, y)".becomes(.call(name: "foo", arguments: [.variable("x"), .variable("y")]))
         "foo(x,y)".becomes(.call(name: "foo", arguments: [.variable("x"), .variable("y")]))
         "foo( x , y )".becomes(.call(name: "foo", arguments: [.variable("x"), .variable("y")]))
+"""
+foo(
+  x
+ ,
+  y
+ )
+""".becomes(.call(name: "foo", arguments: [.variable("x"), .variable("y")]))
     }
 
     func test_callChains() {
