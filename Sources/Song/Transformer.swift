@@ -189,9 +189,9 @@ public func makeTransformer() -> Transformer<Expression> {
         try reduce(try $0.vals("calls"))
     }
 
-//    t.rule(["arg": .simple("arg")]) {
-//        try $0.val("arg")
-//    }
+    t.rule(["scopeStatement": .simple("statement")]) {
+        try $0.val("statement")
+    }
 //
 //    t.rule(["anonSubject": .simple("subject"), "args": .series("args")]) {
 //        .callAnonymous(closure: try $0.val("subject"), arguments: try $0.vals("args"))

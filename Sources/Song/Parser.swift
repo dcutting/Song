@@ -190,7 +190,7 @@ public func makeParser() -> ParserProtocol {
     // Scopes.
 
     let statement = Deferred()
-    let scopeItem = skip >>> statement.tag("arg")
+    let scopeItem = skip >>> statement.tag("scopeStatement")
     let delimiterOrNewline = skip >>> ((delimiter.maybe >>> skip >>> newline) | delimiter)
     let scopeItems = (scopeItem >>> (delimiterOrNewline >>> scopeItem).recur).tag("scopeItems") >>> delimiter.maybe
     scope.parser = start >>> spaceOrNewline >>> skipSpaceAndNewlines >>> scopeItems >>> spaceOrNewline >>> skipSpaceAndNewlines >>> end
