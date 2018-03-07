@@ -116,7 +116,7 @@ public func makeParser() -> ParserProtocol {
 
     let lambdaParameter = variableName
     let lambdaParameters = lambdaParameter >>> (comma >>> lambdaParameter).recur
-    let lambda = (pipe >>> lambdaParameters.tag("params") >>> pipe >>> expression.tag("body")).tag("lambda")
+    let lambda = (pipe >>> lambdaParameters.recur(0, 1).tag("params") >>> pipe >>> expression.tag("body")).tag("lambda")
 
     let argument = expression
     let arguments = argument >>> (comma >>> argument).recur
