@@ -10,11 +10,12 @@ func assertNoThrow(file: StaticString = #file, line: UInt = #line, _ closure: ()
 }
 
 func declareSubfunctions(_ subfunctions: [Subfunction]) throws -> Context {
-    return try declareSubfunctions(subfunctions.map { Expression.subfunction($0) })
+    let exprs = subfunctions.map { Expression.subfunction($0) }
+    return try declareSubfunctions(exprs)
 }
 
-func declareSubfunctions(_ subfunctions: [Expression]) throws -> Context {
-    var context = Context()
+func declareSubfunctions(_ subfunctions: [Expression], in context: Context = Context()) throws -> Context {
+    var context = context
     for subfunction in subfunctions {
         let result = try subfunction.evaluate(context: context)
         if case .closure(let name, _, _) = result {

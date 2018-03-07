@@ -170,8 +170,14 @@ class PatternTests: XCTestCase {
 
     func test_repeatedVariable_shadowsExistingVariable_overridesButSucceeds() {
         assertNoThrow {
-            context["x"] = .integerValue(5)
-            let call = Expression.call(name: "repeatedVariableFunc", arguments: [.integerValue(2), .integerValue(2)])
+
+            var context: Context = ["x": .integerValue(5)]
+
+            let foo = Subfunction(name: "foo", patterns: [.variable("x"), .variable("x")], when: .booleanValue(true), body: .variable("x"))
+
+            context = try declareSubfunctions([Expression.subfunction(foo)], in: context)
+            
+            let call = Expression.call(name: "foo", arguments: [.integerValue(2), .integerValue(2)])
             let actual = try call.evaluate(context: context)
             XCTAssertEqual(.integerValue(2), actual)
         }
