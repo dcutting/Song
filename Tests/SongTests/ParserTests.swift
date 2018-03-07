@@ -409,7 +409,7 @@ End
         "(Do |x| x+1 End)(5)".becomes(.callAnonymous(closure: .scope([.subfunction(Subfunction(name: nil, patterns: [.variable("x")], when: .booleanValue(true), body: .call(name: "+", arguments: [.variable("x"), .integerValue(1)])))]), arguments: [.integerValue(5)]))
         "(inc(1)).inc".becomes(.call(name: "inc", arguments: [.call(name: "inc", arguments: [.integerValue(1)])]))
         "(x)()".becomes(.callAnonymous(closure: .variable("x"), arguments: []))
-//        "5.lessThan()(4)".becomes(.callAnonymous(closure: .call(name: "lessThan", arguments: [.integerValue(5)]), arguments: [.integerValue(4)]))
+        "5.lessThan()(4)".becomes(.callAnonymous(closure: .call(name: "lessThan", arguments: [.integerValue(5)]), arguments: [.integerValue(4)]))
         "(5.lessThan())(4)".becomes(.callAnonymous(closure: .call(name: "lessThan", arguments: [.integerValue(5)]), arguments: [.integerValue(4)]))
         "(5.lessThan)(4)".becomes(.callAnonymous(closure: .call(name: "lessThan", arguments: [.integerValue(5)]), arguments: [.integerValue(4)]))
         "lessThan(5)(4)".becomes(.callAnonymous(closure: .call(name: "lessThan", arguments: [.integerValue(5)]), arguments: [.integerValue(4)]))
@@ -421,21 +421,23 @@ End
                                                   body: .call(name: "+", arguments: [.variable("x"), .integerValue(1)])
                 )),
                 arguments: [.integerValue(4)]))
-//        "4.(|x| x+1)".becomes(
-//            .callAnonymous(
-//                closure: .subfunction(Subfunction(name: nil,
-//                                                  patterns: [.variable("x")],
-//                                                  when: .booleanValue(true),
-//                                                  body: .call(name: "+", arguments: [.variable("x"), .integerValue(1)])
-//                )),
-//                arguments: [.integerValue(4)]))
-//        "4.(|x| x+1)()".becomes(
-//            .callAnonymous(
-//                closure: .subfunction(Subfunction(name: nil,
-//                                                  patterns: [.variable("x")],
-//                                                  when: .booleanValue(true),
-//                                                  body: .call(name: "+", arguments: [.variable("x"), .integerValue(1)])
-//                )),
-//                arguments: [.integerValue(4)]))
+        "4.(|x| x+1)".becomes(
+            .callAnonymous(
+                closure: .subfunction(Subfunction(name: nil,
+                                                  patterns: [.variable("x")],
+                                                  when: .booleanValue(true),
+                                                  body: .call(name: "+", arguments: [.variable("x"), .integerValue(1)])
+                )),
+                arguments: [.integerValue(4)]))
+        "4.(|x| x+1)()".becomes(
+            .callAnonymous(closure:
+                .callAnonymous(
+                    closure: .subfunction(Subfunction(name: nil,
+                                                      patterns: [.variable("x")],
+                                                      when: .booleanValue(true),
+                                                      body: .call(name: "+", arguments: [.variable("x"), .integerValue(1)])
+                    )),
+                    arguments: [.integerValue(4)]
+                ), arguments: []))
     }
 }

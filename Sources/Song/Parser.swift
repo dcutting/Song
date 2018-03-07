@@ -133,7 +133,7 @@ public func makeParser() -> ParserProtocol {
     let dotGroupCall = groupNameCall.tag("nameCall") | groupAnonCall
     let headGroupCall = groupNameCall.tag("nameCall") | groupAnonCallWithArgs
     let group = dotGroupCall | groupName.tag("nameCall") | wrappedExpression
-    let dotHead = (headGroupCall >>> trailCalls).tag("trailCalls") | wrappedExpression | variableName | literalValue | lambda
+    let dotHead = (headGroupCall >>> trailCalls).tag("trailCalls") | wrappedExpression | variableName | literalValue
     let dotGroup = dot >>> group
     let dotCall = dotHead.tag("head") >>> dotGroup >>> trailCalls >>> (dotGroup >>> trailCalls).recur
 

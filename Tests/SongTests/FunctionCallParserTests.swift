@@ -24,7 +24,8 @@ class FunctionCallParserTests: XCTestCase {
         "(|x|x)(1)(2)".ok()
         "(|x|x)(1)(2).foo".ok()
         "1.(|x|x)".ok()
-        "(4)()".ok()
+        "(foo)()".ok()
+        "(foo())()".ok()
         "foo()".ok()
         "foo(bar)".ok()
         "foo(bar())".ok()
@@ -38,7 +39,7 @@ class FunctionCallParserTests: XCTestCase {
         "foo(|x|x.foo(bar()())(),1)".ok()
 
         "4()".bad()
-        "|x|x()".bad()
         "4.|x|x".bad()
+        "(4)()".bad()
     }
 }
