@@ -17,7 +17,7 @@ extension Expression {
     private func evaluate(expression: Expression, context: Context) throws -> Expression {
         switch expression {
 
-        case .bool, .numberValue, .character, .closure, .anyVariable:
+        case .bool, .number, .character, .closure, .anyVariable:
             return expression
 
         case let .list(exprs):
@@ -59,31 +59,31 @@ extension Expression {
             guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
             let left = numbers.removeFirst()
             let right = numbers.removeFirst()
-            return .numberValue(left.times(right))
+            return .number(left.times(right))
         case "/":
             var numbers = try toNumbers(arguments: arguments, context: context)
             guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
             let left = numbers.removeFirst()
             let right = numbers.removeFirst()
-            return .numberValue(left.floatDividedBy(right))
+            return .number(left.floatDividedBy(right))
         case "Mod":
             var numbers = try toNumbers(arguments: arguments, context: context)
             guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
             let left = numbers.removeFirst()
             let right = numbers.removeFirst()
-            return .numberValue(try left.modulo(right))
+            return .number(try left.modulo(right))
         case "Div":
             var numbers = try toNumbers(arguments: arguments, context: context)
             guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
             let left = numbers.removeFirst()
             let right = numbers.removeFirst()
-            return .numberValue(try left.integerDividedBy(right))
+            return .number(try left.integerDividedBy(right))
         case "+":
             guard arguments.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
             let result: Expression
             do {
                 result = try numberOp(arguments: arguments, context: context) {
-                     .numberValue($0.plus($1))
+                     .number($0.plus($1))
                 }
             } catch EvaluationError.notANumber {
                 result = try listOp(arguments: arguments, context: context) {
@@ -95,11 +95,11 @@ extension Expression {
             var numbers = try toNumbers(arguments: arguments, context: context)
             if numbers.count == 1 {
                 let right = numbers.removeFirst()
-                return .numberValue(right.negate())
+                return .number(right.negate())
             } else if numbers.count == 2 {
                 let left = numbers.removeFirst()
                 let right = numbers.removeFirst()
-                return .numberValue(left.minus(right))
+                return .number(left.minus(right))
             } else {
                 throw EvaluationError.signatureMismatch(arguments)
             }
@@ -157,7 +157,7 @@ extension Expression {
             do {
                 let string = try left.evaluate(context: context).asString()
                 let number = try Number.convert(from: string)
-                return Expression.numberValue(number)
+                return Expression.number(number)
             } catch EvaluationError.numericMismatch {
                 throw EvaluationError.notANumber(left)
             }
@@ -165,7 +165,7 @@ extension Expression {
             var numbers = try toNumbers(arguments: arguments, context: context)
             guard numbers.count == 1 else { throw EvaluationError.signatureMismatch(arguments) }
             let left = numbers.removeFirst()
-            return .numberValue(left.truncate())
+            return .number(left.truncate())
         case "out":
             return try evaluateOut(arguments: arguments, context: context)
         default:
@@ -208,7 +208,7 @@ extension Expression {
     }
 
     private func extractNumber(_ expression: Expression, context: Context) throws -> Number {
-        if case .numberValue(let number) = try expression.evaluate(context: context) {
+        if case .number(let number) = try expression.evaluate(context: context) {
             return number
         }
         throw EvaluationError.notANumber(expression)
@@ -266,7 +266,7 @@ extension Expression {
     private func toNumbers(arguments: [Expression], context: Context) throws -> [Number] {
         return try arguments.map { arg -> Number in
             let evaluatedArg = try arg.evaluate(context: context)
-            guard case let .numberValue(n) = evaluatedArg else {
+            guard case let .number(n) = evaluatedArg else {
                 throw EvaluationError.notANumber(evaluatedArg)
             }
             return n
@@ -307,7 +307,7 @@ extension Expression {
 
     private func validatePatterns(_ subfunction: Subfunction) throws {
         try subfunction.patterns.forEach { pattern in
-            if case .numberValue(Number.float) = pattern {
+            if case .number(Number.float) = pattern {
                 throw EvaluationError.patternsCannotBeFloats(pattern)
             }
         }
@@ -371,7 +371,7 @@ extension Expression {
             () // Do nothing
         case .variable(let name):
             if let existingValue = patternEqualityContext[name] {
-                if case .numberValue(let numberValue) = existingValue {
+                if case .number(let numberValue) = existingValue {
                     if case .float = numberValue {
                         throw EvaluationError.patternsCannotBeFloats(argument)
                     }
