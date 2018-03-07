@@ -122,7 +122,7 @@ public func makeParser() -> ParserProtocol {
     let arguments = argument >>> (argumentDelimiter >>> argument).recur
     let wrappedArguments = lParen >>> skipSpaceAndNewlines >>> arguments.recur.tag("args") >>> skipSpaceAndNewlines >>> rParen
 
-    let callable = call | variableName | lambda
+    let callable = call | variableName | lambda | scope
 
     let groupName = name.tag("functionName")
     let groupAnon = lParen >>> callable >>> rParen
