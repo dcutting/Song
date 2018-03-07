@@ -29,7 +29,7 @@ public indirect enum Expression {
     case variable(String)
     case ignore
     case call(name: String, arguments: [Expression])
-    case callAnonymous(closure: Expression, arguments: [Expression])
+    case callAnon(closure: Expression, arguments: [Expression])
 
     case subfunction(Subfunction)
     case constant(variable: Expression, value: Expression)

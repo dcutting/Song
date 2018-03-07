@@ -43,7 +43,7 @@ extension Expression {
         case let .call(name: name, arguments: arguments):
             return try evaluateCall(expression: expression, name: name, arguments: arguments, context: context)
 
-        case let .callAnonymous(subfunction, arguments):
+        case let .callAnon(subfunction, arguments):
             return try evaluateCallAnonymous(closure: subfunction, arguments: arguments, callingContext: context)
 
         case let .scope(statements):

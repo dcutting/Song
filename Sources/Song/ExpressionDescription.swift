@@ -52,7 +52,7 @@ extension Expression: CustomStringConvertible {
         case let .call(name: name, arguments: arguments):
             return descriptionCall(name: name, arguments: arguments)
 
-        case let .callAnonymous(closure, arguments):
+        case let .callAnon(closure, arguments):
             return descriptionCallAnonymous(closure: closure, arguments: arguments)
 
         case let .scope(expressions):

@@ -37,7 +37,7 @@ public func ==(lhs: Expression, rhs: Expression) -> Bool {
     case let (.call(lhsName, lhsArguments), .call(rhsName, rhsArguments)):
         return lhsName == rhsName && lhsArguments == rhsArguments
 
-    case let (.callAnonymous(lhsClosure, lhsArguments), .callAnonymous(rhsClosure, rhsArguments)):
+    case let (.callAnon(lhsClosure, lhsArguments), .callAnon(rhsClosure, rhsArguments)):
         return lhsClosure == rhsClosure && lhsArguments == rhsArguments
 
     case let (.scope(lhsExpressions), .scope(rhsExpressions)):
