@@ -101,26 +101,10 @@ public func makeTransformer() -> Transformer<Expression> {
 
     // Function calls.
 
-//    t.rule(["int": .simple("n")]) {
-//        let n = try $0.str("n")
-//        guard let int = IntType(n) else { throw SongTransformError.notNumeric(n) }
-//        return .integerValue(int)
-//    }
-//
-//    t.rule(["variableName": .simple("name")]) {
-//        .variable(try $0.str("name"))
-//    }
-
-    // TODO: needed?
     t.rule(["args": .series("args")]) {
         .list(try $0.vals("args"))
     }
 
-//    t.rule(["functionName": .simple("name")]) {
-//        .call(name: try $0.str("name"), arguments: [])
-//    }
-
-    // TODO: args should be simple or series?
     t.rule(["functionName": .simple("name"), "args": .series("args")]) {
         .call(name: try $0.str("name"), arguments: try $0.vals("args"))
     }
@@ -149,7 +133,6 @@ public func makeTransformer() -> Transformer<Expression> {
         return .callAnonymous(closure: expr, arguments: [head])
     }
 
-    // TODO: args should be simple or series?
     t.rule(["head": .simple("head"), "anonCall": .simple("expr"), "args": .series("args")]) {
         let head = try $0.val("head")
         let expr = try $0.val("expr")
@@ -162,7 +145,6 @@ public func makeTransformer() -> Transformer<Expression> {
         return .callAnonymous(closure: try $0.val("anon"), arguments: args)
     }
 
-    // TODO: args should be simple or series?
     t.rule(["anonCall": .simple("args")]) {
         guard case .list(let args) = try $0.val("args") else { throw SongTransformError.unknown }
         let dummy = Expression.booleanValue(false)
@@ -173,17 +155,9 @@ public func makeTransformer() -> Transformer<Expression> {
         try $0.val("call")
     }
 
-    t.rule(["dotCall": .simple("call")]) {
-        try $0.val("call")
-    }
-
     t.rule(["trailCalls": .series("calls")]) {
         try reduce(try $0.vals("calls"))
     }
-
-    //    t.rule(["trailCalls": .simple("call")]) {
-    //        try $0.val("call")
-    //    }
 
     t.rule(["dotCall": .series("calls")]) {
         try reduce(try $0.vals("calls"))
@@ -192,41 +166,8 @@ public func makeTransformer() -> Transformer<Expression> {
     t.rule(["scopeStatement": .simple("statement")]) {
         try $0.val("statement")
     }
-//
-//    t.rule(["anonSubject": .simple("subject"), "args": .series("args")]) {
-//        .callAnonymous(closure: try $0.val("subject"), arguments: try $0.vals("args"))
-//    }
-//
-//    t.rule(["anonSubject": .simple("subject")]) {
-//        .callAnonymous(closure: try $0.val("subject"), arguments: [])
-//    }
-//
-//    t.rule(["functionName": .simple("name"), "args": .series("args")]) {
-//        .call(name: try $0.str("name"), arguments: try $0.vals("args"))
-//    }
-//
-//    t.rule(["subject": .simple("subject"), "calls": .series("calls")]) {
-//        let subject = try $0.val("subject")
-//        var calls = try $0.vals("calls")
-//        guard calls.count > 0 else { throw SongTransformError.notAFunction }
-//        let firstCall = calls.removeFirst()
-//        guard case let .call(call) = firstCall else { throw SongTransformError.notAFunction }
-//        let arguments = [subject] + call.arguments
-//        let firstFuncCall = Expression.call(name: call.name, arguments: arguments)
-//        return try calls.reduce(firstFuncCall) { acc, next in
-//            guard case .call(let name, var arguments) = next else {
-//                throw SongTransformError.notAFunction
-//            }
-//            arguments.insert(acc, at: 0)
-//            return Expression.call(name: name, arguments: arguments)
-//        }
-//    }
 
     // Function declarations.
-
-    t.rule(["param": .simple("param")]) {
-        try $0.val("param")
-    }
 
     t.rule(["subject": .simple("subject"), "functionName": .simple("name"), "guard": .simple("guard"), "body": .simple("body")]) {
         .subfunction(try transformFunction(args: $0))
@@ -237,12 +178,6 @@ public func makeTransformer() -> Transformer<Expression> {
     }
 
     t.rule(["functionName": .simple("name"), "body": .simple("body"), "guard": .simple("guard"), "params": .series("params")]) {
-        .subfunction(try transformFunction(args: $0))
-    }
-
-    // Lambdas.
-
-    t.rule(["params": .series("params"), "lambdaBody": .simple("body")]) {
         .subfunction(try transformFunction(args: $0))
     }
 
