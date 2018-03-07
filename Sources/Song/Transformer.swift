@@ -38,7 +38,7 @@ public func makeTransformer() -> Transformer<Expression> {
     t.rule(["integer": .simple("i")]) {
         let i = try $0.str("i")
         guard let int = IntType(i) else { throw SongTransformError.notNumeric(i) }
-        return .integerValue(int)
+        return .int(int)
     }
 
     t.rule(["float": .simple("f")]) {

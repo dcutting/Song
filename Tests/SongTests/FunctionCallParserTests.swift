@@ -4,7 +4,7 @@ import Song
 class FunctionCallParserTests: XCTestCase {
 
     func test() {
-        "1.inc".becomes(.call("inc", [.integerValue(1)]))
+        "1.inc".becomes(.call("inc", [.int(1)]))
         "x.inc".ok()
         "1.inc()".ok()
         "1.inc.foo".ok()

@@ -15,10 +15,10 @@ class VariableTests: XCTestCase {
     }
 
     func testEvaluateBoundVariable() {
-        let context: Context = ["n": .integerValue(5)]
+        let context: Context = ["n": .int(5)]
         assertNoThrow {
             let result = try variable.evaluate(context: context)
-            XCTAssertEqual(Expression.integerValue(5), result)
+            XCTAssertEqual(Expression.int(5), result)
         }
     }
     

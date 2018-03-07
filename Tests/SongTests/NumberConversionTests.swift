@@ -7,7 +7,7 @@ class NumberConversionTests: XCTestCase {
         assertNoThrow {
             let input = "99"
             let call = Expression.call("number", [.stringValue(input)])
-            XCTAssertEqual(.integerValue(99), try call.evaluate())
+            XCTAssertEqual(.int(99), try call.evaluate())
         }
     }
 
@@ -16,7 +16,7 @@ class NumberConversionTests: XCTestCase {
             let context: Context = ["x": .stringValue("-5")]
             let variable = Expression.variable("x")
             let call = Expression.call("number", [variable])
-            XCTAssertEqual(.integerValue(-5), try call.evaluate(context: context))
+            XCTAssertEqual(.int(-5), try call.evaluate(context: context))
         }
     }
 
@@ -35,13 +35,13 @@ class NumberConversionTests: XCTestCase {
     }
 
     func test_number_invalidString_throws() {
-        let input = Expression.list([.char("9"), .integerValue(99)]) // This is a list that doesn't contain only characters (i.e., not a string).
+        let input = Expression.list([.char("9"), .int(99)]) // This is a list that doesn't contain only characters (i.e., not a string).
         let call = Expression.call("number", [input])
         XCTAssertThrowsError(try call.evaluate())
     }
 
     func test_number_invalidType_throws() {
-        let call = Expression.call("number", [.integerValue(99)])
+        let call = Expression.call("number", [.int(99)])
         XCTAssertThrowsError(try call.evaluate())
     }
 

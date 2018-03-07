@@ -6,18 +6,18 @@ class BuiltinFunctionTests: XCTestCase {
     // Invalid types.
 
     func test_invalidArgumentTypes() {
-        XCTAssertThrowsError(try Expression.call("*", [.integerValue(5), .stringValue("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("/", [.integerValue(5), .stringValue("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Mod", [.integerValue(5), .stringValue("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Div", [.integerValue(5), .stringValue("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("+", [.integerValue(5), .stringValue("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("-", [.integerValue(5), .stringValue("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("<", [.integerValue(5), .stringValue("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call(">", [.integerValue(5), .stringValue("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("<=", [.integerValue(5), .stringValue("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call(">=", [.integerValue(5), .stringValue("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Eq", [.integerValue(5), .stringValue("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Neq", [.integerValue(5), .stringValue("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call("*", [.int(5), .stringValue("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call("/", [.int(5), .stringValue("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call("Mod", [.int(5), .stringValue("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call("Div", [.int(5), .stringValue("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call("+", [.int(5), .stringValue("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call("-", [.int(5), .stringValue("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call("<", [.int(5), .stringValue("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call(">", [.int(5), .stringValue("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call("<=", [.int(5), .stringValue("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call(">=", [.int(5), .stringValue("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call("Eq", [.int(5), .stringValue("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call("Neq", [.int(5), .stringValue("hi")]).evaluate())
         XCTAssertThrowsError(try Expression.call("And", [.bool(true), .stringValue("hi")]).evaluate())
         XCTAssertThrowsError(try Expression.call("Or", [.bool(true), .stringValue("hi")]).evaluate())
         XCTAssertThrowsError(try Expression.call("Not", [.stringValue("hi")]).evaluate())
@@ -26,30 +26,30 @@ class BuiltinFunctionTests: XCTestCase {
     // Invalid number of arguments.
 
     func test_invalidArgumentCount() {
-        XCTAssertThrowsError(try Expression.call("*", [.integerValue(1)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("*", [.integerValue(1), .integerValue(2), .integerValue(3)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("/", [.integerValue(1)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("/", [.integerValue(1), .integerValue(2), .integerValue(3)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Mod", [.integerValue(1)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Mod", [.integerValue(1), .integerValue(2), .integerValue(3)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Div", [.integerValue(1)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Div", [.integerValue(1), .integerValue(2), .integerValue(3)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("+", [.integerValue(1)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("+", [.integerValue(1), .integerValue(2), .integerValue(3)]).evaluate())
+        XCTAssertThrowsError(try Expression.call("*", [.int(1)]).evaluate())
+        XCTAssertThrowsError(try Expression.call("*", [.int(1), .int(2), .int(3)]).evaluate())
+        XCTAssertThrowsError(try Expression.call("/", [.int(1)]).evaluate())
+        XCTAssertThrowsError(try Expression.call("/", [.int(1), .int(2), .int(3)]).evaluate())
+        XCTAssertThrowsError(try Expression.call("Mod", [.int(1)]).evaluate())
+        XCTAssertThrowsError(try Expression.call("Mod", [.int(1), .int(2), .int(3)]).evaluate())
+        XCTAssertThrowsError(try Expression.call("Div", [.int(1)]).evaluate())
+        XCTAssertThrowsError(try Expression.call("Div", [.int(1), .int(2), .int(3)]).evaluate())
+        XCTAssertThrowsError(try Expression.call("+", [.int(1)]).evaluate())
+        XCTAssertThrowsError(try Expression.call("+", [.int(1), .int(2), .int(3)]).evaluate())
         XCTAssertThrowsError(try Expression.call("-", []).evaluate())
-        XCTAssertThrowsError(try Expression.call("-", [.integerValue(1), .integerValue(2), .integerValue(3)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("<", [.integerValue(1)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("<", [.integerValue(1), .integerValue(2), .integerValue(3)]).evaluate())
-        XCTAssertThrowsError(try Expression.call(">", [.integerValue(1)]).evaluate())
-        XCTAssertThrowsError(try Expression.call(">", [.integerValue(1), .integerValue(2), .integerValue(3)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("<=", [.integerValue(1)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("<=", [.integerValue(1), .integerValue(2), .integerValue(3)]).evaluate())
-        XCTAssertThrowsError(try Expression.call(">=", [.integerValue(1)]).evaluate())
-        XCTAssertThrowsError(try Expression.call(">=", [.integerValue(1), .integerValue(2), .integerValue(3)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Eq", [.integerValue(1)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Eq", [.integerValue(1), .integerValue(2), .integerValue(3)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Neq", [.integerValue(1)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Neq", [.integerValue(1), .integerValue(2), .integerValue(3)]).evaluate())
+        XCTAssertThrowsError(try Expression.call("-", [.int(1), .int(2), .int(3)]).evaluate())
+        XCTAssertThrowsError(try Expression.call("<", [.int(1)]).evaluate())
+        XCTAssertThrowsError(try Expression.call("<", [.int(1), .int(2), .int(3)]).evaluate())
+        XCTAssertThrowsError(try Expression.call(">", [.int(1)]).evaluate())
+        XCTAssertThrowsError(try Expression.call(">", [.int(1), .int(2), .int(3)]).evaluate())
+        XCTAssertThrowsError(try Expression.call("<=", [.int(1)]).evaluate())
+        XCTAssertThrowsError(try Expression.call("<=", [.int(1), .int(2), .int(3)]).evaluate())
+        XCTAssertThrowsError(try Expression.call(">=", [.int(1)]).evaluate())
+        XCTAssertThrowsError(try Expression.call(">=", [.int(1), .int(2), .int(3)]).evaluate())
+        XCTAssertThrowsError(try Expression.call("Eq", [.int(1)]).evaluate())
+        XCTAssertThrowsError(try Expression.call("Eq", [.int(1), .int(2), .int(3)]).evaluate())
+        XCTAssertThrowsError(try Expression.call("Neq", [.int(1)]).evaluate())
+        XCTAssertThrowsError(try Expression.call("Neq", [.int(1), .int(2), .int(3)]).evaluate())
         XCTAssertThrowsError(try Expression.call("And", [.bool(true)]).evaluate())
         XCTAssertThrowsError(try Expression.call("And", [.bool(true), .bool(true), .bool(true)]).evaluate())
         XCTAssertThrowsError(try Expression.call("Or", [.bool(true)]).evaluate())
@@ -63,11 +63,11 @@ class BuiltinFunctionTests: XCTestCase {
     func test_evaluatesArguments() {
         let first = Expression.variable("x")
         let second = Expression.variable("y")
-        let context: Context = ["x": .integerValue(9), "y": .integerValue(5)]
+        let context: Context = ["x": .int(9), "y": .int(5)]
 
         assertNoThrow {
             let op = try Expression.call("*", [first, second]).evaluate(context: context)
-            XCTAssertEqual(Expression.integerValue(45), op)
+            XCTAssertEqual(Expression.int(45), op)
         }
 
         assertNoThrow {
@@ -77,27 +77,27 @@ class BuiltinFunctionTests: XCTestCase {
 
         assertNoThrow {
             let op = try Expression.call("Mod", [first, second]).evaluate(context: context)
-            XCTAssertEqual(Expression.integerValue(4), op)
+            XCTAssertEqual(Expression.int(4), op)
         }
 
         assertNoThrow {
             let op = try Expression.call("Div", [first, second]).evaluate(context: context)
-            XCTAssertEqual(Expression.integerValue(1), op)
+            XCTAssertEqual(Expression.int(1), op)
         }
 
         assertNoThrow {
             let op = try Expression.call("+", [first, second]).evaluate(context: context)
-            XCTAssertEqual(Expression.integerValue(14), op)
+            XCTAssertEqual(Expression.int(14), op)
         }
 
         assertNoThrow {
             let op = try Expression.call("-", [first, second]).evaluate(context: context)
-            XCTAssertEqual(Expression.integerValue(4), op)
+            XCTAssertEqual(Expression.int(4), op)
         }
 
         assertNoThrow {
             let op = try Expression.call("-", [first]).evaluate(context: context)
-            XCTAssertEqual(Expression.integerValue(-9), op)
+            XCTAssertEqual(Expression.int(-9), op)
         }
 
         assertNoThrow {

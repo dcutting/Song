@@ -39,7 +39,7 @@ public indirect enum Expression {
 
 public extension Expression {
 
-    public static func integerValue(_ int: IntType) -> Expression {
+    public static func int(_ int: IntType) -> Expression {
         return .number(Number.int(int))
     }
 

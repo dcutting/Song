@@ -12,7 +12,7 @@ class FunctionTests: XCTestCase {
     }
 
     func test_evaluate_namedFunction_returnsClosure() {
-        let context: Context = ["x": .integerValue(5)]
+        let context: Context = ["x": .int(5)]
         assertNoThrow {
             let actual = try namedFunction.evaluate(context: context)
             let expected = Expression.closure("foo", [namedFunction], context)
@@ -21,7 +21,7 @@ class FunctionTests: XCTestCase {
     }
 
     func test_evaluate_namedFunction_shadowsExistingNonClosure_throws() {
-        let context: Context = ["foo": .integerValue(5)]
+        let context: Context = ["foo": .int(5)]
         XCTAssertThrowsError(try namedFunction.evaluate(context: context))
     }
 

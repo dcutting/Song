@@ -22,8 +22,8 @@ class ContextTests: XCTestCase {
     }
 
     func testIsEqual_simple_differentKeys_returnsFalse() {
-        let left: Context = ["a": .integerValue(4)]
-        let right: Context = ["b": .integerValue(4)]
+        let left: Context = ["a": .int(4)]
+        let right: Context = ["b": .int(4)]
         XCTAssertFalse(Song.isEqual(lhsContext: left, rhsContext: right))
     }
 }

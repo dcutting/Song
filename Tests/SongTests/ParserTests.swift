@@ -10,12 +10,12 @@ class ParserTests: XCTestCase {
     }
 
     func test_integers() {
-        "99".becomes(.integerValue(99))
-        "+99".becomes(.integerValue(99))
-        "-21".becomes(.call("-", [.integerValue(21)]))
-        "0".becomes(.integerValue(0))
-        "-0".becomes(.call("-", [.integerValue(0)]))
-        " 99 ".becomes(.integerValue(99))
+        "99".becomes(.int(99))
+        "+99".becomes(.int(99))
+        "-21".becomes(.call("-", [.int(21)]))
+        "0".becomes(.int(0))
+        "-0".becomes(.call("-", [.int(0)]))
+        " 99 ".becomes(.int(99))
 
         "9d".fails()
     }
@@ -52,11 +52,11 @@ class ParserTests: XCTestCase {
     func test_lists() {
         "[]".becomes(.list([]))
         " [] ".becomes(.list([]))
-        "[1,No]".becomes(.list([.integerValue(1), .bool(false)]))
-        "[ 1 , Yes , \"hi\" ]".becomes(.list([.integerValue(1), .bool(true), .stringValue("hi")]))
+        "[1,No]".becomes(.list([.int(1), .bool(false)]))
+        "[ 1 , Yes , \"hi\" ]".becomes(.list([.int(1), .bool(true), .stringValue("hi")]))
         "[[1,2],[No,4], [], \"hi\"]".becomes(.list([
-            .list([.integerValue(1), .integerValue(2)]),
-            .list([.bool(false), .integerValue(4)]),
+            .list([.int(1), .int(2)]),
+            .list([.bool(false), .int(4)]),
             .list([]),
             .stringValue("hi")
             ]))
@@ -66,21 +66,21 @@ class ParserTests: XCTestCase {
 
   No
 ]
-""".becomes(.list([.integerValue(1), .bool(false)]))
+""".becomes(.list([.int(1), .bool(false)]))
     }
 
     func test_listConstructors() {
         "[x|xs]".becomes(.listCons([.variable("x")], .variable("xs")))
         "[x,y|xs]".becomes(.listCons([.variable("x"), .variable("y")], .variable("xs")))
-        "[ 1 , x | xs ]".becomes(.listCons([.integerValue(1), .variable("x")], .variable("xs")))
-        "[Yes|2]".becomes(.listCons([.bool(true)], .integerValue(2)))
+        "[ 1 , x | xs ]".becomes(.listCons([.int(1), .variable("x")], .variable("xs")))
+        "[Yes|2]".becomes(.listCons([.bool(true)], .int(2)))
         "[ f(x) | g(x) ]".becomes(.listCons([.call("f", [.variable("x")])],
                                                    .call("g", [.variable("x")])))
         "[1,2|[3,4|[5,6]]]".becomes(.listCons(
-            [.integerValue(1), .integerValue(2)],
+            [.int(1), .int(2)],
             .listCons(
-                [.integerValue(3), .integerValue(4)],
-                .list([.integerValue(5), .integerValue(6)])
+                [.int(3), .int(4)],
+                .list([.int(5), .int(6)])
             )))
 """
 [
@@ -95,27 +95,27 @@ class ParserTests: XCTestCase {
     }
 
     func test_expressions() {
-        "1*2".becomes(.call("*", [.integerValue(1), .integerValue(2)]))
+        "1*2".becomes(.call("*", [.int(1), .int(2)]))
         "1*2*3".becomes(.call("*", [
-            .call("*", [.integerValue(1), .integerValue(2)]),
-            .integerValue(3)]))
+            .call("*", [.int(1), .int(2)]),
+            .int(3)]))
         "1+2*3/4-5".becomes(
             .call("-", [
                 .call("+", [
-                    .integerValue(1),
+                    .int(1),
                     .call("/", [
                         .call("*", [
-                            .integerValue(2),
-                            .integerValue(3)
+                            .int(2),
+                            .int(3)
                             ])
-                        , .integerValue(4)]),
+                        , .int(4)]),
                     ]),
-                .integerValue(5)
+                .int(5)
                 ]))
-        "12 Div 5".becomes(.call("Div", [.integerValue(12), .integerValue(5)]))
-        "12 Mod 5".becomes(.call("Mod", [.integerValue(12), .integerValue(5)]))
-        "x Eq 5".becomes(.call("Eq", [.variable("x"), .integerValue(5)]))
-        "Do 2, 5 < 7 End And Do Yes End".becomes(.call("And", [.scope([.integerValue(2), .call("<", [.integerValue(5), .integerValue(7)])]), .scope([.bool(true)])]))
+        "12 Div 5".becomes(.call("Div", [.int(12), .int(5)]))
+        "12 Mod 5".becomes(.call("Mod", [.int(12), .int(5)]))
+        "x Eq 5".becomes(.call("Eq", [.variable("x"), .int(5)]))
+        "Do 2, 5 < 7 End And Do Yes End".becomes(.call("And", [.scope([.int(2), .call("<", [.int(5), .int(7)])]), .scope([.bool(true)])]))
 
         "12 Div5".fails()
         "12 Mod5".fails()
@@ -124,35 +124,35 @@ class ParserTests: XCTestCase {
     }
 
     func test_equality() {
-        "4 Neq 8".becomes(.call("Neq", [.integerValue(4), .integerValue(8)]))
+        "4 Neq 8".becomes(.call("Neq", [.int(4), .int(8)]))
         "\"hi\" Neq \"ho\"".becomes(.call("Neq", [.stringValue("hi"), .stringValue("ho")]))
-        "[4] Neq [7]".becomes(.call("Neq", [.list([.integerValue(4)]), .list([.integerValue(7)])]))
+        "[4] Neq [7]".becomes(.call("Neq", [.list([.int(4)]), .list([.int(7)])]))
 
-        "4 Eq 3".becomes(.call("Eq", [.integerValue(4), .integerValue(3)]))
-        "4 Eq [7]".becomes(.call("Eq", [.integerValue(4), .list([.integerValue(7)])]))
-        "4 Eq \"hi\"".becomes(.call("Eq", [.integerValue(4), .stringValue("hi")]))
+        "4 Eq 3".becomes(.call("Eq", [.int(4), .int(3)]))
+        "4 Eq [7]".becomes(.call("Eq", [.int(4), .list([.int(7)])]))
+        "4 Eq \"hi\"".becomes(.call("Eq", [.int(4), .stringValue("hi")]))
 
         "\"hi\" Eq \"ho\"".becomes(.call("Eq", [.stringValue("hi"), .stringValue("ho")]))
-        "\"hi\" Eq [7]".becomes(.call("Eq", [.stringValue("hi"), .list([.integerValue(7)])]))
-        "\"hi\" Eq 3".becomes(.call("Eq", [.stringValue("hi"), .integerValue(3)]))
+        "\"hi\" Eq [7]".becomes(.call("Eq", [.stringValue("hi"), .list([.int(7)])]))
+        "\"hi\" Eq 3".becomes(.call("Eq", [.stringValue("hi"), .int(3)]))
 
-        "[7] Eq [7]".becomes(.call("Eq", [.list([.integerValue(7)]), .list([.integerValue(7)])]))
-        "[7] Eq 3".becomes(.call("Eq", [.list([.integerValue(7)]), .integerValue(3)]))
-        "[7] Eq \"hi\"".becomes(.call("Eq", [.list([.integerValue(7)]), .stringValue("hi")]))
+        "[7] Eq [7]".becomes(.call("Eq", [.list([.int(7)]), .list([.int(7)])]))
+        "[7] Eq 3".becomes(.call("Eq", [.list([.int(7)]), .int(3)]))
+        "[7] Eq \"hi\"".becomes(.call("Eq", [.list([.int(7)]), .stringValue("hi")]))
     }
 
     func test_wrappedExpressions() {
         "1+2*3".becomes(.call("+", [
-            .integerValue(1),
-            .call("*", [.integerValue(2), .integerValue(3)])
+            .int(1),
+            .call("*", [.int(2), .int(3)])
             ]))
         "(1+2)*3".becomes(.call("*", [
-            .call("+", [.integerValue(1), .integerValue(2)]),
-            .integerValue(3)
+            .call("+", [.int(1), .int(2)]),
+            .int(3)
             ]))
         "(5-+2)*-3".becomes(.call("*", [
-            .call("-", [.integerValue(5), .integerValue(2)]),
-            .call("-", [.integerValue(3)])
+            .call("-", [.int(5), .int(2)]),
+            .call("-", [.int(3)])
             ]))
     }
 
@@ -172,7 +172,7 @@ class ParserTests: XCTestCase {
 
     func test_subfunctions() {
         "foo() = 5".becomes(
-            .subfunction(Subfunction(name: "foo", patterns: [], when: .bool(true), body: .integerValue(5)))
+            .subfunction(Subfunction(name: "foo", patterns: [], when: .bool(true), body: .int(5)))
         )
         "foo(a) = a".becomes(
             .subfunction(Subfunction(name: "foo", patterns: [.variable("a")], when: .bool(true), body: .variable("a")))
@@ -193,13 +193,13 @@ foo(
         "a.foo When a < 50 = a".becomes(
             .subfunction(Subfunction(name: "foo",
                                      patterns: [.variable("a")],
-                                     when: .call("<", [.variable("a"), .integerValue(50)]),
+                                     when: .call("<", [.variable("a"), .int(50)]),
                                      body: .variable("a")))
         )
         "a.foo() When a < 50 = a".becomes(
             .subfunction(Subfunction(name: "foo",
                                      patterns: [.variable("a")],
-                                     when: .call("<", [.variable("a"), .integerValue(50)]),
+                                     when: .call("<", [.variable("a"), .int(50)]),
                                      body: .variable("a")))
         )
         "a.plus(b) = a + b".becomes(
@@ -215,45 +215,45 @@ foo(
 """
 a.foo =
  5
-""".becomes(.subfunction(Subfunction(name: "foo", patterns: [.variable("a")], when: .bool(true), body: .integerValue(5))))
+""".becomes(.subfunction(Subfunction(name: "foo", patterns: [.variable("a")], when: .bool(true), body: .int(5))))
 """
 foo() =
 5
-""".becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .bool(true), body: .integerValue(5))))
-("foo() =" + " " + "\n5").becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .bool(true), body: .integerValue(5))))
+""".becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .bool(true), body: .int(5))))
+("foo() =" + " " + "\n5").becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .bool(true), body: .int(5))))
 """
 foo() =
   5
-""".becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .bool(true), body: .integerValue(5))))
+""".becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .bool(true), body: .int(5))))
 """
 foo() = Do
   5
 End
-""".becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .bool(true), body: .scope([.integerValue(5)]))))
+""".becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .bool(true), body: .scope([.int(5)]))))
 """
 foo() =
 Do
   5
 End
-""".becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .bool(true), body: .scope([.integerValue(5)]))))
+""".becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .bool(true), body: .scope([.int(5)]))))
 """
 foo() = Do 5
 End
-""".becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .bool(true), body: .scope([.integerValue(5)]))))
+""".becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .bool(true), body: .scope([.int(5)]))))
 """
 foo() = Do 5 End
-""".becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .bool(true), body: .scope([.integerValue(5)]))))
+""".becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .bool(true), body: .scope([.int(5)]))))
     }
 
     func test_constants() {
-        "x = 5".becomes(.assign(variable: .variable("x"), value: .integerValue(5)))
-        "x=5".becomes(.assign(variable: .variable("x"), value: .integerValue(5)))
-        "_ = 5".becomes(.assign(variable: .ignore, value: .integerValue(5)))
+        "x = 5".becomes(.assign(variable: .variable("x"), value: .int(5)))
+        "x=5".becomes(.assign(variable: .variable("x"), value: .int(5)))
+        "_ = 5".becomes(.assign(variable: .ignore, value: .int(5)))
         "double = |x| x * 2".becomes(.assign(variable: .variable("double"), value:
             .subfunction(Subfunction(name: nil,
                                      patterns: [.variable("x")],
                                      when: .bool(true),
-                                     body: .call("*", [.variable("x"), .integerValue(2)])))))
+                                     body: .call("*", [.variable("x"), .int(2)])))))
 
         "2 = 5".fails()
     }
@@ -270,27 +270,27 @@ foo() = Do 5 End
  x
 """.becomes(.subfunction(Subfunction(name: nil, patterns: [.variable("x"), .variable("y")], when: .bool(true), body: .variable("x"))))
         "|[x|xs], y| x".becomes(.subfunction(Subfunction(name: nil, patterns: [.listCons([.variable("x")], .variable("xs")), .variable("y")], when: .bool(true), body: .variable("x"))))
-        "|_| 5".becomes(.subfunction(Subfunction(name: nil, patterns: [.ignore], when: .bool(true), body: .integerValue(5))))
-        "|| 5".becomes(.subfunction(Subfunction(name: nil, patterns: [], when: .bool(true), body: .integerValue(5))))
+        "|_| 5".becomes(.subfunction(Subfunction(name: nil, patterns: [.ignore], when: .bool(true), body: .int(5))))
+        "|| 5".becomes(.subfunction(Subfunction(name: nil, patterns: [], when: .bool(true), body: .int(5))))
     }
 
     func test_negations() {
-        "+5".becomes(.integerValue(5))
-        "-5".becomes(.call("-", [.integerValue(5)]))
+        "+5".becomes(.int(5))
+        "-5".becomes(.call("-", [.int(5)]))
         "-x".becomes(.call("-", [.variable("x")]))
-        "-foo(1)".becomes(.call("-", [.call("foo", [.integerValue(1)])]))
+        "-foo(1)".becomes(.call("-", [.call("foo", [.int(1)])]))
         "--x".becomes(.call("-", [.call("-", [.variable("x")])]))
         "Not x".becomes(.call("Not", [.variable("x")]))
         "Not Not x".becomes(.call("Not", [.call("Not", [.variable("x")])]))
-        "9--5".becomes(.call("-", [.integerValue(9), .call("-", [.integerValue(5)])]))
+        "9--5".becomes(.call("-", [.int(9), .call("-", [.int(5)])]))
     }
 
     func test_calls() {
         "foo()".becomes(.call("foo", []))
         "foo(a)".becomes(.call("foo", [.variable("a")]))
-        "foo(4)".becomes(.call("foo", [.integerValue(4)]))
-        "4.foo".becomes(.call("foo", [.integerValue(4)]))
-        "4.foo()".becomes(.call("foo", [.integerValue(4)]))
+        "foo(4)".becomes(.call("foo", [.int(4)]))
+        "4.foo".becomes(.call("foo", [.int(4)]))
+        "4.foo()".becomes(.call("foo", [.int(4)]))
         "foo(x, y)".becomes(.call("foo", [.variable("x"), .variable("y")]))
         "foo(x,y)".becomes(.call("foo", [.variable("x"), .variable("y")]))
         "foo( x , y )".becomes(.call("foo", [.variable("x"), .variable("y")]))
@@ -304,30 +304,30 @@ foo(
     }
 
     func test_callChains() {
-        "3.foo.bar".becomes(.call("bar", [.call("foo", [.integerValue(3)])]))
-        "3.foo().bar".becomes(.call("bar", [.call("foo", [.integerValue(3)])]))
-        "3.foo.bar()".becomes(.call("bar", [.call("foo", [.integerValue(3)])]))
-        "3.foo().bar()".becomes(.call("bar", [.call("foo", [.integerValue(3)])]))
-        "3.foo(5).bar()".becomes(.call("bar", [.call("foo", [.integerValue(3), .integerValue(5)])]))
-        "3.foo(5).bar".becomes(.call("bar", [.call("foo", [.integerValue(3), .integerValue(5)])]))
-        "3.foo().bar(5)".becomes(.call("bar", [.call("foo", [.integerValue(3)]), .integerValue(5)]))
-        "3.foo.bar(5)".becomes(.call("bar", [.call("foo", [.integerValue(3)]), .integerValue(5)]))
-        "3.foo(9).bar(5)".becomes(.call("bar", [.call("foo", [.integerValue(3), .integerValue(9)]), .integerValue(5)]))
+        "3.foo.bar".becomes(.call("bar", [.call("foo", [.int(3)])]))
+        "3.foo().bar".becomes(.call("bar", [.call("foo", [.int(3)])]))
+        "3.foo.bar()".becomes(.call("bar", [.call("foo", [.int(3)])]))
+        "3.foo().bar()".becomes(.call("bar", [.call("foo", [.int(3)])]))
+        "3.foo(5).bar()".becomes(.call("bar", [.call("foo", [.int(3), .int(5)])]))
+        "3.foo(5).bar".becomes(.call("bar", [.call("foo", [.int(3), .int(5)])]))
+        "3.foo().bar(5)".becomes(.call("bar", [.call("foo", [.int(3)]), .int(5)]))
+        "3.foo.bar(5)".becomes(.call("bar", [.call("foo", [.int(3)]), .int(5)]))
+        "3.foo(9).bar(5)".becomes(.call("bar", [.call("foo", [.int(3), .int(9)]), .int(5)]))
         "foo().bar".becomes(.call("bar", [.call("foo", [])]))
         "foo().bar()".becomes(.call("bar", [.call("foo", [])]))
-        "foo(3).bar()".becomes(.call("bar", [.call("foo", [.integerValue(3)])]))
+        "foo(3).bar()".becomes(.call("bar", [.call("foo", [.int(3)])]))
     }
 
     func test_nestedCalls() {
 
         "foo(bar())".becomes(.call("foo", [.call("bar", [])]))
-        "foo(bar(4))".becomes(.call("foo", [.call("bar", [.integerValue(4)])]))
+        "foo(bar(4))".becomes(.call("foo", [.call("bar", [.int(4)])]))
         "foo(1, bar(4))".becomes(.call("foo", [
-            .integerValue(1),
-            .call("bar", [.integerValue(4)])]))
+            .int(1),
+            .call("bar", [.int(4)])]))
         "1.foo(bar(4))".becomes(.call("foo", [
-            .integerValue(1),
-            .call("bar", [.integerValue(4)])]))
+            .int(1),
+            .call("bar", [.int(4)])]))
 
         "foo( x( a , b ) , y( c , d) )".becomes(
             .call("foo", [
@@ -338,80 +338,80 @@ foo(
         "3.foo(5.bar(6.foo(9)).foo()).bar(foo(3).bar)".becomes(
             .call("bar", [
                 .call("foo", [
-                    .integerValue(3),
+                    .int(3),
                     .call("foo", [
                         .call("bar", [
-                            .integerValue(5),
+                            .int(5),
                             .call("foo", [
-                                .integerValue(6),
-                                .integerValue(9)
+                                .int(6),
+                                .int(9)
                                 ])
                             ])
                         ])
                     ]),
                 .call("bar", [
-                    .call("foo", [.integerValue(3)])
+                    .call("foo", [.int(3)])
                     ])
                 ]))
     }
 
     func test_scopes() {
         "Do _ End".becomes(.scope([.ignore]))
-        "Do 1 End".becomes(.scope([.integerValue(1)]))
-        "Do 1, End".becomes(.scope([.integerValue(1)]))
-        "Do 1, x End".becomes(.scope([.integerValue(1), .variable("x")]))
-        "Do 1 , x End".becomes(.scope([.integerValue(1), .variable("x")]))
-        "Do 1, x, End".becomes(.scope([.integerValue(1), .variable("x")]))
-        "Do x = 5, x End".becomes(.scope([.assign(variable: .variable("x"), value: .integerValue(5)), .variable("x")]))
+        "Do 1 End".becomes(.scope([.int(1)]))
+        "Do 1, End".becomes(.scope([.int(1)]))
+        "Do 1, x End".becomes(.scope([.int(1), .variable("x")]))
+        "Do 1 , x End".becomes(.scope([.int(1), .variable("x")]))
+        "Do 1, x, End".becomes(.scope([.int(1), .variable("x")]))
+        "Do x = 5, x End".becomes(.scope([.assign(variable: .variable("x"), value: .int(5)), .variable("x")]))
         "Do |x| x End".becomes(.scope([.subfunction(Subfunction(name: nil, patterns: [.variable("x")], when: .bool(true), body: .variable("x")))]))
         "Do x.inc = x+1, 7.inc End".becomes(.scope([
-            .subfunction(Subfunction(name: "inc", patterns: [.variable("x")], when: .bool(true), body: .call("+", [.variable("x"), .integerValue(1)]))),
-            .call("inc", [.integerValue(7)])]))
-        "Do 1, Do Do 2, 3 End, 4, End, End".becomes(.scope([.integerValue(1), .scope([.scope([.integerValue(2), .integerValue(3)]), .integerValue(4)])]))
+            .subfunction(Subfunction(name: "inc", patterns: [.variable("x")], when: .bool(true), body: .call("+", [.variable("x"), .int(1)]))),
+            .call("inc", [.int(7)])]))
+        "Do 1, Do Do 2, 3 End, 4, End, End".becomes(.scope([.int(1), .scope([.scope([.int(2), .int(3)]), .int(4)])]))
 
 """
 Do 1
 2
 3 End
-""".becomes(.scope([.integerValue(1), .integerValue(2), .integerValue(3)]))
+""".becomes(.scope([.int(1), .int(2), .int(3)]))
 """
 Do
   1
   2
   3
 End
-""".becomes(.scope([.integerValue(1), .integerValue(2), .integerValue(3)]))
+""".becomes(.scope([.int(1), .int(2), .int(3)]))
 """
 Do 1
 2,3 End
-""".becomes(.scope([.integerValue(1), .integerValue(2), .integerValue(3)]))
+""".becomes(.scope([.int(1), .int(2), .int(3)]))
 """
 Do
   1
   2
   3
 End
-""".becomes(.scope([.integerValue(1), .integerValue(2), .integerValue(3)]))
+""".becomes(.scope([.int(1), .int(2), .int(3)]))
 """
 Do
   1 , 2
   3
 End
-""".becomes(.scope([.integerValue(1), .integerValue(2), .integerValue(3)]))
+""".becomes(.scope([.int(1), .int(2), .int(3)]))
 """
 Do
   1,
   2,
   3
 End
-""".becomes(.scope([.integerValue(1), .integerValue(2), .integerValue(3)]))
+""".becomes(.scope([.int(1), .int(2), .int(3)]))
 """
 Do
   1,
   2,
   3,
 End
-""".becomes(.scope([.integerValue(1), .integerValue(2), .integerValue(3)]))
+""".becomes(.scope([.int(1), .int(2), .int(3)]))
 
         "DoEnd".fails()
         "Do End".fails()
@@ -421,40 +421,40 @@ End
     }
 
     func test_unusualFunctionCalls() {
-        "(1 < 10).negate".becomes(.call("negate", [.call("<", [.integerValue(1), .integerValue(10)])]))
-        "(Do 5, 8 End).inc".becomes(.call("inc", [.scope([.integerValue(5), .integerValue(8)])]))
-        "(Do |x| x+1 End)(5)".becomes(.callAnon(.scope([.subfunction(Subfunction(name: nil, patterns: [.variable("x")], when: .bool(true), body: .call("+", [.variable("x"), .integerValue(1)])))]), [.integerValue(5)]))
-        "(inc(1)).inc".becomes(.call("inc", [.call("inc", [.integerValue(1)])]))
+        "(1 < 10).negate".becomes(.call("negate", [.call("<", [.int(1), .int(10)])]))
+        "(Do 5, 8 End).inc".becomes(.call("inc", [.scope([.int(5), .int(8)])]))
+        "(Do |x| x+1 End)(5)".becomes(.callAnon(.scope([.subfunction(Subfunction(name: nil, patterns: [.variable("x")], when: .bool(true), body: .call("+", [.variable("x"), .int(1)])))]), [.int(5)]))
+        "(inc(1)).inc".becomes(.call("inc", [.call("inc", [.int(1)])]))
         "(x)()".becomes(.callAnon(.variable("x"), []))
-        "5.lessThan()(4)".becomes(.callAnon(.call("lessThan", [.integerValue(5)]), [.integerValue(4)]))
-        "(5.lessThan())(4)".becomes(.callAnon(.call("lessThan", [.integerValue(5)]), [.integerValue(4)]))
-        "(5.lessThan)(4)".becomes(.callAnon(.call("lessThan", [.integerValue(5)]), [.integerValue(4)]))
-        "lessThan(5)(4)".becomes(.callAnon(.call("lessThan", [.integerValue(5)]), [.integerValue(4)]))
+        "5.lessThan()(4)".becomes(.callAnon(.call("lessThan", [.int(5)]), [.int(4)]))
+        "(5.lessThan())(4)".becomes(.callAnon(.call("lessThan", [.int(5)]), [.int(4)]))
+        "(5.lessThan)(4)".becomes(.callAnon(.call("lessThan", [.int(5)]), [.int(4)]))
+        "lessThan(5)(4)".becomes(.callAnon(.call("lessThan", [.int(5)]), [.int(4)]))
         "(|x| x+1)(4)".becomes(
             .callAnon(
                 .subfunction(Subfunction(name: nil,
                                                   patterns: [.variable("x")],
                                                   when: .bool(true),
-                                                  body: .call("+", [.variable("x"), .integerValue(1)])
+                                                  body: .call("+", [.variable("x"), .int(1)])
                 )),
-                [.integerValue(4)]))
+                [.int(4)]))
         "4.(|x| x+1)".becomes(
             .callAnon(
                 .subfunction(Subfunction(name: nil,
                                                   patterns: [.variable("x")],
                                                   when: .bool(true),
-                                                  body: .call("+", [.variable("x"), .integerValue(1)])
+                                                  body: .call("+", [.variable("x"), .int(1)])
                 )),
-                [.integerValue(4)]))
+                [.int(4)]))
         "4.(|x| x+1)()".becomes(
             .callAnon(
                 .callAnon(
                     .subfunction(Subfunction(name: nil,
                                                       patterns: [.variable("x")],
                                                       when: .bool(true),
-                                                      body: .call("+", [.variable("x"), .integerValue(1)])
+                                                      body: .call("+", [.variable("x"), .int(1)])
                     )),
-                    [.integerValue(4)]
+                    [.int(4)]
                 ), []))
     }
 }

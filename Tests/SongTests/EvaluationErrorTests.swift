@@ -20,17 +20,17 @@ Evaluation error
     }
 
     func test_signatureMismatch() {
-        let error = EvaluationError.signatureMismatch([.integerValue(1)])
+        let error = EvaluationError.signatureMismatch([.int(1)])
         XCTAssertEqual("Evaluation error\n 💥  no pattern matches arguments: [1]", format(error: error))
     }
 
     func test_notAClosure() {
-        let error = EvaluationError.notAClosure(.integerValue(1))
+        let error = EvaluationError.notAClosure(.int(1))
         XCTAssertEqual("Evaluation error\n 💥  need a closure, not 1", format(error: error))
     }
 
     func test_notABoolean() {
-        let error = EvaluationError.notABoolean(.integerValue(1))
+        let error = EvaluationError.notABoolean(.int(1))
         XCTAssertEqual("Evaluation error\n 💥  need a boolean, not 1", format(error: error))
     }
 
