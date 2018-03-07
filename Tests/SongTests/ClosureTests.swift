@@ -26,7 +26,7 @@ class ClosureTests: XCTestCase {
     private func makeNamedFunction() -> Expression {
         let subfunction = Subfunction(name: "foo",
                                       patterns: [ Expression.variable("a"), Expression.variable("b") ],
-                                      when: Expression.booleanValue(true),
+                                      when: Expression.bool(true),
                                       body: Expression.variable("x"))
         return .subfunction(subfunction)
     }

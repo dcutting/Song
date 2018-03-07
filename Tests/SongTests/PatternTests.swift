@@ -4,30 +4,30 @@ import Song
 class PatternTests: XCTestCase {
 
     lazy var functions: [Subfunction] = [
-        Subfunction(name: "anyVariableFunc", patterns: [.anyVariable], when: .booleanValue(true), body: .stringValue("ok")),
-        Subfunction(name: "booleanLiteralFunc", patterns: [.booleanValue(false)], when: .booleanValue(true), body: .stringValue("ok")),
-        Subfunction(name: "numberLiteralFunc", patterns: [.integerValue(2)], when: .booleanValue(true), body: .stringValue("ok")),
-        Subfunction(name: "listLiteralFunc", patterns: [.list([.integerValue(1), .integerValue(2)])], when: .booleanValue(true), body: .stringValue("ok")),
-        Subfunction(name: "listConstructorLiteralFunc", patterns: [.listConstructor([.integerValue(1)], .list([.integerValue(2)]))], when: .booleanValue(true), body: .stringValue("ok")),
-        Subfunction(name: "listConstructorVariableFunc", patterns: [.listConstructor([.integerValue(1), .integerValue(2)], .list([.variable("xs")]))], when: .booleanValue(true), body: .stringValue("ok")),
-        Subfunction(name: "nestedListConstructorLiteralFunc", patterns: [.listConstructor([.list([.integerValue(1)])], .list([.integerValue(2)]))], when: .booleanValue(true), body: .stringValue("ok")),
-        Subfunction(name: "zip", patterns: [.list([.list([]), .list([])])], when: .booleanValue(true), body: .list([])),
+        Subfunction(name: "anyVariableFunc", patterns: [.anyVariable], when: .bool(true), body: .stringValue("ok")),
+        Subfunction(name: "booleanLiteralFunc", patterns: [.bool(false)], when: .bool(true), body: .stringValue("ok")),
+        Subfunction(name: "numberLiteralFunc", patterns: [.integerValue(2)], when: .bool(true), body: .stringValue("ok")),
+        Subfunction(name: "listLiteralFunc", patterns: [.list([.integerValue(1), .integerValue(2)])], when: .bool(true), body: .stringValue("ok")),
+        Subfunction(name: "listConstructorLiteralFunc", patterns: [.listConstructor([.integerValue(1)], .list([.integerValue(2)]))], when: .bool(true), body: .stringValue("ok")),
+        Subfunction(name: "listConstructorVariableFunc", patterns: [.listConstructor([.integerValue(1), .integerValue(2)], .list([.variable("xs")]))], when: .bool(true), body: .stringValue("ok")),
+        Subfunction(name: "nestedListConstructorLiteralFunc", patterns: [.listConstructor([.list([.integerValue(1)])], .list([.integerValue(2)]))], when: .bool(true), body: .stringValue("ok")),
+        Subfunction(name: "zip", patterns: [.list([.list([]), .list([])])], when: .bool(true), body: .list([])),
         Subfunction(name: "zip",
                     patterns: [.list([
                         .listConstructor([.variable("x")], .variable("xs")),
                         .listConstructor([.variable("y")], .variable("ys"))
                         ])],
-                    when: .booleanValue(true),
+                    when: .bool(true),
                     body: .call(name: "+", arguments: [
                         .list([.list([.variable("x"), .variable("y")])]),
                         .call(name: "zip", arguments: [.list([.variable("xs"), .variable("ys")])])
                         ])),
-        Subfunction(name: "variableFunc", patterns: [.variable("x")], when: .booleanValue(true), body: .variable("x")),
-        Subfunction(name: "repeatedVariableFunc", patterns: [.variable("x"), .variable("x")], when: .booleanValue(true), body: .variable("x")),
+        Subfunction(name: "variableFunc", patterns: [.variable("x")], when: .bool(true), body: .variable("x")),
+        Subfunction(name: "repeatedVariableFunc", patterns: [.variable("x"), .variable("x")], when: .bool(true), body: .variable("x")),
         Subfunction(name: "repeatedNestedVariableFunc",
                     patterns: [.listConstructor([.variable("x")], .anyVariable),
                                .listConstructor([.variable("x")], .anyVariable)],
-                    when: .booleanValue(true),
+                    when: .bool(true),
                     body: .variable("x")),
     ]
 
@@ -57,14 +57,14 @@ class PatternTests: XCTestCase {
 
     func test_boolLiteral_match_evaluates() {
         assertNoThrow {
-            let call = Expression.call(name: "booleanLiteralFunc", arguments: [.booleanValue(false)])
+            let call = Expression.call(name: "booleanLiteralFunc", arguments: [.bool(false)])
             let actual = try call.evaluate(context: context)
             XCTAssertEqual(Expression.stringValue("ok"), actual)
         }
     }
 
     func test_boolLiteral_noMatch_fails() {
-        let call = Expression.call(name: "booleanLiteralFunc", arguments: [.booleanValue(true)])
+        let call = Expression.call(name: "booleanLiteralFunc", arguments: [.bool(true)])
         XCTAssertThrowsError(try call.evaluate(context: context))
     }
 
@@ -173,7 +173,7 @@ class PatternTests: XCTestCase {
 
             var context: Context = ["x": .integerValue(5)]
 
-            let foo = Subfunction(name: "foo", patterns: [.variable("x"), .variable("x")], when: .booleanValue(true), body: .variable("x"))
+            let foo = Subfunction(name: "foo", patterns: [.variable("x"), .variable("x")], when: .bool(true), body: .variable("x"))
 
             context = try declareSubfunctions([Expression.subfunction(foo)], in: context)
             

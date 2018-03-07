@@ -4,7 +4,7 @@ extension Expression: Equatable {
 public func ==(lhs: Expression, rhs: Expression) -> Bool {
     switch (lhs, rhs) {
         
-    case let (.booleanValue(lhsValue), .booleanValue(rhsValue)):
+    case let (.bool(lhsValue), .bool(rhsValue)):
         return lhsValue == rhsValue
         
     case let (.numberValue(lhsValue), .numberValue(rhsValue)):

@@ -19,7 +19,7 @@ public struct Subfunction: Equatable {
 
 public indirect enum Expression {
 
-    case booleanValue(Bool)
+    case bool(Bool)
     case numberValue(Number)
     case character(Character)
     case list([Expression])

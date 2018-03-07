@@ -16,7 +16,7 @@ class OutTests: XCTestCase {
     }
 
     func testOut_closureValue_doesNotIncludeContext() {
-        let subfunction = Subfunction(name: "foo", patterns: [], when: .booleanValue(true), body: .integerValue(99))
+        let subfunction = Subfunction(name: "foo", patterns: [], when: .bool(true), body: .integerValue(99))
         let function = Expression.subfunction(subfunction)
         let context: Context = ["a": .integerValue(5)]
         let string = Expression.closure("foo", [function], context)
@@ -46,7 +46,7 @@ class OutTests: XCTestCase {
 
     func test_evaluate_multipleArguments_joinsWithSpace() {
         assertNoThrow {
-            let call = Expression.call(name: "out", arguments: [.integerValue(99), .stringValue("is in"), .list([.booleanValue(true), .integerValue(99)])])
+            let call = Expression.call(name: "out", arguments: [.integerValue(99), .stringValue("is in"), .list([.bool(true), .integerValue(99)])])
             XCTAssertEqual(Expression.stringValue("99 is in [Yes, 99]"), try call.evaluate())
         }
     }

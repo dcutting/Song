@@ -28,11 +28,11 @@ public func makeTransformer() -> Transformer<Expression> {
     // Literals.
 
     t.rule(["true": .simple("")]) { _ in
-        .booleanValue(true)
+        .bool(true)
     }
 
     t.rule(["false": .simple("")]) { _ in
-        .booleanValue(false)
+        .bool(false)
     }
 
     t.rule(["integer": .simple("i")]) {
@@ -114,7 +114,7 @@ public func makeTransformer() -> Transformer<Expression> {
     }
 
     t.rule(["params": .series("params"), "body": .simple("body")]) {
-        .subfunction(Subfunction(name: nil, patterns: try $0.vals("params"), when: .booleanValue(true), body: try $0.val("body")))
+        .subfunction(Subfunction(name: nil, patterns: try $0.vals("params"), when: .bool(true), body: try $0.val("body")))
     }
 
     t.rule(["lambda": .simple("lambda")]) {
@@ -147,7 +147,7 @@ public func makeTransformer() -> Transformer<Expression> {
 
     t.rule(["anonCall": .simple("args")]) {
         guard case .list(let args) = try $0.val("args") else { throw SongTransformError.unknown }
-        let dummy = Expression.booleanValue(false)
+        let dummy = Expression.bool(false)
         return .callAnonymous(closure: dummy, arguments: args)
     }
 
@@ -232,7 +232,7 @@ func transformFunction(args: TransformerReducerArguments<Expression>) throws -> 
         let subject = try args.val("subject")
         params.insert(subject, at: 0)
     } catch {}
-    var when = Expression.booleanValue(true)
+    var when = Expression.bool(true)
     do {
         when = try args.val("guard")
     } catch {}

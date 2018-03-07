@@ -17,7 +17,7 @@ extension Expression {
     private func evaluate(expression: Expression, context: Context) throws -> Expression {
         switch expression {
 
-        case .booleanValue, .numberValue, .character, .closure, .anyVariable:
+        case .bool, .numberValue, .character, .closure, .anyVariable:
             return expression
 
         case let .list(exprs):
@@ -108,25 +108,25 @@ extension Expression {
             guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
             let left = numbers.removeFirst()
             let right = numbers.removeFirst()
-            return .booleanValue(left.lessThan(right))
+            return .bool(left.lessThan(right))
         case ">":
             var numbers = try toNumbers(arguments: arguments, context: context)
             guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
             let left = numbers.removeFirst()
             let right = numbers.removeFirst()
-            return .booleanValue(left.greaterThan(right))
+            return .bool(left.greaterThan(right))
         case "<=":
             var numbers = try toNumbers(arguments: arguments, context: context)
             guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
             let left = numbers.removeFirst()
             let right = numbers.removeFirst()
-            return .booleanValue(left.lessThanOrEqualTo(right))
+            return .bool(left.lessThanOrEqualTo(right))
         case ">=":
             var numbers = try toNumbers(arguments: arguments, context: context)
             guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
             let left = numbers.removeFirst()
             let right = numbers.removeFirst()
-            return .booleanValue(left.greaterThanOrEqualTo(right))
+            return .bool(left.greaterThanOrEqualTo(right))
         case "Eq":
             return try evaluateEq(arguments: arguments, context: context)
         case "Neq":
@@ -138,18 +138,18 @@ extension Expression {
             guard bools.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
             let left = bools.removeFirst()
             let right = bools.removeFirst()
-            return .booleanValue(left && right)
+            return .bool(left && right)
         case "Or":
             var bools = try toBools(arguments: arguments, context: context)
             guard bools.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
             let left = bools.removeFirst()
             let right = bools.removeFirst()
-            return .booleanValue(left || right)
+            return .bool(left || right)
         case "Not":
             var bools = try toBools(arguments: arguments, context: context)
             guard bools.count == 1 else { throw EvaluationError.signatureMismatch(arguments) }
             let left = bools.removeFirst()
-            return .booleanValue(!left)
+            return .bool(!left)
         case "number":
             var numbers = arguments
             guard numbers.count == 1 else { throw EvaluationError.signatureMismatch(arguments) }
@@ -178,28 +178,28 @@ extension Expression {
         let result: Expression
         do {
             result = try booleanOp(arguments: arguments, context: context) {
-                .booleanValue($0 == $1)
+                .bool($0 == $1)
             }
         } catch EvaluationError.notABoolean {
             do {
                 result = try numberOp(arguments: arguments, context: context) {
-                    try .booleanValue($0.equalTo($1))
+                    try .bool($0.equalTo($1))
                 }
             } catch EvaluationError.notANumber {
                 do {
                     result = try characterOp(arguments: arguments, context: context) {
-                        .booleanValue($0 == $1)
+                        .bool($0 == $1)
                     }
                 } catch EvaluationError.notACharacter {
                     result = try listOp(arguments: arguments, context: context) { left, right in
-                        guard left.count == right.count else { return .booleanValue(false) }
+                        guard left.count == right.count else { return .bool(false) }
                         for (l, r) in zip(left, right) {
                             let lrEq = try evaluateEq(arguments: [l, r], context: context)
-                            if case .booleanValue(false) = lrEq {
-                                return .booleanValue(false)
+                            if case .bool(false) = lrEq {
+                                return .bool(false)
                             }
                         }
-                        return .booleanValue(true)
+                        return .bool(true)
                     }
                 }
             }
@@ -215,7 +215,7 @@ extension Expression {
     }
 
     private func extractBool(_ expression: Expression, context: Context) throws -> Bool {
-        if case .booleanValue(let value) = try expression.evaluate(context: context) {
+        if case .bool(let value) = try expression.evaluate(context: context) {
             return value
         }
         throw EvaluationError.notABoolean(expression)
@@ -276,7 +276,7 @@ extension Expression {
     private func toBools(arguments: [Expression], context: Context) throws -> [Bool] {
         return try arguments.map { arg -> Bool in
             let evaluatedArg = try arg.evaluate(context: context)
-            guard case let .booleanValue(n) = evaluatedArg else {
+            guard case let .bool(n) = evaluatedArg else {
                 throw EvaluationError.notABoolean(evaluatedArg)
             }
             return n
@@ -341,8 +341,8 @@ extension Expression {
 
             let extendedContext = try matchParameters(closureContext: closureContext, callingContext: callingContext, parameters: subfunction.patterns, arguments: arguments)
             let whenEvaluated = try subfunction.when.evaluate(context: extendedContext)
-            guard case .booleanValue = whenEvaluated else { throw EvaluationError.notABoolean(subfunction.when) }
-            guard case .booleanValue(true) = whenEvaluated else { throw EvaluationError.signatureMismatch(arguments) }
+            guard case .bool = whenEvaluated else { throw EvaluationError.notABoolean(subfunction.when) }
+            guard case .bool(true) = whenEvaluated else { throw EvaluationError.signatureMismatch(arguments) }
             let finalContext = callingContext.merging(extendedContext) { l, r in r }
             return try subfunction.body.evaluate(context: finalContext)
         default:

@@ -4,9 +4,9 @@ import Song
 class ParserTests: XCTestCase {
 
     func test_booleans() {
-        "Yes".becomes(.booleanValue(true))
-        "No".becomes(.booleanValue(false))
-        " Yes ".becomes(.booleanValue(true))
+        "Yes".becomes(.bool(true))
+        "No".becomes(.bool(false))
+        " Yes ".becomes(.bool(true))
     }
 
     func test_integers() {
@@ -52,11 +52,11 @@ class ParserTests: XCTestCase {
     func test_lists() {
         "[]".becomes(.list([]))
         " [] ".becomes(.list([]))
-        "[1,No]".becomes(.list([.integerValue(1), .booleanValue(false)]))
-        "[ 1 , Yes , \"hi\" ]".becomes(.list([.integerValue(1), .booleanValue(true), .stringValue("hi")]))
+        "[1,No]".becomes(.list([.integerValue(1), .bool(false)]))
+        "[ 1 , Yes , \"hi\" ]".becomes(.list([.integerValue(1), .bool(true), .stringValue("hi")]))
         "[[1,2],[No,4], [], \"hi\"]".becomes(.list([
             .list([.integerValue(1), .integerValue(2)]),
-            .list([.booleanValue(false), .integerValue(4)]),
+            .list([.bool(false), .integerValue(4)]),
             .list([]),
             .stringValue("hi")
             ]))
@@ -66,14 +66,14 @@ class ParserTests: XCTestCase {
 
   No
 ]
-""".becomes(.list([.integerValue(1), .booleanValue(false)]))
+""".becomes(.list([.integerValue(1), .bool(false)]))
     }
 
     func test_listConstructors() {
         "[x|xs]".becomes(.listConstructor([.variable("x")], .variable("xs")))
         "[x,y|xs]".becomes(.listConstructor([.variable("x"), .variable("y")], .variable("xs")))
         "[ 1 , x | xs ]".becomes(.listConstructor([.integerValue(1), .variable("x")], .variable("xs")))
-        "[Yes|2]".becomes(.listConstructor([.booleanValue(true)], .integerValue(2)))
+        "[Yes|2]".becomes(.listConstructor([.bool(true)], .integerValue(2)))
         "[ f(x) | g(x) ]".becomes(.listConstructor([.call(name: "f", arguments: [.variable("x")])],
                                                    .call(name: "g", arguments: [.variable("x")])))
         "[1,2|[3,4|[5,6]]]".becomes(.listConstructor(
@@ -115,7 +115,7 @@ class ParserTests: XCTestCase {
         "12 Div 5".becomes(.call(name: "Div", arguments: [.integerValue(12), .integerValue(5)]))
         "12 Mod 5".becomes(.call(name: "Mod", arguments: [.integerValue(12), .integerValue(5)]))
         "x Eq 5".becomes(.call(name: "Eq", arguments: [.variable("x"), .integerValue(5)]))
-        "Do 2, 5 < 7 End And Do Yes End".becomes(.call(name: "And", arguments: [.scope([.integerValue(2), .call(name: "<", arguments: [.integerValue(5), .integerValue(7)])]), .scope([.booleanValue(true)])]))
+        "Do 2, 5 < 7 End And Do Yes End".becomes(.call(name: "And", arguments: [.scope([.integerValue(2), .call(name: "<", arguments: [.integerValue(5), .integerValue(7)])]), .scope([.bool(true)])]))
 
         "12 Div5".fails()
         "12 Mod5".fails()
@@ -172,23 +172,23 @@ class ParserTests: XCTestCase {
 
     func test_subfunctions() {
         "foo() = 5".becomes(
-            .subfunction(Subfunction(name: "foo", patterns: [], when: .booleanValue(true), body: .integerValue(5)))
+            .subfunction(Subfunction(name: "foo", patterns: [], when: .bool(true), body: .integerValue(5)))
         )
         "foo(a) = a".becomes(
-            .subfunction(Subfunction(name: "foo", patterns: [.variable("a")], when: .booleanValue(true), body: .variable("a")))
+            .subfunction(Subfunction(name: "foo", patterns: [.variable("a")], when: .bool(true), body: .variable("a")))
         )
 """
 foo(a,
     b) = a
-""".becomes(.subfunction(Subfunction(name: "foo", patterns: [.variable("a"), .variable("b")], when: .booleanValue(true), body: .variable("a"))))
+""".becomes(.subfunction(Subfunction(name: "foo", patterns: [.variable("a"), .variable("b")], when: .bool(true), body: .variable("a"))))
 """
 foo(
   a,
   b
 ) = a
-""".becomes(.subfunction(Subfunction(name: "foo", patterns: [.variable("a"), .variable("b")], when: .booleanValue(true), body: .variable("a"))))
+""".becomes(.subfunction(Subfunction(name: "foo", patterns: [.variable("a"), .variable("b")], when: .bool(true), body: .variable("a"))))
         "a.foo = a".becomes(
-            .subfunction(Subfunction(name: "foo", patterns: [.variable("a")], when: .booleanValue(true), body: .variable("a")))
+            .subfunction(Subfunction(name: "foo", patterns: [.variable("a")], when: .bool(true), body: .variable("a")))
         )
         "a.foo When a < 50 = a".becomes(
             .subfunction(Subfunction(name: "foo",
@@ -203,46 +203,46 @@ foo(
                                      body: .variable("a")))
         )
         "a.plus(b) = a + b".becomes(
-            .subfunction(Subfunction(name: "plus", patterns: [.variable("a"), .variable("b")], when: .booleanValue(true), body: .call(name: "+", arguments: [.variable("a"), .variable("b")])))
+            .subfunction(Subfunction(name: "plus", patterns: [.variable("a"), .variable("b")], when: .bool(true), body: .call(name: "+", arguments: [.variable("a"), .variable("b")])))
         )
         "[x|xs].map(f) = [f(x)|xs.map(f)]".becomes(
             .subfunction(Subfunction(name: "map",
                                      patterns: [.listConstructor([.variable("x")], .variable("xs")), .variable("f")],
-                                     when: .booleanValue(true),
+                                     when: .bool(true),
                                      body: .listConstructor([.call(name: "f", arguments: [.variable("x")])],
                                                             .call(name: "map", arguments: [.variable("xs"), .variable("f")]))))
         )
 """
 a.foo =
  5
-""".becomes(.subfunction(Subfunction(name: "foo", patterns: [.variable("a")], when: .booleanValue(true), body: .integerValue(5))))
+""".becomes(.subfunction(Subfunction(name: "foo", patterns: [.variable("a")], when: .bool(true), body: .integerValue(5))))
 """
 foo() =
 5
-""".becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .booleanValue(true), body: .integerValue(5))))
-("foo() =" + " " + "\n5").becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .booleanValue(true), body: .integerValue(5))))
+""".becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .bool(true), body: .integerValue(5))))
+("foo() =" + " " + "\n5").becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .bool(true), body: .integerValue(5))))
 """
 foo() =
   5
-""".becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .booleanValue(true), body: .integerValue(5))))
+""".becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .bool(true), body: .integerValue(5))))
 """
 foo() = Do
   5
 End
-""".becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .booleanValue(true), body: .scope([.integerValue(5)]))))
+""".becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .bool(true), body: .scope([.integerValue(5)]))))
 """
 foo() =
 Do
   5
 End
-""".becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .booleanValue(true), body: .scope([.integerValue(5)]))))
+""".becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .bool(true), body: .scope([.integerValue(5)]))))
 """
 foo() = Do 5
 End
-""".becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .booleanValue(true), body: .scope([.integerValue(5)]))))
+""".becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .bool(true), body: .scope([.integerValue(5)]))))
 """
 foo() = Do 5 End
-""".becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .booleanValue(true), body: .scope([.integerValue(5)]))))
+""".becomes(.subfunction(Subfunction(name: "foo", patterns: [], when: .bool(true), body: .scope([.integerValue(5)]))))
     }
 
     func test_constants() {
@@ -252,15 +252,15 @@ foo() = Do 5 End
         "double = |x| x * 2".becomes(.constant(variable: .variable("double"), value:
             .subfunction(Subfunction(name: nil,
                                      patterns: [.variable("x")],
-                                     when: .booleanValue(true),
+                                     when: .bool(true),
                                      body: .call(name: "*", arguments: [.variable("x"), .integerValue(2)])))))
 
         "2 = 5".fails()
     }
 
     func test_lambdas() {
-        "|x| x".becomes(.subfunction(Subfunction(name: nil, patterns: [.variable("x")], when: .booleanValue(true), body: .variable("x"))))
-        "| x , y | x".becomes(.subfunction(Subfunction(name: nil, patterns: [.variable("x"), .variable("y")], when: .booleanValue(true), body: .variable("x"))))
+        "|x| x".becomes(.subfunction(Subfunction(name: nil, patterns: [.variable("x")], when: .bool(true), body: .variable("x"))))
+        "| x , y | x".becomes(.subfunction(Subfunction(name: nil, patterns: [.variable("x"), .variable("y")], when: .bool(true), body: .variable("x"))))
 """
  |
  x
@@ -268,10 +268,10 @@ foo() = Do 5 End
  y
  |
  x
-""".becomes(.subfunction(Subfunction(name: nil, patterns: [.variable("x"), .variable("y")], when: .booleanValue(true), body: .variable("x"))))
-        "|[x|xs], y| x".becomes(.subfunction(Subfunction(name: nil, patterns: [.listConstructor([.variable("x")], .variable("xs")), .variable("y")], when: .booleanValue(true), body: .variable("x"))))
-        "|_| 5".becomes(.subfunction(Subfunction(name: nil, patterns: [.anyVariable], when: .booleanValue(true), body: .integerValue(5))))
-        "|| 5".becomes(.subfunction(Subfunction(name: nil, patterns: [], when: .booleanValue(true), body: .integerValue(5))))
+""".becomes(.subfunction(Subfunction(name: nil, patterns: [.variable("x"), .variable("y")], when: .bool(true), body: .variable("x"))))
+        "|[x|xs], y| x".becomes(.subfunction(Subfunction(name: nil, patterns: [.listConstructor([.variable("x")], .variable("xs")), .variable("y")], when: .bool(true), body: .variable("x"))))
+        "|_| 5".becomes(.subfunction(Subfunction(name: nil, patterns: [.anyVariable], when: .bool(true), body: .integerValue(5))))
+        "|| 5".becomes(.subfunction(Subfunction(name: nil, patterns: [], when: .bool(true), body: .integerValue(5))))
     }
 
     func test_negations() {
@@ -363,9 +363,9 @@ foo(
         "Do 1 , x End".becomes(.scope([.integerValue(1), .variable("x")]))
         "Do 1, x, End".becomes(.scope([.integerValue(1), .variable("x")]))
         "Do x = 5, x End".becomes(.scope([.constant(variable: .variable("x"), value: .integerValue(5)), .variable("x")]))
-        "Do |x| x End".becomes(.scope([.subfunction(Subfunction(name: nil, patterns: [.variable("x")], when: .booleanValue(true), body: .variable("x")))]))
+        "Do |x| x End".becomes(.scope([.subfunction(Subfunction(name: nil, patterns: [.variable("x")], when: .bool(true), body: .variable("x")))]))
         "Do x.inc = x+1, 7.inc End".becomes(.scope([
-            .subfunction(Subfunction(name: "inc", patterns: [.variable("x")], when: .booleanValue(true), body: .call(name: "+", arguments: [.variable("x"), .integerValue(1)]))),
+            .subfunction(Subfunction(name: "inc", patterns: [.variable("x")], when: .bool(true), body: .call(name: "+", arguments: [.variable("x"), .integerValue(1)]))),
             .call(name: "inc", arguments: [.integerValue(7)])]))
         "Do 1, Do Do 2, 3 End, 4, End, End".becomes(.scope([.integerValue(1), .scope([.scope([.integerValue(2), .integerValue(3)]), .integerValue(4)])]))
 
@@ -423,7 +423,7 @@ End
     func test_unusualFunctionCalls() {
         "(1 < 10).negate".becomes(.call(name: "negate", arguments: [.call(name: "<", arguments: [.integerValue(1), .integerValue(10)])]))
         "(Do 5, 8 End).inc".becomes(.call(name: "inc", arguments: [.scope([.integerValue(5), .integerValue(8)])]))
-        "(Do |x| x+1 End)(5)".becomes(.callAnonymous(closure: .scope([.subfunction(Subfunction(name: nil, patterns: [.variable("x")], when: .booleanValue(true), body: .call(name: "+", arguments: [.variable("x"), .integerValue(1)])))]), arguments: [.integerValue(5)]))
+        "(Do |x| x+1 End)(5)".becomes(.callAnonymous(closure: .scope([.subfunction(Subfunction(name: nil, patterns: [.variable("x")], when: .bool(true), body: .call(name: "+", arguments: [.variable("x"), .integerValue(1)])))]), arguments: [.integerValue(5)]))
         "(inc(1)).inc".becomes(.call(name: "inc", arguments: [.call(name: "inc", arguments: [.integerValue(1)])]))
         "(x)()".becomes(.callAnonymous(closure: .variable("x"), arguments: []))
         "5.lessThan()(4)".becomes(.callAnonymous(closure: .call(name: "lessThan", arguments: [.integerValue(5)]), arguments: [.integerValue(4)]))
@@ -434,7 +434,7 @@ End
             .callAnonymous(
                 closure: .subfunction(Subfunction(name: nil,
                                                   patterns: [.variable("x")],
-                                                  when: .booleanValue(true),
+                                                  when: .bool(true),
                                                   body: .call(name: "+", arguments: [.variable("x"), .integerValue(1)])
                 )),
                 arguments: [.integerValue(4)]))
@@ -442,7 +442,7 @@ End
             .callAnonymous(
                 closure: .subfunction(Subfunction(name: nil,
                                                   patterns: [.variable("x")],
-                                                  when: .booleanValue(true),
+                                                  when: .bool(true),
                                                   body: .call(name: "+", arguments: [.variable("x"), .integerValue(1)])
                 )),
                 arguments: [.integerValue(4)]))
@@ -451,7 +451,7 @@ End
                 .callAnonymous(
                     closure: .subfunction(Subfunction(name: nil,
                                                       patterns: [.variable("x")],
-                                                      when: .booleanValue(true),
+                                                      when: .bool(true),
                                                       body: .call(name: "+", arguments: [.variable("x"), .integerValue(1)])
                     )),
                     arguments: [.integerValue(4)]

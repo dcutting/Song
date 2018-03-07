@@ -3,7 +3,7 @@ extension Expression: CustomStringConvertible {
     public var description: String {
         switch self {
             
-        case let .booleanValue(value):
+        case let .bool(value):
             return value ? "Yes" : "No"
             
         case let .numberValue(value):

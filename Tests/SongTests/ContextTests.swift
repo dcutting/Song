@@ -10,8 +10,8 @@ class ContextTests: XCTestCase {
     }
 
     func testIsEqual_simple_same_returnsTrue() {
-        let left: Context = ["a": .stringValue("hi"), "b": .booleanValue(true)]
-        let right: Context = ["a": .stringValue("hi"), "b": .booleanValue(true)]
+        let left: Context = ["a": .stringValue("hi"), "b": .bool(true)]
+        let right: Context = ["a": .stringValue("hi"), "b": .bool(true)]
         XCTAssertTrue(Song.isEqual(lhsContext: left, rhsContext: right))
     }
 

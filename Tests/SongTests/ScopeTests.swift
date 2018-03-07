@@ -109,7 +109,7 @@ class ScopeTests: XCTestCase {
     }
 
     private func makeFoo(_ pattern: Expression,
-                         when: Expression = .booleanValue(true),
+                         when: Expression = .bool(true),
                          _ body: Expression) -> Expression {
         return .subfunction(Subfunction(name: "foo", patterns: [pattern], when: when, body: body))
     }

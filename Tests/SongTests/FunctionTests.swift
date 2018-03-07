@@ -26,7 +26,7 @@ class FunctionTests: XCTestCase {
     }
 
     func test_evaluate_patternIsAFloat_throws() {
-        let subfunction = Subfunction(name: "foo", patterns: [.floatValue(1.0)], when: .booleanValue(true), body: .booleanValue(true))
+        let subfunction = Subfunction(name: "foo", patterns: [.floatValue(1.0)], when: .bool(true), body: .bool(true))
         let function = Expression.subfunction(subfunction)
         XCTAssertThrowsError(try function.evaluate())
     }
@@ -39,7 +39,7 @@ class FunctionTests: XCTestCase {
     private func makeNamedFunction() -> Expression {
         let subfunction = Subfunction(name: "foo",
                                       patterns: [Expression.variable("a"), Expression.variable("b")],
-                                      when: Expression.booleanValue(true),
+                                      when: Expression.bool(true),
                                       body: Expression.variable("x"))
         return .subfunction(subfunction)
     }
@@ -47,7 +47,7 @@ class FunctionTests: XCTestCase {
     private func makeAnonymousFunction() -> Expression {
         let subfunction = Subfunction(name: nil,
                                       patterns: [Expression.variable("a"), Expression.variable("b")],
-                                      when: Expression.booleanValue(true),
+                                      when: Expression.bool(true),
                                       body: Expression.variable("x"))
         return .subfunction(subfunction)
     }

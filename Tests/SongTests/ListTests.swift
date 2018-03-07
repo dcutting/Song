@@ -9,7 +9,7 @@ class ListTests: XCTestCase {
     }
 
     func testDescription_nonEmptyList() {
-        let list = Expression.list([.integerValue(4), .booleanValue(false)])
+        let list = Expression.list([.integerValue(4), .bool(false)])
         XCTAssertEqual("[4, No]", "\(list)")
     }
 
@@ -35,10 +35,10 @@ class ListTests: XCTestCase {
             .variable("x")
             ])
         assertNoThrow {
-            let actual = try list.evaluate(context: ["x": .booleanValue(false)])
+            let actual = try list.evaluate(context: ["x": .bool(false)])
             let expected = Expression.list([
                 .integerValue(5),
-                .booleanValue(false)
+                .bool(false)
                 ])
             XCTAssertEqual(expected, actual)
         }
@@ -61,11 +61,11 @@ class ListTests: XCTestCase {
 
         assertNoThrow {
             let call = Expression.call(name: "Eq", arguments: [left, right])
-            XCTAssertEqual(Expression.booleanValue(true), try call.evaluate())
+            XCTAssertEqual(Expression.bool(true), try call.evaluate())
         }
         assertNoThrow {
             let call = Expression.call(name: "Neq", arguments: [left, right])
-            XCTAssertEqual(Expression.booleanValue(false), try call.evaluate())
+            XCTAssertEqual(Expression.bool(false), try call.evaluate())
         }
     }
 
@@ -75,11 +75,11 @@ class ListTests: XCTestCase {
 
         assertNoThrow {
             let call = Expression.call(name: "Eq", arguments: [left, right])
-            XCTAssertEqual(Expression.booleanValue(false), try call.evaluate())
+            XCTAssertEqual(Expression.bool(false), try call.evaluate())
         }
         assertNoThrow {
             let call = Expression.call(name: "Neq", arguments: [left, right])
-            XCTAssertEqual(Expression.booleanValue(true), try call.evaluate())
+            XCTAssertEqual(Expression.bool(true), try call.evaluate())
         }
     }
 
@@ -91,44 +91,44 @@ class ListTests: XCTestCase {
     }
 
     func test_evaluate_equalNestedLists() {
-        let left = Expression.list([.list([.integerValue(9), .booleanValue(false)]), .integerValue(1), .stringValue("ok")])
-        let right = Expression.list([.list([.integerValue(9), .booleanValue(false)]), .integerValue(1), .stringValue("ok")])
+        let left = Expression.list([.list([.integerValue(9), .bool(false)]), .integerValue(1), .stringValue("ok")])
+        let right = Expression.list([.list([.integerValue(9), .bool(false)]), .integerValue(1), .stringValue("ok")])
 
         assertNoThrow {
             let call = Expression.call(name: "Eq", arguments: [left, right])
-            XCTAssertEqual(Expression.booleanValue(true), try call.evaluate())
+            XCTAssertEqual(Expression.bool(true), try call.evaluate())
         }
         assertNoThrow {
             let call = Expression.call(name: "Neq", arguments: [left, right])
-            XCTAssertEqual(Expression.booleanValue(false), try call.evaluate())
+            XCTAssertEqual(Expression.bool(false), try call.evaluate())
         }
     }
 
     func test_evaluate_almostEqualNestedLists() {
-        let left = Expression.list([.list([.integerValue(8), .booleanValue(false)]), .integerValue(1), .stringValue("ok")])
-        let right = Expression.list([.list([.integerValue(9), .booleanValue(false)]), .integerValue(1), .stringValue("ok")])
+        let left = Expression.list([.list([.integerValue(8), .bool(false)]), .integerValue(1), .stringValue("ok")])
+        let right = Expression.list([.list([.integerValue(9), .bool(false)]), .integerValue(1), .stringValue("ok")])
 
         assertNoThrow {
             let call = Expression.call(name: "Eq", arguments: [left, right])
-            XCTAssertEqual(Expression.booleanValue(false), try call.evaluate())
+            XCTAssertEqual(Expression.bool(false), try call.evaluate())
         }
         assertNoThrow {
             let call = Expression.call(name: "Neq", arguments: [left, right])
-            XCTAssertEqual(Expression.booleanValue(true), try call.evaluate())
+            XCTAssertEqual(Expression.bool(true), try call.evaluate())
         }
     }
 
     func test_evaluate_unequalNestedLists() {
-        let left = Expression.list([.list([.booleanValue(false)]), .integerValue(1), .stringValue("ok")])
-        let right = Expression.list([.list([.integerValue(9), .booleanValue(false)]), .stringValue("ok")])
+        let left = Expression.list([.list([.bool(false)]), .integerValue(1), .stringValue("ok")])
+        let right = Expression.list([.list([.integerValue(9), .bool(false)]), .stringValue("ok")])
 
         assertNoThrow {
             let call = Expression.call(name: "Eq", arguments: [left, right])
-            XCTAssertEqual(Expression.booleanValue(false), try call.evaluate())
+            XCTAssertEqual(Expression.bool(false), try call.evaluate())
         }
         assertNoThrow {
             let call = Expression.call(name: "Neq", arguments: [left, right])
-            XCTAssertEqual(Expression.booleanValue(true), try call.evaluate())
+            XCTAssertEqual(Expression.bool(true), try call.evaluate())
         }
     }
 }
