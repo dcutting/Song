@@ -1,3 +1,5 @@
+import Basic
+
 extension Expression {
     
     public func evaluate() throws -> Expression {
@@ -170,6 +172,8 @@ extension Expression {
             return try evaluateIn(arguments: arguments, context: context)
         case "out":
             return try evaluateOut(arguments: arguments, context: context)
+        case "err":
+            return try evaluateErr(arguments: arguments, context: context)
         default:
             return try evaluateUserFunction(name: name, arguments: arguments, context: context)
         }
@@ -418,10 +422,20 @@ extension Expression {
     }
 
     private func evaluateOut(arguments: [Expression], context: Context) throws -> Expression {
-        let evaluated = try arguments.map { expr -> Expression in try expr.evaluate(context: context) }
-        let output = evaluated.map { $0.out() }.joined(separator: " ")
+        let output = try prepareOutput(for: arguments, context: context)
         print(output)
         return .string(output)
+    }
+
+    private func evaluateErr(arguments: [Expression], context: Context) throws -> Expression {
+        let output = try prepareOutput(for: arguments, context: context)
+        printStdErr(output)
+        return .string(output)
+    }
+
+    private func prepareOutput(for arguments: [Expression], context: Context) throws -> String {
+        let evaluated = try arguments.map { expr -> Expression in try expr.evaluate(context: context) }
+        return evaluated.map { $0.out() }.joined(separator: " ")
     }
 
     private func evaluateUserFunction(name: String, arguments: [Expression], context: Context) throws -> Expression {
@@ -461,4 +475,9 @@ extension Expression {
         }
         return try last.evaluate(context: scopeContext)
     }
+}
+
+func printStdErr(_ message: String) {
+    stderrStream <<< message <<< "\n"
+    stderrStream.flush()
 }

@@ -6,4 +6,5 @@ n.fib(a, b) When n > 0 = (n-1).fib(b, a+b)
 
 [_,b|_].second = b
 
+args.err
 args.second.number.fib.out
