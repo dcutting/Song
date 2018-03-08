@@ -96,35 +96,14 @@ public func makeParser() -> ParserProtocol {
 
     // Function calls.
 
-//    let arg = expression.tag("arg")
-    let argumentDelimiter = skipSpaceAndNewlines >>> comma >>> skipSpaceAndNewlines
-//    let args = skipSpaceAndNewlines >>> (arg >>> (argumentDelimiter >>> arg).recur).tag("args") >>> skipSpaceAndNewlines
-//    let freeFunctionCall = functionName >>> (lParen >>> args.maybe >>> skip >>> rParen)
-//    let anonymousFunctionCall = Deferred()
-//    let subject = wrappedExpression | freeFunctionCall | literalValue | variableName
-//    let subjectFunctionCall = subject.tag("subject") >>> (dot >>> functionName >>> (lParen >>> args.maybe >>> rParen).maybe).some.tag("calls")
-//    anonymousFunctionCall.parser = subject.tag("anonSubject") >>> (lParen >>> args.maybe >>> rParen)
-//    let functionCall = anonymousFunctionCall | subjectFunctionCall | freeFunctionCall
-
-//    let literal = integerValue
-//    let variable = name.tag("variableName")
-//    let value = Deferred()
-//    let lambda = Deferred()
     let call = Deferred()
-//    let wrappedValue = lParen >>> value >>> rParen
-//    value.parser = wrappedValue | call | lambda | literal | variable
-
-//    let lambdaParameters = pipe >>> parameters.recur(0, 1).tag("params") >>> pipe
-//    let lambdaBody = expression.tag("lambdaBody")
-//    let lambda = lambdaParameters >>> lambdaBody
-
-//    let lambdaParameter = variableName
-//    let lambdaParameters = lambdaParameter >>> (comma >>> lambdaParameter).recur
-    let lambda = (pipe >>> skipSpaceAndNewlines >>> parameters.recur(0, 1).tag("params") >>> skipSpaceAndNewlines >>> pipe >>> skipSpaceAndNewlines >>> expression.tag("body")).tag("lambda")
 
     let argument = expression
+    let argumentDelimiter = skipSpaceAndNewlines >>> comma >>> skipSpaceAndNewlines
     let arguments = argument >>> (argumentDelimiter >>> argument).recur
     let wrappedArguments = lParen >>> skipSpaceAndNewlines >>> arguments.recur.tag("args") >>> skipSpaceAndNewlines >>> rParen
+
+    let lambda = (pipe >>> skipSpaceAndNewlines >>> parameters.recur(0, 1).tag("params") >>> skipSpaceAndNewlines >>> pipe >>> skipSpaceAndNewlines >>> expression.tag("body")).tag("lambda")
 
     let callable = call | variableName | lambda | scope
 
