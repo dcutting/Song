@@ -76,6 +76,26 @@ class FunctionCallParserTests: XCTestCase {
         "lessThan(5)(4)".makes(.eval(.call("lessThan", [.int(5)]), [.int(4)]))
         "(1+2).foo".makes(.call("foo", [.call("+", [.int(1), .int(2)])]))
         "foo(_)".makes(.call("foo", [.ignore]))
+        "(1 < 10).negate".makes(.call("negate", [.call("<", [.int(1), .int(10)])]))
+        "(Do 5, 8 End).inc".makes(.call("inc", [.scope([.int(5), .int(8)])]))
+        "(Do |x| x+1 End)(5)".makes(.eval(.scope([.function(Function(name: nil, patterns: [.name("x")], when: .bool(true), body: .call("+", [.name("x"), .int(1)])))]), [.int(5)]))
+        "(inc(1)).inc".makes(.call("inc", [.call("inc", [.int(1)])]))
+        "(x)()".makes(.eval(.name("x"), []))
+        "5.lessThan()(4)".makes(.eval(.call("lessThan", [.int(5)]), [.int(4)]))
+        "(5.lessThan())(4)".makes(.eval(.call("lessThan", [.int(5)]), [.int(4)]))
+        "(5.lessThan)(4)".makes(.eval(.call("lessThan", [.int(5)]), [.int(4)]))
+        "lessThan(5)(4)".makes(.eval(.call("lessThan", [.int(5)]), [.int(4)]))
+        "(|x| x+1)(4)".makes(.eval(.lambda([.name("x")], .call("+", [.name("x"), .int(1)])), [.int(4)]))
+        "4.(|x| x+1)".makes(.eval(.lambda([.name("x")], .call("+", [.name("x"), .int(1)])), [.int(4)]))
+        "4.(|x| x+1)()".makes(.eval(.eval(.lambda([.name("x")], .call("+", [.name("x"), .int(1)])), [.int(4)]), []))
+        "foo( x( a , b ) , y( c , d) )".makes(.call("foo", [.call("x", [.name("a"), .name("b")]), .call("y", [.name("c"), .name("d")])]))
+"""
+foo(
+  x
+ ,
+  y
+ )
+""".makes(.call("foo", [.name("x"), .name("y")]))
     }
 
     func test_doesNotParse() {

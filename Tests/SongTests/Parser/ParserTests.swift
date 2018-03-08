@@ -3,13 +3,13 @@ import Song
 
 class ParserTests: XCTestCase {
 
-    func test_booleans() {
+    func test_bools() {
         "Yes".makes(.bool(true))
         "No".makes(.bool(false))
         " Yes ".makes(.bool(true))
     }
 
-    func test_integers() {
+    func test_ints() {
         "99".makes(.int(99))
         "+99".makes(.int(99))
         "-21".makes(.call("-", [.int(21)]))
@@ -30,7 +30,7 @@ class ParserTests: XCTestCase {
         ".1".fails()
     }
 
-    func test_characters() {
+    func test_chars() {
         "'A'".makes(.char("A"))
         "' '".makes(.char(" "))
         "'\\''".makes(.char("'"))
@@ -69,7 +69,7 @@ class ParserTests: XCTestCase {
 """.makes(.list([.int(1), .bool(false)]))
     }
 
-    func test_listConstructors() {
+    func test_cons() {
         "[x|xs]".makes(.cons([.name("x")], .name("xs")))
         "[x,y|xs]".makes(.cons([.name("x"), .name("y")], .name("xs")))
         "[ 1 , x | xs ]".makes(.cons([.int(1), .name("x")], .name("xs")))
@@ -156,7 +156,7 @@ class ParserTests: XCTestCase {
             ]))
     }
 
-    func test_variables() {
+    func test_names() {
         "_".makes(.ignore)
         "x".makes(.name("x"))
         "_x".makes(.name("_x"))
@@ -170,7 +170,7 @@ class ParserTests: XCTestCase {
         "9bottles".fails()
     }
 
-    func test_subfunctions() {
+    func test_functions() {
         "foo() = 5".makes(
             .function(Function(name: "foo", patterns: [], when: .bool(true), body: .int(5)))
         )
@@ -245,7 +245,7 @@ foo() = Do 5 End
 """.makes(.function(Function(name: "foo", patterns: [], when: .bool(true), body: .scope([.int(5)]))))
     }
 
-    func test_constants() {
+    func test_assigns() {
         "x = 5".makes(.assign(variable: .name("x"), value: .int(5)))
         "x=5".makes(.assign(variable: .name("x"), value: .int(5)))
         "_ = 5".makes(.assign(variable: .ignore, value: .int(5)))
@@ -283,76 +283,6 @@ foo() = Do 5 End
         "Not x".makes(.call("Not", [.name("x")]))
         "Not Not x".makes(.call("Not", [.call("Not", [.name("x")])]))
         "9--5".makes(.call("-", [.int(9), .call("-", [.int(5)])]))
-    }
-
-    func test_calls() {
-        "foo()".makes(.call("foo", []))
-        "foo(a)".makes(.call("foo", [.name("a")]))
-        "foo(4)".makes(.call("foo", [.int(4)]))
-        "4.foo".makes(.call("foo", [.int(4)]))
-        "4.foo()".makes(.call("foo", [.int(4)]))
-        "foo(x, y)".makes(.call("foo", [.name("x"), .name("y")]))
-        "foo(x,y)".makes(.call("foo", [.name("x"), .name("y")]))
-        "foo( x , y )".makes(.call("foo", [.name("x"), .name("y")]))
-"""
-foo(
-  x
- ,
-  y
- )
-""".makes(.call("foo", [.name("x"), .name("y")]))
-    }
-
-    func test_callChains() {
-        "3.foo.bar".makes(.call("bar", [.call("foo", [.int(3)])]))
-        "3.foo().bar".makes(.call("bar", [.call("foo", [.int(3)])]))
-        "3.foo.bar()".makes(.call("bar", [.call("foo", [.int(3)])]))
-        "3.foo().bar()".makes(.call("bar", [.call("foo", [.int(3)])]))
-        "3.foo(5).bar()".makes(.call("bar", [.call("foo", [.int(3), .int(5)])]))
-        "3.foo(5).bar".makes(.call("bar", [.call("foo", [.int(3), .int(5)])]))
-        "3.foo().bar(5)".makes(.call("bar", [.call("foo", [.int(3)]), .int(5)]))
-        "3.foo.bar(5)".makes(.call("bar", [.call("foo", [.int(3)]), .int(5)]))
-        "3.foo(9).bar(5)".makes(.call("bar", [.call("foo", [.int(3), .int(9)]), .int(5)]))
-        "foo().bar".makes(.call("bar", [.call("foo", [])]))
-        "foo().bar()".makes(.call("bar", [.call("foo", [])]))
-        "foo(3).bar()".makes(.call("bar", [.call("foo", [.int(3)])]))
-    }
-
-    func test_nestedCalls() {
-
-        "foo(bar())".makes(.call("foo", [.call("bar", [])]))
-        "foo(bar(4))".makes(.call("foo", [.call("bar", [.int(4)])]))
-        "foo(1, bar(4))".makes(.call("foo", [
-            .int(1),
-            .call("bar", [.int(4)])]))
-        "1.foo(bar(4))".makes(.call("foo", [
-            .int(1),
-            .call("bar", [.int(4)])]))
-
-        "foo( x( a , b ) , y( c , d) )".makes(
-            .call("foo", [
-                .call("x", [.name("a"), .name("b")]),
-                .call("y", [.name("c"), .name("d")])
-                ]))
-
-        "3.foo(5.bar(6.foo(9)).foo()).bar(foo(3).bar)".makes(
-            .call("bar", [
-                .call("foo", [
-                    .int(3),
-                    .call("foo", [
-                        .call("bar", [
-                            .int(5),
-                            .call("foo", [
-                                .int(6),
-                                .int(9)
-                                ])
-                            ])
-                        ])
-                    ]),
-                .call("bar", [
-                    .call("foo", [.int(3)])
-                    ])
-                ]))
     }
 
     func test_scopes() {
@@ -418,43 +348,5 @@ End
         "Do , End".fails()
         "Do,End".fails()
         "Do1End".fails()
-    }
-
-    func test_unusualFunctionCalls() {
-        "(1 < 10).negate".makes(.call("negate", [.call("<", [.int(1), .int(10)])]))
-        "(Do 5, 8 End).inc".makes(.call("inc", [.scope([.int(5), .int(8)])]))
-        "(Do |x| x+1 End)(5)".makes(.eval(.scope([.function(Function(name: nil, patterns: [.name("x")], when: .bool(true), body: .call("+", [.name("x"), .int(1)])))]), [.int(5)]))
-        "(inc(1)).inc".makes(.call("inc", [.call("inc", [.int(1)])]))
-        "(x)()".makes(.eval(.name("x"), []))
-        "5.lessThan()(4)".makes(.eval(.call("lessThan", [.int(5)]), [.int(4)]))
-        "(5.lessThan())(4)".makes(.eval(.call("lessThan", [.int(5)]), [.int(4)]))
-        "(5.lessThan)(4)".makes(.eval(.call("lessThan", [.int(5)]), [.int(4)]))
-        "lessThan(5)(4)".makes(.eval(.call("lessThan", [.int(5)]), [.int(4)]))
-        "(|x| x+1)(4)".makes(
-            .eval(
-                .function(Function(name: nil,
-                                                  patterns: [.name("x")],
-                                                  when: .bool(true),
-                                                  body: .call("+", [.name("x"), .int(1)])
-                )),
-                [.int(4)]))
-        "4.(|x| x+1)".makes(
-            .eval(
-                .function(Function(name: nil,
-                                                  patterns: [.name("x")],
-                                                  when: .bool(true),
-                                                  body: .call("+", [.name("x"), .int(1)])
-                )),
-                [.int(4)]))
-        "4.(|x| x+1)()".makes(
-            .eval(
-                .eval(
-                    .function(Function(name: nil,
-                                                      patterns: [.name("x")],
-                                                      when: .bool(true),
-                                                      body: .call("+", [.name("x"), .int(1)])
-                    )),
-                    [.int(4)]
-                ), []))
     }
 }
