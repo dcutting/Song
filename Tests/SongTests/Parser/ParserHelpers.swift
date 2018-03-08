@@ -3,17 +3,6 @@ import XCTest
 
 extension String {
 
-    func ok(file: StaticString = #file, line: UInt = #line) {
-        let parser = makeParser()
-        let (_, remainder) = parser.parse(self)
-        if !remainder.text.isEmpty {
-            XCTFail(remainder.text, file: file, line: line)
-        }
-    }
-}
-
-extension String {
-
     func makes(_ expected: Expression, file: StaticString = #file, line: UInt = #line) {
         assertNoThrow(file: file, line: line) {
             let actual = try parse(self)
