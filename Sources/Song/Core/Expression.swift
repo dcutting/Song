@@ -32,4 +32,8 @@ public extension Expression {
     public static func string(_ string: String) -> Expression {
         return .list(Array(string).map(Expression.char))
     }
+
+    public static func lambda(_ patterns: [Expression], _ body: Expression) -> Expression {
+        return .subfunction(Subfunction(name: nil, patterns: patterns, when: .bool(true), body: body))
+    }
 }

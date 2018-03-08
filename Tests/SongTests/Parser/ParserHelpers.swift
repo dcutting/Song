@@ -10,14 +10,6 @@ extension String {
             XCTFail(remainder.text, file: file, line: line)
         }
     }
-
-    func bad(file: StaticString = #file, line: UInt = #line) {
-        let parser = makeParser()
-        let (_, remainder) = parser.parse(self)
-        if remainder.text.isEmpty {
-            XCTFail("should not parse", file: file, line: line)
-        }
-    }
 }
 
 extension String {
