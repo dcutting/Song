@@ -107,19 +107,19 @@ let {
     x=5
     body=let {
         foo=
-            subfunction {
+            function {
                 patterns=[1]
                 body=2
             }
         body=let {
             foo=
-                subfunction {
+                function {
                     patterns=[a]
                     body=let {
                         y=7
                         let {
                             foo=
-                                subfunction {
+                                function {
                                     patterns=[4]
                                     body=8
                                 }
@@ -149,7 +149,7 @@ let {
 
 "exp" = ?
 Read line
-If line is subfunction or assignment
+If line is function or assignment
     line becomes new let statement with line as binding and empty body array
     "exp" is new let statement
 else

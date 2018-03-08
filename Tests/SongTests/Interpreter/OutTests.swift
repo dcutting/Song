@@ -16,8 +16,7 @@ class OutTests: XCTestCase {
     }
 
     func testOut_closureValue_doesNotIncludeContext() {
-        let subfunction = Function(name: "foo", patterns: [], when: .bool(true), body: .int(99))
-        let function = Expression.function(subfunction)
+        let function = Expression.function(Function(name: "foo", patterns: [], when: .bool(true), body: .int(99)))
         let context: Context = ["a": .int(5)]
         let string = Expression.closure("foo", [function], context)
         let actual = string.out()

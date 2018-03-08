@@ -34,8 +34,8 @@ extension Expression {
         case let .name(variable):
             return try evaluateVariable(variable: variable, context)
 
-        case let .function(subfunction):
-            return try evaluate(expression: expression, subfunction: subfunction, context: context)
+        case let .function(function):
+            return try evaluate(expression: expression, function: function, context: context)
 
         case let .assign(variable, value):
             return .assign(variable: variable, value: try value.evaluate(context: context))
@@ -46,8 +46,8 @@ extension Expression {
         case let .call(name, arguments):
             return try evaluateCall(expression: expression, name: name, arguments: arguments, context: context)
 
-        case let .eval(subfunction, arguments):
-            return try evaluateCallAnonymous(closure: subfunction, arguments: arguments, callingContext: context)
+        case let .eval(function, arguments):
+            return try evaluateCallAnonymous(closure: function, arguments: arguments, callingContext: context)
         }
     }
     
@@ -284,12 +284,12 @@ extension Expression {
         }
     }
 
-    private func evaluate(expression: Expression, subfunction: Function, context: Context) throws -> Expression {
+    private func evaluate(expression: Expression, function: Function, context: Context) throws -> Expression {
 
-        try validatePatterns(subfunction)
+        try validatePatterns(function)
 
         var finalContext = context
-        let name = subfunction.name
+        let name = function.name
         var existingClauses = [Expression]()
         var existingContext = Context()
 
@@ -306,8 +306,8 @@ extension Expression {
         return .closure(name, existingClauses, finalContext)
     }
 
-    private func validatePatterns(_ subfunction: Function) throws {
-        try subfunction.patterns.forEach { pattern in
+    private func validatePatterns(_ function: Function) throws {
+        try function.patterns.forEach { pattern in
             if case .number(Number.float) = pattern {
                 throw EvaluationError.patternsCannotBeFloats(pattern)
             }
@@ -338,14 +338,14 @@ extension Expression {
     
     func evaluateCallFunction(function: Expression, closureContext: Context, arguments: [Expression], callingContext: Context, closure: Expression) throws -> Expression {
         switch function {
-        case let .function(subfunction):
+        case let .function(function):
 
-            let extendedContext = try matchParameters(closureContext: closureContext, callingContext: callingContext, parameters: subfunction.patterns, arguments: arguments)
-            let whenEvaluated = try subfunction.when.evaluate(context: extendedContext)
-            guard case .bool = whenEvaluated else { throw EvaluationError.notABoolean(subfunction.when) }
+            let extendedContext = try matchParameters(closureContext: closureContext, callingContext: callingContext, parameters: function.patterns, arguments: arguments)
+            let whenEvaluated = try function.when.evaluate(context: extendedContext)
+            guard case .bool = whenEvaluated else { throw EvaluationError.notABoolean(function.when) }
             guard case .bool(true) = whenEvaluated else { throw EvaluationError.signatureMismatch(arguments) }
             let finalContext = callingContext.merging(extendedContext) { l, r in r }
-            return try subfunction.body.evaluate(context: finalContext)
+            return try function.body.evaluate(context: finalContext)
         default:
             throw EvaluationError.notAFunction(closure)
         }
@@ -429,8 +429,8 @@ extension Expression {
         var scopeContext = context
         var shadowedFunctions = Set<String>()
         for statement in allStatements {
-            if case .function(let subfunction) = statement {
-                if let name = subfunction.name {
+            if case .function(let function) = statement {
+                if let name = function.name {
                     if !shadowedFunctions.contains(name) {
                         scopeContext.removeValue(forKey: name)
                     }
