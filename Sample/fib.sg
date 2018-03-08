@@ -2,8 +2,8 @@
 
 n.fib = n.fib(0, 1)
 0.fib(a, _) = a
-n.fib(a, b) = (n-1).fib(b, a+b)
+n.fib(a, b) When n > 0 = (n-1).fib(b, a+b)
 
 [_,b|_].second = b
 
-out(args.second.number.fib)
+args.second.number.fib.out
