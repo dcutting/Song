@@ -6,9 +6,18 @@ class FunctionTests: XCTestCase {
     lazy var namedFunction = makeNamedFunction()
     lazy var anonymousFunction = Expression.lambda([.name("a"), .name("b")], .name("x"))
 
-    func testDescriptionNamedFunction() {
+    func test_description_functionWithoutWhen() {
         let result = "\(makeNamedFunction())"
         XCTAssertEqual("foo(a, b) = x", result)
+    }
+
+    func test_description_functionWithWhen() {
+        let function = Function(name: "foo",
+                                patterns: [.name("a"), .name("b")],
+                                when: .call("<", [.name("a"), .name("b")]),
+                                body: .name("a"))
+        let expr = Expression.function(function)
+        XCTAssertEqual("foo(a, b) When <(a, b) = a", "\(expr)")
     }
 
     func test_evaluate_namedFunction_returnsClosure() {
