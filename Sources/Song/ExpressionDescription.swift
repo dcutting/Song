@@ -49,14 +49,14 @@ extension Expression: CustomStringConvertible {
             let contextList = contextDescription(context: context)
             return "[(\(contextList)) \(function)]"
 
+        case let .scope(expressions):
+            return "scope (" + expressions.map { "\($0)" }.joined(separator: ", ") + ")"
+
         case let .call(name, arguments):
             return descriptionCall(name: name, arguments: arguments)
 
         case let .callAnon(closure, arguments):
             return descriptionCallAnonymous(closure: closure, arguments: arguments)
-
-        case let .scope(expressions):
-            return "scope (" + expressions.map { "\($0)" }.joined(separator: ", ") + ")"
         }
     }
 

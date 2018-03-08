@@ -24,27 +24,28 @@ public indirect enum Expression {
     case char(Character)
     case list([Expression])
     case listCons([Expression], Expression)
-    case closure(String?, [Expression], Context)
 
-    case variable(String)
     case ignore
-    case call(String, [Expression])
-    case callAnon(Expression, [Expression])
+    case variable(String)
 
     case subfunction(Subfunction)
     case assign(variable: Expression, value: Expression)
 
+    case closure(String?, [Expression], Context)
     case scope([Expression])
+
+    case call(String, [Expression])
+    case callAnon(Expression, [Expression])
 }
 
 public extension Expression {
 
     public static func int(_ int: IntType) -> Expression {
-        return .number(Number.int(int))
+        return .number(.int(int))
     }
 
     public static func float(_ float: FloatType) -> Expression {
-        return .number(Number.float(float))
+        return .number(.float(float))
     }
 
     public static func string(_ string: String) -> Expression {

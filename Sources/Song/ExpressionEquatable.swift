@@ -34,14 +34,14 @@ public func ==(lhs: Expression, rhs: Expression) -> Bool {
     case let (.closure(lhsName, lhsFunctions, lhsContext), .closure(rhsName, rhsFunctions, rhsContext)):
         return lhsName == rhsName && lhsFunctions == rhsFunctions && isEqual(lhsContext: lhsContext, rhsContext: rhsContext)
 
+    case let (.scope(lhsExpressions), .scope(rhsExpressions)):
+        return lhsExpressions == rhsExpressions
+
     case let (.call(lhsName, lhsArguments), .call(rhsName, rhsArguments)):
         return lhsName == rhsName && lhsArguments == rhsArguments
 
     case let (.callAnon(lhsClosure, lhsArguments), .callAnon(rhsClosure, rhsArguments)):
         return lhsClosure == rhsClosure && lhsArguments == rhsArguments
-
-    case let (.scope(lhsExpressions), .scope(rhsExpressions)):
-        return lhsExpressions == rhsExpressions
 
     default:
         return false

@@ -1,7 +1,7 @@
 public typealias Context = [String: Expression]
 
 func contextDescription(context: Context) -> String {
-    var contextPairs = Array<String>()
+    var contextPairs = [String]()
     for (key, value) in context {
         contextPairs.append("\(key): \(value)")
     }

@@ -17,7 +17,7 @@ extension Expression {
     private func evaluate(expression: Expression, context: Context) throws -> Expression {
         switch expression {
 
-        case .bool, .number, .char, .closure, .ignore:
+        case .bool, .number, .char, .ignore, .closure:
             return expression
 
         case let .list(exprs):
@@ -40,14 +40,14 @@ extension Expression {
         case let .assign(variable, value):
             return .assign(variable: variable, value: try value.evaluate(context: context))
 
+        case let .scope(statements):
+            return try evaluateScope(statements: statements, context: context)
+
         case let .call(name, arguments):
             return try evaluateCall(expression: expression, name: name, arguments: arguments, context: context)
 
         case let .callAnon(subfunction, arguments):
             return try evaluateCallAnonymous(closure: subfunction, arguments: arguments, callingContext: context)
-
-        case let .scope(statements):
-            return try evaluateScope(statements: statements, context: context)
         }
     }
     
