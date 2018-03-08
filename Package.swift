@@ -19,7 +19,7 @@ let package = Package(
             dependencies: ["Song", "Utility", "LineNoise"]),
         .target(
             name: "Song",
-            dependencies: ["Syft"]),
+            dependencies: ["Syft", "Utility"]),
         .testTarget(
             name: "SongTests",
             dependencies: ["Song"])
