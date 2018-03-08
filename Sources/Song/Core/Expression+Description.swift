@@ -16,7 +16,7 @@ extension Expression: CustomStringConvertible {
             return describeList(exprs)
 
         case let .listCons(head, tail):
-            return "[\(head.map(String.init).joined(separator: ", "))|\(tail)]"
+            return "[" + head.map(String.init).joined(separator: ", ") + "|\(tail)]"
 
         case .ignore:
             return "_"
@@ -31,7 +31,7 @@ extension Expression: CustomStringConvertible {
             return "\(name): \(value)"
 
         case let .closure(_, function, context):
-            return "[(\(describeContext(context))) \(function)]"
+            return "[(" + describeContext(context) + ") \(function)]"
 
         case let .scope(exprs):
             return "scope (" + exprs.map { "\($0)" }.joined(separator: ", ") + ")"
