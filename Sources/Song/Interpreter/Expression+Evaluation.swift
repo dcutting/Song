@@ -201,6 +201,7 @@ extension Expression {
                         }
                         return .bool(true)
                     }
+                    // TODO: need propr equality check for listCons too.
                 }
             }
         }
