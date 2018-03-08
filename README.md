@@ -479,7 +479,7 @@ And patterns can be nested as needed for more complex matches:
 # [[1, 'a'], [2, 'b'], [3, 'c']]
 ```
 
-If you use the same variable name several times in a pattern, the values that match them are required to be equal:
+If you use the same variable name several times in a pattern, the values that match must be equal:
 
 ```
 list.startsWith?([]) = Yes
@@ -487,9 +487,10 @@ list.startsWith?([]) = Yes
 _.startsWith?(_) = No
 
 "hello".startsWith?("he")
+# Yes
 ```
 
-As usual, if the values that match pattern variables are floats, the pattern match will throw an error because floats are not equatable.
+If the values that match a repeated variable are floats, Song will throw an error because floats are not equatable.
 
 ### When
 
