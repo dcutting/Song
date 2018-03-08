@@ -202,7 +202,7 @@ public func makeTransformer() -> Transformer<Expression> {
     return t
 }
 
-func reduce(_ calls: [Expression]) throws -> Expression {
+private func reduce(_ calls: [Expression]) throws -> Expression {
     guard calls.count > 0 else { throw SongTransformError.unknown }
     var calls = calls
     var result = calls.removeFirst()
@@ -219,7 +219,7 @@ func reduce(_ calls: [Expression]) throws -> Expression {
     return result
 }
 
-func transformFunction(args: TransformerReducerArguments<Expression>) throws -> Subfunction {
+private func transformFunction(args: TransformerReducerArguments<Expression>) throws -> Subfunction {
     var name: String?
     do {
         name = try args.str("name")
