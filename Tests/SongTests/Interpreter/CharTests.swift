@@ -8,12 +8,17 @@ class CharTests: XCTestCase {
         XCTAssertEqual("'A'", "\(char)")
     }
 
-    func test_description_escaped() {
+    func test_description_escapedQuote() {
         let char = Expression.char("\'")
         XCTAssertEqual("'\\''", "\(char)")
     }
 
-    func testEvaluate() {
+    func test_description_backslash() {
+        let char = Expression.char("\\")
+        XCTAssertEqual("'\\'", "\(char)")
+    }
+
+    func test_evaluate() {
         assertNoThrow {
             let char = Expression.char("$")
             XCTAssertEqual(char, try char.evaluate())
