@@ -77,4 +77,9 @@ End
 foo() = Do 5 End
 """.makes(.function(Function(name: "foo", patterns: [], when: .bool(true), body: .scope([.int(5)]))))
     }
+
+    func test_shouldNotParse() {
+        "foo((x)) = x".fails()
+        "(x).foo = x".fails()
+    }
 }

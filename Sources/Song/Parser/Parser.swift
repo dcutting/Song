@@ -105,12 +105,16 @@ public func makeParser() -> ParserProtocol {
 
     let call = Deferred()
 
-    let argument = expression
+    let argument = Deferred()
+    let wrappedArgument = lParen >>> argument >>> rParen
+    argument.parser = wrappedArgument | expression
     let argumentDelimiter = skipSpaceAndNewlines >>> comma >>> skipSpaceAndNewlines
     let arguments = argument >>> (argumentDelimiter >>> argument).recur
     let wrappedArguments = lParen >>> skipSpaceAndNewlines >>> arguments.recur.tag("args") >>> skipSpaceAndNewlines >>> rParen
 
-    let callable = call | variableName | lambda | scope
+    let callable = Deferred()
+    let wrappedCallable = lParen >>> callable >>> rParen
+    callable.parser = wrappedCallable | call | variableName | lambda | scope
 
     let groupName = name.tag("functionName")
     let groupAnon = lParen >>> callable >>> rParen
