@@ -3,7 +3,7 @@ import Song
 
 class ScopeParserTests: XCTestCase {
 
-    func test_scopes() {
+    func test_shouldParse() {
         "Do _ End".makes(.scope([.ignore]))
         "Do 1 End".makes(.scope([.int(1)]))
         "Do 1, End".makes(.scope([.int(1)]))
@@ -60,7 +60,9 @@ Do
   3,
 End
 """.makes(.scope([.int(1), .int(2), .int(3)]))
+    }
 
+    func test_shouldNotParse() {
         "DoEnd".fails()
         "Do End".fails()
         "Do , End".fails()

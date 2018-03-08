@@ -3,7 +3,7 @@ import Song
 
 class CallParserTests: XCTestCase {
 
-    func test_parses() {
+    func test_shouldParse() {
         "1.inc".makes(.call("inc", [.int(1)]))
         "x.inc".makes(.call("inc", [.name("x")]))
         "1.inc()".makes(.call("inc", [.int(1)]))
@@ -98,7 +98,7 @@ foo(
 """.makes(.call("foo", [.name("x"), .name("y")]))
     }
 
-    func test_doesNotParse() {
+    func test_shouldNotParse() {
         "4()".fails()
         "4.|x|x".fails()
         "(4)()".fails()

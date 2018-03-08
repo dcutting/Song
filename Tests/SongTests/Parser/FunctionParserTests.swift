@@ -3,7 +3,7 @@ import Song
 
 class FunctionParserTests: XCTestCase {
 
-    func test_functions() {
+    func test_shouldParse() {
         "foo() = 5".makes(
             .function(Function(name: "foo", patterns: [], when: .bool(true), body: .int(5)))
         )
