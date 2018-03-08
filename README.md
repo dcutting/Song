@@ -479,7 +479,7 @@ And patterns can be nested as needed for more complex matches:
 # [[1, 'a'], [2, 'b'], [3, 'c']]
 ```
 
-If you use the same variable name several times in a pattern, the values that match them are required to be equal:
+If you use the same variable name several times in a pattern, the values that match must be equal:
 
 ```
 list.startsWith?([]) = Yes
@@ -487,9 +487,10 @@ list.startsWith?([]) = Yes
 _.startsWith?(_) = No
 
 "hello".startsWith?("he")
+# Yes
 ```
 
-As usual, if the values that match pattern variables are floats, the pattern match will throw an error because floats are not equatable.
+If the values that match a repeated variable are floats, Song will throw an error because floats are not equatable.
 
 ### When
 
@@ -518,9 +519,18 @@ x.apply(f) = f(x)
 # 10
 ```
 
-Note the lambda syntax uses pipes `|` to specify parameters.
+Note the lambda syntax uses pipes `|` to specify parameters. They also support some pattern matching, which is useful for destructuring list arguments:
 
-They don't just have to be passed as arguments. They can also live on their own in a variable:
+```
+x.apply(f) = f(x)
+
+[1,2,3].apply(|[x|_]| x)
+# 1
+```
+
+They don't support pattern matching simple literals like numbers though, since this would not be a very useful feature.
+
+Lambdas don't just have to be passed as arguments to other functions. They can also live on their own in a variable:
 
 ```
 double = |x| x*2
@@ -666,16 +676,42 @@ This may or may not be what you intend. In general, it is easiest to reason abou
 
 ## Input and output
 
-You can print things to stdout using the `out()` built-in function:
+You can print things to `stdout` and `stderr` using the `out()` and `err()` built-in functions:
 
 ```
 out("hello", "world", 99)
-# "hello world 99"
+# "hello world 99" to stdout
+
+err("uh oh")
+# "uh oh" to stderr
 ```
 
-Song cannot currently read input from stdin or files, so you'll need to include most data in your script. But I'm working on it. ;)
+Reading a line of input from `stdin` is similarly straightforward:
 
-Scripts can, however, read arguments from the command-line:
+```
+name = in("What is your name? ")
+out("Hello", name)
+```
+
+You can make a simple interactive loop using recursion. Here's an interactive version of the Fibonacci program:
+
+```
+#!/usr/bin/env song
+
+0.fib = 0
+1.fib = 1
+n.fib = (n-2).fib + (n-1).fib
+
+loop() = Do
+  "n? ".in.number.fib.out
+  loop()
+End
+
+"Welcome to Fibonacci".out
+loop()
+```
+
+Scripts can also read arguments from the command-line passed in the `args` variable. The first argument will be the name of your script, so you'll usually want to read the second one:
 
 ```
 #!/usr/bin/env song
@@ -688,6 +724,8 @@ args.second.number.double.out
 ```
 
 ```
-$ song doubler.sg 9
+$ ./doubler.sg 9
 18
 ```
+
+Song cannot currently read input from files, so you'll need to include most data in your script. But I'm working on it. ;)
