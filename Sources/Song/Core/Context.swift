@@ -1,13 +1,5 @@
 public typealias Context = [String: Expression]
 
-func contextDescription(context: Context) -> String {
-    var contextPairs = [String]()
-    for (key, value) in context {
-        contextPairs.append("\(key): \(value)")
-    }
-    return contextPairs.sorted().joined(separator: ", ")
-}
-
 public func extendContext(context: Context, name: String, value: Expression) -> Context {
     var extendedContext = context
     extendedContext[name] = value
@@ -20,4 +12,12 @@ func isEqual(lhsContext: Context, rhsContext: Context) -> Bool {
         guard let rhsValue = rhsContext[key], value == rhsValue else { return false }
     }
     return true
+}
+
+func contextDescription(context: Context) -> String {
+    var contextPairs = [String]()
+    for (key, value) in context {
+        contextPairs.append("\(key): \(value)")
+    }
+    return contextPairs.sorted().joined(separator: ", ")
 }

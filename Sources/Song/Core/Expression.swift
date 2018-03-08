@@ -1,22 +1,3 @@
-public struct Subfunction: Equatable {
-
-    public let name: String?
-    public let patterns: [Expression]
-    public let when: Expression
-    public let body: Expression
-
-    public init(name: String?, patterns: [Expression], when: Expression, body: Expression) {
-        self.name = name
-        self.patterns = patterns
-        self.when = when
-        self.body = body
-    }
-
-    public static func ==(lhs: Subfunction, rhs: Subfunction) -> Bool {
-        return lhs.name == rhs.name && lhs.patterns == rhs.patterns && lhs.when == rhs.when && lhs.body == rhs.body
-    }
-}
-
 public indirect enum Expression {
 
     case bool(Bool)
@@ -49,7 +30,6 @@ public extension Expression {
     }
 
     public static func string(_ string: String) -> Expression {
-        let chars = Array(string).map { Expression.char($0) }
-        return .list(chars)
+        return .list(Array(string).map(Expression.char))
     }
 }
