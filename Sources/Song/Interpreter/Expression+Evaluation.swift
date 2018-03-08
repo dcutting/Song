@@ -166,6 +166,8 @@ extension Expression {
             guard numbers.count == 1 else { throw EvaluationError.signatureMismatch(arguments) }
             let left = numbers.removeFirst()
             return .number(left.truncate())
+        case "in":
+            return try evaluateIn(arguments: arguments, context: context)
         case "out":
             return try evaluateOut(arguments: arguments, context: context)
         default:
@@ -405,6 +407,14 @@ extension Expression {
             }
         }
         return (extendedContext, patternEqualityContext)
+    }
+
+    private func evaluateIn(arguments: [Expression], context: Context) throws -> Expression {
+        let evaluated = try arguments.map { expr -> Expression in try expr.evaluate(context: context) }
+        let output = evaluated.map { $0.out() }.joined(separator: " ")
+        print(output, terminator: "")
+        let line = readLine() ?? ""
+        return .string(line)
     }
 
     private func evaluateOut(arguments: [Expression], context: Context) throws -> Expression {
