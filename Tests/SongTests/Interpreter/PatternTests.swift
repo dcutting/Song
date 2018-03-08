@@ -4,7 +4,7 @@ import Song
 class PatternTests: XCTestCase {
 
     lazy var functions: [Function] = [
-        Function(name: "anyVariableFunc", patterns: [.ignore], when: .bool(true), body: .string("ok")),
+        Function(name: "ignoreVariableFunc", patterns: [.ignore], when: .bool(true), body: .string("ok")),
         Function(name: "booleanLiteralFunc", patterns: [.bool(false)], when: .bool(true), body: .string("ok")),
         Function(name: "numberLiteralFunc", patterns: [.int(2)], when: .bool(true), body: .string("ok")),
         Function(name: "listLiteralFunc", patterns: [.list([.int(1), .int(2)])], when: .bool(true), body: .string("ok")),
@@ -47,9 +47,9 @@ class PatternTests: XCTestCase {
         XCTAssertThrowsError(try call.evaluate(context: context))
     }
 
-    func test_anyVariable_match_evaluates() {
+    func test_ignoreVariable_match_evaluates() {
         assertNoThrow {
-            let call = Expression.call("anyVariableFunc", [.int(2)])
+            let call = Expression.call("ignoreVariableFunc", [.int(2)])
             let actual = try call.evaluate(context: context)
             XCTAssertEqual(Expression.string("ok"), actual)
         }
@@ -175,7 +175,7 @@ class PatternTests: XCTestCase {
 
             let foo = Function(name: "foo", patterns: [.name("x"), .name("x")], when: .bool(true), body: .name("x"))
 
-            context = try declareSubfunctions([Expression.function(foo)], in: context)
+            context = try declareSubfunctions([.function(foo)], in: context)
             
             let call = Expression.call("foo", [.int(2), .int(2)])
             let actual = try call.evaluate(context: context)

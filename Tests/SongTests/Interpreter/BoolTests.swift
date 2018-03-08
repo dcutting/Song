@@ -3,57 +3,53 @@ import Song
 
 class BoolTests: XCTestCase {
     
-    let trueBooleanValue = Expression.bool(true)
-    let falseBooleanValue = Expression.bool(false)
+    let trueBool = Expression.bool(true)
+    let falseBool = Expression.bool(false)
     
-    func testDescriptionTrue() {
-        let result = "\(trueBooleanValue)"
-        XCTAssertEqual("Yes", result)
+    func test_description_true() {
+        XCTAssertEqual("Yes", "\(trueBool)")
     }
     
-    func testDescriptionFalse() {
-        let result = "\(falseBooleanValue)"
-        XCTAssertEqual("No", result)
+    func test_description_false() {
+        XCTAssertEqual("No", "\(falseBool)")
     }
     
-    func testEvaluateTrue() {
+    func test_evaluate_true() {
         assertNoThrow {
-            let result = try trueBooleanValue.evaluate()
-            XCTAssertEqual(trueBooleanValue, result)
+            XCTAssertEqual(trueBool, try trueBool.evaluate())
         }
     }
     
-    func testEvaluateFalse() {
+    func test_evaluate_false() {
         assertNoThrow {
-            let result = try falseBooleanValue.evaluate()
-            XCTAssertEqual(falseBooleanValue, result)
+            XCTAssertEqual(falseBool, try falseBool.evaluate())
         }
     }
 
     func test_eq_equal_returnsYes() {
         assertNoThrow {
-            let call = Expression.call("Eq", [trueBooleanValue, trueBooleanValue])
+            let call = Expression.call("Eq", [trueBool, trueBool])
             XCTAssertEqual(Expression.bool(true), try call.evaluate())
         }
     }
 
     func test_eq_unequal_returnsNo() {
         assertNoThrow {
-            let call = Expression.call("Eq", [falseBooleanValue, trueBooleanValue])
+            let call = Expression.call("Eq", [falseBool, trueBool])
             XCTAssertEqual(Expression.bool(false), try call.evaluate())
         }
     }
 
-    func test_notEq_equal_returnsNo() {
+    func test_neq_equal_returnsNo() {
         assertNoThrow {
-            let call = Expression.call("Neq", [trueBooleanValue, trueBooleanValue])
+            let call = Expression.call("Neq", [trueBool, trueBool])
             XCTAssertEqual(Expression.bool(false), try call.evaluate())
         }
     }
 
-    func test_notEq_unequal_returnsYes() {
+    func test_neq_unequal_returnsYes() {
         assertNoThrow {
-            let call = Expression.call("Neq", [falseBooleanValue, trueBooleanValue])
+            let call = Expression.call("Neq", [falseBool, trueBool])
             XCTAssertEqual(Expression.bool(true), try call.evaluate())
         }
     }

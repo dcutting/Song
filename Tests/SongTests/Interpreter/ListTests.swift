@@ -3,23 +3,23 @@ import Song
 
 class ListTests: XCTestCase {
 
-    func testDescription_emptyList() {
+    func test_description_emptyList() {
         let emptyList = Expression.list([])
         XCTAssertEqual("[]", "\(emptyList)")
     }
 
-    func testDescription_nonEmptyList() {
+    func test_description_nonEmptyList() {
         let list = Expression.list([.int(4), .bool(false)])
         XCTAssertEqual("[4, No]", "\(list)")
     }
 
-    func testEquatable_same_returnsTrue() {
+    func test_eq_same_returnsTrue() {
         let left = Expression.list([.int(1), .int(2), .int(3)])
         let right = Expression.list([.int(1), .int(2), .int(3)])
         XCTAssertEqual(left, right)
     }
 
-    func testEquatable_different_returnsFalse() {
+    func test_eq_different_returnsFalse() {
         let left = Expression.list([.int(2), .int(1), .int(3)])
         let right = Expression.list([.int(1), .int(2), .int(3)])
         XCTAssertNotEqual(left, right)

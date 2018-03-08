@@ -4,7 +4,7 @@ import Song
 class FunctionTests: XCTestCase {
 
     lazy var namedFunction = makeNamedFunction()
-    lazy var anonymousFunction = makeAnonymousFunction()
+    lazy var anonymousFunction = Expression.lambda([.name("a"), .name("b")], .name("x"))
 
     func testDescriptionNamedFunction() {
         let result = "\(makeNamedFunction())"
@@ -30,24 +30,16 @@ class FunctionTests: XCTestCase {
         XCTAssertThrowsError(try function.evaluate())
     }
 
-    func testDescriptionAnonymousFunction() {
+    func test_description_anonymousFunction() {
         let result = "\(anonymousFunction)"
         XCTAssertEqual("λ(a, b) = x", result)
     }
 
     private func makeNamedFunction() -> Expression {
         let function = Function(name: "foo",
-                                      patterns: [Expression.name("a"), Expression.name("b")],
-                                      when: Expression.bool(true),
-                                      body: Expression.name("x"))
-        return .function(function)
-    }
-
-    private func makeAnonymousFunction() -> Expression {
-        let function = Function(name: nil,
-                                      patterns: [Expression.name("a"), Expression.name("b")],
-                                      when: Expression.bool(true),
-                                      body: Expression.name("x"))
+                                      patterns: [.name("a"), .name("b")],
+                                      when: .bool(true),
+                                      body: .name("x"))
         return .function(function)
     }
 }

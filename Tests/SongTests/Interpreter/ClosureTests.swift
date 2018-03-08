@@ -7,7 +7,7 @@ class ClosureTests: XCTestCase {
 
     let context: Context = ["x": .int(5), "y": .string("hi")]
     
-    func testDescription() {
+    func test_description() {
         assertNoThrow {
             let closure = try function.evaluate(context: context)
             let result = "\(closure)"
@@ -15,19 +15,18 @@ class ClosureTests: XCTestCase {
         }
     }
     
-    func testEvaluate() {
+    func test_evaluate() {
         assertNoThrow {
             let closure = try function.evaluate(context: context)
-            let result = try closure.evaluate()
-            XCTAssertEqual(closure, result)
+            XCTAssertEqual(closure, try closure.evaluate())
         }
     }
 
     private func makeNamedFunction() -> Expression {
         let function = Function(name: "foo",
-                                      patterns: [ Expression.name("a"), Expression.name("b") ],
-                                      when: Expression.bool(true),
-                                      body: Expression.name("x"))
+                                patterns: [.name("a"), .name("b")],
+                                when: .bool(true),
+                                body: .name("x"))
         return .function(function)
     }
 }

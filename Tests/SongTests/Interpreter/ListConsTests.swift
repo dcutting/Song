@@ -8,13 +8,13 @@ class ListConsTests: XCTestCase {
         XCTAssertEqual("[9, \"hi\"|xs]", "\(listConstructor)")
     }
 
-    func testEquatable_same_returnsTrue() {
+    func test_eq_same_returnsTrue() {
         let left = Expression.cons([.int(1), .int(5)], .list([.int(2)]))
         let right = Expression.cons([.int(1), .int(5)], .list([.int(2)]))
         XCTAssertEqual(left, right)
     }
 
-    func testEquatable_different_returnsFalse() {
+    func test_eq_different_returnsFalse() {
         let left = Expression.cons([.int(1), .int(5)], .list([]))
         let right = Expression.cons([.int(1), .int(5)], .list([.int(2)]))
         XCTAssertNotEqual(left, right)
@@ -29,16 +29,16 @@ class ListConsTests: XCTestCase {
     }
 
     func test_evaluate_emptyHeads_constructsList() {
-        let cons = Expression.cons([], .list([.int(1)]))
         assertNoThrow {
+            let cons = Expression.cons([], .list([.int(1)]))
             let actual = try cons.evaluate()
             XCTAssertEqual(Expression.list([.int(1)]), actual)
         }
     }
 
     func test_evaluate_evaluatesHeadsAndTail() {
-        let cons = Expression.cons([.name("x")], .list([.name("y")]))
         assertNoThrow {
+            let cons = Expression.cons([.name("x")], .list([.name("y")]))
             let actual = try cons.evaluate(context: ["x": .string("hi"), "y": .int(1)])
             XCTAssertEqual(Expression.list([.string("hi"), .int(1)]), actual)
         }

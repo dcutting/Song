@@ -3,16 +3,15 @@ import Song
 
 class IntTests: XCTestCase {
 
-    func testDescription() {
-        let result = "\(Expression.int(5))"
-        XCTAssertEqual("5", result)
+    func test_description() {
+        let int = Expression.int(-5)
+        XCTAssertEqual("-5", "\(int)")
     }
 
-    func testEvaluate() {
+    func test_evaluate() {
         assertNoThrow {
-            let number = Expression.int(5)
-            let actual = try number.evaluate()
-            XCTAssertEqual(number, actual)
+            let int = Expression.int(5)
+            XCTAssertEqual(int, try int.evaluate())
         }
     }
 }

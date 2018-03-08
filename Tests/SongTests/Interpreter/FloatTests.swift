@@ -3,24 +3,22 @@ import Song
 
 class FloatTests: XCTestCase {
 
-    func testDescription() {
+    func test_description() {
         let float = Expression.float(5.3)
-        let actual = "\(float)"
-        XCTAssertEqual("5.3", actual)
+        XCTAssertEqual("5.3", "\(float)")
     }
 
-    func testEvaluate() {
+    func test_evaluate() {
         assertNoThrow {
             let float = Expression.float(5.3)
-            let actual = try float.evaluate()
-            XCTAssertEqual(float, actual)
+            XCTAssertEqual(float, try float.evaluate())
         }
     }
 
     func test_eq_throws() {
         let a = Expression.float(5.0)
         let b = Expression.float(5.0)
-        let eq = Expression.call("Eq", [a, b])
-        XCTAssertThrowsError(try eq.evaluate())
+        let call = Expression.call("Eq", [a, b])
+        XCTAssertThrowsError(try call.evaluate())
     }
 }
