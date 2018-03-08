@@ -1,4 +1,6 @@
-import Basic
+var _stdIn: StdIn = DefaultStdIn()
+var _stdOut: StdOut = DefaultStdOut()
+var _stdErr: StdOut = DefaultStdErr()
 
 extension Expression {
     
@@ -416,20 +418,20 @@ extension Expression {
     private func evaluateIn(arguments: [Expression], context: Context) throws -> Expression {
         let evaluated = try arguments.map { expr -> Expression in try expr.evaluate(context: context) }
         let output = evaluated.map { $0.out() }.joined(separator: " ")
-        print(output, terminator: "")
-        let line = readLine() ?? ""
+        _stdOut.put(output)
+        let line = _stdIn.get() ?? ""
         return .string(line)
     }
 
     private func evaluateOut(arguments: [Expression], context: Context) throws -> Expression {
         let output = try prepareOutput(for: arguments, context: context)
-        print(output)
+        _stdOut.put(output + "\n")
         return .string(output)
     }
 
     private func evaluateErr(arguments: [Expression], context: Context) throws -> Expression {
         let output = try prepareOutput(for: arguments, context: context)
-        printStdErr(output)
+        _stdErr.put(output + "\n")
         return .string(output)
     }
 
@@ -475,9 +477,4 @@ extension Expression {
         }
         return try last.evaluate(context: scopeContext)
     }
-}
-
-func printStdErr(_ message: String) {
-    stderrStream <<< message <<< "\n"
-    stderrStream.flush()
 }

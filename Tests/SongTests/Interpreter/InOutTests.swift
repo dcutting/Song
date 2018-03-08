@@ -1,7 +1,7 @@
 import XCTest
-import Song
+@testable import Song
 
-class OutTests: XCTestCase {
+class InOutTests: XCTestCase {
 
     func test_out_characterValue_doesNotIncludeQuotes() {
         let char = Expression.char("A")
@@ -45,8 +45,33 @@ class OutTests: XCTestCase {
 
     func test_evaluate_multipleArguments_joinsWithSpace() {
         assertNoThrow {
+            let stdOut = SpyStdOut()
+            _stdOut = stdOut
             let call = Expression.call("out", [.int(99), .string("is in"), .list([.bool(true), .int(99)])])
             XCTAssertEqual(Expression.string("99 is in [Yes, 99]"), try call.evaluate())
+            XCTAssertEqual("99 is in [Yes, 99]\n", stdOut.actual)
+        }
+    }
+
+    func test_evaluate_err() {
+        assertNoThrow {
+            let stdErr = SpyStdOut()
+            _stdErr = stdErr
+            let call = Expression.call("err", [.int(99), .string("is in"), .list([.bool(true), .int(99)])])
+            XCTAssertEqual(Expression.string("99 is in [Yes, 99]"), try call.evaluate())
+            XCTAssertEqual("99 is in [Yes, 99]\n", stdErr.actual)
+        }
+    }
+
+    func test_evaluate_in() {
+        assertNoThrow {
+            let stdIn = StubStdIn("Dan")
+            let stdOut = SpyStdOut()
+            _stdIn = stdIn
+            _stdOut = stdOut
+            let call = Expression.call("in", [.string("Your name? ")])
+            XCTAssertEqual(Expression.string("Dan"), try call.evaluate())
+            XCTAssertEqual("Your name? ", stdOut.actual)
         }
     }
 }
