@@ -1,7 +1,7 @@
 import XCTest
 import Song
 
-class IntegerTests: XCTestCase {
+class IntTests: XCTestCase {
 
     func testDescription() {
         let result = "\(Expression.int(5))"

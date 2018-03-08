@@ -1,7 +1,7 @@
 import XCTest
 import Song
 
-class ListConstructorTests: XCTestCase {
+class ListConsTests: XCTestCase {
 
     func testDescription() {
         let listConstructor = Expression.listCons([.int(9), .string("hi")], .variable("xs"))

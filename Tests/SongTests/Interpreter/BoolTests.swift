@@ -1,7 +1,7 @@
 import XCTest
 import Song
 
-class BooleanTests: XCTestCase {
+class BoolTests: XCTestCase {
     
     let trueBooleanValue = Expression.bool(true)
     let falseBooleanValue = Expression.bool(false)

@@ -1,7 +1,7 @@
 import XCTest
 import Song
 
-class CharacterTests: XCTestCase {
+class CharTests: XCTestCase {
 
     func test_description() {
         let char = Expression.char("A")

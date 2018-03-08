@@ -1,7 +1,7 @@
 import XCTest
 import Song
 
-class ConstantTests: XCTestCase {
+class AssignTests: XCTestCase {
 
     func testDescription() {
         let constant = Expression.assign(variable: .variable("foo"), value: .string("bar"))
