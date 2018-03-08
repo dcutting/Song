@@ -6,8 +6,7 @@ public extension Expression {
             return "\(char)"
         case let .list(exprs):
             do {
-                let string = try convertToString(characters: exprs)
-                return string
+                return try convertToString(characters: exprs)
             } catch {
                 return "\(self)"
             }
