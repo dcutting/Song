@@ -162,7 +162,7 @@ while (true) {
                     }
                 }
                 if case .assign(let variable, let value) = expression {
-                    if case .variable(let name) = variable {
+                    if case .name(let name) = variable {
                         context = extendContext(context: context, name: name, value: value)
                     }
                 }

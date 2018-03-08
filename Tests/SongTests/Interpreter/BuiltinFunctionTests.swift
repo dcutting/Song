@@ -61,8 +61,8 @@ class BuiltinFunctionTests: XCTestCase {
     // Evaluates arguments.
 
     func test_evaluatesArguments() {
-        let first = Expression.variable("x")
-        let second = Expression.variable("y")
+        let first = Expression.name("x")
+        let second = Expression.name("y")
         let context: Context = ["x": .int(9), "y": .int(5)]
 
         assertNoThrow {

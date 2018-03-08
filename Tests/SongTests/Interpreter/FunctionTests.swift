@@ -38,17 +38,17 @@ class FunctionTests: XCTestCase {
 
     private func makeNamedFunction() -> Expression {
         let subfunction = Subfunction(name: "foo",
-                                      patterns: [Expression.variable("a"), Expression.variable("b")],
+                                      patterns: [Expression.name("a"), Expression.name("b")],
                                       when: Expression.bool(true),
-                                      body: Expression.variable("x"))
+                                      body: Expression.name("x"))
         return .subfunction(subfunction)
     }
 
     private func makeAnonymousFunction() -> Expression {
         let subfunction = Subfunction(name: nil,
-                                      patterns: [Expression.variable("a"), Expression.variable("b")],
+                                      patterns: [Expression.name("a"), Expression.name("b")],
                                       when: Expression.bool(true),
-                                      body: Expression.variable("x"))
+                                      body: Expression.name("x"))
         return .subfunction(subfunction)
     }
 }

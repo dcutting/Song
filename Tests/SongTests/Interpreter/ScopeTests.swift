@@ -36,7 +36,7 @@ class ScopeTests: XCTestCase {
     func test_capturesCallingContext() {
         assertNoThrow {
             let context: Context = ["x": .int(9)]
-            let scope = Expression.scope([.variable("x")])
+            let scope = Expression.scope([.name("x")])
             XCTAssertEqual(Expression.int(9), try scope.evaluate(context: context))
         }
     }
@@ -45,8 +45,8 @@ class ScopeTests: XCTestCase {
         assertNoThrow {
             let context: Context = ["x": .int(9)]
             let scope = Expression.scope([
-                .assign(variable: .variable("x"), value: .int(5)),
-                .variable("x")
+                .assign(variable: .name("x"), value: .int(5)),
+                .name("x")
                 ])
             XCTAssertEqual(Expression.int(5), try scope.evaluate(context: context))
         }
@@ -56,10 +56,10 @@ class ScopeTests: XCTestCase {
         assertNoThrow {
             let context: Context = ["x": .int(9)]
             let scope = Expression.scope([
-                .assign(variable: .variable("x"), value: .int(5)),
-                .assign(variable: .variable("x"), value: .int(2)),
-                .assign(variable: .variable("x"), value: .int(99)),
-                .variable("x")
+                .assign(variable: .name("x"), value: .int(5)),
+                .assign(variable: .name("x"), value: .int(2)),
+                .assign(variable: .name("x"), value: .int(99)),
+                .name("x")
                 ])
             XCTAssertEqual(Expression.int(99), try scope.evaluate(context: context))
         }
@@ -68,7 +68,7 @@ class ScopeTests: XCTestCase {
     func test_localFunctionsCanMatch() {
         assertNoThrow {
             let scope = Expression.scope([
-                makeFoo(.variable("x"), .variable("x")),
+                makeFoo(.name("x"), .name("x")),
                 callFoo(.int(9))
                 ])
             XCTAssertEqual(Expression.int(9), try scope.evaluate())
@@ -79,13 +79,13 @@ class ScopeTests: XCTestCase {
 
         let context = try! declareSubfunctions([
             makeFoo(.int(9), .string("N I N E")),
-            makeFoo(.variable("x"), .variable("x"))
+            makeFoo(.name("x"), .name("x"))
         ])
 
         let inScope = [
             makeFoo(.int(9), .string("nine")),
-            makeFoo(.variable("x"),
-                    when: .call(">", [.variable("x"), .int(100)]),
+            makeFoo(.name("x"),
+                    when: .call(">", [.name("x"), .int(100)]),
                     .string("BIG")),
             makeFoo(.int(2), .string("two"))
         ]

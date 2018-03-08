@@ -3,7 +3,7 @@ import Song
 
 class VariableTests: XCTestCase {
     
-    let variable = Expression.variable("n")
+    let variable = Expression.name("n")
     
     func test_description_anyVariable() {
         XCTAssertEqual("_", "\(Expression.ignore)")

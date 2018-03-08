@@ -8,27 +8,27 @@ class PatternTests: XCTestCase {
         Subfunction(name: "booleanLiteralFunc", patterns: [.bool(false)], when: .bool(true), body: .string("ok")),
         Subfunction(name: "numberLiteralFunc", patterns: [.int(2)], when: .bool(true), body: .string("ok")),
         Subfunction(name: "listLiteralFunc", patterns: [.list([.int(1), .int(2)])], when: .bool(true), body: .string("ok")),
-        Subfunction(name: "listConstructorLiteralFunc", patterns: [.listCons([.int(1)], .list([.int(2)]))], when: .bool(true), body: .string("ok")),
-        Subfunction(name: "listConstructorVariableFunc", patterns: [.listCons([.int(1), .int(2)], .list([.variable("xs")]))], when: .bool(true), body: .string("ok")),
-        Subfunction(name: "nestedListConstructorLiteralFunc", patterns: [.listCons([.list([.int(1)])], .list([.int(2)]))], when: .bool(true), body: .string("ok")),
+        Subfunction(name: "listConstructorLiteralFunc", patterns: [.cons([.int(1)], .list([.int(2)]))], when: .bool(true), body: .string("ok")),
+        Subfunction(name: "listConstructorVariableFunc", patterns: [.cons([.int(1), .int(2)], .list([.name("xs")]))], when: .bool(true), body: .string("ok")),
+        Subfunction(name: "nestedListConstructorLiteralFunc", patterns: [.cons([.list([.int(1)])], .list([.int(2)]))], when: .bool(true), body: .string("ok")),
         Subfunction(name: "zip", patterns: [.list([.list([]), .list([])])], when: .bool(true), body: .list([])),
         Subfunction(name: "zip",
                     patterns: [.list([
-                        .listCons([.variable("x")], .variable("xs")),
-                        .listCons([.variable("y")], .variable("ys"))
+                        .cons([.name("x")], .name("xs")),
+                        .cons([.name("y")], .name("ys"))
                         ])],
                     when: .bool(true),
                     body: .call("+", [
-                        .list([.list([.variable("x"), .variable("y")])]),
-                        .call("zip", [.list([.variable("xs"), .variable("ys")])])
+                        .list([.list([.name("x"), .name("y")])]),
+                        .call("zip", [.list([.name("xs"), .name("ys")])])
                         ])),
-        Subfunction(name: "variableFunc", patterns: [.variable("x")], when: .bool(true), body: .variable("x")),
-        Subfunction(name: "repeatedVariableFunc", patterns: [.variable("x"), .variable("x")], when: .bool(true), body: .variable("x")),
+        Subfunction(name: "variableFunc", patterns: [.name("x")], when: .bool(true), body: .name("x")),
+        Subfunction(name: "repeatedVariableFunc", patterns: [.name("x"), .name("x")], when: .bool(true), body: .name("x")),
         Subfunction(name: "repeatedNestedVariableFunc",
-                    patterns: [.listCons([.variable("x")], .ignore),
-                               .listCons([.variable("x")], .ignore)],
+                    patterns: [.cons([.name("x")], .ignore),
+                               .cons([.name("x")], .ignore)],
                     when: .bool(true),
-                    body: .variable("x")),
+                    body: .name("x")),
     ]
 
     var context = Context()
@@ -173,7 +173,7 @@ class PatternTests: XCTestCase {
 
             var context: Context = ["x": .int(5)]
 
-            let foo = Subfunction(name: "foo", patterns: [.variable("x"), .variable("x")], when: .bool(true), body: .variable("x"))
+            let foo = Subfunction(name: "foo", patterns: [.name("x"), .name("x")], when: .bool(true), body: .name("x"))
 
             context = try declareSubfunctions([Expression.subfunction(foo)], in: context)
             

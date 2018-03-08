@@ -4,7 +4,7 @@ import Song
 class EvaluationErrorTests: XCTestCase {
 
     func test_stackTrace() {
-        let error = EvaluationError.cannotEvaluate(.variable("foo"), .cannotEvaluate(.variable("bar"), .symbolNotFound("baz")))
+        let error = EvaluationError.cannotEvaluate(.name("foo"), .cannotEvaluate(.name("bar"), .symbolNotFound("baz")))
         let expected = """
 Evaluation error
  ↳ foo

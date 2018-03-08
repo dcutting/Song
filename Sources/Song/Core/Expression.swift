@@ -4,10 +4,10 @@ public indirect enum Expression {
     case number(Number)
     case char(Character)
     case list([Expression])
-    case listCons([Expression], Expression)
+    case cons([Expression], Expression)
 
     case ignore
-    case variable(String)
+    case name(String)
 
     case subfunction(Subfunction)
     case assign(variable: Expression, value: Expression)
@@ -16,7 +16,7 @@ public indirect enum Expression {
     case scope([Expression])
 
     case call(String, [Expression])
-    case callAnon(Expression, [Expression])
+    case eval(Expression, [Expression])
 }
 
 public extension Expression {

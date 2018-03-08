@@ -24,14 +24,14 @@ extension Expression {
             let evaluated = try exprs.map { try $0.evaluate(context: context) }
             return .list(evaluated)
 
-        case let .listCons(heads, tail):
+        case let .cons(heads, tail):
             let evaluatedHeads = try heads.map { try $0.evaluate(context: context) }
             let evaluatedTail = try tail.evaluate(context: context)
             guard case var .list(items) = evaluatedTail else { throw EvaluationError.notAList(evaluatedTail) }
             items.insert(contentsOf: evaluatedHeads, at: 0)
             return .list(items)
 
-        case let .variable(variable):
+        case let .name(variable):
             return try evaluateVariable(variable: variable, context)
 
         case let .subfunction(subfunction):
@@ -46,7 +46,7 @@ extension Expression {
         case let .call(name, arguments):
             return try evaluateCall(expression: expression, name: name, arguments: arguments, context: context)
 
-        case let .callAnon(subfunction, arguments):
+        case let .eval(subfunction, arguments):
             return try evaluateCallAnonymous(closure: subfunction, arguments: arguments, callingContext: context)
         }
     }
@@ -370,7 +370,7 @@ extension Expression {
         switch parameter {
         case .ignore:
             () // Do nothing
-        case .variable(let name):
+        case .name(let name):
             if let existingValue = patternEqualityContext[name] {
                 if case .number(let numberValue) = existingValue {
                     if case .float = numberValue {
@@ -383,7 +383,7 @@ extension Expression {
             }
             patternEqualityContext[name] = evaluatedValue
             extendedContext = extendContext(context: extendedContext, name: name, value: evaluatedValue)
-        case .listCons(var paramHeads, let paramTail):
+        case .cons(var paramHeads, let paramTail):
             guard case var .list(argItems) = evaluatedValue else { throw EvaluationError.signatureMismatch([argument]) }
             guard argItems.count >= paramHeads.count else { throw EvaluationError.signatureMismatch([argument]) }
             while paramHeads.count > 0 {
@@ -444,7 +444,7 @@ extension Expression {
                 }
             }
             if case .assign(let variable, let value) = result {
-                if case .variable(let name) = variable {
+                if case .name(let name) = variable {
                     scopeContext = extendContext(context: scopeContext, name: name, value: value)
                 }
             }

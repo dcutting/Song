@@ -4,10 +4,10 @@ import Song
 class CallTests: XCTestCase {
     
     func testDescription() {
-        let subfunction = Subfunction(name: "echo", patterns: [Expression.variable("x"), Expression.variable("y")], when: Expression.bool(true), body: Expression.variable("x"))
+        let subfunction = Subfunction(name: "echo", patterns: [Expression.name("x"), Expression.name("y")], when: Expression.bool(true), body: Expression.name("x"))
         assertNoThrow {
             let closure = try Expression.subfunction(subfunction).evaluate()
-            let call = Expression.callAnon( closure, [Expression.int(99), Expression.int(100)])
+            let call = Expression.eval( closure, [Expression.int(99), Expression.int(100)])
             let result = "\(call)"
             XCTAssertEqual("[() [echo(x, y) = x]](99, 100)", result)
         }
@@ -39,31 +39,31 @@ class CallTests: XCTestCase {
     }
 
     func testEquatable_callAnonymous_same_returnsTrue() {
-        let left = Expression.callAnon(.int(9), [.int(5)])
-        let right = Expression.callAnon(.int(9), [.int(5)])
+        let left = Expression.eval(.int(9), [.int(5)])
+        let right = Expression.eval(.int(9), [.int(5)])
         XCTAssertEqual(left, right)
     }
 
     func testEquatable_callAnonymous_differentClosure_returnsFalse() {
-        let left = Expression.callAnon(.int(1), [.int(5)])
-        let right = Expression.callAnon(.int(9), [.int(5)])
+        let left = Expression.eval(.int(1), [.int(5)])
+        let right = Expression.eval(.int(9), [.int(5)])
         XCTAssertNotEqual(left, right)
     }
 
     func testEquatable_callAnonymous_differentArguments_returnsFalse() {
-        let left = Expression.callAnon(.int(9), [.int(5)])
-        let right = Expression.callAnon(.int(9), [.int(1)])
+        let left = Expression.eval(.int(9), [.int(5)])
+        let right = Expression.eval(.int(9), [.int(1)])
         XCTAssertNotEqual(left, right)
     }
 
     func testEvaluateCallingNonClosure() {
-        let call = Expression.callAnon(Expression.int(5), [])
+        let call = Expression.eval(Expression.int(5), [])
         XCTAssertThrowsError(try call.evaluate())
     }
 
     func testEvaluateCallingInvalidClosure() {
         let closure = Expression.closure(nil, [.int(5)], Context())
-        let call = Expression.callAnon(closure, [])
+        let call = Expression.eval(closure, [])
         XCTAssertThrowsError(try call.evaluate())
     }
 
@@ -72,7 +72,7 @@ class CallTests: XCTestCase {
             let subfunction = Subfunction(name: "five", patterns: [], when: .bool(true), body: .int(5))
             let function = Expression.subfunction(subfunction)
             let closure = try function.evaluate()
-            let call = Expression.callAnon(Expression.variable("f"), [])
+            let call = Expression.eval(Expression.name("f"), [])
             let result = try call.evaluate(context: ["f": closure])
             XCTAssertEqual(Expression.int(5), result)
         }
@@ -83,71 +83,71 @@ class CallTests: XCTestCase {
             let subfunction = Subfunction(name: "five", patterns: [], when: .bool(true), body: Expression.int(5))
             let function = Expression.subfunction(subfunction)
             let closure = try function.evaluate()
-            let call = Expression.callAnon(closure, [])
+            let call = Expression.eval(closure, [])
             let result = try call.evaluate()
             XCTAssertEqual(Expression.int(5), result)
         }
     }
     
     func testEvaluateClosureReferencesDeclarationContext() {
-        let subfunction = Subfunction(name: "getX", patterns: [], when: .bool(true), body: .variable("x"))
+        let subfunction = Subfunction(name: "getX", patterns: [], when: .bool(true), body: .name("x"))
         let function = Expression.subfunction(subfunction)
         assertNoThrow {
             let closure = try function.evaluate(context: ["x": .int(7)])
-            let call = Expression.callAnon(closure, [])
+            let call = Expression.eval(closure, [])
             let result = try call.evaluate()
             XCTAssertEqual(Expression.int(7), result)
         }
     }
     
     func testEvaluateClosureCapturesCallingContext() {
-        let subfunction = Subfunction(name: "getX", patterns: [], when: .bool(true), body: .variable("x"))
+        let subfunction = Subfunction(name: "getX", patterns: [], when: .bool(true), body: .name("x"))
         let function = Expression.subfunction(subfunction)
         assertNoThrow {
             let closure = try function.evaluate()
-            let call = Expression.callAnon(closure, [])
+            let call = Expression.eval(closure, [])
             XCTAssertEqual(Expression.int(7), try call.evaluate(context: ["x": .int(7)]))
         }
     }
     
     func testEvaluateClosureWithParameter() {
-        let subfunction = Subfunction(name: "echo", patterns: [.variable("x")], when: .bool(true), body: .variable("x"))
+        let subfunction = Subfunction(name: "echo", patterns: [.name("x")], when: .bool(true), body: .name("x"))
         let function = Expression.subfunction(subfunction)
         assertNoThrow {
             let closure = try function.evaluate()
-            let call = Expression.callAnon(closure, [Expression.int(7)])
+            let call = Expression.eval(closure, [Expression.int(7)])
             let result = try call.evaluate()
             XCTAssertEqual(Expression.int(7), result)
         }
     }
     
     func testEvaluateClosureWithArgumentReferencingCallingContext() {
-        let subfunction = Subfunction(name: "echo", patterns: [.variable("x")], when: .bool(true), body: .variable("x"))
+        let subfunction = Subfunction(name: "echo", patterns: [.name("x")], when: .bool(true), body: .name("x"))
         let function = Expression.subfunction(subfunction)
         assertNoThrow {
             let closure = try function.evaluate()
-            let call = Expression.callAnon(closure, [Expression.variable("y")])
+            let call = Expression.eval(closure, [Expression.name("y")])
             let result = try call.evaluate(context: ["y": .int(15)])
             XCTAssertEqual(Expression.int(15), result)
         }
     }
     
     func testEvaluateClosureWithoutEnoughArguments() {
-        let subfunction = Subfunction(name: "echo", patterns: [.variable("x"), .variable("y")], when: .bool(true), body: .variable("x"))
+        let subfunction = Subfunction(name: "echo", patterns: [.name("x"), .name("y")], when: .bool(true), body: .name("x"))
         let function = Expression.subfunction(subfunction)
         assertNoThrow {
             let closure = try function.evaluate()
-            let call = Expression.callAnon(closure, [Expression.int(7)])
+            let call = Expression.eval(closure, [Expression.int(7)])
             XCTAssertThrowsError(try call.evaluate())
         }
     }
     
     func testEvaluateClosureWithTooManyArguments() {
-        let subfunction = Subfunction(name: "echo", patterns: [.variable("x")], when: .bool(true), body: .variable("x"))
+        let subfunction = Subfunction(name: "echo", patterns: [.name("x")], when: .bool(true), body: .name("x"))
         let function = Expression.subfunction(subfunction)
         assertNoThrow {
             let closure = try function.evaluate()
-            let call = Expression.callAnon(closure, [Expression.int(7), Expression.int(8)])
+            let call = Expression.eval(closure, [Expression.int(7), Expression.int(8)])
             XCTAssertThrowsError(try call.evaluate())
         }
     }
@@ -187,10 +187,10 @@ class CallTests: XCTestCase {
     }
 
     func testEvaluateLambda() {
-        let subfunction = Subfunction(name: nil, patterns: [.variable("x")], when: .bool(true), body: .variable("x"))
+        let subfunction = Subfunction(name: nil, patterns: [.name("x")], when: .bool(true), body: .name("x"))
         assertNoThrow {
             let lambda = try Expression.subfunction(subfunction).evaluate()
-            let call = Expression.callAnon(lambda, [Expression.int(7)])
+            let call = Expression.eval(lambda, [Expression.int(7)])
             let result = try call.evaluate()
             XCTAssertEqual(Expression.int(7), result)
         }

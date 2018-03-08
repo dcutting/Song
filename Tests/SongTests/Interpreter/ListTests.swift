@@ -32,7 +32,7 @@ class ListTests: XCTestCase {
     func test_evaluate_nonEmptyList_returnsListOfAllEvaluatedItems() {
         let list = Expression.list([
             .call("+", [.int(2), .int(3)]),
-            .variable("x")
+            .name("x")
             ])
         assertNoThrow {
             let actual = try list.evaluate(context: ["x": .bool(false)])

@@ -22,7 +22,7 @@ public func makeTransformer() -> Transformer<Expression> {
     }
 
     t.rule(["heads": .series("heads"), "tail": .simple("tail")]) {
-        .listCons(try $0.vals("heads"), try $0.val("tail"))
+        .cons(try $0.vals("heads"), try $0.val("tail"))
     }
 
     // Literals.
@@ -92,7 +92,7 @@ public func makeTransformer() -> Transformer<Expression> {
 
     t.rule(["variableName": .simple("v")]) {
         let v = try $0.str("v")
-        return v == "_" ? .ignore : .variable(v)
+        return v == "_" ? .ignore : .name(v)
     }
 
     t.rule(["functionName": .simple("name")]) {
@@ -130,25 +130,25 @@ public func makeTransformer() -> Transformer<Expression> {
     t.rule(["head": .simple("head"), "anonCall": .simple("expr")]) {
         let head = try $0.val("head")
         let expr = try $0.val("expr")
-        return .callAnon(expr, [head])
+        return .eval(expr, [head])
     }
 
     t.rule(["head": .simple("head"), "anonCall": .simple("expr"), "args": .series("args")]) {
         let head = try $0.val("head")
         let expr = try $0.val("expr")
         let args = try $0.vals("args")
-        return .callAnon(.callAnon(expr, [head]), args)
+        return .eval(.eval(expr, [head]), args)
     }
 
     t.rule(["anonCall": .simple("anon"), "args": .series("args")]) {
         let args = try $0.vals("args")
-        return .callAnon(try $0.val("anon"), args)
+        return .eval(try $0.val("anon"), args)
     }
 
     t.rule(["anonCall": .simple("args")]) {
         guard case .list(let args) = try $0.val("args") else { throw SongTransformError.unknown }
         let dummy = Expression.bool(false)
-        return .callAnon(dummy, args)
+        return .eval(dummy, args)
     }
 
     t.rule(["nameCall": .simple("call")]) {
@@ -208,8 +208,8 @@ private func reduce(_ calls: [Expression]) throws -> Expression {
     var result = calls.removeFirst()
     try calls.forEach { call in
         switch call {
-        case let .callAnon(_, args):
-            result = .callAnon(result, args)
+        case let .eval(_, args):
+            result = .eval(result, args)
         case let .call(name, args):
             result = .call(name, [result] + args)
         default:

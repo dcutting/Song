@@ -14,7 +14,7 @@ class TruncateConversionTests: XCTestCase {
     func test_truncate_expressionEvaluatingToNumber_returnsInt() {
         assertNoThrow {
             let context: Context = ["x": .float(-5.2)]
-            let variable = Expression.variable("x")
+            let variable = Expression.name("x")
             let call = Expression.call("truncate", [variable])
             XCTAssertEqual(.int(-5), try call.evaluate(context: context))
         }

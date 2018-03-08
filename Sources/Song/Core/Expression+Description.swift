@@ -15,13 +15,13 @@ extension Expression: CustomStringConvertible {
         case let .list(exprs):
             return describeList(exprs)
 
-        case let .listCons(head, tail):
+        case let .cons(head, tail):
             return "[" + head.map(String.init).joined(separator: ", ") + "|\(tail)]"
 
         case .ignore:
             return "_"
 
-        case let .variable(variable):
+        case let .name(variable):
             return "\(variable)"
 
         case let .subfunction(subfunction):
@@ -39,7 +39,7 @@ extension Expression: CustomStringConvertible {
         case let .call(name, args):
             return "\(name)(\(describeArgs(args)))"
 
-        case let .callAnon(closure, args):
+        case let .eval(closure, args):
             return "\(closure)(\(describeArgs(args)))"
         }
     }

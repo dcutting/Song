@@ -15,13 +15,13 @@ extension Expression: Equatable {
         case let (.list(lhsExprs), .list(rhsExprs)):
             return lhsExprs == rhsExprs
 
-        case let (.listCons(lhsHead, lhsTail), .listCons(rhsHead, rhsTail)):
+        case let (.cons(lhsHead, lhsTail), .cons(rhsHead, rhsTail)):
             return lhsHead == rhsHead && lhsTail == rhsTail
 
         case (.ignore, .ignore):
             return true
 
-        case let (.variable(lhsVariable), .variable(rhsVariable)):
+        case let (.name(lhsVariable), .name(rhsVariable)):
             return lhsVariable == rhsVariable
 
         case let (.subfunction(lhsSubfunction), .subfunction(rhsSubfunction)):
@@ -39,7 +39,7 @@ extension Expression: Equatable {
         case let (.call(lhsName, lhsArguments), .call(rhsName, rhsArguments)):
             return lhsName == rhsName && lhsArguments == rhsArguments
 
-        case let (.callAnon(lhsClosure, lhsArguments), .callAnon(rhsClosure, rhsArguments)):
+        case let (.eval(lhsClosure, lhsArguments), .eval(rhsClosure, rhsArguments)):
             return lhsClosure == rhsClosure && lhsArguments == rhsArguments
 
         default:
