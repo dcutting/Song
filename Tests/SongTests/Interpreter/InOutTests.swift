@@ -84,3 +84,25 @@ class InOutTests: XCTestCase {
         }
     }
 }
+
+class StubStdIn: StdIn {
+
+    private var stubbed: String?
+
+    init(_ stubbed: String?) {
+        self.stubbed = stubbed
+    }
+
+    func get() -> String? {
+        return stubbed
+    }
+}
+
+class SpyStdOut: StdOut {
+
+    var actual: String?
+
+    func put(_ output: String) {
+        actual = output
+    }
+}
