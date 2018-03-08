@@ -9,7 +9,7 @@ class CallTests: XCTestCase {
             let closure = try Expression.subfunction(subfunction).evaluate()
             let call = Expression.callAnon( closure, [Expression.int(99), Expression.int(100)])
             let result = "\(call)"
-            XCTAssertEqual("[() [echo(x, y) When Yes = x]](99, 100)", result)
+            XCTAssertEqual("[() [echo(x, y) = x]](99, 100)", result)
         }
     }
 

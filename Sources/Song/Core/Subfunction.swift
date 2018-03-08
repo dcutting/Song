@@ -16,11 +16,10 @@ public struct Subfunction {
 extension Subfunction: CustomStringConvertible {
 
     public var description: String {
-        let parametersList = patterns.map { "\($0)" }.joined(separator: ", ")
-        if let funcName = name {
-            return "\(funcName)(\(parametersList)) When \(when) = \(body)"
-        }
-        return "λ(\(parametersList)) = \(body)"
+        let params = patterns.map(String.init).joined(separator: ", ")
+        let funcName = name ?? "λ"
+        let whenClause = when == .bool(true) ? "" : " When \(when)"
+        return "\(funcName)(\(params))\(whenClause) = \(body)"
     }
 }
 
