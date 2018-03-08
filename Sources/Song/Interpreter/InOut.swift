@@ -12,9 +12,9 @@ public class DefaultStdIn: StdIn {
 
 public class StubStdIn: StdIn {
 
-    private var stubbed = ""
+    private var stubbed: String?
 
-    public init(_ stubbed: String) {
+    public init(_ stubbed: String?) {
         self.stubbed = stubbed
     }
 

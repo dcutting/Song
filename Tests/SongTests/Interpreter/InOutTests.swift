@@ -74,4 +74,13 @@ class InOutTests: XCTestCase {
             XCTAssertEqual("Your name? ", stdOut.actual)
         }
     }
+
+    func test_evaluate_in_nilInput_returnsEmptyString() {
+        assertNoThrow {
+            let stdIn = StubStdIn(nil)
+            _stdIn = stdIn
+            let call = Expression.call("in", [.string("Your name? ")])
+            XCTAssertEqual(Expression.string(""), try call.evaluate())
+        }
+    }
 }
