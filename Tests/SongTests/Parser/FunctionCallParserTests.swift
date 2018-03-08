@@ -3,7 +3,7 @@ import Song
 
 class FunctionCallParserTests: XCTestCase {
 
-    func test() {
+    func test_parses() {
         "1.inc".makes(.call("inc", [.int(1)]))
         "x.inc".makes(.call("inc", [.name("x")]))
         "1.inc()".makes(.call("inc", [.int(1)]))
@@ -76,7 +76,9 @@ class FunctionCallParserTests: XCTestCase {
         "lessThan(5)(4)".makes(.eval(.call("lessThan", [.int(5)]), [.int(4)]))
         "(1+2).foo".makes(.call("foo", [.call("+", [.int(1), .int(2)])]))
         "foo(_)".makes(.call("foo", [.ignore]))
+    }
 
+    func test_doesNotParse() {
         "4()".fails()
         "4.|x|x".fails()
         "(4)()".fails()
