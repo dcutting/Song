@@ -1,4 +1,5 @@
 public indirect enum EvaluationError: Error {
+
     case cannotEvaluate(Expression, EvaluationError)
     case symbolNotFound(String)
     case signatureMismatch([Expression])
@@ -13,49 +14,55 @@ public indirect enum EvaluationError: Error {
     case notACharacter
 }
 
-public func format(error: EvaluationError) -> String {
-    return "Evaluation error\n" + format(error: error, indent: 1)
-}
+extension EvaluationError: CustomStringConvertible {
 
-private func format(error: EvaluationError, indent: Int) -> String {
-    switch error {
-    case let .cannotEvaluate(expr, inner):
-        return format(scope: expr, inner: inner, indent: indent)
-    case .symbolNotFound(let symbol):
-        return "💥  unknown symbol: \(symbol)".indented(by: indent)
-    case .signatureMismatch(let arguments):
-        return "💥  no pattern matches arguments: \(arguments)".indented(by: indent)
-    case .notAClosure(let expr):
-        return "💥  need a closure, not \(expr)".indented(by: indent)
-    case .notABoolean(let expr):
-        return "💥  need a boolean, not \(expr)".indented(by: indent)
-    case .notANumber(let expr):
-        return "💥  need a number, not \(expr)".indented(by: indent)
-    case .notAList(let expr):
-        return "💥  need a list, not \(expr)".indented(by: indent)
-    case .notAFunction(let expr):
-        return "💥  need a function, not \(expr)".indented(by: indent)
-    case .patternsCannotBeFloats(let expr):
-        return "💥  patterns cannot be floats: \(expr)".indented(by: indent)
-    case .numericMismatch:
-        return "💥  can only use integers here".indented(by: indent)
-    case .emptyScope:
-        return "💥  Do/End must contain at least one expression".indented(by: indent)
-    case .notACharacter:
-        return "💥  need a character".indented(by: indent)
+    private static let tabIndent = 1
+
+    public var description: String {
+        return "Evaluation error\n" + format(error: self, indent: EvaluationError.tabIndent)
     }
-}
 
-private func format(scope: Expression, inner: EvaluationError, indent: Int) -> String {
-    let nextIndent = makeNextIndent(indent: indent)
-    let innerFormatted = format(error: inner, indent: nextIndent)
-    let scopeFormatted = "↳ \(scope)".indented(by: indent)
-    return scopeFormatted + "\n" + innerFormatted
-}
+    private func format(error: EvaluationError, indent: Int) -> String {
+        var result: String
+        switch error {
+        case let .cannotEvaluate(expr, inner):
+            return format(outer: expr, inner: inner, indent: indent)
+        case .symbolNotFound(let symbol):
+            result = "unknown symbol: \(symbol)"
+        case .signatureMismatch(let arguments):
+            result = "no pattern matches arguments: \(arguments)"
+        case .notAClosure(let expr):
+            result = "need a closure, not \(expr)"
+        case .notABoolean(let expr):
+            result = "need a boolean, not \(expr)"
+        case .notANumber(let expr):
+            result = "need a number, not \(expr)"
+        case .notAList(let expr):
+            result = "need a list, not \(expr)"
+        case .notAFunction(let expr):
+            result = "need a function, not \(expr)"
+        case .patternsCannotBeFloats(let expr):
+            result = "patterns cannot be floats: \(expr)"
+        case .numericMismatch:
+            result = "can only use integers here"
+        case .emptyScope:
+            result = "Do/End must contain at least one expression"
+        case .notACharacter:
+            result = "need a character"
+        }
+        return "💥  \(result)".indented(by: indent)
+    }
 
-private func makeNextIndent(indent: Int) -> Int {
-    let tabIndent = 1
-    return indent + tabIndent
+    private func format(outer: Expression, inner: EvaluationError, indent: Int) -> String {
+        let nextIndent = makeNextIndent(indent: indent)
+        let innerFormatted = format(error: inner, indent: nextIndent)
+        let outerFormatted = "↳ \(outer)".indented(by: indent)
+        return outerFormatted + "\n" + innerFormatted
+    }
+
+    private func makeNextIndent(indent: Int) -> Int {
+        return indent + EvaluationError.tabIndent
+    }
 }
 
 private extension String {

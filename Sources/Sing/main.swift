@@ -173,7 +173,7 @@ while (true) {
                     log(expression)
                 }
             } catch let error as EvaluationError {
-                print(format(error: error))
+                print(error)
                 if verbose {
                     log()
                     log("Context:")
