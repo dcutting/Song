@@ -18,7 +18,10 @@ extension Subfunction: CustomStringConvertible {
     public var description: String {
         let params = patterns.map(String.init).joined(separator: ", ")
         let funcName = name ?? "λ"
-        let whenClause = when == .bool(true) ? "" : " When \(when)"
+        var whenClause = ""
+        if when != .bool(true) {
+            whenClause = " When \(when)"
+        }
         return "\(funcName)(\(params))\(whenClause) = \(body)"
     }
 }
