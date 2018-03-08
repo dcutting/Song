@@ -6,6 +6,7 @@ public enum SongTransformError: Error {
     case notNumeric(String)
     case notAFunction
     case notAFunctionCall
+    case notArgs
 }
 
 public func makeTransformer() -> Transformer<Expression> {
@@ -146,7 +147,7 @@ public func makeTransformer() -> Transformer<Expression> {
     }
 
     t.rule(["anonCall": .simple("args")]) {
-        guard case .list(let args) = try $0.val("args") else { throw SongTransformError.unknown }
+        guard case .list(let args) = try $0.val("args") else { throw SongTransformError.notArgs }
         let dummy = Expression.bool(false)
         return .eval(dummy, args)
     }
@@ -203,7 +204,7 @@ public func makeTransformer() -> Transformer<Expression> {
 }
 
 private func reduce(_ calls: [Expression]) throws -> Expression {
-    guard calls.count > 0 else { throw SongTransformError.unknown }
+    guard calls.count > 0 else { throw SongTransformError.notAFunctionCall }
     var calls = calls
     var result = calls.removeFirst()
     try calls.forEach { call in
@@ -220,10 +221,10 @@ private func reduce(_ calls: [Expression]) throws -> Expression {
 }
 
 private func transformFunction(args: TransformerReducerArguments<Expression>) throws -> Function {
-    var name: String?
-    do {
-        name = try args.str("name")
-    } catch {}
+
+    let name = try args.str("name")
+    let body = try args.val("body")
+
     var params = [Expression]()
     do {
         params = try args.vals("params")
@@ -236,6 +237,6 @@ private func transformFunction(args: TransformerReducerArguments<Expression>) th
     do {
         when = try args.val("guard")
     } catch {}
-    let body = try args.val("body")
+
     return Function(name: name, patterns: params, when: when, body: body)
 }
