@@ -117,13 +117,6 @@ class ParserTests: XCTestCase {
         "x Eq 5".makes(.call("Eq", [.name("x"), .int(5)]))
         "Do 2, 5 < 7 End And Do Yes End".makes(.call("And", [.scope([.int(2), .call("<", [.int(5), .int(7)])]), .scope([.bool(true)])]))
 
-        "12 Div5".fails()
-        "12 Mod5".fails()
-        "12Div 5".fails()
-        "12Mod 5".fails()
-    }
-
-    func test_equality() {
         "4 Neq 8".makes(.call("Neq", [.int(4), .int(8)]))
         "\"hi\" Neq \"ho\"".makes(.call("Neq", [.string("hi"), .string("ho")]))
         "[4] Neq [7]".makes(.call("Neq", [.list([.int(4)]), .list([.int(7)])]))
@@ -139,6 +132,11 @@ class ParserTests: XCTestCase {
         "[7] Eq [7]".makes(.call("Eq", [.list([.int(7)]), .list([.int(7)])]))
         "[7] Eq 3".makes(.call("Eq", [.list([.int(7)]), .int(3)]))
         "[7] Eq \"hi\"".makes(.call("Eq", [.list([.int(7)]), .string("hi")]))
+
+        "12 Div5".fails()
+        "12 Mod5".fails()
+        "12Div 5".fails()
+        "12Mod 5".fails()
     }
 
     func test_wrappedExpressions() {
@@ -168,81 +166,6 @@ class ParserTests: XCTestCase {
 
         "GoodName".fails()
         "9bottles".fails()
-    }
-
-    func test_functions() {
-        "foo() = 5".makes(
-            .function(Function(name: "foo", patterns: [], when: .bool(true), body: .int(5)))
-        )
-        "foo(a) = a".makes(
-            .function(Function(name: "foo", patterns: [.name("a")], when: .bool(true), body: .name("a")))
-        )
-"""
-foo(a,
-    b) = a
-""".makes(.function(Function(name: "foo", patterns: [.name("a"), .name("b")], when: .bool(true), body: .name("a"))))
-"""
-foo(
-  a,
-  b
-) = a
-""".makes(.function(Function(name: "foo", patterns: [.name("a"), .name("b")], when: .bool(true), body: .name("a"))))
-        "a.foo = a".makes(
-            .function(Function(name: "foo", patterns: [.name("a")], when: .bool(true), body: .name("a")))
-        )
-        "a.foo When a < 50 = a".makes(
-            .function(Function(name: "foo",
-                                     patterns: [.name("a")],
-                                     when: .call("<", [.name("a"), .int(50)]),
-                                     body: .name("a")))
-        )
-        "a.foo() When a < 50 = a".makes(
-            .function(Function(name: "foo",
-                                     patterns: [.name("a")],
-                                     when: .call("<", [.name("a"), .int(50)]),
-                                     body: .name("a")))
-        )
-        "a.plus(b) = a + b".makes(
-            .function(Function(name: "plus", patterns: [.name("a"), .name("b")], when: .bool(true), body: .call("+", [.name("a"), .name("b")])))
-        )
-        "[x|xs].map(f) = [f(x)|xs.map(f)]".makes(
-            .function(Function(name: "map",
-                                     patterns: [.cons([.name("x")], .name("xs")), .name("f")],
-                                     when: .bool(true),
-                                     body: .cons([.call("f", [.name("x")])],
-                                                            .call("map", [.name("xs"), .name("f")]))))
-        )
-"""
-a.foo =
- 5
-""".makes(.function(Function(name: "foo", patterns: [.name("a")], when: .bool(true), body: .int(5))))
-"""
-foo() =
-5
-""".makes(.function(Function(name: "foo", patterns: [], when: .bool(true), body: .int(5))))
-("foo() =" + " " + "\n5").makes(.function(Function(name: "foo", patterns: [], when: .bool(true), body: .int(5))))
-"""
-foo() =
-  5
-""".makes(.function(Function(name: "foo", patterns: [], when: .bool(true), body: .int(5))))
-"""
-foo() = Do
-  5
-End
-""".makes(.function(Function(name: "foo", patterns: [], when: .bool(true), body: .scope([.int(5)]))))
-"""
-foo() =
-Do
-  5
-End
-""".makes(.function(Function(name: "foo", patterns: [], when: .bool(true), body: .scope([.int(5)]))))
-"""
-foo() = Do 5
-End
-""".makes(.function(Function(name: "foo", patterns: [], when: .bool(true), body: .scope([.int(5)]))))
-"""
-foo() = Do 5 End
-""".makes(.function(Function(name: "foo", patterns: [], when: .bool(true), body: .scope([.int(5)]))))
     }
 
     func test_assigns() {
@@ -283,70 +206,5 @@ foo() = Do 5 End
         "Not x".makes(.call("Not", [.name("x")]))
         "Not Not x".makes(.call("Not", [.call("Not", [.name("x")])]))
         "9--5".makes(.call("-", [.int(9), .call("-", [.int(5)])]))
-    }
-
-    func test_scopes() {
-        "Do _ End".makes(.scope([.ignore]))
-        "Do 1 End".makes(.scope([.int(1)]))
-        "Do 1, End".makes(.scope([.int(1)]))
-        "Do 1, x End".makes(.scope([.int(1), .name("x")]))
-        "Do 1 , x End".makes(.scope([.int(1), .name("x")]))
-        "Do 1, x, End".makes(.scope([.int(1), .name("x")]))
-        "Do x = 5, x End".makes(.scope([.assign(variable: .name("x"), value: .int(5)), .name("x")]))
-        "Do |x| x End".makes(.scope([.function(Function(name: nil, patterns: [.name("x")], when: .bool(true), body: .name("x")))]))
-        "Do x.inc = x+1, 7.inc End".makes(.scope([
-            .function(Function(name: "inc", patterns: [.name("x")], when: .bool(true), body: .call("+", [.name("x"), .int(1)]))),
-            .call("inc", [.int(7)])]))
-        "Do 1, Do Do 2, 3 End, 4, End, End".makes(.scope([.int(1), .scope([.scope([.int(2), .int(3)]), .int(4)])]))
-
-"""
-Do 1
-2
-3 End
-""".makes(.scope([.int(1), .int(2), .int(3)]))
-"""
-Do
-  1
-  2
-  3
-End
-""".makes(.scope([.int(1), .int(2), .int(3)]))
-"""
-Do 1
-2,3 End
-""".makes(.scope([.int(1), .int(2), .int(3)]))
-"""
-Do
-  1
-  2
-  3
-End
-""".makes(.scope([.int(1), .int(2), .int(3)]))
-"""
-Do
-  1 , 2
-  3
-End
-""".makes(.scope([.int(1), .int(2), .int(3)]))
-"""
-Do
-  1,
-  2,
-  3
-End
-""".makes(.scope([.int(1), .int(2), .int(3)]))
-"""
-Do
-  1,
-  2,
-  3,
-End
-""".makes(.scope([.int(1), .int(2), .int(3)]))
-
-        "DoEnd".fails()
-        "Do End".fails()
-        "Do , End".fails()
-        "Do,End".fails()
-        "Do1End".fails()
     }
 }
