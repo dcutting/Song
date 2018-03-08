@@ -46,17 +46,19 @@ extension Expression: CustomStringConvertible {
 
     private func describeList(_ exprs: [Expression]) -> String {
         
-        guard !exprs.isEmpty else { return "[]" }
+        if exprs.isEmpty { return "[]" }
 
+        var result: String
         do {
             let value = try convertToString(characters: exprs)
-            return "\"" + value.replacingOccurrences(of: "\"", with: "\\\"") + "\""
+            result = "\"" + value.replacingOccurrences(of: "\"", with: "\\\"") + "\""
         } catch {
-            return "[" + exprs.map(String.init).joined(separator: ", ") + "]"
+            result = "[" + exprs.map(String.init).joined(separator: ", ") + "]"
         }
+        return result
     }
 
     private func describeArgs(_ args: [Expression]) -> String {
-        return args.map { "\($0)" }.joined(separator: ", ")
+        return args.map(String.init).joined(separator: ", ")
     }
 }
