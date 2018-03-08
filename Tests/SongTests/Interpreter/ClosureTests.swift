@@ -24,10 +24,10 @@ class ClosureTests: XCTestCase {
     }
 
     private func makeNamedFunction() -> Expression {
-        let subfunction = Subfunction(name: "foo",
+        let subfunction = Function(name: "foo",
                                       patterns: [ Expression.name("a"), Expression.name("b") ],
                                       when: Expression.bool(true),
                                       body: Expression.name("x"))
-        return .subfunction(subfunction)
+        return .function(subfunction)
     }
 }

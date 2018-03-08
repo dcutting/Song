@@ -1,7 +1,7 @@
 @testable import Song
 
-func declareSubfunctions(_ subfunctions: [Subfunction]) throws -> Context {
-    let exprs = subfunctions.map { Expression.subfunction($0) }
+func declareSubfunctions(_ subfunctions: [Function]) throws -> Context {
+    let exprs = subfunctions.map { Expression.function($0) }
     return try declareSubfunctions(exprs)
 }
 

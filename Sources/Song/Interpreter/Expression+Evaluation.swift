@@ -34,7 +34,7 @@ extension Expression {
         case let .name(variable):
             return try evaluateVariable(variable: variable, context)
 
-        case let .subfunction(subfunction):
+        case let .function(subfunction):
             return try evaluate(expression: expression, subfunction: subfunction, context: context)
 
         case let .assign(variable, value):
@@ -284,7 +284,7 @@ extension Expression {
         }
     }
 
-    private func evaluate(expression: Expression, subfunction: Subfunction, context: Context) throws -> Expression {
+    private func evaluate(expression: Expression, subfunction: Function, context: Context) throws -> Expression {
 
         try validatePatterns(subfunction)
 
@@ -306,7 +306,7 @@ extension Expression {
         return .closure(name, existingClauses, finalContext)
     }
 
-    private func validatePatterns(_ subfunction: Subfunction) throws {
+    private func validatePatterns(_ subfunction: Function) throws {
         try subfunction.patterns.forEach { pattern in
             if case .number(Number.float) = pattern {
                 throw EvaluationError.patternsCannotBeFloats(pattern)
@@ -338,7 +338,7 @@ extension Expression {
     
     func evaluateCallFunction(function: Expression, closureContext: Context, arguments: [Expression], callingContext: Context, closure: Expression) throws -> Expression {
         switch function {
-        case let .subfunction(subfunction):
+        case let .function(subfunction):
 
             let extendedContext = try matchParameters(closureContext: closureContext, callingContext: callingContext, parameters: subfunction.patterns, arguments: arguments)
             let whenEvaluated = try subfunction.when.evaluate(context: extendedContext)
@@ -429,7 +429,7 @@ extension Expression {
         var scopeContext = context
         var shadowedFunctions = Set<String>()
         for statement in allStatements {
-            if case .subfunction(let subfunction) = statement {
+            if case .function(let subfunction) = statement {
                 if let name = subfunction.name {
                     if !shadowedFunctions.contains(name) {
                         scopeContext.removeValue(forKey: name)

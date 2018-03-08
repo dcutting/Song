@@ -1,4 +1,4 @@
-public struct Subfunction {
+public struct Function {
 
     public let name: String?
     public let patterns: [Expression]
@@ -13,7 +13,7 @@ public struct Subfunction {
     }
 }
 
-extension Subfunction: CustomStringConvertible {
+extension Function: CustomStringConvertible {
 
     public var description: String {
         let params = patterns.map(String.init).joined(separator: ", ")
@@ -26,9 +26,9 @@ extension Subfunction: CustomStringConvertible {
     }
 }
 
-extension Subfunction: Equatable {
+extension Function: Equatable {
 
-    public static func ==(lhs: Subfunction, rhs: Subfunction) -> Bool {
+    public static func ==(lhs: Function, rhs: Function) -> Bool {
         return lhs.name == rhs.name && lhs.patterns == rhs.patterns && lhs.when == rhs.when && lhs.body == rhs.body
     }
 }

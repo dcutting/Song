@@ -9,7 +9,7 @@ public indirect enum Expression {
     case ignore
     case name(String)
 
-    case subfunction(Subfunction)
+    case function(Function)
     case assign(variable: Expression, value: Expression)
 
     case closure(String?, [Expression], Context)
@@ -34,6 +34,6 @@ public extension Expression {
     }
 
     public static func lambda(_ patterns: [Expression], _ body: Expression) -> Expression {
-        return .subfunction(Subfunction(name: nil, patterns: patterns, when: .bool(true), body: body))
+        return .function(Function(name: nil, patterns: patterns, when: .bool(true), body: body))
     }
 }

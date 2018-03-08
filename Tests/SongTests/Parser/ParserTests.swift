@@ -172,41 +172,41 @@ class ParserTests: XCTestCase {
 
     func test_subfunctions() {
         "foo() = 5".makes(
-            .subfunction(Subfunction(name: "foo", patterns: [], when: .bool(true), body: .int(5)))
+            .function(Function(name: "foo", patterns: [], when: .bool(true), body: .int(5)))
         )
         "foo(a) = a".makes(
-            .subfunction(Subfunction(name: "foo", patterns: [.name("a")], when: .bool(true), body: .name("a")))
+            .function(Function(name: "foo", patterns: [.name("a")], when: .bool(true), body: .name("a")))
         )
 """
 foo(a,
     b) = a
-""".makes(.subfunction(Subfunction(name: "foo", patterns: [.name("a"), .name("b")], when: .bool(true), body: .name("a"))))
+""".makes(.function(Function(name: "foo", patterns: [.name("a"), .name("b")], when: .bool(true), body: .name("a"))))
 """
 foo(
   a,
   b
 ) = a
-""".makes(.subfunction(Subfunction(name: "foo", patterns: [.name("a"), .name("b")], when: .bool(true), body: .name("a"))))
+""".makes(.function(Function(name: "foo", patterns: [.name("a"), .name("b")], when: .bool(true), body: .name("a"))))
         "a.foo = a".makes(
-            .subfunction(Subfunction(name: "foo", patterns: [.name("a")], when: .bool(true), body: .name("a")))
+            .function(Function(name: "foo", patterns: [.name("a")], when: .bool(true), body: .name("a")))
         )
         "a.foo When a < 50 = a".makes(
-            .subfunction(Subfunction(name: "foo",
+            .function(Function(name: "foo",
                                      patterns: [.name("a")],
                                      when: .call("<", [.name("a"), .int(50)]),
                                      body: .name("a")))
         )
         "a.foo() When a < 50 = a".makes(
-            .subfunction(Subfunction(name: "foo",
+            .function(Function(name: "foo",
                                      patterns: [.name("a")],
                                      when: .call("<", [.name("a"), .int(50)]),
                                      body: .name("a")))
         )
         "a.plus(b) = a + b".makes(
-            .subfunction(Subfunction(name: "plus", patterns: [.name("a"), .name("b")], when: .bool(true), body: .call("+", [.name("a"), .name("b")])))
+            .function(Function(name: "plus", patterns: [.name("a"), .name("b")], when: .bool(true), body: .call("+", [.name("a"), .name("b")])))
         )
         "[x|xs].map(f) = [f(x)|xs.map(f)]".makes(
-            .subfunction(Subfunction(name: "map",
+            .function(Function(name: "map",
                                      patterns: [.cons([.name("x")], .name("xs")), .name("f")],
                                      when: .bool(true),
                                      body: .cons([.call("f", [.name("x")])],
@@ -215,34 +215,34 @@ foo(
 """
 a.foo =
  5
-""".makes(.subfunction(Subfunction(name: "foo", patterns: [.name("a")], when: .bool(true), body: .int(5))))
+""".makes(.function(Function(name: "foo", patterns: [.name("a")], when: .bool(true), body: .int(5))))
 """
 foo() =
 5
-""".makes(.subfunction(Subfunction(name: "foo", patterns: [], when: .bool(true), body: .int(5))))
-("foo() =" + " " + "\n5").makes(.subfunction(Subfunction(name: "foo", patterns: [], when: .bool(true), body: .int(5))))
+""".makes(.function(Function(name: "foo", patterns: [], when: .bool(true), body: .int(5))))
+("foo() =" + " " + "\n5").makes(.function(Function(name: "foo", patterns: [], when: .bool(true), body: .int(5))))
 """
 foo() =
   5
-""".makes(.subfunction(Subfunction(name: "foo", patterns: [], when: .bool(true), body: .int(5))))
+""".makes(.function(Function(name: "foo", patterns: [], when: .bool(true), body: .int(5))))
 """
 foo() = Do
   5
 End
-""".makes(.subfunction(Subfunction(name: "foo", patterns: [], when: .bool(true), body: .scope([.int(5)]))))
+""".makes(.function(Function(name: "foo", patterns: [], when: .bool(true), body: .scope([.int(5)]))))
 """
 foo() =
 Do
   5
 End
-""".makes(.subfunction(Subfunction(name: "foo", patterns: [], when: .bool(true), body: .scope([.int(5)]))))
+""".makes(.function(Function(name: "foo", patterns: [], when: .bool(true), body: .scope([.int(5)]))))
 """
 foo() = Do 5
 End
-""".makes(.subfunction(Subfunction(name: "foo", patterns: [], when: .bool(true), body: .scope([.int(5)]))))
+""".makes(.function(Function(name: "foo", patterns: [], when: .bool(true), body: .scope([.int(5)]))))
 """
 foo() = Do 5 End
-""".makes(.subfunction(Subfunction(name: "foo", patterns: [], when: .bool(true), body: .scope([.int(5)]))))
+""".makes(.function(Function(name: "foo", patterns: [], when: .bool(true), body: .scope([.int(5)]))))
     }
 
     func test_constants() {
@@ -250,7 +250,7 @@ foo() = Do 5 End
         "x=5".makes(.assign(variable: .name("x"), value: .int(5)))
         "_ = 5".makes(.assign(variable: .ignore, value: .int(5)))
         "double = |x| x * 2".makes(.assign(variable: .name("double"), value:
-            .subfunction(Subfunction(name: nil,
+            .function(Function(name: nil,
                                      patterns: [.name("x")],
                                      when: .bool(true),
                                      body: .call("*", [.name("x"), .int(2)])))))
@@ -259,8 +259,8 @@ foo() = Do 5 End
     }
 
     func test_lambdas() {
-        "|x| x".makes(.subfunction(Subfunction(name: nil, patterns: [.name("x")], when: .bool(true), body: .name("x"))))
-        "| x , y | x".makes(.subfunction(Subfunction(name: nil, patterns: [.name("x"), .name("y")], when: .bool(true), body: .name("x"))))
+        "|x| x".makes(.function(Function(name: nil, patterns: [.name("x")], when: .bool(true), body: .name("x"))))
+        "| x , y | x".makes(.function(Function(name: nil, patterns: [.name("x"), .name("y")], when: .bool(true), body: .name("x"))))
 """
  |
  x
@@ -268,10 +268,10 @@ foo() = Do 5 End
  y
  |
  x
-""".makes(.subfunction(Subfunction(name: nil, patterns: [.name("x"), .name("y")], when: .bool(true), body: .name("x"))))
-        "|[x|xs], y| x".makes(.subfunction(Subfunction(name: nil, patterns: [.cons([.name("x")], .name("xs")), .name("y")], when: .bool(true), body: .name("x"))))
-        "|_| 5".makes(.subfunction(Subfunction(name: nil, patterns: [.ignore], when: .bool(true), body: .int(5))))
-        "|| 5".makes(.subfunction(Subfunction(name: nil, patterns: [], when: .bool(true), body: .int(5))))
+""".makes(.function(Function(name: nil, patterns: [.name("x"), .name("y")], when: .bool(true), body: .name("x"))))
+        "|[x|xs], y| x".makes(.function(Function(name: nil, patterns: [.cons([.name("x")], .name("xs")), .name("y")], when: .bool(true), body: .name("x"))))
+        "|_| 5".makes(.function(Function(name: nil, patterns: [.ignore], when: .bool(true), body: .int(5))))
+        "|| 5".makes(.function(Function(name: nil, patterns: [], when: .bool(true), body: .int(5))))
     }
 
     func test_negations() {
@@ -363,9 +363,9 @@ foo(
         "Do 1 , x End".makes(.scope([.int(1), .name("x")]))
         "Do 1, x, End".makes(.scope([.int(1), .name("x")]))
         "Do x = 5, x End".makes(.scope([.assign(variable: .name("x"), value: .int(5)), .name("x")]))
-        "Do |x| x End".makes(.scope([.subfunction(Subfunction(name: nil, patterns: [.name("x")], when: .bool(true), body: .name("x")))]))
+        "Do |x| x End".makes(.scope([.function(Function(name: nil, patterns: [.name("x")], when: .bool(true), body: .name("x")))]))
         "Do x.inc = x+1, 7.inc End".makes(.scope([
-            .subfunction(Subfunction(name: "inc", patterns: [.name("x")], when: .bool(true), body: .call("+", [.name("x"), .int(1)]))),
+            .function(Function(name: "inc", patterns: [.name("x")], when: .bool(true), body: .call("+", [.name("x"), .int(1)]))),
             .call("inc", [.int(7)])]))
         "Do 1, Do Do 2, 3 End, 4, End, End".makes(.scope([.int(1), .scope([.scope([.int(2), .int(3)]), .int(4)])]))
 
@@ -423,7 +423,7 @@ End
     func test_unusualFunctionCalls() {
         "(1 < 10).negate".makes(.call("negate", [.call("<", [.int(1), .int(10)])]))
         "(Do 5, 8 End).inc".makes(.call("inc", [.scope([.int(5), .int(8)])]))
-        "(Do |x| x+1 End)(5)".makes(.eval(.scope([.subfunction(Subfunction(name: nil, patterns: [.name("x")], when: .bool(true), body: .call("+", [.name("x"), .int(1)])))]), [.int(5)]))
+        "(Do |x| x+1 End)(5)".makes(.eval(.scope([.function(Function(name: nil, patterns: [.name("x")], when: .bool(true), body: .call("+", [.name("x"), .int(1)])))]), [.int(5)]))
         "(inc(1)).inc".makes(.call("inc", [.call("inc", [.int(1)])]))
         "(x)()".makes(.eval(.name("x"), []))
         "5.lessThan()(4)".makes(.eval(.call("lessThan", [.int(5)]), [.int(4)]))
@@ -432,7 +432,7 @@ End
         "lessThan(5)(4)".makes(.eval(.call("lessThan", [.int(5)]), [.int(4)]))
         "(|x| x+1)(4)".makes(
             .eval(
-                .subfunction(Subfunction(name: nil,
+                .function(Function(name: nil,
                                                   patterns: [.name("x")],
                                                   when: .bool(true),
                                                   body: .call("+", [.name("x"), .int(1)])
@@ -440,7 +440,7 @@ End
                 [.int(4)]))
         "4.(|x| x+1)".makes(
             .eval(
-                .subfunction(Subfunction(name: nil,
+                .function(Function(name: nil,
                                                   patterns: [.name("x")],
                                                   when: .bool(true),
                                                   body: .call("+", [.name("x"), .int(1)])
@@ -449,7 +449,7 @@ End
         "4.(|x| x+1)()".makes(
             .eval(
                 .eval(
-                    .subfunction(Subfunction(name: nil,
+                    .function(Function(name: nil,
                                                       patterns: [.name("x")],
                                                       when: .bool(true),
                                                       body: .call("+", [.name("x"), .int(1)])

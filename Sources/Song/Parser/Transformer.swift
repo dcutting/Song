@@ -114,7 +114,7 @@ public func makeTransformer() -> Transformer<Expression> {
     }
 
     t.rule(["params": .series("params"), "body": .simple("body")]) {
-        .subfunction(Subfunction(name: nil, patterns: try $0.vals("params"), when: .bool(true), body: try $0.val("body")))
+        .function(Function(name: nil, patterns: try $0.vals("params"), when: .bool(true), body: try $0.val("body")))
     }
 
     t.rule(["lambda": .simple("lambda")]) {
@@ -170,15 +170,15 @@ public func makeTransformer() -> Transformer<Expression> {
     // Function declarations.
 
     t.rule(["subject": .simple("subject"), "functionName": .simple("name"), "guard": .simple("guard"), "body": .simple("body")]) {
-        .subfunction(try transformFunction(args: $0))
+        .function(try transformFunction(args: $0))
     }
 
     t.rule(["subject": .simple("subject"), "functionName": .simple("name"), "params": .series("params"), "guard": .simple("guard"), "body": .simple("body")]) {
-        .subfunction(try transformFunction(args: $0))
+        .function(try transformFunction(args: $0))
     }
 
     t.rule(["functionName": .simple("name"), "body": .simple("body"), "guard": .simple("guard"), "params": .series("params")]) {
-        .subfunction(try transformFunction(args: $0))
+        .function(try transformFunction(args: $0))
     }
 
     // Constants.
@@ -219,7 +219,7 @@ private func reduce(_ calls: [Expression]) throws -> Expression {
     return result
 }
 
-private func transformFunction(args: TransformerReducerArguments<Expression>) throws -> Subfunction {
+private func transformFunction(args: TransformerReducerArguments<Expression>) throws -> Function {
     var name: String?
     do {
         name = try args.str("name")
@@ -237,5 +237,5 @@ private func transformFunction(args: TransformerReducerArguments<Expression>) th
         when = try args.val("guard")
     } catch {}
     let body = try args.val("body")
-    return Subfunction(name: name, patterns: params, when: when, body: body)
+    return Function(name: name, patterns: params, when: when, body: body)
 }

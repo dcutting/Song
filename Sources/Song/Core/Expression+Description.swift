@@ -24,7 +24,7 @@ extension Expression: CustomStringConvertible {
         case let .name(variable):
             return "\(variable)"
 
-        case let .subfunction(subfunction):
+        case let .function(subfunction):
             return "\(subfunction)"
 
         case let .assign(name, value):

@@ -3,16 +3,16 @@ import Song
 
 class PatternTests: XCTestCase {
 
-    lazy var functions: [Subfunction] = [
-        Subfunction(name: "anyVariableFunc", patterns: [.ignore], when: .bool(true), body: .string("ok")),
-        Subfunction(name: "booleanLiteralFunc", patterns: [.bool(false)], when: .bool(true), body: .string("ok")),
-        Subfunction(name: "numberLiteralFunc", patterns: [.int(2)], when: .bool(true), body: .string("ok")),
-        Subfunction(name: "listLiteralFunc", patterns: [.list([.int(1), .int(2)])], when: .bool(true), body: .string("ok")),
-        Subfunction(name: "listConstructorLiteralFunc", patterns: [.cons([.int(1)], .list([.int(2)]))], when: .bool(true), body: .string("ok")),
-        Subfunction(name: "listConstructorVariableFunc", patterns: [.cons([.int(1), .int(2)], .list([.name("xs")]))], when: .bool(true), body: .string("ok")),
-        Subfunction(name: "nestedListConstructorLiteralFunc", patterns: [.cons([.list([.int(1)])], .list([.int(2)]))], when: .bool(true), body: .string("ok")),
-        Subfunction(name: "zip", patterns: [.list([.list([]), .list([])])], when: .bool(true), body: .list([])),
-        Subfunction(name: "zip",
+    lazy var functions: [Function] = [
+        Function(name: "anyVariableFunc", patterns: [.ignore], when: .bool(true), body: .string("ok")),
+        Function(name: "booleanLiteralFunc", patterns: [.bool(false)], when: .bool(true), body: .string("ok")),
+        Function(name: "numberLiteralFunc", patterns: [.int(2)], when: .bool(true), body: .string("ok")),
+        Function(name: "listLiteralFunc", patterns: [.list([.int(1), .int(2)])], when: .bool(true), body: .string("ok")),
+        Function(name: "listConstructorLiteralFunc", patterns: [.cons([.int(1)], .list([.int(2)]))], when: .bool(true), body: .string("ok")),
+        Function(name: "listConstructorVariableFunc", patterns: [.cons([.int(1), .int(2)], .list([.name("xs")]))], when: .bool(true), body: .string("ok")),
+        Function(name: "nestedListConstructorLiteralFunc", patterns: [.cons([.list([.int(1)])], .list([.int(2)]))], when: .bool(true), body: .string("ok")),
+        Function(name: "zip", patterns: [.list([.list([]), .list([])])], when: .bool(true), body: .list([])),
+        Function(name: "zip",
                     patterns: [.list([
                         .cons([.name("x")], .name("xs")),
                         .cons([.name("y")], .name("ys"))
@@ -22,9 +22,9 @@ class PatternTests: XCTestCase {
                         .list([.list([.name("x"), .name("y")])]),
                         .call("zip", [.list([.name("xs"), .name("ys")])])
                         ])),
-        Subfunction(name: "variableFunc", patterns: [.name("x")], when: .bool(true), body: .name("x")),
-        Subfunction(name: "repeatedVariableFunc", patterns: [.name("x"), .name("x")], when: .bool(true), body: .name("x")),
-        Subfunction(name: "repeatedNestedVariableFunc",
+        Function(name: "variableFunc", patterns: [.name("x")], when: .bool(true), body: .name("x")),
+        Function(name: "repeatedVariableFunc", patterns: [.name("x"), .name("x")], when: .bool(true), body: .name("x")),
+        Function(name: "repeatedNestedVariableFunc",
                     patterns: [.cons([.name("x")], .ignore),
                                .cons([.name("x")], .ignore)],
                     when: .bool(true),
@@ -173,9 +173,9 @@ class PatternTests: XCTestCase {
 
             var context: Context = ["x": .int(5)]
 
-            let foo = Subfunction(name: "foo", patterns: [.name("x"), .name("x")], when: .bool(true), body: .name("x"))
+            let foo = Function(name: "foo", patterns: [.name("x"), .name("x")], when: .bool(true), body: .name("x"))
 
-            context = try declareSubfunctions([Expression.subfunction(foo)], in: context)
+            context = try declareSubfunctions([Expression.function(foo)], in: context)
             
             let call = Expression.call("foo", [.int(2), .int(2)])
             let actual = try call.evaluate(context: context)

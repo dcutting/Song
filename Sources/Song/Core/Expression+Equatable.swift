@@ -24,7 +24,7 @@ extension Expression: Equatable {
         case let (.name(lhsVariable), .name(rhsVariable)):
             return lhsVariable == rhsVariable
 
-        case let (.subfunction(lhsSubfunction), .subfunction(rhsSubfunction)):
+        case let (.function(lhsSubfunction), .function(rhsSubfunction)):
             return lhsSubfunction == rhsSubfunction
 
         case let (.assign(lhsName, lhsValue), .assign(rhsName, rhsValue)):
