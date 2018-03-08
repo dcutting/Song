@@ -42,7 +42,7 @@ class CallParserTests: XCTestCase {
         "foo(((|x|x)))".makes(.call("foo", [.lambda([.name("x")], .name("x"))]))
         "1.foo((|x|x))".makes(.call("foo", [.int(1), .lambda([.name("x")], .name("x"))]))
         "foo(|x|x,|y|y)".makes(.call("foo", [.lambda([.name("x")], .name("x")), .lambda([.name("y")], .name("y"))]))
-        "foo(|x|x.foo(bar()())(),1)".makes(.call("foo", [.eval(.lambda([.name("x")], .eval(.call("foo", [.name("x"), .eval(.call("bar", []), [])]), [])), [.int(1)])]))
+        "foo(|x|x.foo(bar()())(),1)".makes(.call("foo", [.lambda([.name("x")], .eval(.call("foo", [.name("x"), .eval(.call("bar", []), [])]), [])), .int(1)]))
         "1.foo()".makes(.call("foo", [.int(1)]))
         "1.foo(2)(3)".makes(.eval(.call("foo", [.int(1), .int(2)]), [.int(3)]))
         "1.foo(2)(3).bar".makes(.call("bar", [.eval(.call("foo", [.int(1), .int(2)]), [.int(3)])]))
