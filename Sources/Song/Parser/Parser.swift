@@ -99,7 +99,7 @@ public func makeParser() -> ParserProtocol {
     let lambdaParameter = (list | listConstructor | variableName).tag("param")
     let lambdaParameters = lambdaParameter >>> (parameterDelimiter >>> lambdaParameter).recur
 
-    let lambda = (pipe >>> skipSpaceAndNewlines >>> lambdaParameters.recur(0, 1).tag("params") >>> skipSpaceAndNewlines >>> pipe >>> skipSpaceAndNewlines >>> expression.tag("body")).tag("lambda")
+    let lambda = (pipe >>> skipSpaceAndNewlines >>> lambdaParameters.recur(0, 1).tag("params") >>> skipSpaceAndNewlines >>> pipe >>> skipSpaceAndNewlines >>> (wrappedExpression | expression).tag("body")).tag("lambda")
 
     // Function calls.
 
