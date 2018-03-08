@@ -4,7 +4,7 @@ import Song
 class ConstantTests: XCTestCase {
 
     func testDescription() {
-        let constant = Expression.assign(variable: .variable("foo"), value: .stringValue("bar"))
+        let constant = Expression.assign(variable: .variable("foo"), value: .string("bar"))
         let actual = "\(constant)"
         XCTAssertEqual("foo: \"bar\"", actual)
     }

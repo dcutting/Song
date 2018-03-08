@@ -41,24 +41,24 @@ class ParserTests: XCTestCase {
     }
 
     func test_strings() {
-        "\"\"".becomes(.stringValue(""))
-        "\"'\"".becomes(.stringValue("'"))
-        "\"hello world\"".becomes(.stringValue("hello world"))
-        "\"\\\"Hi,\\\" I said\"".becomes(.stringValue("\"Hi,\" I said"))
-        "\"a\\\\backslash\"".becomes(.stringValue("a\\backslash"))
-        " \"hello world\" ".becomes(.stringValue("hello world"))
+        "\"\"".becomes(.string(""))
+        "\"'\"".becomes(.string("'"))
+        "\"hello world\"".becomes(.string("hello world"))
+        "\"\\\"Hi,\\\" I said\"".becomes(.string("\"Hi,\" I said"))
+        "\"a\\\\backslash\"".becomes(.string("a\\backslash"))
+        " \"hello world\" ".becomes(.string("hello world"))
     }
 
     func test_lists() {
         "[]".becomes(.list([]))
         " [] ".becomes(.list([]))
         "[1,No]".becomes(.list([.int(1), .bool(false)]))
-        "[ 1 , Yes , \"hi\" ]".becomes(.list([.int(1), .bool(true), .stringValue("hi")]))
+        "[ 1 , Yes , \"hi\" ]".becomes(.list([.int(1), .bool(true), .string("hi")]))
         "[[1,2],[No,4], [], \"hi\"]".becomes(.list([
             .list([.int(1), .int(2)]),
             .list([.bool(false), .int(4)]),
             .list([]),
-            .stringValue("hi")
+            .string("hi")
             ]))
 """
 [
@@ -125,20 +125,20 @@ class ParserTests: XCTestCase {
 
     func test_equality() {
         "4 Neq 8".becomes(.call("Neq", [.int(4), .int(8)]))
-        "\"hi\" Neq \"ho\"".becomes(.call("Neq", [.stringValue("hi"), .stringValue("ho")]))
+        "\"hi\" Neq \"ho\"".becomes(.call("Neq", [.string("hi"), .string("ho")]))
         "[4] Neq [7]".becomes(.call("Neq", [.list([.int(4)]), .list([.int(7)])]))
 
         "4 Eq 3".becomes(.call("Eq", [.int(4), .int(3)]))
         "4 Eq [7]".becomes(.call("Eq", [.int(4), .list([.int(7)])]))
-        "4 Eq \"hi\"".becomes(.call("Eq", [.int(4), .stringValue("hi")]))
+        "4 Eq \"hi\"".becomes(.call("Eq", [.int(4), .string("hi")]))
 
-        "\"hi\" Eq \"ho\"".becomes(.call("Eq", [.stringValue("hi"), .stringValue("ho")]))
-        "\"hi\" Eq [7]".becomes(.call("Eq", [.stringValue("hi"), .list([.int(7)])]))
-        "\"hi\" Eq 3".becomes(.call("Eq", [.stringValue("hi"), .int(3)]))
+        "\"hi\" Eq \"ho\"".becomes(.call("Eq", [.string("hi"), .string("ho")]))
+        "\"hi\" Eq [7]".becomes(.call("Eq", [.string("hi"), .list([.int(7)])]))
+        "\"hi\" Eq 3".becomes(.call("Eq", [.string("hi"), .int(3)]))
 
         "[7] Eq [7]".becomes(.call("Eq", [.list([.int(7)]), .list([.int(7)])]))
         "[7] Eq 3".becomes(.call("Eq", [.list([.int(7)]), .int(3)]))
-        "[7] Eq \"hi\"".becomes(.call("Eq", [.list([.int(7)]), .stringValue("hi")]))
+        "[7] Eq \"hi\"".becomes(.call("Eq", [.list([.int(7)]), .string("hi")]))
     }
 
     func test_wrappedExpressions() {

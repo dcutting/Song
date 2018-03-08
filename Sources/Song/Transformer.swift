@@ -52,7 +52,7 @@ public func makeTransformer() -> Transformer<Expression> {
     }
 
     t.rule(["string": .simple("s")]) {
-        return .stringValue(unescape(try $0.str("s")))
+        return .string(unescape(try $0.str("s")))
     }
 
     func unescape(_ value: String) -> String {

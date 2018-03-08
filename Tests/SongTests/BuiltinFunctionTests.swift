@@ -6,21 +6,21 @@ class BuiltinFunctionTests: XCTestCase {
     // Invalid types.
 
     func test_invalidArgumentTypes() {
-        XCTAssertThrowsError(try Expression.call("*", [.int(5), .stringValue("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("/", [.int(5), .stringValue("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Mod", [.int(5), .stringValue("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Div", [.int(5), .stringValue("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("+", [.int(5), .stringValue("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("-", [.int(5), .stringValue("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("<", [.int(5), .stringValue("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call(">", [.int(5), .stringValue("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("<=", [.int(5), .stringValue("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call(">=", [.int(5), .stringValue("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Eq", [.int(5), .stringValue("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Neq", [.int(5), .stringValue("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("And", [.bool(true), .stringValue("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Or", [.bool(true), .stringValue("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Not", [.stringValue("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call("*", [.int(5), .string("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call("/", [.int(5), .string("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call("Mod", [.int(5), .string("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call("Div", [.int(5), .string("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call("+", [.int(5), .string("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call("-", [.int(5), .string("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call("<", [.int(5), .string("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call(">", [.int(5), .string("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call("<=", [.int(5), .string("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call(">=", [.int(5), .string("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call("Eq", [.int(5), .string("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call("Neq", [.int(5), .string("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call("And", [.bool(true), .string("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call("Or", [.bool(true), .string("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call("Not", [.string("hi")]).evaluate())
     }
 
     // Invalid number of arguments.

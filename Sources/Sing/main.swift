@@ -100,7 +100,7 @@ func log(_ str: Any? = nil) {
     }
 }
 
-let songArgs = scriptArgs.map { Expression.stringValue($0) }
+let songArgs = scriptArgs.map { Expression.string($0) }
 var context: Context = ["args": .list(songArgs)]
 
 func dumpContext() {

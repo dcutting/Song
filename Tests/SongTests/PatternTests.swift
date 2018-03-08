@@ -4,13 +4,13 @@ import Song
 class PatternTests: XCTestCase {
 
     lazy var functions: [Subfunction] = [
-        Subfunction(name: "anyVariableFunc", patterns: [.ignore], when: .bool(true), body: .stringValue("ok")),
-        Subfunction(name: "booleanLiteralFunc", patterns: [.bool(false)], when: .bool(true), body: .stringValue("ok")),
-        Subfunction(name: "numberLiteralFunc", patterns: [.int(2)], when: .bool(true), body: .stringValue("ok")),
-        Subfunction(name: "listLiteralFunc", patterns: [.list([.int(1), .int(2)])], when: .bool(true), body: .stringValue("ok")),
-        Subfunction(name: "listConstructorLiteralFunc", patterns: [.listCons([.int(1)], .list([.int(2)]))], when: .bool(true), body: .stringValue("ok")),
-        Subfunction(name: "listConstructorVariableFunc", patterns: [.listCons([.int(1), .int(2)], .list([.variable("xs")]))], when: .bool(true), body: .stringValue("ok")),
-        Subfunction(name: "nestedListConstructorLiteralFunc", patterns: [.listCons([.list([.int(1)])], .list([.int(2)]))], when: .bool(true), body: .stringValue("ok")),
+        Subfunction(name: "anyVariableFunc", patterns: [.ignore], when: .bool(true), body: .string("ok")),
+        Subfunction(name: "booleanLiteralFunc", patterns: [.bool(false)], when: .bool(true), body: .string("ok")),
+        Subfunction(name: "numberLiteralFunc", patterns: [.int(2)], when: .bool(true), body: .string("ok")),
+        Subfunction(name: "listLiteralFunc", patterns: [.list([.int(1), .int(2)])], when: .bool(true), body: .string("ok")),
+        Subfunction(name: "listConstructorLiteralFunc", patterns: [.listCons([.int(1)], .list([.int(2)]))], when: .bool(true), body: .string("ok")),
+        Subfunction(name: "listConstructorVariableFunc", patterns: [.listCons([.int(1), .int(2)], .list([.variable("xs")]))], when: .bool(true), body: .string("ok")),
+        Subfunction(name: "nestedListConstructorLiteralFunc", patterns: [.listCons([.list([.int(1)])], .list([.int(2)]))], when: .bool(true), body: .string("ok")),
         Subfunction(name: "zip", patterns: [.list([.list([]), .list([])])], when: .bool(true), body: .list([])),
         Subfunction(name: "zip",
                     patterns: [.list([
@@ -38,7 +38,7 @@ class PatternTests: XCTestCase {
     }
 
     func test_literal_wrongType_fails() {
-        let call = Expression.call("numberLiteralFunc", [.stringValue("two")])
+        let call = Expression.call("numberLiteralFunc", [.string("two")])
         XCTAssertThrowsError(try call.evaluate(context: context))
     }
 
@@ -51,7 +51,7 @@ class PatternTests: XCTestCase {
         assertNoThrow {
             let call = Expression.call("anyVariableFunc", [.int(2)])
             let actual = try call.evaluate(context: context)
-            XCTAssertEqual(Expression.stringValue("ok"), actual)
+            XCTAssertEqual(Expression.string("ok"), actual)
         }
     }
 
@@ -59,7 +59,7 @@ class PatternTests: XCTestCase {
         assertNoThrow {
             let call = Expression.call("booleanLiteralFunc", [.bool(false)])
             let actual = try call.evaluate(context: context)
-            XCTAssertEqual(Expression.stringValue("ok"), actual)
+            XCTAssertEqual(Expression.string("ok"), actual)
         }
     }
 
@@ -72,7 +72,7 @@ class PatternTests: XCTestCase {
         assertNoThrow {
             let call = Expression.call("numberLiteralFunc", [.int(2)])
             let actual = try call.evaluate(context: context)
-            XCTAssertEqual(Expression.stringValue("ok"), actual)
+            XCTAssertEqual(Expression.string("ok"), actual)
         }
     }
 
@@ -85,7 +85,7 @@ class PatternTests: XCTestCase {
         assertNoThrow {
             let call = Expression.call("listLiteralFunc", [.list([.int(1), .int(2)])])
             let actual = try call.evaluate(context: context)
-            XCTAssertEqual(Expression.stringValue("ok"), actual)
+            XCTAssertEqual(Expression.string("ok"), actual)
         }
     }
 
@@ -98,7 +98,7 @@ class PatternTests: XCTestCase {
         assertNoThrow {
             let call = Expression.call("listConstructorLiteralFunc", [.list([.int(1), .int(2)])])
             let actual = try call.evaluate(context: context)
-            XCTAssertEqual(Expression.stringValue("ok"), actual)
+            XCTAssertEqual(Expression.string("ok"), actual)
         }
     }
 
@@ -106,7 +106,7 @@ class PatternTests: XCTestCase {
         assertNoThrow {
             let call = Expression.call("nestedListConstructorLiteralFunc", [.list([.list([.int(1)]), .int(2)])])
             let actual = try call.evaluate(context: context)
-            XCTAssertEqual(Expression.stringValue("ok"), actual)
+            XCTAssertEqual(Expression.string("ok"), actual)
         }
     }
 

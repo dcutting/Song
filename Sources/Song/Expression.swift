@@ -47,7 +47,7 @@ public extension Expression {
         return .number(Number.float(float))
     }
 
-    public static func stringValue(_ string: String) -> Expression {
+    public static func string(_ string: String) -> Expression {
         let chars = Array(string).map { Expression.char($0) }
         return .list(chars)
     }

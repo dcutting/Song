@@ -4,7 +4,7 @@ import Song
 class ListConstructorTests: XCTestCase {
 
     func testDescription() {
-        let listConstructor = Expression.listCons([.int(9), .stringValue("hi")], .variable("xs"))
+        let listConstructor = Expression.listCons([.int(9), .string("hi")], .variable("xs"))
         XCTAssertEqual("[9, \"hi\"|xs]", "\(listConstructor)")
     }
 
@@ -39,8 +39,8 @@ class ListConstructorTests: XCTestCase {
     func test_evaluate_evaluatesHeadsAndTail() {
         let cons = Expression.listCons([.variable("x")], .list([.variable("y")]))
         assertNoThrow {
-            let actual = try cons.evaluate(context: ["x": .stringValue("hi"), "y": .int(1)])
-            XCTAssertEqual(Expression.list([.stringValue("hi"), .int(1)]), actual)
+            let actual = try cons.evaluate(context: ["x": .string("hi"), "y": .int(1)])
+            XCTAssertEqual(Expression.list([.string("hi"), .int(1)]), actual)
         }
     }
 

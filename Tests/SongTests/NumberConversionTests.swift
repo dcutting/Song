@@ -6,14 +6,14 @@ class NumberConversionTests: XCTestCase {
     func test_number_int_returnsInt() {
         assertNoThrow {
             let input = "99"
-            let call = Expression.call("number", [.stringValue(input)])
+            let call = Expression.call("number", [.string(input)])
             XCTAssertEqual(.int(99), try call.evaluate())
         }
     }
 
     func test_number_expressionEvaluatingToInt_returnsInt() {
         assertNoThrow {
-            let context: Context = ["x": .stringValue("-5")]
+            let context: Context = ["x": .string("-5")]
             let variable = Expression.variable("x")
             let call = Expression.call("number", [variable])
             XCTAssertEqual(.int(-5), try call.evaluate(context: context))
@@ -23,14 +23,14 @@ class NumberConversionTests: XCTestCase {
     func test_number_float_returnsFloat() {
         assertNoThrow {
             let input = "0.2"
-            let call = Expression.call("number", [.stringValue(input)])
+            let call = Expression.call("number", [.string(input)])
             XCTAssertEqual(.float(0.2), try call.evaluate())
         }
     }
 
     func test_number_invalidNumber_throws() {
         let input = "hello"
-        let call = Expression.call("number", [.stringValue(input)])
+        let call = Expression.call("number", [.string(input)])
         XCTAssertThrowsError(try call.evaluate())
     }
 

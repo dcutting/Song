@@ -78,21 +78,21 @@ class ScopeTests: XCTestCase {
     func test_matchesAgainstLocalFunctionsLexicallyThenOuterFunctionsLexically() {
 
         let context = try! declareSubfunctions([
-            makeFoo(.int(9), .stringValue("N I N E")),
+            makeFoo(.int(9), .string("N I N E")),
             makeFoo(.variable("x"), .variable("x"))
         ])
 
         let inScope = [
-            makeFoo(.int(9), .stringValue("nine")),
+            makeFoo(.int(9), .string("nine")),
             makeFoo(.variable("x"),
                     when: .call(">", [.variable("x"), .int(100)]),
-                    .stringValue("BIG")),
-            makeFoo(.int(2), .stringValue("two"))
+                    .string("BIG")),
+            makeFoo(.int(2), .string("two"))
         ]
 
         assertNoThrow {
             let scope = Expression.scope(inScope + [callFoo(.int(9))])
-            XCTAssertEqual(Expression.stringValue("nine"), try scope.evaluate(context: context))
+            XCTAssertEqual(Expression.string("nine"), try scope.evaluate(context: context))
         }
 
         let scope = Expression.scope(inScope + [callFoo(.int(5))])
@@ -100,11 +100,11 @@ class ScopeTests: XCTestCase {
 
         assertNoThrow {
             let scope = Expression.scope(inScope + [callFoo(.int(500))])
-            XCTAssertEqual(Expression.stringValue("BIG"), try scope.evaluate(context: context))
+            XCTAssertEqual(Expression.string("BIG"), try scope.evaluate(context: context))
         }
         assertNoThrow {
             let scope = Expression.scope(inScope + [callFoo(.int(2))])
-            XCTAssertEqual(Expression.stringValue("two"), try scope.evaluate(context: context))
+            XCTAssertEqual(Expression.string("two"), try scope.evaluate(context: context))
         }
     }
 

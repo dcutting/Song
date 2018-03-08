@@ -410,7 +410,7 @@ extension Expression {
         let evaluated = try arguments.map { expr -> Expression in try expr.evaluate(context: context) }
         let output = evaluated.map { $0.out() }.joined(separator: " ")
         print(output)
-        return .stringValue(output)
+        return .string(output)
     }
 
     private func evaluateUserFunction(name: String, arguments: [Expression], context: Context) throws -> Expression {

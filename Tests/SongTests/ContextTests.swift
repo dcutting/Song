@@ -10,14 +10,14 @@ class ContextTests: XCTestCase {
     }
 
     func testIsEqual_simple_same_returnsTrue() {
-        let left: Context = ["a": .stringValue("hi"), "b": .bool(true)]
-        let right: Context = ["a": .stringValue("hi"), "b": .bool(true)]
+        let left: Context = ["a": .string("hi"), "b": .bool(true)]
+        let right: Context = ["a": .string("hi"), "b": .bool(true)]
         XCTAssertTrue(Song.isEqual(lhsContext: left, rhsContext: right))
     }
 
     func testIsEqual_simple_different_returnsFalse() {
-        let left: Context = ["a": .stringValue("hi")]
-        let right: Context = ["a": .stringValue("bye")]
+        let left: Context = ["a": .string("hi")]
+        let right: Context = ["a": .string("bye")]
         XCTAssertFalse(Song.isEqual(lhsContext: left, rhsContext: right))
     }
 

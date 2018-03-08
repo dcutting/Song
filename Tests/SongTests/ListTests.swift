@@ -91,8 +91,8 @@ class ListTests: XCTestCase {
     }
 
     func test_evaluate_equalNestedLists() {
-        let left = Expression.list([.list([.int(9), .bool(false)]), .int(1), .stringValue("ok")])
-        let right = Expression.list([.list([.int(9), .bool(false)]), .int(1), .stringValue("ok")])
+        let left = Expression.list([.list([.int(9), .bool(false)]), .int(1), .string("ok")])
+        let right = Expression.list([.list([.int(9), .bool(false)]), .int(1), .string("ok")])
 
         assertNoThrow {
             let call = Expression.call("Eq", [left, right])
@@ -105,8 +105,8 @@ class ListTests: XCTestCase {
     }
 
     func test_evaluate_almostEqualNestedLists() {
-        let left = Expression.list([.list([.int(8), .bool(false)]), .int(1), .stringValue("ok")])
-        let right = Expression.list([.list([.int(9), .bool(false)]), .int(1), .stringValue("ok")])
+        let left = Expression.list([.list([.int(8), .bool(false)]), .int(1), .string("ok")])
+        let right = Expression.list([.list([.int(9), .bool(false)]), .int(1), .string("ok")])
 
         assertNoThrow {
             let call = Expression.call("Eq", [left, right])
@@ -119,8 +119,8 @@ class ListTests: XCTestCase {
     }
 
     func test_evaluate_unequalNestedLists() {
-        let left = Expression.list([.list([.bool(false)]), .int(1), .stringValue("ok")])
-        let right = Expression.list([.list([.int(9), .bool(false)]), .stringValue("ok")])
+        let left = Expression.list([.list([.bool(false)]), .int(1), .string("ok")])
+        let right = Expression.list([.list([.int(9), .bool(false)]), .string("ok")])
 
         assertNoThrow {
             let call = Expression.call("Eq", [left, right])

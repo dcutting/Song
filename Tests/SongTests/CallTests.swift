@@ -34,7 +34,7 @@ class CallTests: XCTestCase {
 
     func testEquatable_call_differentArguments_returnsFalse() {
         let left = Expression.call("foo", [.int(9)])
-        let right = Expression.call("foo", [.stringValue("hi")])
+        let right = Expression.call("foo", [.string("hi")])
         XCTAssertNotEqual(left, right)
     }
 

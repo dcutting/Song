@@ -5,7 +5,7 @@ class ClosureTests: XCTestCase {
 
     lazy var function = makeNamedFunction()
 
-    let context: Context = ["x": .int(5), "y": .stringValue("hi")]
+    let context: Context = ["x": .int(5), "y": .string("hi")]
     
     func testDescription() {
         assertNoThrow {
