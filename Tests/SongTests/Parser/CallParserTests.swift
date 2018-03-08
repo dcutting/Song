@@ -1,7 +1,7 @@
 import XCTest
 import Song
 
-class FunctionCallParserTests: XCTestCase {
+class CallParserTests: XCTestCase {
 
     func test_parses() {
         "1.inc".makes(.call("inc", [.int(1)]))
