@@ -14,7 +14,7 @@ func isEqual(lhsContext: Context, rhsContext: Context) -> Bool {
     return true
 }
 
-func contextDescription(context: Context) -> String {
+func describeContext(_ context: Context) -> String {
     var contextPairs = [String]()
     for (key, value) in context {
         contextPairs.append("\(key): \(value)")

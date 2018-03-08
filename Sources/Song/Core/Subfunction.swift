@@ -13,6 +13,17 @@ public struct Subfunction {
     }
 }
 
+extension Subfunction: CustomStringConvertible {
+
+    public var description: String {
+        let parametersList = patterns.map { "\($0)" }.joined(separator: ", ")
+        if let funcName = name {
+            return "\(funcName)(\(parametersList)) When \(when) = \(body)"
+        }
+        return "λ(\(parametersList)) = \(body)"
+    }
+}
+
 extension Subfunction: Equatable {
 
     public static func ==(lhs: Subfunction, rhs: Subfunction) -> Bool {

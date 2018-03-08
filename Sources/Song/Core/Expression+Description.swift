@@ -10,28 +10,13 @@ extension Expression: CustomStringConvertible {
             return "\(value)"
 
         case let .char(value):
-            let string = "\(value)"
-            let escaped = string.replacingOccurrences(of: "\'", with: "\\\'")
-            return "'\(escaped)'"
+            return "'" + "\(value)".replacingOccurrences(of: "\'", with: "\\\'") + "'"
 
         case let .list(exprs):
-            if exprs.isEmpty {
-                return "[]"
-            }
-            do {
-                let value = try convertToString(characters: exprs)
-                let escaped = value.replacingOccurrences(of: "\"", with: "\\\"")
-                return "\"\(escaped)\""
-            } catch {
-                let descriptions = exprs.map { "\($0)" }
-                let joined = descriptions.joined(separator: ", ")
-                return "[\(joined)]"
-            }
+            return describeList(exprs)
 
         case let .listCons(head, tail):
-            let descriptions = head.map { "\($0)" }
-            let heads = descriptions.joined(separator: ", ")
-            return "[\(heads)|\(tail)]"
+            return "[\(head.map(String.init).joined(separator: ", "))|\(tail)]"
 
         case .ignore:
             return "_"
@@ -40,43 +25,38 @@ extension Expression: CustomStringConvertible {
             return "\(variable)"
 
         case let .subfunction(subfunction):
-            return descriptionSubfunction(subfunction: subfunction)
+            return "\(subfunction)"
 
         case let .assign(name, value):
             return "\(name): \(value)"
 
         case let .closure(_, function, context):
-            let contextList = contextDescription(context: context)
-            return "[(\(contextList)) \(function)]"
+            return "[(\(describeContext(context))) \(function)]"
 
-        case let .scope(expressions):
-            return "scope (" + expressions.map { "\($0)" }.joined(separator: ", ") + ")"
+        case let .scope(exprs):
+            return "scope (" + exprs.map { "\($0)" }.joined(separator: ", ") + ")"
 
-        case let .call(name, arguments):
-            return descriptionCall(name: name, arguments: arguments)
+        case let .call(name, args):
+            return "\(name)(\(describeArgs(args)))"
 
-        case let .callAnon(closure, arguments):
-            return descriptionCallAnonymous(closure: closure, arguments: arguments)
+        case let .callAnon(closure, args):
+            return "\(closure)(\(describeArgs(args)))"
         }
     }
 
-    func descriptionSubfunction(subfunction: Subfunction) -> String {
-        let parametersList = subfunction.patterns.map { "\($0)" }.joined(separator: ", ")
-        if let funcName = subfunction.name {
-            return "\(funcName)(\(parametersList)) When \(subfunction.when) = \(subfunction.body)"
+    private func describeList(_ exprs: [Expression]) -> String {
+        
+        guard !exprs.isEmpty else { return "[]" }
+
+        do {
+            let value = try convertToString(characters: exprs)
+            return "\"" + value.replacingOccurrences(of: "\"", with: "\\\"") + "\""
+        } catch {
+            return "[" + exprs.map(String.init).joined(separator: ", ") + "]"
         }
-        return "λ(\(parametersList)) = \(subfunction.body)"
     }
 
-    func descriptionCall(name: String, arguments: [Expression]) -> String {
-        return "\(name)(\(description(arguments: arguments)))"
-    }
-
-    func descriptionCallAnonymous(closure: Expression, arguments: [Expression]) -> String {
-        return "\(closure)(\(description(arguments: arguments)))"
-    }
-
-    private func description(arguments: [Expression]) -> String {
-        return arguments.map { "\($0)" }.joined(separator: ", ")
+    private func describeArgs(_ args: [Expression]) -> String {
+        return args.map { "\($0)" }.joined(separator: ", ")
     }
 }
