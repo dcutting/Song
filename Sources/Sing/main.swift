@@ -15,7 +15,8 @@ let incompletePrompt = ". "
 func parse(arguments: [String]) throws {
     let argsParser = ArgumentParser(usage: "<options> [filename]", overview: "the Song functional language")
     let verboseArg: OptionArgument<Bool> = argsParser.add(option: "--verbose", shortName: "-v", kind: Bool.self, usage: "Verbose logging")
-    let scriptArgsArg = argsParser.add(positional: "filename", kind: [String].self, optional: true, usage: "Song script to run and arguments to pass to it")
+    let scriptArgsArg = argsParser.add(positional: "filename", kind: [String].self, optional: true, strategy: .remaining, usage: "Song script to run and arguments to pass to it")
+
 
     let arguments = Array(arguments.dropFirst())
     let parsedArguments = try argsParser.parse(arguments)
