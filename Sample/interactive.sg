@@ -1,8 +1,8 @@
 #!/usr/bin/env song
 
-n.fib = n.fib(0, 1)
-0.fib(a, _) = a
-n.fib(a, b) When n > 0 = (n-1).fib(b, a+b)
+0.fib = 0
+1.fib = 1
+n.fib = (n-2).fib + (n-1).fib
 
 loop() = Do
   "n? ".in.number.fib.out
