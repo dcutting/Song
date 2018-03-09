@@ -7,3 +7,5 @@ x.floor When x.positive? = x.truncate
 x.floor = (x - 1).truncate
 x.ceiling = x.negate.floor.negate
 x.round = (x + 0.5).floor
+
+"ok".out
