@@ -7,7 +7,7 @@ def fib(n)
   _fib(n, 0, 1)
 end
 
-999.times do
+500.times do
   fib(80)
 end
 puts(fib(80))

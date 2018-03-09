@@ -4,7 +4,11 @@ n.fib = n.fib(0, 1)
 0.fib(a, _) = a
 n.fib(a, b) When n > 0 = (n-1).fib(b, a+b)
 
-[_,b|_].second = b
+1.times(f) = f()
+n.times(f) When n > 1 = Do
+  f()
+  (n-1).times(f)
+End
 
-args.err
-args.second.number.fib.out
+500.times(|| 80.fib)
+80.fib.out

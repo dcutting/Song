@@ -9,7 +9,7 @@ func fib(_ n: Int64) -> Int64 {
   return fib(n, 0, 1)
 }
 
-for _ in (1...999) {
+for _ in (1...500) {
   _ = fib(80)
 }
 print(fib(80))
