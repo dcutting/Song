@@ -44,7 +44,7 @@ attributes:
   regularExpression: true
 outlineMenu: []
 variables:
-- beginString: "(?=\\.)[a-z_][a-zA-Z0-9_\\?]*"
+- beginString: "(?<=\\.)[a-z_][a-zA-Z0-9_\\?]*"
   regularExpression: true
 - beginString: "[a-z_][a-zA-Z0-9_\\?]*(?=\\()"
   regularExpression: true
