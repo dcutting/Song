@@ -22,6 +22,9 @@ let package = Package(
             dependencies: ["Syft", "Utility"]),
         .testTarget(
             name: "SongTests",
+            dependencies: ["Song"]),
+        .testTarget(
+            name: "SongPerformanceTests",
             dependencies: ["Song"])
     ]
 )
