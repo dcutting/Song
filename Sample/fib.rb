@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby
+
 def _fib(n, a, b)
   return a if n == 0
   _fib(n-1, b, a+b)

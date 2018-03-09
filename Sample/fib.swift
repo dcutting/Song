@@ -1,3 +1,5 @@
+#!/usr/bin/env swift
+
 func fib(_ n: Int64, _ a: Int64, _ b: Int64) -> Int64 {
   if n == 0 {
     return a
