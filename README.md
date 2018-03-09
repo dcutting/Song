@@ -11,13 +11,22 @@ Song is a terse functional programming language.
 
 Here's a program that calculates Fibonacci numbers:
 
+<img src="Docs/song-syntax.png" width="600" alt="Song syntax" align="middle"/>
+
 ```
+#!/usr/bin/env song
+
 0.fib = 0
 1.fib = 1
 n.fib = (n-2).fib + (n-1).fib
 
-7.fib
-# 13
+loop() = Do
+  "n? ".in.number.fib.out
+  loop()
+End
+
+"Welcome to Fibonacci".out
+loop()
 ```
 
 Song has no loops and no if statements. Instead, you use recursion and pattern matching. There are no reference types: everything is a value.
@@ -693,7 +702,7 @@ name = in("What is your name? ")
 out("Hello", name)
 ```
 
-You can make a simple interactive loop using recursion. Here's an interactive version of the Fibonacci program:
+You can make a simple interactive loop using recursion. Here's that Fibonacci program again. The `loop()` function never exits, so it continues to ask the user for another number:
 
 ```
 #!/usr/bin/env song
