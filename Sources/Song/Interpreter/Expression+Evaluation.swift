@@ -48,11 +48,17 @@ extension Expression {
             return try evaluateScope(statements: statements, context: context)
 
         case let .call(name, arguments):
-            return try evaluateCall(expression: expression, name: name, arguments: arguments, context: context)
+            let evalArgs = try evaluate(arguments: arguments, context: context)
+            return try evaluateCall(expression: expression, name: name, arguments: evalArgs, context: context)
 
         case let .eval(function, arguments):
-            return try evaluateCallAnonymous(closure: function, arguments: arguments, callingContext: context)
+            let evalArgs = try evaluate(arguments: arguments, context: context)
+            return try evaluateCallAnonymous(closure: function, arguments: evalArgs, callingContext: context)
         }
+    }
+
+    private func evaluate(arguments: [Expression], context: Context) throws -> [Expression] {
+        return try arguments.map { try $0.evaluate(context: context) }
     }
     
     func evaluateCall(expression: Expression, name: String, arguments: [Expression], context: Context) throws -> Expression {
@@ -366,15 +372,14 @@ extension Expression {
         var extendedContext = closureContext
         var patternEqualityContext = Context()
         for (p, a) in zip(parameters, arguments) {
-            (extendedContext, patternEqualityContext) = try matchAndExtend(context: extendedContext, parameter: p, argument: a, callingContext: callingContext, patternEqualityContext: patternEqualityContext)
+            (extendedContext, patternEqualityContext) = try matchAndExtend(context: extendedContext, parameter: p, value: a, callingContext: callingContext, patternEqualityContext: patternEqualityContext)
         }
         return extendedContext
     }
 
-    private func matchAndExtend(context: Context, parameter: Expression, argument: Expression, callingContext: Context, patternEqualityContext: Context) throws -> (Context, Context) {
+    private func matchAndExtend(context: Context, parameter: Expression, value: Expression, callingContext: Context, patternEqualityContext: Context) throws -> (Context, Context) {
         var extendedContext = context
         var patternEqualityContext = patternEqualityContext
-        let evaluatedValue = try argument.evaluate(context: callingContext)
         switch parameter {
         case .ignore:
             () // Do nothing
@@ -382,40 +387,41 @@ extension Expression {
             if let existingValue = patternEqualityContext[name] {
                 if case .number(let numberValue) = existingValue {
                     if case .float = numberValue {
-                        throw EvaluationError.patternsCannotBeFloats(argument)
+                        throw EvaluationError.patternsCannotBeFloats(value)
                     }
                 }
-                if existingValue != evaluatedValue {
-                    throw EvaluationError.signatureMismatch([argument])
+                if existingValue != value {
+                    throw EvaluationError.signatureMismatch([value])
                 }
             }
-            patternEqualityContext[name] = evaluatedValue
-            extendedContext = extendContext(context: extendedContext, name: name, value: evaluatedValue)
+            patternEqualityContext[name] = value
+            extendedContext = extendContext(context: extendedContext, name: name, value: value)
         case .cons(var paramHeads, let paramTail):
-            guard case var .list(argItems) = evaluatedValue else { throw EvaluationError.signatureMismatch([argument]) }
-            guard argItems.count >= paramHeads.count else { throw EvaluationError.signatureMismatch([argument]) }
+            guard case var .list(argItems) = value else { throw EvaluationError.signatureMismatch([value]) }
+            guard argItems.count >= paramHeads.count else { throw EvaluationError.signatureMismatch([value]) }
             while paramHeads.count > 0 {
                 let paramHead = paramHeads.removeFirst()
                 let argHead = argItems.removeFirst()
-                (extendedContext, patternEqualityContext) = try matchAndExtend(context: extendedContext, parameter: paramHead, argument: argHead, callingContext: callingContext, patternEqualityContext: patternEqualityContext)
+                (extendedContext, patternEqualityContext) = try matchAndExtend(context: extendedContext, parameter: paramHead, value: argHead, callingContext: callingContext, patternEqualityContext: patternEqualityContext)
             }
             let argTail = Expression.list(argItems)
-            (extendedContext, patternEqualityContext) = try matchAndExtend(context: extendedContext, parameter: paramTail, argument: argTail, callingContext: callingContext, patternEqualityContext: patternEqualityContext)
+            (extendedContext, patternEqualityContext) = try matchAndExtend(context: extendedContext, parameter: paramTail, value: argTail, callingContext: callingContext, patternEqualityContext: patternEqualityContext)
         case .list(let paramItems):
-            guard case let .list(argItems) = evaluatedValue else { throw EvaluationError.signatureMismatch([argument]) }
-            guard paramItems.count == argItems.count else { throw EvaluationError.signatureMismatch([argument]) }
+            guard case let .list(argItems) = value else { throw EvaluationError.signatureMismatch([value]) }
+            guard paramItems.count == argItems.count else { throw EvaluationError.signatureMismatch([value]) }
             for (p, a) in zip(paramItems, argItems) {
-                (extendedContext, patternEqualityContext) = try matchAndExtend(context: extendedContext, parameter: p, argument: a, callingContext: callingContext, patternEqualityContext: patternEqualityContext)
+                (extendedContext, patternEqualityContext) = try matchAndExtend(context: extendedContext, parameter: p, value: a, callingContext: callingContext, patternEqualityContext: patternEqualityContext)
             }
         default:
-            if parameter != evaluatedValue {    // NOTE: should this use Eq operator instead of Swift equality?
-                throw EvaluationError.signatureMismatch([argument])
+            if parameter != value {    // NOTE: should this use Eq operator instead of Swift equality?
+                throw EvaluationError.signatureMismatch([value])
             }
         }
         return (extendedContext, patternEqualityContext)
     }
 
     private func evaluateIn(arguments: [Expression], context: Context) throws -> Expression {
+        // TODO: anywhere I map arguments to an evaluation, they may be calling `in`...
         let evaluated = try arguments.map { expr -> Expression in try expr.evaluate(context: context) }
         let output = evaluated.map { $0.out() }.joined(separator: " ")
         _stdOut.put(output)
