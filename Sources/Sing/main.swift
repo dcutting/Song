@@ -112,7 +112,12 @@ log("Song v0.6.0 🎵")
 
 while (true) {
 
-    guard let thisLine = getLine() else { break }
+    guard let thisLine = getLine() else {
+        if !interactive && !multilines.isEmpty {
+            print("💥  incomplete expression; do you have a typo?\n\n\(multilines.joined())")
+        }
+        break
+    }
 
     if thisLine.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
         continue

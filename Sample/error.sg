@@ -1,0 +1,7 @@
+#!/usr/bin/env song
+
+foo() = Do
+  "hello"
+end
+
+(foo()).out
