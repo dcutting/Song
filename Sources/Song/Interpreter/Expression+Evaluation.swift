@@ -171,6 +171,8 @@ extension Expression {
             } catch EvaluationError.numericMismatch {
                 throw EvaluationError.notANumber(left)
             }
+        case "string":
+            return try evaluateString(arguments: arguments, context: context)
         case "truncate":
             var numbers = try toNumbers(arguments: arguments, context: context)
             guard numbers.count == 1 else { throw EvaluationError.signatureMismatch(arguments) }
@@ -432,6 +434,11 @@ extension Expression {
     private func evaluateOut(arguments: [Expression], context: Context) throws -> Expression {
         let output = try prepareOutput(for: arguments, context: context)
         _stdOut.put(output + "\n")
+        return .string(output)
+    }
+
+    private func evaluateString(arguments: [Expression], context: Context) throws -> Expression {
+        let output = try prepareOutput(for: arguments, context: context)
         return .string(output)
     }
 
