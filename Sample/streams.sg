@@ -1,0 +1,66 @@
+#!/usr/bin/env song
+
+# Streams are infinite lazy lists.
+
+# They are modelled as a list of two items:
+# a "head" or current value, and a "then" which is a thunk
+# that when evaluated returns a new advanced stream.
+
+[x, _].head = x
+[_, then].next = then()
+
+# Construct a stream by providing an initial value and a lambda
+# that can construct future values.
+
+x.then(f) = [x, || f(x).then(f)]
+
+# Lazily map a supplied function to a stream.
+
+stream.map(f) = [f(stream.head), || stream.next.map(f)]
+
+# Zip two streams together.
+
+a.zip(b) = [[a.head, b.head], || a.next.zip(b.next)]
+a.zip(b, f) = [f(a.head, b.head), || a.next.zip(b.next, f)]
+
+# Index into a list.
+
+[x|_].index(0) = x
+[_|xs].index(i) When i > 0 = xs.index(i-1)
+
+# Length of a list.
+
+[].length = 0
+[_|xs].length = 1 + xs.length
+
+# Join a list of any values into a string.
+
+join(a, b) = [a, b].join
+[].join = []
+[x|xs].join = x.string + xs.join
+
+# Cycle endlessly through a given list.
+
+list.cycle = list.cycle(0)
+list.cycle(i) = Do
+  j = (i + 1) Mod list.length
+  [list.index(i), || list.cycle(j)]
+End
+
+# Greedily return the next "n" items of a stream in a list.
+
+stream.take(0) = []
+stream.take(n) = [stream.head|stream.next.take(n-1)]
+
+# Make a stream of numbers starting from "n".
+
+n.andUp = n.then(|x| x+1)
+
+# Now play with the streams.
+
+naturals = 1.andUp
+naturals.take(10).out
+naturals.map(|x| x*2).take(10).out
+"abc".cycle.take(50).out
+"abc".cycle.zip(naturals).take(10).out
+"abc".cycle.zip(naturals, join).take(10).out
