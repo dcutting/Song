@@ -1,0 +1,23 @@
+#!/usr/bin/env song
+
+Stream Has
+  head
+  then
+End
+
+stream.next = stream.then()
+
+stream.map(f) = Stream(
+  head: f(stream.head),
+  then: || stream.next.map(f)
+)
+
+a.zip(b, f) = Stream(
+  head: f(a.head, b.head)
+  then: || a.next.zip(b.next, f)
+)
+
+stream.take(0) = []
+stream.take(n) = [stream.head|stream.next.take(n-1)]
+
+n.andUp = Stream(n, || |x| x+1)

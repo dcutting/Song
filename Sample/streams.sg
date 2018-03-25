@@ -20,7 +20,7 @@ stream.map(f) = [f(stream.head), || stream.next.map(f)]
 
 # Zip two streams together.
 
-a.zip(b) = [[a.head, b.head], || a.next.zip(b.next)]
+a.zip(b) = a.zip(b, |x, y| [x, y])
 a.zip(b, f) = [f(a.head, b.head), || a.next.zip(b.next, f)]
 
 # Index into a list.
