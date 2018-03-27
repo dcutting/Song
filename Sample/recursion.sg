@@ -1,0 +1,9 @@
+#!/usr/bin/env song
+
+countdown(0) = out("Blast off!")
+countdown(n) = Do
+  out(n)
+  countdown(n-1)
+End
+
+countdown(10)
