@@ -49,11 +49,19 @@ extension Expression {
 
         case let .call(name, arguments):
             let evalArgs = try evaluate(arguments: arguments, context: context)
-            return try evaluateCall(expression: expression, name: name, arguments: evalArgs, context: context)
+            var intermediate = try evaluateCall(name: name, arguments: evalArgs, context: context)
+            // Trampoline tail calls.
+            while case let .tailCall(tailName, tailEvalArgs) = intermediate {
+                intermediate = try evaluateCall(name: tailName, arguments: tailEvalArgs, context: context)
+            }
+            return intermediate
 
         case let .eval(function, arguments):
             let evalArgs = try evaluate(arguments: arguments, context: context)
             return try evaluateCallAnonymous(closure: function, arguments: evalArgs, callingContext: context)
+
+        case .tailCall:
+            return self
         }
     }
 
@@ -61,7 +69,7 @@ extension Expression {
         return try arguments.map { try $0.evaluate(context: context) }
     }
     
-    func evaluateCall(expression: Expression, name: String, arguments: [Expression], context: Context) throws -> Expression {
+    func evaluateCall(name: String, arguments: [Expression], context: Context) throws -> Expression {
 
         switch name {
         case "*":
@@ -361,7 +369,23 @@ extension Expression {
             guard case .bool = whenEvaluated else { throw EvaluationError.notABoolean(function.when) }
             guard case .bool(true) = whenEvaluated else { throw EvaluationError.signatureMismatch(arguments) }
             let finalContext = callingContext.merging(extendedContext) { l, r in r }
-            return try function.body.evaluate(context: finalContext)
+            let body = function.body
+
+            // Detect tail calls if present.
+            if case let .call(name, arguments) = body {
+                let evalArgs = try evaluate(arguments: arguments, context: finalContext)
+                return .tailCall(name, evalArgs)
+            } else if case let .scope(statements) = body {
+                let (last, scopeContext) = try semiEvaluateScope(statements: statements, context: finalContext)
+                if case let .call(name, arguments) = last {
+                    let evalArgs = try evaluate(arguments: arguments, context: scopeContext)
+                    return .tailCall(name, evalArgs)
+                } else {
+                    return try last.evaluate(context: scopeContext)
+                }
+            } else {
+                return try body.evaluate(context: finalContext)
+            }
         default:
             throw EvaluationError.notAFunction(closure)
         }
@@ -462,6 +486,12 @@ extension Expression {
 
     // TODO: this code needs to be merged with the REPL code in main somehow.
     func evaluateScope(statements: [Expression], context: Context) throws -> Expression {
+        let (last, scopeContext) = try semiEvaluateScope(statements: statements, context: context)
+        return try last.evaluate(context: scopeContext)
+    }
+
+    func semiEvaluateScope(statements: [Expression], context: Context) throws -> (Expression, Context) {
+
         guard statements.count > 0 else { throw EvaluationError.emptyScope }
         var allStatements = statements
         let last = allStatements.removeLast()
@@ -488,6 +518,7 @@ extension Expression {
                 }
             }
         }
-        return try last.evaluate(context: scopeContext)
+
+        return (last, scopeContext)
     }
 }

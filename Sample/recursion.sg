@@ -6,4 +6,4 @@ countdown(n) = Do
   countdown(n-1)
 End
 
-countdown(10)
+countdown(1000)

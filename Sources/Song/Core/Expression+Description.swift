@@ -41,6 +41,9 @@ extension Expression: CustomStringConvertible {
 
         case let .eval(closure, args):
             return "\(closure)(\(describeArgs(args)))"
+
+        case let .tailCall(name, evalArgs):
+            return "\(name)(\(describeArgs(evalArgs)))"
         }
     }
 
