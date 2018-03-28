@@ -1,0 +1,6 @@
+length([]) = 0
+length([_|xs]) = +(1, length(xs))
+
+length_tco(list) = length_tco(list, 0)
+length_tco([], n) = n
+length_tco([_|xs], n) = length_tco(xs, n+1)
