@@ -1,0 +1,4 @@
+count(0) = Yes
+count(n) = count(n-1)
+
+count(1000)
