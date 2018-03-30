@@ -52,6 +52,7 @@ extension Expression {
             var intermediate = try evaluateCall(name: name, arguments: evalArgs, context: context)
             // Trampoline tail calls.
             while case let .tailCall(tailName, tailEvalArgs) = intermediate {
+                // TODO: the lambda called "f" is not in this context?
                 intermediate = try evaluateCall(name: tailName, arguments: tailEvalArgs, context: context)
             }
             return intermediate
