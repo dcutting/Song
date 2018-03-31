@@ -18,7 +18,7 @@ public indirect enum Expression {
     case call(String, [Expression])
     case eval(Expression, [Expression])
 
-    case tailCall(String, [Expression])
+    case tailCall(String, [Expression], Context)
 }
 
 public extension Expression {

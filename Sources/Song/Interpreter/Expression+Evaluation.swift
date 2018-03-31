@@ -3,11 +3,11 @@ var _stdOut: StdOut = DefaultStdOut()
 var _stdErr: StdOut = DefaultStdErr()
 
 extension Expression {
-    
+
     public func evaluate() throws -> Expression {
         return try evaluate(context: Context())
     }
-    
+
     public func evaluate(context: Context) throws -> Expression {
         let result: Expression
         do {
@@ -51,9 +51,9 @@ extension Expression {
             let evalArgs = try evaluate(arguments: arguments, context: context)
             var intermediate = try evaluateCall(name: name, arguments: evalArgs, context: context)
             // Trampoline tail calls.
-            while case let .tailCall(tailName, tailEvalArgs) = intermediate {
-                // TODO: the lambda called "f" is not in this context?
-                intermediate = try evaluateCall(name: tailName, arguments: tailEvalArgs, context: context)
+            while case let .tailCall(tailName, tailArgs, tailContext) = intermediate {
+                let evalArgs = try evaluate(arguments: tailArgs, context: tailContext)
+                intermediate = try evaluateCall(name: tailName, arguments: evalArgs, context: tailContext)
             }
             return intermediate
 
@@ -69,7 +69,7 @@ extension Expression {
     private func evaluate(arguments: [Expression], context: Context) throws -> [Expression] {
         return try arguments.map { try $0.evaluate(context: context) }
     }
-    
+
     func evaluateCall(name: String, arguments: [Expression], context: Context) throws -> Expression {
 
         switch name {
@@ -360,7 +360,7 @@ extension Expression {
             throw EvaluationError.notAFunction(closure)
         }
     }
-    
+
     func evaluateCallFunction(function: Expression, closureContext: Context, arguments: [Expression], callingContext: Context, closure: Expression) throws -> Expression {
         switch function {
         case let .function(function):
@@ -374,13 +374,11 @@ extension Expression {
 
             // Detect tail calls if present.
             if case let .call(name, arguments) = body {
-                let evalArgs = try evaluate(arguments: arguments, context: finalContext)
-                return .tailCall(name, evalArgs)
+                return .tailCall(name, arguments, finalContext)
             } else if case let .scope(statements) = body {
                 let (last, scopeContext) = try semiEvaluateScope(statements: statements, context: finalContext)
                 if case let .call(name, arguments) = last {
-                    let evalArgs = try evaluate(arguments: arguments, context: scopeContext)
-                    return .tailCall(name, evalArgs)
+                    return .tailCall(name, arguments, scopeContext)
                 } else {
                     return try last.evaluate(context: scopeContext)
                 }
