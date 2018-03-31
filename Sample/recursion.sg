@@ -1,0 +1,11 @@
+#!/usr/bin/env song
+
+countdown(0, f) = f()
+countdown(n, f) = Do
+  out(n)
+  countdown(n-1, f)
+End
+
+[_,b|_].second = b
+
+countdown(args.second.number, || "Blast off!".out)
