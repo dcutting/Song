@@ -21,7 +21,7 @@ extension Expression {
     private func evaluate(expression: Expression, context: Context) throws -> Expression {
         switch expression {
 
-        case .bool, .number, .char, .ignore, .closure:
+        case .bool, .number, .char, .ignore, .closure, .tailCall:
             return expression
 
         case let .list(exprs):
@@ -60,9 +60,6 @@ extension Expression {
         case let .eval(function, arguments):
             let evalArgs = try evaluate(arguments: arguments, context: context)
             return try evaluateCallAnonymous(closure: function, arguments: evalArgs, callingContext: context)
-
-        case .tailCall:
-            return self
         }
     }
 
