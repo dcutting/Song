@@ -377,11 +377,13 @@ extension Expression {
                 return .tailCall(name, arguments, finalContext)
             } else if case let .scope(statements) = body {
                 let (last, scopeContext) = try semiEvaluateScope(statements: statements, context: finalContext)
+                let result: Expression
                 if case let .call(name, arguments) = last {
-                    return .tailCall(name, arguments, scopeContext)
+                    result = .tailCall(name, arguments, scopeContext)
                 } else {
-                    return try last.evaluate(context: scopeContext)
+                    result = try last.evaluate(context: scopeContext)
                 }
+                return result
             } else {
                 return try body.evaluate(context: finalContext)
             }
