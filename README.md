@@ -29,7 +29,7 @@ End
 loop()
 ```
 
-Song has no loops and no if statements. Instead, you use recursion and pattern matching. There are no reference types: everything is a value.
+Song has no if statements and no loops. Instead, you use pattern matching and recursion (tail calls are optimised). There are no reference types: everything is a value.
 
 Here are some more complex examples:
 
@@ -719,6 +719,8 @@ End
 "Welcome to Fibonacci".out
 loop()
 ```
+
+Song automatically detects tail call recursion like this and ensures new stack frames are not created for each iteration of the loop. More generally, this means your functions can recurse to any depth when written in tail call style.
 
 Scripts can also read arguments from the command-line passed in the `args` variable. The first argument will be the name of your script, so you'll usually want to read the second one:
 
