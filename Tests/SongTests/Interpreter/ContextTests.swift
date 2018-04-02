@@ -26,4 +26,13 @@ class ContextTests: XCTestCase {
         let right: Context = ["b": .int(4)]
         XCTAssertFalse(Song.isEqual(lhsContext: left, rhsContext: right))
     }
+
+    func test_contextsAreNotDynamicallyScoped() {
+        let foo = Function(name: "foo", patterns: [.name("x")], when: .bool(true), body: .name("n"))
+        let bar = Function(name: "bar", patterns: [.name("n")], when: .bool(true), body: .call("foo", [.name("n")]))
+        let context = try! declareSubfunctions([foo, bar])
+
+        let call = Expression.call("bar", [.int(5)])
+        XCTAssertThrowsError(try call.evaluate(context: context))
+    }
 }
