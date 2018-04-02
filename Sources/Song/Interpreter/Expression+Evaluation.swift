@@ -362,7 +362,7 @@ extension Expression {
         switch function {
         case let .function(function):
 
-            let extendedContext = try matchParameters(closureContext: closureContext, callingContext: callingContext, parameters: function.patterns, arguments: arguments)
+            let extendedContext = try matchParameters(closureContext: closureContext, parameters: function.patterns, arguments: arguments)
             let whenEvaluated = try function.when.evaluate(context: extendedContext)
             guard case .bool = whenEvaluated else { throw EvaluationError.notABoolean(function.when) }
             guard case .bool(true) = whenEvaluated else { throw EvaluationError.signatureMismatch(arguments) }
@@ -389,19 +389,19 @@ extension Expression {
         }
     }
 
-    private func matchParameters(closureContext: Context, callingContext: Context, parameters: [Expression], arguments: [Expression]) throws -> Context {
+    private func matchParameters(closureContext: Context, parameters: [Expression], arguments: [Expression]) throws -> Context {
         guard parameters.count <= arguments.count else { throw EvaluationError.signatureMismatch(arguments) }
         guard arguments.count <= parameters.count else { throw EvaluationError.signatureMismatch(arguments) }
 
         var extendedContext = closureContext
         var patternEqualityContext = Context()
         for (p, a) in zip(parameters, arguments) {
-            (extendedContext, patternEqualityContext) = try matchAndExtend(context: extendedContext, parameter: p, value: a, callingContext: callingContext, patternEqualityContext: patternEqualityContext)
+            (extendedContext, patternEqualityContext) = try matchAndExtend(context: extendedContext, parameter: p, value: a, patternEqualityContext: patternEqualityContext)
         }
         return extendedContext
     }
 
-    private func matchAndExtend(context: Context, parameter: Expression, value: Expression, callingContext: Context, patternEqualityContext: Context) throws -> (Context, Context) {
+    private func matchAndExtend(context: Context, parameter: Expression, value: Expression, patternEqualityContext: Context) throws -> (Context, Context) {
         var extendedContext = context
         var patternEqualityContext = patternEqualityContext
         switch parameter {
@@ -426,15 +426,15 @@ extension Expression {
             while paramHeads.count > 0 {
                 let paramHead = paramHeads.removeFirst()
                 let argHead = argItems.removeFirst()
-                (extendedContext, patternEqualityContext) = try matchAndExtend(context: extendedContext, parameter: paramHead, value: argHead, callingContext: callingContext, patternEqualityContext: patternEqualityContext)
+                (extendedContext, patternEqualityContext) = try matchAndExtend(context: extendedContext, parameter: paramHead, value: argHead, patternEqualityContext: patternEqualityContext)
             }
             let argTail = Expression.list(argItems)
-            (extendedContext, patternEqualityContext) = try matchAndExtend(context: extendedContext, parameter: paramTail, value: argTail, callingContext: callingContext, patternEqualityContext: patternEqualityContext)
+            (extendedContext, patternEqualityContext) = try matchAndExtend(context: extendedContext, parameter: paramTail, value: argTail, patternEqualityContext: patternEqualityContext)
         case .list(let paramItems):
             guard case let .list(argItems) = value else { throw EvaluationError.signatureMismatch([value]) }
             guard paramItems.count == argItems.count else { throw EvaluationError.signatureMismatch([value]) }
             for (p, a) in zip(paramItems, argItems) {
-                (extendedContext, patternEqualityContext) = try matchAndExtend(context: extendedContext, parameter: p, value: a, callingContext: callingContext, patternEqualityContext: patternEqualityContext)
+                (extendedContext, patternEqualityContext) = try matchAndExtend(context: extendedContext, parameter: p, value: a, patternEqualityContext: patternEqualityContext)
             }
         default:
             if parameter != value {    // NOTE: should this use Eq operator instead of Swift equality?
