@@ -28,11 +28,27 @@ class ContextTests: XCTestCase {
     }
 
     func test_call_contextsAreNotDynamicallyScoped() {
-        let foo = Function(name: "foo", patterns: [.name("x")], when: .yes, body: .name("n"))
-        let bar = Function(name: "bar", patterns: [.name("n")], when: .yes, body: .call("foo", [.name("n")]))
+        let foo = Function(name: "foo", patterns: [], when: .yes, body: .name("n"))
+        let bar = Function(name: "bar", patterns: [.name("n")], when: .yes, body: .call("foo", []))
         let context = try! declareSubfunctions([foo, bar])
-
         let call = Expression.call("bar", [.int(5)])
         XCTAssertThrowsError(try call.evaluate(context: context))
+    }
+
+    func test_scopeCall_contextsAreNotDynamicallyScoped() {
+        let foo = Function(name: "foo", patterns: [], when: .yes, body: .name("n"))
+        let context = try! declareSubfunctions([foo])
+        let scope = Expression.scope([.assign(variable: .name("n"), value: .int(5)), .call("foo", [])])
+        XCTAssertThrowsError(try scope.evaluate(context: context))
+    }
+
+    func test_call_globalsDefinedLaterAreAccessible() {
+        assertNoThrow {
+            let foo = Function(name: "foo", patterns: [], when: .yes, body: .name("n"))
+            var context = try declareSubfunctions([foo])
+            context = extendContext(context: context, name: "n", value: .int(5))
+            let call = Expression.call("foo", [])
+            XCTAssertEqual(Expression.int(5), try call.evaluate(context: context))
+        }
     }
 }

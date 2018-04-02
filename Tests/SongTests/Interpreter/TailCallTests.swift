@@ -36,4 +36,24 @@ class TailCallTests: XCTestCase {
             XCTAssertEqual(expected, actual)
         }
     }
+
+    func test_tailCallIsParameter() {
+        assertNoThrow {
+            let foo = Function(name: "foo", patterns: [.name("f")], when: .yes, body: .call("f", []))
+            let context = try declareSubfunctions([foo])
+            let call = Expression.call("foo", [.lambda([], .int(5))])
+            let actual = try call.evaluate(context: context)
+            XCTAssertEqual(Expression.int(5), actual)
+        }
+    }
+
+    func test_tailCallIsBuiltIn() {
+        assertNoThrow {
+            let foo = Function(name: "foo", patterns: [], when: .yes, body: .call("+", [.int(1), .int(2)]))
+            let context = try declareSubfunctions([foo])
+            let call = Expression.call("foo", [])
+            let actual = try call.evaluate(context: context)
+            XCTAssertEqual(Expression.int(3), actual)
+        }
+    }
 }
