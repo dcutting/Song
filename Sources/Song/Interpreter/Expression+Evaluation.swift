@@ -51,9 +51,8 @@ extension Expression {
             let evalArgs = try evaluate(arguments: arguments, context: context)
             var intermediate = try evaluateCall(name: name, arguments: evalArgs, context: context)
             // Trampoline tail calls.
-            while case let .tailCall(tailName, tailArgs, tailContext) = intermediate {
-                let evalArgs = try evaluate(arguments: tailArgs, context: tailContext)
-                intermediate = try evaluateCall(name: tailName, arguments: evalArgs, context: tailContext)
+            while case let .tailCall(tailName, tailArgs) = intermediate {
+                intermediate = try evaluateCall(name: tailName, arguments: tailArgs, context: context)
             }
             return intermediate
 
@@ -371,12 +370,14 @@ extension Expression {
 
             // Detect tail calls if present.
             if case let .call(name, arguments) = body {
-                return .tailCall(name, arguments, finalContext)
+                let evalArgs = try evaluate(arguments: arguments, context: finalContext)
+                return .tailCall(name, evalArgs)
             } else if case let .scope(statements) = body {
                 let (last, scopeContext) = try semiEvaluateScope(statements: statements, context: finalContext)
                 let result: Expression
                 if case let .call(name, arguments) = last {
-                    result = .tailCall(name, arguments, scopeContext)
+                    let evalArgs = try evaluate(arguments: arguments, context: finalContext)
+                    result = .tailCall(name, evalArgs)
                 } else {
                     result = try last.evaluate(context: scopeContext)
                 }
@@ -504,6 +505,7 @@ extension Expression {
                     shadowedFunctions.insert(name)
                 }
             }
+            // TODO: evaluating calls in scopeContext is not really right - this would make them dynamically scoped.
             let result = try statement.evaluate(context: scopeContext)
             if case .closure(let name, _, _) = result {
                 if let name = name {
