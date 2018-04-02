@@ -1,0 +1,7 @@
+#!/usr/bin/env song
+
+x.foo = n
+n.bar = n.foo
+
+5.bar.out
+4.foo.out
