@@ -1,7 +1,8 @@
 #!/usr/bin/env song
 
-x.foo = n
-n.bar = n.foo
+foo(x) = n
 
-5.bar.out
-4.foo.out
+Do
+  n = 5
+  foo(2).out
+End
