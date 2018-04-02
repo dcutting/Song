@@ -23,6 +23,14 @@ public indirect enum Expression {
 
 public extension Expression {
 
+    public static var yes: Expression {
+        return .bool(true)
+    }
+
+    public static var no: Expression {
+        return .bool(false)
+    }
+
     public static func int(_ int: IntType) -> Expression {
         return .number(.int(int))
     }
@@ -36,6 +44,6 @@ public extension Expression {
     }
 
     public static func lambda(_ patterns: [Expression], _ body: Expression) -> Expression {
-        return .function(Function(name: nil, patterns: patterns, when: .bool(true), body: body))
+        return .function(Function(name: nil, patterns: patterns, when: .yes, body: body))
     }
 }

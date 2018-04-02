@@ -19,7 +19,7 @@ extension Function: CustomStringConvertible {
         let params = patterns.map(String.init).joined(separator: ", ")
         let funcName = name ?? "λ"
         var whenClause = ""
-        if when != .bool(true) {
+        if when != .yes {
             whenClause = " When \(when)"
         }
         return "\(funcName)(\(params))\(whenClause) = \(body)"

@@ -4,30 +4,30 @@ import Song
 class PatternTests: XCTestCase {
 
     lazy var functions: [Function] = [
-        Function(name: "ignoreVariableFunc", patterns: [.ignore], when: .bool(true), body: .string("ok")),
-        Function(name: "booleanLiteralFunc", patterns: [.bool(false)], when: .bool(true), body: .string("ok")),
-        Function(name: "numberLiteralFunc", patterns: [.int(2)], when: .bool(true), body: .string("ok")),
-        Function(name: "listLiteralFunc", patterns: [.list([.int(1), .int(2)])], when: .bool(true), body: .string("ok")),
-        Function(name: "listConstructorLiteralFunc", patterns: [.cons([.int(1)], .list([.int(2)]))], when: .bool(true), body: .string("ok")),
-        Function(name: "listConstructorVariableFunc", patterns: [.cons([.int(1), .int(2)], .list([.name("xs")]))], when: .bool(true), body: .string("ok")),
-        Function(name: "nestedListConstructorLiteralFunc", patterns: [.cons([.list([.int(1)])], .list([.int(2)]))], when: .bool(true), body: .string("ok")),
-        Function(name: "zip", patterns: [.list([.list([]), .list([])])], when: .bool(true), body: .list([])),
+        Function(name: "ignoreVariableFunc", patterns: [.ignore], when: .yes, body: .string("ok")),
+        Function(name: "booleanLiteralFunc", patterns: [.no], when: .yes, body: .string("ok")),
+        Function(name: "numberLiteralFunc", patterns: [.int(2)], when: .yes, body: .string("ok")),
+        Function(name: "listLiteralFunc", patterns: [.list([.int(1), .int(2)])], when: .yes, body: .string("ok")),
+        Function(name: "listConstructorLiteralFunc", patterns: [.cons([.int(1)], .list([.int(2)]))], when: .yes, body: .string("ok")),
+        Function(name: "listConstructorVariableFunc", patterns: [.cons([.int(1), .int(2)], .list([.name("xs")]))], when: .yes, body: .string("ok")),
+        Function(name: "nestedListConstructorLiteralFunc", patterns: [.cons([.list([.int(1)])], .list([.int(2)]))], when: .yes, body: .string("ok")),
+        Function(name: "zip", patterns: [.list([.list([]), .list([])])], when: .yes, body: .list([])),
         Function(name: "zip",
                     patterns: [.list([
                         .cons([.name("x")], .name("xs")),
                         .cons([.name("y")], .name("ys"))
                         ])],
-                    when: .bool(true),
+                    when: .yes,
                     body: .call("+", [
                         .list([.list([.name("x"), .name("y")])]),
                         .call("zip", [.list([.name("xs"), .name("ys")])])
                         ])),
-        Function(name: "variableFunc", patterns: [.name("x")], when: .bool(true), body: .name("x")),
-        Function(name: "repeatedVariableFunc", patterns: [.name("x"), .name("x")], when: .bool(true), body: .name("x")),
+        Function(name: "variableFunc", patterns: [.name("x")], when: .yes, body: .name("x")),
+        Function(name: "repeatedVariableFunc", patterns: [.name("x"), .name("x")], when: .yes, body: .name("x")),
         Function(name: "repeatedNestedVariableFunc",
                     patterns: [.cons([.name("x")], .ignore),
                                .cons([.name("x")], .ignore)],
-                    when: .bool(true),
+                    when: .yes,
                     body: .name("x")),
     ]
 
@@ -57,14 +57,14 @@ class PatternTests: XCTestCase {
 
     func test_boolLiteral_match_evaluates() {
         assertNoThrow {
-            let call = Expression.call("booleanLiteralFunc", [.bool(false)])
+            let call = Expression.call("booleanLiteralFunc", [.no])
             let actual = try call.evaluate(context: context)
             XCTAssertEqual(Expression.string("ok"), actual)
         }
     }
 
     func test_boolLiteral_noMatch_fails() {
-        let call = Expression.call("booleanLiteralFunc", [.bool(true)])
+        let call = Expression.call("booleanLiteralFunc", [.yes])
         XCTAssertThrowsError(try call.evaluate(context: context))
     }
 
@@ -173,7 +173,7 @@ class PatternTests: XCTestCase {
 
             var context: Context = ["x": .int(5)]
 
-            let foo = Function(name: "foo", patterns: [.name("x"), .name("x")], when: .bool(true), body: .name("x"))
+            let foo = Function(name: "foo", patterns: [.name("x"), .name("x")], when: .yes, body: .name("x"))
 
             context = try declareSubfunctions([.function(foo)], in: context)
             

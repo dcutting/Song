@@ -213,14 +213,14 @@ extension Expression {
                     }
                 } catch EvaluationError.notACharacter {
                     result = try listOp(arguments: arguments, context: context) { left, right in
-                        guard left.count == right.count else { return .bool(false) }
+                        guard left.count == right.count else { return .no }
                         for (l, r) in zip(left, right) {
                             let lrEq = try evaluateEq(arguments: [l, r], context: context)
-                            if case .bool(false) = lrEq {
-                                return .bool(false)
+                            if case .no = lrEq {
+                                return .no
                             }
                         }
-                        return .bool(true)
+                        return .yes
                     }
                     // TODO: need propr equality check for listCons too.
                 }
@@ -364,7 +364,7 @@ extension Expression {
             let extendedContext = try matchParameters(closureContext: closureContext, parameters: function.patterns, arguments: arguments)
             let whenEvaluated = try function.when.evaluate(context: extendedContext)
             guard case .bool = whenEvaluated else { throw EvaluationError.notABoolean(function.when) }
-            guard case .bool(true) = whenEvaluated else { throw EvaluationError.signatureMismatch(arguments) }
+            guard case .yes = whenEvaluated else { throw EvaluationError.signatureMismatch(arguments) }
             let finalContext = callingContext.merging(extendedContext) { l, r in r }
             let body = function.body
 

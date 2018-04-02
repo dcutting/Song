@@ -35,17 +35,17 @@ Evaluation error
     }
 
     func test_notANumber() {
-        let error = EvaluationError.notANumber(.bool(true))
+        let error = EvaluationError.notANumber(.yes)
         XCTAssertEqual("Evaluation error\n 💥  need a number, not Yes", "\(error)")
     }
 
     func test_notAList() {
-        let error = EvaluationError.notAList(.bool(true))
+        let error = EvaluationError.notAList(.yes)
         XCTAssertEqual("Evaluation error\n 💥  need a list, not Yes", "\(error)")
     }
 
     func test_notAFunction() {
-        let error = EvaluationError.notAFunction(.bool(true))
+        let error = EvaluationError.notAFunction(.yes)
         XCTAssertEqual("Evaluation error\n 💥  need a function, not Yes", "\(error)")
     }
 

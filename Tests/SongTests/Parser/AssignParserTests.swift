@@ -10,7 +10,7 @@ class AssignParserTests: XCTestCase {
         "double = |x| x * 2".makes(.assign(variable: .name("double"), value:
             .function(Function(name: nil,
                                patterns: [.name("x")],
-                               when: .bool(true),
+                               when: .yes,
                                body: .call("*", [.name("x"), .int(2)])))))
     }
 

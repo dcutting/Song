@@ -24,7 +24,7 @@ class ExpressionParserTests: XCTestCase {
         "12 Div 5".makes(.call("Div", [.int(12), .int(5)]))
         "12 Mod 5".makes(.call("Mod", [.int(12), .int(5)]))
         "x Eq 5".makes(.call("Eq", [.name("x"), .int(5)]))
-        "Do 2, 5 < 7 End And Do Yes End".makes(.call("And", [.scope([.int(2), .call("<", [.int(5), .int(7)])]), .scope([.bool(true)])]))
+        "Do 2, 5 < 7 End And Do Yes End".makes(.call("And", [.scope([.int(2), .call("<", [.int(5), .int(7)])]), .scope([.yes])]))
 
         "4 Neq 8".makes(.call("Neq", [.int(4), .int(8)]))
         "\"hi\" Neq \"ho\"".makes(.call("Neq", [.string("hi"), .string("ho")]))

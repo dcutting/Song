@@ -18,8 +18,8 @@ class BuiltinFunctionTests: XCTestCase {
         XCTAssertThrowsError(try Expression.call(">=", [.int(5), .string("hi")]).evaluate())
         XCTAssertThrowsError(try Expression.call("Eq", [.int(5), .string("hi")]).evaluate())
         XCTAssertThrowsError(try Expression.call("Neq", [.int(5), .string("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("And", [.bool(true), .string("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Or", [.bool(true), .string("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call("And", [.yes, .string("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call("Or", [.yes, .string("hi")]).evaluate())
         XCTAssertThrowsError(try Expression.call("Not", [.string("hi")]).evaluate())
     }
 
@@ -50,12 +50,12 @@ class BuiltinFunctionTests: XCTestCase {
         XCTAssertThrowsError(try Expression.call("Eq", [.int(1), .int(2), .int(3)]).evaluate())
         XCTAssertThrowsError(try Expression.call("Neq", [.int(1)]).evaluate())
         XCTAssertThrowsError(try Expression.call("Neq", [.int(1), .int(2), .int(3)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("And", [.bool(true)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("And", [.bool(true), .bool(true), .bool(true)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Or", [.bool(true)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Or", [.bool(true), .bool(true), .bool(true)]).evaluate())
+        XCTAssertThrowsError(try Expression.call("And", [.yes]).evaluate())
+        XCTAssertThrowsError(try Expression.call("And", [.yes, .yes, .yes]).evaluate())
+        XCTAssertThrowsError(try Expression.call("Or", [.yes]).evaluate())
+        XCTAssertThrowsError(try Expression.call("Or", [.yes, .yes, .yes]).evaluate())
         XCTAssertThrowsError(try Expression.call("Not", []).evaluate())
-        XCTAssertThrowsError(try Expression.call("Not", [.bool(true), .bool(true)]).evaluate())
+        XCTAssertThrowsError(try Expression.call("Not", [.yes, .yes]).evaluate())
     }
 
     // Evaluates arguments.
@@ -102,50 +102,50 @@ class BuiltinFunctionTests: XCTestCase {
 
         assertNoThrow {
             let op = try Expression.call("<", [first, second]).evaluate(context: context)
-            XCTAssertEqual(Expression.bool(false), op)
+            XCTAssertEqual(Expression.no, op)
         }
 
         assertNoThrow {
             let op = try Expression.call(">", [first, second]).evaluate(context: context)
-            XCTAssertEqual(Expression.bool(true), op)
+            XCTAssertEqual(Expression.yes, op)
         }
 
         assertNoThrow {
             let op = try Expression.call("<=", [first, second]).evaluate(context: context)
-            XCTAssertEqual(Expression.bool(false), op)
+            XCTAssertEqual(Expression.no, op)
         }
 
         assertNoThrow {
             let op = try Expression.call(">=", [first, second]).evaluate(context: context)
-            XCTAssertEqual(Expression.bool(true), op)
+            XCTAssertEqual(Expression.yes, op)
         }
 
         assertNoThrow {
             let op = try Expression.call("Eq", [first, second]).evaluate(context: context)
-            XCTAssertEqual(Expression.bool(false), op)
+            XCTAssertEqual(Expression.no, op)
         }
 
         assertNoThrow {
             let op = try Expression.call("Neq", [first, second]).evaluate(context: context)
-            XCTAssertEqual(Expression.bool(true), op)
+            XCTAssertEqual(Expression.yes, op)
         }
 
         assertNoThrow {
             let op = Expression.call("And", [first, second])
-            let result = try op.evaluate(context: ["x": .bool(true), "y": .bool(false)])
-            XCTAssertEqual(Expression.bool(false), result)
+            let result = try op.evaluate(context: ["x": .yes, "y": .no])
+            XCTAssertEqual(Expression.no, result)
         }
 
         assertNoThrow {
             let op = Expression.call("Or", [first, second])
-            let result = try op.evaluate(context: ["x": .bool(false), "y": .bool(true)])
-            XCTAssertEqual(Expression.bool(true), result)
+            let result = try op.evaluate(context: ["x": .no, "y": .yes])
+            XCTAssertEqual(Expression.yes, result)
         }
 
         assertNoThrow {
             let op = Expression.call("Not", [first])
-            let result = try op.evaluate(context: ["x": .bool(false)])
-            XCTAssertEqual(Expression.bool(true), result)
+            let result = try op.evaluate(context: ["x": .no])
+            XCTAssertEqual(Expression.yes, result)
         }
     }
 }

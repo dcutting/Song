@@ -5,7 +5,7 @@ class EvalTests: XCTestCase {
 
     func test_description() {
         assertNoThrow {
-            let function = Function(name: "echo", patterns: [.name("x"), .name("y")], when: .bool(true), body: .name("x"))
+            let function = Function(name: "echo", patterns: [.name("x"), .name("y")], when: .yes, body: .name("x"))
             let closure = try Expression.function(function).evaluate()
             let eval = Expression.eval( closure, [.int(99), .int(100)])
             XCTAssertEqual("[() [echo(x, y) = x]](99, 100)", "\(eval)")
@@ -43,7 +43,7 @@ class EvalTests: XCTestCase {
 
     func test_evaluate_callingFunctionReferencedInContext() {
         assertNoThrow {
-            let function = Expression.function(Function(name: "five", patterns: [], when: .bool(true), body: .int(5)))
+            let function = Expression.function(Function(name: "five", patterns: [], when: .yes, body: .int(5)))
             let closure = try function.evaluate()
             let eval = Expression.eval(.name("f"), [])
             let result = try eval.evaluate(context: ["f": closure])
@@ -53,7 +53,7 @@ class EvalTests: XCTestCase {
 
     func test_evaluate_closureWithoutParameters() {
         assertNoThrow {
-            let function = Expression.function(Function(name: "five", patterns: [], when: .bool(true), body: .int(5)))
+            let function = Expression.function(Function(name: "five", patterns: [], when: .yes, body: .int(5)))
             let closure = try function.evaluate()
             let call = Expression.eval(closure, [])
             let result = try call.evaluate()
@@ -62,7 +62,7 @@ class EvalTests: XCTestCase {
     }
 
     func test_evaluate_closureReferencesDeclarationContext() {
-        let function = Expression.function(Function(name: "getX", patterns: [], when: .bool(true), body: .name("x")))
+        let function = Expression.function(Function(name: "getX", patterns: [], when: .yes, body: .name("x")))
         assertNoThrow {
             let closure = try function.evaluate(context: ["x": .int(7)])
             let call = Expression.eval(closure, [])
@@ -72,7 +72,7 @@ class EvalTests: XCTestCase {
     }
 
     func test_evaluate_closureCapturesCallingContext() {
-        let function = Expression.function(Function(name: "getX", patterns: [], when: .bool(true), body: .name("x")))
+        let function = Expression.function(Function(name: "getX", patterns: [], when: .yes, body: .name("x")))
         assertNoThrow {
             let closure = try function.evaluate()
             let call = Expression.eval(closure, [])
@@ -81,7 +81,7 @@ class EvalTests: XCTestCase {
     }
 
     func test_evaluate_closureWithParameter() {
-        let function = Expression.function(Function(name: "echo", patterns: [.name("x")], when: .bool(true), body: .name("x")))
+        let function = Expression.function(Function(name: "echo", patterns: [.name("x")], when: .yes, body: .name("x")))
         assertNoThrow {
             let closure = try function.evaluate()
             let call = Expression.eval(closure, [.int(7)])
@@ -91,7 +91,7 @@ class EvalTests: XCTestCase {
     }
 
     func test_evaluate_closureWithArgumentReferencingCallingContext() {
-        let function = Expression.function(Function(name: "echo", patterns: [.name("x")], when: .bool(true), body: .name("x")))
+        let function = Expression.function(Function(name: "echo", patterns: [.name("x")], when: .yes, body: .name("x")))
         assertNoThrow {
             let closure = try function.evaluate()
             let call = Expression.eval(closure, [.name("y")])
@@ -101,7 +101,7 @@ class EvalTests: XCTestCase {
     }
 
     func test_evaluate_closureWithoutEnoughArguments() {
-        let function = Expression.function(Function(name: "echo", patterns: [.name("x"), .name("y")], when: .bool(true), body: .name("x")))
+        let function = Expression.function(Function(name: "echo", patterns: [.name("x"), .name("y")], when: .yes, body: .name("x")))
         assertNoThrow {
             let closure = try function.evaluate()
             let call = Expression.eval(closure, [.int(7)])
@@ -110,7 +110,7 @@ class EvalTests: XCTestCase {
     }
 
     func test_evaluate_closureWithTooManyArguments() {
-        let function = Expression.function(Function(name: "echo", patterns: [.name("x")], when: .bool(true), body: .name("x")))
+        let function = Expression.function(Function(name: "echo", patterns: [.name("x")], when: .yes, body: .name("x")))
         assertNoThrow {
             let closure = try function.evaluate()
             let call = Expression.eval(closure, [.int(7), .int(8)])
@@ -119,7 +119,7 @@ class EvalTests: XCTestCase {
     }
 
     func test_evaluate_lambda() {
-        let function = Function(name: nil, patterns: [.name("x")], when: .bool(true), body: .name("x"))
+        let function = Function(name: nil, patterns: [.name("x")], when: .yes, body: .name("x"))
         assertNoThrow {
             let lambda = try Expression.function(function).evaluate()
             let call = Expression.eval(lambda, [.int(7)])

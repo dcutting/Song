@@ -29,11 +29,11 @@ public func makeTransformer() -> Transformer<Expression> {
     // Literals.
 
     t.rule(["true": .simple("")]) { _ in
-        .bool(true)
+        .yes
     }
 
     t.rule(["false": .simple("")]) { _ in
-        .bool(false)
+        .no
     }
 
     t.rule(["integer": .simple("i")]) {
@@ -115,7 +115,7 @@ public func makeTransformer() -> Transformer<Expression> {
     }
 
     t.rule(["params": .series("params"), "body": .simple("body")]) {
-        .function(Function(name: nil, patterns: try $0.vals("params"), when: .bool(true), body: try $0.val("body")))
+        .function(Function(name: nil, patterns: try $0.vals("params"), when: .yes, body: try $0.val("body")))
     }
 
     t.rule(["lambda": .simple("lambda")]) {
@@ -148,7 +148,7 @@ public func makeTransformer() -> Transformer<Expression> {
 
     t.rule(["anonCall": .simple("args")]) {
         guard case .list(let args) = try $0.val("args") else { throw SongTransformError.notArgs }
-        let dummy = Expression.bool(false)
+        let dummy = Expression.no
         return .eval(dummy, args)
     }
 
@@ -233,7 +233,7 @@ private func transformFunction(args: TransformerReducerArguments<Expression>) th
         let subject = try args.val("subject")
         params.insert(subject, at: 0)
     } catch {}
-    var when = Expression.bool(true)
+    var when = Expression.yes
     do {
         when = try args.val("guard")
     } catch {}

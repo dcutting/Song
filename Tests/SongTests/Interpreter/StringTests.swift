@@ -51,11 +51,11 @@ class StringTests: XCTestCase {
 
         assertNoThrow {
             let call = Expression.call("Eq", [left, right])
-            XCTAssertEqual(Expression.bool(true), try call.evaluate())
+            XCTAssertEqual(Expression.yes, try call.evaluate())
         }
         assertNoThrow {
             let call = Expression.call("Neq", [left, right])
-            XCTAssertEqual(Expression.bool(false), try call.evaluate())
+            XCTAssertEqual(Expression.no, try call.evaluate())
         }
     }
 
@@ -65,11 +65,11 @@ class StringTests: XCTestCase {
 
         assertNoThrow {
             let call = Expression.call("Eq", [left, right])
-            XCTAssertEqual(Expression.bool(false), try call.evaluate())
+            XCTAssertEqual(Expression.no, try call.evaluate())
         }
         assertNoThrow {
             let call = Expression.call("Neq", [left, right])
-            XCTAssertEqual(Expression.bool(true), try call.evaluate())
+            XCTAssertEqual(Expression.yes, try call.evaluate())
         }
     }
 }

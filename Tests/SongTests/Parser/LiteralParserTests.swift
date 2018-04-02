@@ -4,9 +4,9 @@ import Song
 class LiteralParserTests: XCTestCase {
 
     func test_bools() {
-        "Yes".makes(.bool(true))
-        "No".makes(.bool(false))
-        " Yes ".makes(.bool(true))
+        "Yes".makes(.yes)
+        "No".makes(.no)
+        " Yes ".makes(.yes)
     }
 
     func test_ints() {
@@ -52,11 +52,11 @@ class LiteralParserTests: XCTestCase {
     func test_lists() {
         "[]".makes(.list([]))
         " [] ".makes(.list([]))
-        "[1,No]".makes(.list([.int(1), .bool(false)]))
-        "[ 1 , Yes , \"hi\" ]".makes(.list([.int(1), .bool(true), .string("hi")]))
+        "[1,No]".makes(.list([.int(1), .no]))
+        "[ 1 , Yes , \"hi\" ]".makes(.list([.int(1), .yes, .string("hi")]))
         "[[1,2],[No,4], [], \"hi\"]".makes(.list([
             .list([.int(1), .int(2)]),
-            .list([.bool(false), .int(4)]),
+            .list([.no, .int(4)]),
             .list([]),
             .string("hi")
             ]))
@@ -66,14 +66,14 @@ class LiteralParserTests: XCTestCase {
 
   No
 ]
-""".makes(.list([.int(1), .bool(false)]))
+""".makes(.list([.int(1), .no]))
     }
 
     func test_cons() {
         "[x|xs]".makes(.cons([.name("x")], .name("xs")))
         "[x,y|xs]".makes(.cons([.name("x"), .name("y")], .name("xs")))
         "[ 1 , x | xs ]".makes(.cons([.int(1), .name("x")], .name("xs")))
-        "[Yes|2]".makes(.cons([.bool(true)], .int(2)))
+        "[Yes|2]".makes(.cons([.yes], .int(2)))
         "[ f(x) | g(x) ]".makes(.cons([.call("f", [.name("x")])],
                                       .call("g", [.name("x")])))
         "[1,2|[3,4|[5,6]]]".makes(.cons(

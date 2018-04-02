@@ -35,7 +35,7 @@ class FunctionTests: XCTestCase {
     }
 
     func test_evaluate_patternIsAFloat_throws() {
-        let function = Expression.function(Function(name: "foo", patterns: [.float(1.0)], when: .bool(true), body: .bool(true)))
+        let function = Expression.function(Function(name: "foo", patterns: [.float(1.0)], when: .yes, body: .yes))
         XCTAssertThrowsError(try function.evaluate())
     }
 
@@ -47,7 +47,7 @@ class FunctionTests: XCTestCase {
     private func makeNamedFunction() -> Expression {
         let function = Function(name: "foo",
                                       patterns: [.name("a"), .name("b")],
-                                      when: .bool(true),
+                                      when: .yes,
                                       body: .name("x"))
         return .function(function)
     }

@@ -25,7 +25,7 @@ class ClosureTests: XCTestCase {
     private func makeNamedFunction() -> Expression {
         let function = Function(name: "foo",
                                 patterns: [.name("a"), .name("b")],
-                                when: .bool(true),
+                                when: .yes,
                                 body: .name("x"))
         return .function(function)
     }

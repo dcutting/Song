@@ -16,7 +16,7 @@ class InOutTests: XCTestCase {
     }
 
     func test_out_closureValue_doesNotIncludeContext() {
-        let function = Expression.function(Function(name: "foo", patterns: [], when: .bool(true), body: .int(99)))
+        let function = Expression.function(Function(name: "foo", patterns: [], when: .yes, body: .int(99)))
         let context: Context = ["a": .int(5)]
         let string = Expression.closure("foo", [function], context)
         let actual = string.out()
@@ -47,7 +47,7 @@ class InOutTests: XCTestCase {
         assertNoThrow {
             let stdOut = SpyStdOut()
             _stdOut = stdOut
-            let call = Expression.call("out", [.int(99), .string("is in"), .list([.bool(true), .int(99)])])
+            let call = Expression.call("out", [.int(99), .string("is in"), .list([.yes, .int(99)])])
             XCTAssertEqual(Expression.string("99 is in [Yes, 99]"), try call.evaluate())
             XCTAssertEqual("99 is in [Yes, 99]\n", stdOut.actual)
         }
@@ -57,7 +57,7 @@ class InOutTests: XCTestCase {
         assertNoThrow {
             let stdErr = SpyStdOut()
             _stdErr = stdErr
-            let call = Expression.call("err", [.int(99), .string("is in"), .list([.bool(true), .int(99)])])
+            let call = Expression.call("err", [.int(99), .string("is in"), .list([.yes, .int(99)])])
             XCTAssertEqual(Expression.string("99 is in [Yes, 99]"), try call.evaluate())
             XCTAssertEqual("99 is in [Yes, 99]\n", stdErr.actual)
         }

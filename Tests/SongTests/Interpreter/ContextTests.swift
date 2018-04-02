@@ -10,8 +10,8 @@ class ContextTests: XCTestCase {
     }
 
     func test_isEqual_simple_same_returnsTrue() {
-        let left: Context = ["a": .string("hi"), "b": .bool(true)]
-        let right: Context = ["a": .string("hi"), "b": .bool(true)]
+        let left: Context = ["a": .string("hi"), "b": .yes]
+        let right: Context = ["a": .string("hi"), "b": .yes]
         XCTAssertTrue(Song.isEqual(lhsContext: left, rhsContext: right))
     }
 
@@ -27,9 +27,9 @@ class ContextTests: XCTestCase {
         XCTAssertFalse(Song.isEqual(lhsContext: left, rhsContext: right))
     }
 
-    func test_contextsAreNotDynamicallyScoped() {
-        let foo = Function(name: "foo", patterns: [.name("x")], when: .bool(true), body: .name("n"))
-        let bar = Function(name: "bar", patterns: [.name("n")], when: .bool(true), body: .call("foo", [.name("n")]))
+    func test_call_contextsAreNotDynamicallyScoped() {
+        let foo = Function(name: "foo", patterns: [.name("x")], when: .yes, body: .name("n"))
+        let bar = Function(name: "bar", patterns: [.name("n")], when: .yes, body: .call("foo", [.name("n")]))
         let context = try! declareSubfunctions([foo, bar])
 
         let call = Expression.call("bar", [.int(5)])

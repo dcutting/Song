@@ -27,7 +27,7 @@ class CallTests: XCTestCase {
     }
 
     func test_evaluate_closure_nonBooleanWhenClause_throws() {
-        let function = Expression.function(Function(name: "echo", patterns: [], when: .int(1), body: .bool(true)))
+        let function = Expression.function(Function(name: "echo", patterns: [], when: .int(1), body: .yes))
         assertNoThrow {
             let closure = try function.evaluate()
             let context: Context = ["echo": closure]
@@ -37,7 +37,7 @@ class CallTests: XCTestCase {
     }
 
     func test_evaluate_closure_falseWhenClause_throws() {
-        let function = Expression.function(Function(name: "echo", patterns: [], when: .bool(false), body: .bool(true)))
+        let function = Expression.function(Function(name: "echo", patterns: [], when: .no, body: .yes))
         assertNoThrow {
             let closure = try function.evaluate()
             let context: Context = ["echo": closure]
@@ -47,7 +47,7 @@ class CallTests: XCTestCase {
     }
 
     func test_evaluate_closure_trueWhenClause_succeeds() {
-        let function = Expression.function(Function(name: "echo", patterns: [], when: .bool(true), body: .int(9)))
+        let function = Expression.function(Function(name: "echo", patterns: [], when: .yes, body: .int(9)))
         assertNoThrow {
             let closure = try function.evaluate()
             let context: Context = ["echo": closure]
