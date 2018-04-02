@@ -1,3 +1,5 @@
+public typealias BuiltIn = ([Expression], Context) throws -> Expression
+
 public indirect enum Expression {
 
     case bool(Bool)
@@ -19,6 +21,8 @@ public indirect enum Expression {
     case eval(Expression, [Expression])
 
     case tailEval(Expression, [Expression])
+
+    case builtIn(BuiltIn)
 }
 
 public extension Expression {

@@ -2,10 +2,14 @@ var _stdIn: StdIn = DefaultStdIn()
 var _stdOut: StdOut = DefaultStdOut()
 var _stdErr: StdOut = DefaultStdErr()
 
+let rootContext: Context = [
+    "Eq": .builtIn(evaluateEq)
+]
+
 extension Expression {
 
     public func evaluate() throws -> Expression {
-        return try evaluate(context: Context())
+        return try evaluate(context: rootContext)
     }
 
     public func evaluate(context: Context) throws -> Expression {
@@ -21,7 +25,7 @@ extension Expression {
     private func evaluate(expression: Expression, context: Context) throws -> Expression {
         switch expression {
 
-        case .bool, .number, .char, .ignore, .closure, .tailEval:
+        case .bool, .number, .char, .ignore, .closure, .tailEval, .builtIn:
             return expression
 
         case let .list(exprs):
@@ -66,7 +70,7 @@ extension Expression {
         return try arguments.map { try $0.evaluate(context: context) }
     }
 
-    func evaluateCall(name: String, arguments: [Expression], context: Context) throws -> Expression {
+    private func evaluateBuiltIn(name: String, arguments: [Expression], context: Context) throws -> Expression {
 
         switch name {
         case "*":
@@ -190,118 +194,7 @@ extension Expression {
         case "err":
             return try evaluateErr(arguments: arguments, context: context)
         default:
-            return try evaluateUserFunction(name: name, arguments: arguments, context: context)
-        }
-    }
-
-    private func evaluateEq(arguments: [Expression], context: Context) throws -> Expression {
-        guard arguments.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
-        let result: Expression
-        do {
-            result = try booleanOp(arguments: arguments, context: context) {
-                .bool($0 == $1)
-            }
-        } catch EvaluationError.notABoolean {
-            do {
-                result = try numberOp(arguments: arguments, context: context) {
-                    try .bool($0.equalTo($1))
-                }
-            } catch EvaluationError.notANumber {
-                do {
-                    result = try characterOp(arguments: arguments, context: context) {
-                        .bool($0 == $1)
-                    }
-                } catch EvaluationError.notACharacter {
-                    result = try listOp(arguments: arguments, context: context) { left, right in
-                        guard left.count == right.count else { return .no }
-                        for (l, r) in zip(left, right) {
-                            let lrEq = try evaluateEq(arguments: [l, r], context: context)
-                            if case .no = lrEq {
-                                return .no
-                            }
-                        }
-                        return .yes
-                    }
-                    // TODO: need propr equality check for listCons too.
-                }
-            }
-        }
-        return result
-    }
-
-    private func extractNumber(_ expression: Expression, context: Context) throws -> Number {
-        if case .number(let number) = try expression.evaluate(context: context) {
-            return number
-        }
-        throw EvaluationError.notANumber(expression)
-    }
-
-    private func extractBool(_ expression: Expression, context: Context) throws -> Bool {
-        if case .bool(let value) = try expression.evaluate(context: context) {
-            return value
-        }
-        throw EvaluationError.notABoolean(expression)
-    }
-
-    private func extractCharacter(_ expression: Expression, context: Context) throws -> Character {
-        if case .char(let value) = try expression.evaluate(context: context) {
-            return value
-        }
-        throw EvaluationError.notACharacter
-    }
-
-    private func extractList(_ expression: Expression, context: Context) throws -> [Expression] {
-        if case .list(let list) = try expression.evaluate(context: context) {
-            return list
-        }
-        throw EvaluationError.notAList(expression)
-    }
-
-    private func numberOp(arguments: [Expression], context: Context, callback: (Number, Number) throws -> Expression) throws -> Expression {
-        var numbers = arguments
-        let left = try extractNumber(numbers.removeFirst(), context: context)
-        let right = try extractNumber(numbers.removeFirst(), context: context)
-        return try callback(left, right)
-    }
-
-    private func booleanOp(arguments: [Expression], context: Context, callback: (Bool, Bool) throws -> Expression) throws -> Expression {
-        var bools = arguments
-        let left = try extractBool(bools.removeFirst(), context: context)
-        let right = try extractBool(bools.removeFirst(), context: context)
-        return try callback(left, right)
-    }
-
-    private func characterOp(arguments: [Expression], context: Context, callback: (Character, Character) throws -> Expression) throws -> Expression {
-        var chars = arguments
-        let left = try extractCharacter(chars.removeFirst(), context: context)
-        let right = try extractCharacter(chars.removeFirst(), context: context)
-        return try callback(left, right)
-    }
-
-    private func listOp(arguments: [Expression], context: Context, callback: ([Expression], [Expression]) throws -> Expression) throws -> Expression {
-        var lists = arguments
-        let left = try extractList(lists.removeFirst(), context: context)
-        let right = try extractList(lists.removeFirst(), context: context)
-        return try callback(left, right)
-    }
-
-    private func toNumbers(arguments: [Expression], context: Context) throws -> [Number] {
-        return try arguments.map { arg -> Number in
-            let evaluatedArg = try arg.evaluate(context: context)
-            guard case let .number(n) = evaluatedArg else {
-                throw EvaluationError.notANumber(evaluatedArg)
-            }
-            return n
-        }
-    }
-
-    private func toBools(arguments: [Expression], context: Context) throws -> [Bool] {
-        return try arguments.map { arg -> Bool in
-            let evaluatedArg = try arg.evaluate(context: context)
-            guard case let .bool(n) = evaluatedArg else {
-                throw EvaluationError.notABoolean(evaluatedArg)
-            }
-            return n
+            throw EvaluationError.symbolNotFound(name)
         }
     }
 
@@ -352,6 +245,8 @@ extension Expression {
                 } catch EvaluationError.signatureMismatch {}
             }
             throw EvaluationError.signatureMismatch(arguments)
+        case let .builtIn(builtIn):
+            return try builtIn(arguments, callingContext)
         default:
             throw EvaluationError.notAFunction(closure)
         }
@@ -478,7 +373,7 @@ extension Expression {
         return evaluated.map { $0.out() }.joined(separator: " ")
     }
 
-    private func evaluateUserFunction(name: String, arguments: [Expression], context: Context) throws -> Expression {
+    private func evaluateCall(name: String, arguments: [Expression], context: Context) throws -> Expression {
         guard
             let expr = context[name]
             else { throw EvaluationError.symbolNotFound(name) }
@@ -523,4 +418,115 @@ extension Expression {
 
         return (last, scopeContext)
     }
+}
+
+private func extractNumber(_ expression: Expression, context: Context) throws -> Number {
+    if case .number(let number) = try expression.evaluate(context: context) {
+        return number
+    }
+    throw EvaluationError.notANumber(expression)
+}
+
+private func extractBool(_ expression: Expression, context: Context) throws -> Bool {
+    if case .bool(let value) = try expression.evaluate(context: context) {
+        return value
+    }
+    throw EvaluationError.notABoolean(expression)
+}
+
+private func extractCharacter(_ expression: Expression, context: Context) throws -> Character {
+    if case .char(let value) = try expression.evaluate(context: context) {
+        return value
+    }
+    throw EvaluationError.notACharacter
+}
+
+private func extractList(_ expression: Expression, context: Context) throws -> [Expression] {
+    if case .list(let list) = try expression.evaluate(context: context) {
+        return list
+    }
+    throw EvaluationError.notAList(expression)
+}
+
+private func toNumbers(arguments: [Expression], context: Context) throws -> [Number] {
+    return try arguments.map { arg -> Number in
+        let evaluatedArg = try arg.evaluate(context: context)
+        guard case let .number(n) = evaluatedArg else {
+            throw EvaluationError.notANumber(evaluatedArg)
+        }
+        return n
+    }
+}
+
+private func toBools(arguments: [Expression], context: Context) throws -> [Bool] {
+    return try arguments.map { arg -> Bool in
+        let evaluatedArg = try arg.evaluate(context: context)
+        guard case let .bool(n) = evaluatedArg else {
+            throw EvaluationError.notABoolean(evaluatedArg)
+        }
+        return n
+    }
+}
+
+private func numberOp(arguments: [Expression], context: Context, callback: (Number, Number) throws -> Expression) throws -> Expression {
+    var numbers = arguments
+    let left = try extractNumber(numbers.removeFirst(), context: context)
+    let right = try extractNumber(numbers.removeFirst(), context: context)
+    return try callback(left, right)
+}
+
+private func booleanOp(arguments: [Expression], context: Context, callback: (Bool, Bool) throws -> Expression) throws -> Expression {
+    var bools = arguments
+    let left = try extractBool(bools.removeFirst(), context: context)
+    let right = try extractBool(bools.removeFirst(), context: context)
+    return try callback(left, right)
+}
+
+private func characterOp(arguments: [Expression], context: Context, callback: (Character, Character) throws -> Expression) throws -> Expression {
+    var chars = arguments
+    let left = try extractCharacter(chars.removeFirst(), context: context)
+    let right = try extractCharacter(chars.removeFirst(), context: context)
+    return try callback(left, right)
+}
+
+private func listOp(arguments: [Expression], context: Context, callback: ([Expression], [Expression]) throws -> Expression) throws -> Expression {
+    var lists = arguments
+    let left = try extractList(lists.removeFirst(), context: context)
+    let right = try extractList(lists.removeFirst(), context: context)
+    return try callback(left, right)
+}
+
+func evaluateEq(arguments: [Expression], context: Context) throws -> Expression {
+    guard arguments.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
+    let result: Expression
+    do {
+        result = try booleanOp(arguments: arguments, context: context) {
+            .bool($0 == $1)
+        }
+    } catch EvaluationError.notABoolean {
+        do {
+            result = try numberOp(arguments: arguments, context: context) {
+                try .bool($0.equalTo($1))
+            }
+        } catch EvaluationError.notANumber {
+            do {
+                result = try characterOp(arguments: arguments, context: context) {
+                    .bool($0 == $1)
+                }
+            } catch EvaluationError.notACharacter {
+                result = try listOp(arguments: arguments, context: context) { left, right in
+                    guard left.count == right.count else { return .no }
+                    for (l, r) in zip(left, right) {
+                        let lrEq = try evaluateEq(arguments: [l, r], context: context)
+                        if case .no = lrEq {
+                            return .no
+                        }
+                    }
+                    return .yes
+                }
+                // TODO: need propr equality check for listCons too.
+            }
+        }
+    }
+    return result
 }
