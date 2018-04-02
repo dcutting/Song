@@ -4,9 +4,9 @@ import Song
 class TailCallTests: XCTestCase {
 
     func test_description_tailCall() {
-        let tailCall = Expression.tailCall("recur", [.int(0)])
+        let tailCall = Expression.tailEval(.int(1), [.int(0)])
         let result = "\(tailCall)"
-        XCTAssertEqual("recur(0)", result)
+        XCTAssertEqual("1(0)", result)
     }
 
     func test_deepRecursion_bodyIsTailCall() {

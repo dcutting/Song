@@ -21,7 +21,7 @@ extension Expression {
     private func evaluate(expression: Expression, context: Context) throws -> Expression {
         switch expression {
 
-        case .bool, .number, .char, .ignore, .closure, .tailCall:
+        case .bool, .number, .char, .ignore, .closure, .tailEval:
             return expression
 
         case let .list(exprs):
@@ -51,8 +51,8 @@ extension Expression {
             let evalArgs = try evaluate(arguments: arguments, context: context)
             var intermediate = try evaluateCall(name: name, arguments: evalArgs, context: context)
             // Trampoline tail calls.
-            while case let .tailCall(tailName, tailArgs) = intermediate {
-                intermediate = try evaluateCall(name: tailName, arguments: tailArgs, context: context)
+            while case let .tailEval(tailExpr, tailArgs) = intermediate {
+                intermediate = try evaluateCallAnonymous(closure: tailExpr, arguments: tailArgs, callingContext: context)
             }
             return intermediate
 
@@ -371,13 +371,15 @@ extension Expression {
             // Detect tail calls if present.
             if case let .call(name, arguments) = body {
                 let evalArgs = try evaluate(arguments: arguments, context: finalContext)
-                return .tailCall(name, evalArgs)
+                let expr = try evaluateVariable(variable: name, finalContext)
+                return .tailEval(expr, evalArgs)
             } else if case let .scope(statements) = body {
                 let (last, scopeContext) = try semiEvaluateScope(statements: statements, context: finalContext)
                 let result: Expression
                 if case let .call(name, arguments) = last {
                     let evalArgs = try evaluate(arguments: arguments, context: finalContext)
-                    result = .tailCall(name, evalArgs)
+                    let expr = try evaluateVariable(variable: name, finalContext)
+                    result = .tailEval(expr, evalArgs)
                 } else {
                     result = try last.evaluate(context: scopeContext)
                 }
