@@ -88,6 +88,7 @@ list.one?(f) = list.select(f).count Eq 1
 [].detect(_) = No
 [x|_].detect(f) When f(x) = x
 [_|xs].detect(f) = xs.detect(f)
+find = detect
 
 list.index(k) = list.index(k, 0)
 [].index(_, _) = No
