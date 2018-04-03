@@ -109,13 +109,16 @@ func log(_ str: Any? = nil) {
 let songArgs = scriptArgs.map { Expression.string($0) }
 var context: Context = extend(context: rootContext, with: ["args": .list(songArgs)])
 
-let listStdLib = try loadLines(from: "./StdLib/list.sg")
-let mathStdLib = try loadLines(from: "./StdLib/math.sg")
-let stringStdLib = try loadLines(from: "./StdLib/string.sg")
-
-context = try evaluate(lines: listStdLib, context: context)
-context = try evaluate(lines: mathStdLib, context: context)
-context = try evaluate(lines: stringStdLib, context: context)
+for child in Stdlib().children {
+    if let file = child as? File {
+        if let data = file.contents {
+            if let line = String(data: data, encoding: String.Encoding.utf8) {
+                let lines = line.split(separator: "\n").map { String($0) }
+                context = try evaluate(lines: lines, context: context)
+            }
+        }
+    }
+}
 
 func dumpContext() {
     print(context as AnyObject)
