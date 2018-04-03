@@ -102,7 +102,7 @@ func log(_ str: Any? = nil) {
 }
 
 let songArgs = scriptArgs.map { Expression.string($0) }
-var context: Context = ["args": .list(songArgs)]
+var context: Context = extend(context: rootContext, with: ["args": .list(songArgs)])
 
 func dumpContext() {
     print(context as AnyObject)
