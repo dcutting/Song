@@ -1,5 +1,11 @@
+import Syft
+
 let parser = makeParser()
 let transformer = makeTransformer()
+
+struct LoadError: Error {
+    let remainder: String
+}
 
 public func evaluate(lines: [String], context: Context) throws -> Context {
     var context = context
@@ -30,6 +36,8 @@ public func evaluate(lines: [String], context: Context) throws -> Context {
                     context = extendContext(context: context, name: name, value: value)
                 }
             }
+        } else if !parsedLastCharacter {
+            throw LoadError(remainder: remainder.text)
         }
     }
     return context

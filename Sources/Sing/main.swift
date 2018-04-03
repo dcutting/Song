@@ -114,7 +114,12 @@ for child in Stdlib().children {
         if let data = file.contents {
             if let line = String(data: data, encoding: String.Encoding.utf8) {
                 let lines = line.split(separator: "\n").map { String($0) }
-                context = try evaluate(lines: lines, context: context)
+                do {
+                    context = try evaluate(lines: lines, context: context)
+                } catch {
+                    print("Could not load stdlib '\(file.filename)': \(error)")
+                    throw error
+                }
             }
         }
     }
