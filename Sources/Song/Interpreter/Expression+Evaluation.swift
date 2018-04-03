@@ -263,8 +263,16 @@ extension Expression {
                     shadowedFunctions.insert(name)
                 }
             }
-            // TODO: evaluating calls in scopeContext is not really right - this would make them dynamically scoped.
-            let result = try statement.evaluate(context: scopeContext)
+
+            let result: Expression
+            if case let .call(name, arguments) = statement {
+                let evalArgs = try evaluate(arguments: arguments, context: scopeContext)
+                let expr = try evaluateVariable(variable: name, scopeContext)
+                result = try evaluateCallAnonymous(closure: expr, arguments: evalArgs, callingContext: context)
+            } else {
+                result = try statement.evaluate(context: scopeContext)
+            }
+
             if case .closure(let name, _, _) = result {
                 if let name = name {
                     scopeContext = extendContext(context: scopeContext, name: name, value: result)

@@ -35,10 +35,17 @@ class ContextTests: XCTestCase {
         XCTAssertThrowsError(try call.evaluate(context: context))
     }
 
-    func test_scopeCall_contextsAreNotDynamicallyScoped() {
+    func test_scopeCall_tailCallHasLexicalScope() {
         let foo = Function(name: "foo", patterns: [], when: .yes, body: .name("n"))
         let context = try! declareSubfunctions([foo])
         let scope = Expression.scope([.assign(variable: .name("n"), value: .int(5)), .call("foo", [])])
+        XCTAssertThrowsError(try scope.evaluate(context: extend(context: rootContext, with: context)))
+    }
+
+    func test_scopeCall_middleCallHasLexicalScope() {
+        let foo = Function(name: "foo", patterns: [], when: .yes, body: .name("n"))
+        let context = try! declareSubfunctions([foo])
+        let scope = Expression.scope([.assign(variable: .name("n"), value: .int(5)), .call("foo", []), .yes])
         XCTAssertThrowsError(try scope.evaluate(context: extend(context: rootContext, with: context)))
     }
 
