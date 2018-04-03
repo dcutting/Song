@@ -1,0 +1,117 @@
+[].count = 0
+[_|xs].count = 1 + xs.count
+length = count
+
+list.empty? = list.count Eq 0
+
+[x|_].head = x
+[_|xs].tail = xs
+list.first = list.head
+list.first(n) = list.take(n)
+list.second = list.tail.first
+list.third = list.tail.second
+list.last = list.reverse.first
+list.last(n) = list.reverse.take(n).reverse
+
+[x|_].at(0) = x
+[_|xs].at(k) When k > 0 = xs.at(k-1)
+list.at(k) When k < 0 = list.reverse.at(-1-k)
+
+list.middle = list.at(list.count Div 2)
+
+list.drop(0) = list
+[_|xs].drop(n) When n > 0 = xs.drop(n-1)
+
+[].dropWhile(f) = []
+[x|xs].dropWhile(f) When x.f = xs.dropWhile(f)
+list.dropWhile(_) = list
+
+_.take(0) = []
+[].take(_) = []
+[x|xs].take(n) When n > 0 = [x] + xs.take(n-1)
+
+[].takeWhile(_) = []
+[x|xs].takeWhile(f) When x.f = [x] + xs.takeWhile(f)
+_.takeWhile(_) = []
+
+list.slice(i, n) = list.drop(i).take(n)
+substring = slice
+
+[].includes?(_) = No
+[x|xs].includes?(a) = a Eq x Or xs.includes?(a)
+
+[].reverse = []
+[x|xs].reverse = xs.reverse + [x]
+
+list.push(x) = list + [x]
+list.pop = list.pop(1)
+list.pop(n) = list.reverse.drop(n).reverse
+
+[].map(_) = []
+[x|xs].map(f) = [f(x)|xs.map(f)]
+
+[].inject(acc, _) = acc
+[x|xs].inject(acc, f) = xs.inject(acc.f(x), f)
+
+[].select(_) = []
+[x|xs].select(f) When x.f = [x] + xs.select(f)
+[_|xs].select(f) = xs.select(f)
+
+list.reject(f) = list.select(|x| Not x.f)
+
+[].sort = []
+[x|xs].sort = xs.select(|k| k < x).sort + [x] + xs.select(|k| k >= x).sort
+
+[].sortBy(_) = []
+list.sortBy(f) = list.map(|x| [x.f, x]).sortMapped.map(|[xm,x]| x)
+[].sortMapped = []
+[[xm, x]|xs].sortMapped = Do
+  left = xs.select(|[ym, y]| ym < xm).sortMapped
+  right = xs.select(|[ym, y]| ym >= xm).sortMapped
+  left + [[xm, x]] + right
+End
+
+[].flatten = []
+[[x|xs]|ys].flatten = ([x] + xs).flatten + ys.flatten
+[x|xs].flatten = [x] + xs.flatten
+
+[].all?(_) = Yes
+[x|xs].all?(f) = f(x) And xs.all?(f)
+
+[].any?(_) = No
+[x|xs].any?(f) = f(x) Or xs.any?(f)
+
+list.none?(f) = list.select(f).empty?
+
+list.one?(f) = list.select(f).count Eq 1
+
+[].detect(_) = No
+[x|_].detect(f) When f(x) = x
+[_|xs].detect(f) = xs.detect(f)
+
+list.index(k) = list.index(k, 0)
+[].index(_, _) = No
+[x|_].index(k, i) When x Eq k = i
+[_|xs].index(k, i) = xs.index(k, i+1)
+
+list.partition(f) = list.partition(f, [], [])
+[].partition(_, selected, rest) = [selected, rest]
+[x|xs].partition(f, selected, rest) When f(x) = xs.partition(f, selected + [x], rest)
+[x|xs].partition(f, selected, rest) = xs.partition(f, selected, rest + [x])
+
+[[], []].zip = []
+[[x|xs], [y|ys]].zip = [[x, y]] + [xs, ys].zip
+
+[].zip([]) = []
+[x|xs].zip([y|ys]) = [[x, y]] + xs.zip(ys)
+
+[[], []].zipWith(_) = []
+[[x|xs], [y|ys]].zipWith(f) = [f(x, y)] + [xs, ys].zipWith(f)
+
+list.palindrome? = list Eq list.reverse
+
+_.startsWith?([]) = Yes
+[x|xs].startsWith?([x|ps]) = xs.startsWith?(ps)
+_.startsWith?(_) = No
+
+list.endsWith?(suffix) = list.reverse.startsWith?(suffix.reverse)

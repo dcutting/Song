@@ -1,121 +1,13 @@
-[].count = 0
-[x|xs].count = 1 + xs.count
+#!/usr/bin/env song
 
-list.empty? = list.count Eq 0
-
-[x|xs].head = x
-[x|xs].tail = xs
-list.first = list.head
-list.first(n) = list.take(n)
-list.second = list.tail.first
-list.third = list.tail.second
-list.last = list.reverse.first
-list.last(n) = list.reverse.take(n).reverse
-
-[x|xs].at(0) = x
-[x|xs].at(k) When k > 0 = xs.at(k-1)
-list.at(k) When k < 0 = list.reverse.at(-1-k)
-
-list.middle = list.at(list.count / 2)
-
-list.drop(0) = list
-[x|xs].drop(n) When n > 0 = xs.drop(n-1)
-
-[].dropWhile(f) = []
-[x|xs].dropWhile(f) When x.f = xs.dropWhile(f)
-list.dropWhile(f) = list
-
-list.take(0) = []
-[].take(n) = []
-[x|xs].take(n) When n > 0 = [x] + xs.take(n-1)
-
-[].takeWhile(f) = []
-[x|xs].takeWhile(f) When x.f = [x] + xs.takeWhile(f)
-list.takeWhile(f) = []
-
-list.slice(i, n) = list.drop(i).take(n)
-
-[].includes?(a) = No
-[x|xs].includes?(a) = a Eq x Or xs.includes?(a)
-
-[].reverse = []
-[x|xs].reverse = xs.reverse + [x]
-
-list.push(x) = list + [x]
-list.pop = list.pop(1)
-list.pop(n) = list.reverse.drop(n).reverse
-
-[].map(f) = []
-[x|xs].map(f) = [f(x)|xs.map(f)]
-
-[].inject(acc, f) = acc
-[x|xs].inject(acc, f) = xs.inject(acc.f(x), f)
-
-[].select(f) = []
-[x|xs].select(f) When x.f = [x] + xs.select(f)
-[x|xs].select(f) = xs.select(f)
-
-list.reject(f) = list.select(|x| Not x.f)
-
-[].sort = []
-[x|xs].sort = xs.select(|k| k < x).sort + [x] + xs.select(|k| k >= x).sort
-
-[].sortBy(f) = []
-list.sortBy(f) = list.map(|x| [x.f, x]).sortMapped.map(|[xm,x]| x)
-[].sortMapped = []
-[[xm, x]|xs].sortMapped = xs.select(|[ym, y]| ym < xm).sortMapped + [[xm, x]] + xs.select(|[ym, y]| ym >= xm).sortMapped
-
-[].flatten = []
-[[x|xs]|ys].flatten = ([x] + xs).flatten + ys.flatten
-[x|xs].flatten = [x] + xs.flatten
-
-[].all?(f) = Yes
-[x|xs].all?(f) = x.f And xs.all?(f)
-
-[].any?(f) = No
-[x|xs].any?(f) = x.f Or xs.any?(f)
-
-list.none?(f) = list.select(f).empty?
-
-list.one?(f) = list.select(f).count Eq 1
-
-[].detect(f) = No
-[x|xs].detect(f) When x.f = x
-[x|xs].detect(f) = xs.detect(f)
-
-list.index(k) = list.index(k, 0)
-[].index(k, i) = No
-[x|xs].index(k, i) When x Eq k = i
-[x|xs].index(k, i) = xs.index(k, i+1)
-
-list.partition(f) = list.partition(f, [], [])
-[].partition(f, selected, rest) = [selected, rest]
-[x|xs].partition(f, selected, rest) When x.f = xs.partition(f, selected + [x], rest)
-[x|xs].partition(f, selected, rest) = xs.partition(f, selected, rest + [x])
-
-[[], []].zip = []
-[[x|xs], [y|ys]].zip = [[x, y]] + [xs, ys].zip
-
-[].zip([]) = []
-[x|xs].zip([y|ys]) = [[x, y]] + xs.zip(ys)
-
-[[], []].zipWith(f) = []
-[[x|xs], [y|ys]].zipWith(f) = [x.f(y)] + [xs, ys].zipWith(f)
-
-list.palindrome? = list Eq list.reverse
-
-list.startsWith?([]) = Yes
-[x|xs].startsWith?([x|ps]) = xs.startsWith?(ps)
-_.startsWith?(_) = No
-
-a = [1,2,3,4,5,10,9,8,7,6]
-out(a)
+a = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+a.out
 b = a.reverse
-out(b)
+b.out
 c = a.partition(|x| x > 5)
-out(c)
+c.out
 d = a.zip(a.reverse)
-out(d)
+d.out
 
 'a'.up = 'A'
 'b'.up = 'B'
@@ -123,6 +15,6 @@ out(d)
 
 string.up = string.map(up)
 
-e = "ab"
-out(e)
-out(e.up)
+e = "abc"
+e.out
+e.up.out

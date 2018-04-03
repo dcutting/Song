@@ -1,0 +1,30 @@
+n.zero? = n Eq 0
+n.nonZero? = n Neq 0
+n.positive? = n > 0
+n.negative? = n < 0
+n.nonNegative? = Not n.negative?
+
+n.power(0) = 1
+n.power(1) = n
+n.power(e) When e > 1 = n * n.power(e - 1)
+
+n.squared = n.power(2)
+n.cubed = n.power(3)
+
+n.even? = (n Mod 2).zero?
+n.odd? = (n - 1).even?
+
+x.divides?(y) = (y Mod x).zero?
+n.between?(x, y) = x <= n And n <= y
+
+n.factorial = n.factorial(1)
+0.factorial(acc) = acc
+n.factorial(acc) When n > 0 = (n - 1).factorial(acc * n)
+
+list.max = list.sort.last
+list.min = list.sort.first
+list.sum = list.inject(0, |a, x| a + x)
+
+x.times(n) = x.times(n, [])
+0.times(n, result) = result
+x.times(n, result) When x > 0 = (x-1).times(n, result + [n])

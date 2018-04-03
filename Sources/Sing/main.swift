@@ -47,19 +47,24 @@ do {
     exit(1)
 }
 
-if let filename = filename {
-    interactive = false
+func loadLines(from filename: String) throws -> [String] {
 
     let contents = try NSString(contentsOfFile: filename,
                                 encoding: String.Encoding.utf8.rawValue)
 
-    lines = [String]()
+    var lines = [String]()
     contents.enumerateLines({ (line, stop) -> () in
-        lines?.append("\(line)\n")
+        lines.append("\(line)\n")
     })
-    if let line = lines?.first, line.hasPrefix("#!") {
-        lines?.removeFirst()
+    if let line = lines.first, line.hasPrefix("#!") {
+        lines.removeFirst()
     }
+    return lines
+}
+
+if let filename = filename {
+    interactive = false
+    lines = try loadLines(from: filename)
 }
 
 func getLine() -> String? {
@@ -103,6 +108,14 @@ func log(_ str: Any? = nil) {
 
 let songArgs = scriptArgs.map { Expression.string($0) }
 var context: Context = extend(context: rootContext, with: ["args": .list(songArgs)])
+
+let listStdLib = try loadLines(from: "./StdLib/list.sg")
+let mathStdLib = try loadLines(from: "./StdLib/math.sg")
+let stringStdLib = try loadLines(from: "./StdLib/string.sg")
+
+context = try evaluate(lines: listStdLib, context: context)
+context = try evaluate(lines: mathStdLib, context: context)
+context = try evaluate(lines: stringStdLib, context: context)
 
 func dumpContext() {
     print(context as AnyObject)
