@@ -31,7 +31,7 @@ extension Expression: CustomStringConvertible {
             return "\(name): \(value)"
 
         case let .closure(_, function, context):
-            return "[(" + describeContext(context) + ") \(function)]"
+            return "\(function)"
 
         case let .scope(exprs):
             return "scope (" + exprs.map { "\($0)" }.joined(separator: ", ") + ")"

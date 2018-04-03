@@ -39,7 +39,7 @@ class ContextTests: XCTestCase {
         let foo = Function(name: "foo", patterns: [], when: .yes, body: .name("n"))
         let context = try! declareSubfunctions([foo])
         let scope = Expression.scope([.assign(variable: .name("n"), value: .int(5)), .call("foo", [])])
-        XCTAssertThrowsError(try scope.evaluate(context: context))
+        XCTAssertThrowsError(try scope.evaluate(context: extend(context: rootContext, with: context)))
     }
 
     func test_call_globalsDefinedLaterAreAccessible() {

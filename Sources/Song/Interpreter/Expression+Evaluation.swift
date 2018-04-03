@@ -2,8 +2,28 @@ var _stdIn: StdIn = DefaultStdIn()
 var _stdOut: StdOut = DefaultStdOut()
 var _stdErr: StdOut = DefaultStdErr()
 
-let rootContext: Context = [
-    "Eq": .builtIn(evaluateEq)
+public let rootContext: Context = [
+    "Eq": .builtIn(evaluateEq),
+    "Neq": .builtIn(evaluateNeq),
+    "Not": .builtIn(evaluateNot),
+    "And": .builtIn(evaluateAnd),
+    "Or": .builtIn(evaluateOr),
+    "number": .builtIn(evaluateNumberConstructor),
+    "string": .builtIn(evaluateStringConstructor),
+    "truncate": .builtIn(evaluateTruncateConstructor),
+    "+": .builtIn(evaluatePlus),
+    "-": .builtIn(evaluateMinus),
+    "*": .builtIn(evaluateTimes),
+    "/": .builtIn(evaluateDividedBy),
+    "Mod": .builtIn(evaluateMod),
+    "Div": .builtIn(evaluateDiv),
+    "<": .builtIn(evaluateLessThan),
+    ">": .builtIn(evaluateGreaterThan),
+    "<=": .builtIn(evaluateLessThanOrEqual),
+    ">=": .builtIn(evaluateGreaterThanOrEqual),
+    "in": .builtIn(evaluateIn),
+    "out": .builtIn(evaluateOut),
+    "err": .builtIn(evaluateErr),
 ]
 
 extension Expression {
@@ -70,134 +90,6 @@ extension Expression {
         return try arguments.map { try $0.evaluate(context: context) }
     }
 
-    private func evaluateBuiltIn(name: String, arguments: [Expression], context: Context) throws -> Expression {
-
-        switch name {
-        case "*":
-            var numbers = try toNumbers(arguments: arguments, context: context)
-            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
-            let left = numbers.removeFirst()
-            let right = numbers.removeFirst()
-            return .number(left.times(right))
-        case "/":
-            var numbers = try toNumbers(arguments: arguments, context: context)
-            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
-            let left = numbers.removeFirst()
-            let right = numbers.removeFirst()
-            return .number(left.floatDividedBy(right))
-        case "Mod":
-            var numbers = try toNumbers(arguments: arguments, context: context)
-            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
-            let left = numbers.removeFirst()
-            let right = numbers.removeFirst()
-            return .number(try left.modulo(right))
-        case "Div":
-            var numbers = try toNumbers(arguments: arguments, context: context)
-            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
-            let left = numbers.removeFirst()
-            let right = numbers.removeFirst()
-            return .number(try left.integerDividedBy(right))
-        case "+":
-            guard arguments.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
-            let result: Expression
-            do {
-                result = try numberOp(arguments: arguments, context: context) {
-                     .number($0.plus($1))
-                }
-            } catch EvaluationError.notANumber {
-                result = try listOp(arguments: arguments, context: context) {
-                    .list($0 + $1)
-                }
-            }
-            return result
-        case "-":
-            var numbers = try toNumbers(arguments: arguments, context: context)
-            if numbers.count == 1 {
-                let right = numbers.removeFirst()
-                return .number(right.negate())
-            } else if numbers.count == 2 {
-                let left = numbers.removeFirst()
-                let right = numbers.removeFirst()
-                return .number(left.minus(right))
-            } else {
-                throw EvaluationError.signatureMismatch(arguments)
-            }
-        case "<":
-            var numbers = try toNumbers(arguments: arguments, context: context)
-            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
-            let left = numbers.removeFirst()
-            let right = numbers.removeFirst()
-            return .bool(left.lessThan(right))
-        case ">":
-            var numbers = try toNumbers(arguments: arguments, context: context)
-            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
-            let left = numbers.removeFirst()
-            let right = numbers.removeFirst()
-            return .bool(left.greaterThan(right))
-        case "<=":
-            var numbers = try toNumbers(arguments: arguments, context: context)
-            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
-            let left = numbers.removeFirst()
-            let right = numbers.removeFirst()
-            return .bool(left.lessThanOrEqualTo(right))
-        case ">=":
-            var numbers = try toNumbers(arguments: arguments, context: context)
-            guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
-            let left = numbers.removeFirst()
-            let right = numbers.removeFirst()
-            return .bool(left.greaterThanOrEqualTo(right))
-        case "Eq":
-            return try evaluateEq(arguments: arguments, context: context)
-        case "Neq":
-            let equalCall = Expression.call("Eq", arguments)
-            let notCall = Expression.call("Not", [equalCall])
-            return try notCall.evaluate(context: context)
-        case "And":
-            var bools = try toBools(arguments: arguments, context: context)
-            guard bools.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
-            let left = bools.removeFirst()
-            let right = bools.removeFirst()
-            return .bool(left && right)
-        case "Or":
-            var bools = try toBools(arguments: arguments, context: context)
-            guard bools.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
-            let left = bools.removeFirst()
-            let right = bools.removeFirst()
-            return .bool(left || right)
-        case "Not":
-            var bools = try toBools(arguments: arguments, context: context)
-            guard bools.count == 1 else { throw EvaluationError.signatureMismatch(arguments) }
-            let left = bools.removeFirst()
-            return .bool(!left)
-        case "number":
-            var numbers = arguments
-            guard numbers.count == 1 else { throw EvaluationError.signatureMismatch(arguments) }
-            let left = numbers.removeFirst()
-            do {
-                let string = try left.evaluate(context: context).asString()
-                let number = try Number.convert(from: string)
-                return Expression.number(number)
-            } catch EvaluationError.numericMismatch {
-                throw EvaluationError.notANumber(left)
-            }
-        case "string":
-            return try evaluateString(arguments: arguments, context: context)
-        case "truncate":
-            var numbers = try toNumbers(arguments: arguments, context: context)
-            guard numbers.count == 1 else { throw EvaluationError.signatureMismatch(arguments) }
-            let left = numbers.removeFirst()
-            return .number(left.truncate())
-        case "in":
-            return try evaluateIn(arguments: arguments, context: context)
-        case "out":
-            return try evaluateOut(arguments: arguments, context: context)
-        case "err":
-            return try evaluateErr(arguments: arguments, context: context)
-        default:
-            throw EvaluationError.symbolNotFound(name)
-        }
-    }
-
     private func evaluate(expression: Expression, function: Function, context: Context) throws -> Expression {
 
         try validatePatterns(function)
@@ -257,10 +149,10 @@ extension Expression {
         case let .function(function):
 
             let extendedContext = try matchParameters(closureContext: closureContext, parameters: function.patterns, arguments: arguments)
-            let whenEvaluated = try function.when.evaluate(context: extendedContext)
+            let finalContext = callingContext.merging(extendedContext) { l, r in r }
+            let whenEvaluated = try function.when.evaluate(context: finalContext)
             guard case .bool = whenEvaluated else { throw EvaluationError.notABoolean(function.when) }
             guard case .yes = whenEvaluated else { throw EvaluationError.signatureMismatch(arguments) }
-            let finalContext = callingContext.merging(extendedContext) { l, r in r }
             let body = function.body
 
             // Detect tail calls if present.
@@ -340,37 +232,6 @@ extension Expression {
             }
         }
         return (extendedContext, patternEqualityContext)
-    }
-
-    private func evaluateIn(arguments: [Expression], context: Context) throws -> Expression {
-        // TODO: anywhere I map arguments to an evaluation, they may be calling `in`...
-        let evaluated = try arguments.map { expr -> Expression in try expr.evaluate(context: context) }
-        let output = evaluated.map { $0.out() }.joined(separator: " ")
-        _stdOut.put(output)
-        let line = _stdIn.get() ?? ""
-        return .string(line)
-    }
-
-    private func evaluateOut(arguments: [Expression], context: Context) throws -> Expression {
-        let output = try prepareOutput(for: arguments, context: context)
-        _stdOut.put(output + "\n")
-        return .string(output)
-    }
-
-    private func evaluateString(arguments: [Expression], context: Context) throws -> Expression {
-        let output = try prepareOutput(for: arguments, context: context)
-        return .string(output)
-    }
-
-    private func evaluateErr(arguments: [Expression], context: Context) throws -> Expression {
-        let output = try prepareOutput(for: arguments, context: context)
-        _stdErr.put(output + "\n")
-        return .string(output)
-    }
-
-    private func prepareOutput(for arguments: [Expression], context: Context) throws -> String {
-        let evaluated = try arguments.map { expr -> Expression in try expr.evaluate(context: context) }
-        return evaluated.map { $0.out() }.joined(separator: " ")
     }
 
     private func evaluateCall(name: String, arguments: [Expression], context: Context) throws -> Expression {
@@ -529,4 +390,177 @@ func evaluateEq(arguments: [Expression], context: Context) throws -> Expression 
         }
     }
     return result
+}
+
+func evaluateNeq(arguments: [Expression], context: Context) throws -> Expression {
+    let equalCall = Expression.call("Eq", arguments)
+    let notCall = Expression.call("Not", [equalCall])
+    return try notCall.evaluate(context: context)
+}
+
+func evaluateNot(arguments: [Expression], context: Context) throws -> Expression {
+    var bools = try toBools(arguments: arguments, context: context)
+    guard bools.count == 1 else { throw EvaluationError.signatureMismatch(arguments) }
+    let left = bools.removeFirst()
+    return .bool(!left)
+}
+
+func evaluatePlus(arguments: [Expression], context: Context) throws -> Expression {
+    guard arguments.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
+    let result: Expression
+    do {
+        result = try numberOp(arguments: arguments, context: context) {
+            .number($0.plus($1))
+        }
+    } catch EvaluationError.notANumber {
+        result = try listOp(arguments: arguments, context: context) {
+            .list($0 + $1)
+        }
+    }
+    return result
+}
+
+func evaluateTimes(arguments: [Expression], context: Context) throws -> Expression {
+    var numbers = try toNumbers(arguments: arguments, context: context)
+    guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
+    let left = numbers.removeFirst()
+    let right = numbers.removeFirst()
+    return .number(left.times(right))
+}
+
+func evaluateDividedBy(arguments: [Expression], context: Context) throws -> Expression {
+    var numbers = try toNumbers(arguments: arguments, context: context)
+    guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
+    let left = numbers.removeFirst()
+    let right = numbers.removeFirst()
+    return .number(left.floatDividedBy(right))
+}
+
+func evaluateMod(arguments: [Expression], context: Context) throws -> Expression {
+    var numbers = try toNumbers(arguments: arguments, context: context)
+    guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
+    let left = numbers.removeFirst()
+    let right = numbers.removeFirst()
+    return .number(try left.modulo(right))
+}
+
+func evaluateDiv(arguments: [Expression], context: Context) throws -> Expression {
+    var numbers = try toNumbers(arguments: arguments, context: context)
+    guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
+    let left = numbers.removeFirst()
+    let right = numbers.removeFirst()
+    return .number(try left.integerDividedBy(right))
+}
+
+func evaluateMinus(arguments: [Expression], context: Context) throws -> Expression {
+    var numbers = try toNumbers(arguments: arguments, context: context)
+    if numbers.count == 1 {
+        let right = numbers.removeFirst()
+        return .number(right.negate())
+    } else if numbers.count == 2 {
+        let left = numbers.removeFirst()
+        let right = numbers.removeFirst()
+        return .number(left.minus(right))
+    } else {
+        throw EvaluationError.signatureMismatch(arguments)
+    }
+}
+
+func evaluateLessThan(arguments: [Expression], context: Context) throws -> Expression {
+    var numbers = try toNumbers(arguments: arguments, context: context)
+    guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
+    let left = numbers.removeFirst()
+    let right = numbers.removeFirst()
+    return .bool(left.lessThan(right))
+}
+
+func evaluateGreaterThan(arguments: [Expression], context: Context) throws -> Expression {
+    var numbers = try toNumbers(arguments: arguments, context: context)
+    guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
+    let left = numbers.removeFirst()
+    let right = numbers.removeFirst()
+    return .bool(left.greaterThan(right))
+}
+
+func evaluateLessThanOrEqual(arguments: [Expression], context: Context) throws -> Expression {
+    var numbers = try toNumbers(arguments: arguments, context: context)
+    guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
+    let left = numbers.removeFirst()
+    let right = numbers.removeFirst()
+    return .bool(left.lessThanOrEqualTo(right))
+}
+
+func evaluateGreaterThanOrEqual(arguments: [Expression], context: Context) throws -> Expression {
+    var numbers = try toNumbers(arguments: arguments, context: context)
+    guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
+    let left = numbers.removeFirst()
+    let right = numbers.removeFirst()
+    return .bool(left.greaterThanOrEqualTo(right))
+}
+
+func evaluateAnd(arguments: [Expression], context: Context) throws -> Expression {
+    var bools = try toBools(arguments: arguments, context: context)
+    guard bools.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
+    let left = bools.removeFirst()
+    let right = bools.removeFirst()
+    return .bool(left && right)
+}
+
+func evaluateOr(arguments: [Expression], context: Context) throws -> Expression {
+    var bools = try toBools(arguments: arguments, context: context)
+    guard bools.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
+    let left = bools.removeFirst()
+    let right = bools.removeFirst()
+    return .bool(left || right)
+}
+
+func evaluateNumberConstructor(arguments: [Expression], context: Context) throws -> Expression {
+    var numbers = arguments
+    guard numbers.count == 1 else { throw EvaluationError.signatureMismatch(arguments) }
+    let left = numbers.removeFirst()
+    do {
+        let string = try left.evaluate(context: context).asString()
+        let number = try Number.convert(from: string)
+        return Expression.number(number)
+    } catch EvaluationError.numericMismatch {
+        throw EvaluationError.notANumber(left)
+    }
+}
+
+private func evaluateStringConstructor(arguments: [Expression], context: Context) throws -> Expression {
+    let output = try prepareOutput(for: arguments, context: context)
+    return .string(output)
+}
+
+private func evaluateIn(arguments: [Expression], context: Context) throws -> Expression {
+    // TODO: anywhere I map arguments to an evaluation, they may be calling `in`...
+    let evaluated = try arguments.map { expr -> Expression in try expr.evaluate(context: context) }
+    let output = evaluated.map { $0.out() }.joined(separator: " ")
+    _stdOut.put(output)
+    let line = _stdIn.get() ?? ""
+    return .string(line)
+}
+
+private func evaluateOut(arguments: [Expression], context: Context) throws -> Expression {
+    let output = try prepareOutput(for: arguments, context: context)
+    _stdOut.put(output + "\n")
+    return .string(output)
+}
+
+private func evaluateErr(arguments: [Expression], context: Context) throws -> Expression {
+    let output = try prepareOutput(for: arguments, context: context)
+    _stdErr.put(output + "\n")
+    return .string(output)
+}
+
+private func prepareOutput(for arguments: [Expression], context: Context) throws -> String {
+    let evaluated = try arguments.map { expr -> Expression in try expr.evaluate(context: context) }
+    return evaluated.map { $0.out() }.joined(separator: " ")
+}
+
+private func evaluateTruncateConstructor(arguments: [Expression], context: Context) throws -> Expression {
+    var numbers = try toNumbers(arguments: arguments, context: context)
+    guard numbers.count == 1 else { throw EvaluationError.signatureMismatch(arguments) }
+    let left = numbers.removeFirst()
+    return .number(left.truncate())
 }

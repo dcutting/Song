@@ -8,7 +8,7 @@ class EvalTests: XCTestCase {
             let function = Function(name: "echo", patterns: [.name("x"), .name("y")], when: .yes, body: .name("x"))
             let closure = try Expression.function(function).evaluate()
             let eval = Expression.eval( closure, [.int(99), .int(100)])
-            XCTAssertEqual("[() [echo(x, y) = x]](99, 100)", "\(eval)")
+            XCTAssertEqual("[echo(x, y) = x](99, 100)", "\(eval)")
         }
     }
 

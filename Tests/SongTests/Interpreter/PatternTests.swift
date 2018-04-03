@@ -31,10 +31,10 @@ class PatternTests: XCTestCase {
                     body: .name("x")),
     ]
 
-    var context = Context()
+    var context = rootContext
 
     override func setUp() {
-        context = try! declareSubfunctions(functions)
+        context = extend(context: rootContext, with: try! declareSubfunctions(functions))
     }
 
     func test_literal_wrongType_fails() {

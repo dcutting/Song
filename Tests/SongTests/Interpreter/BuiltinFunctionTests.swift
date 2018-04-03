@@ -63,7 +63,7 @@ class BuiltinFunctionTests: XCTestCase {
     func test_evaluatesArguments() {
         let first = Expression.name("x")
         let second = Expression.name("y")
-        let context: Context = ["x": .int(9), "y": .int(5)]
+        let context: Context = extend(context: rootContext, with: ["x": .int(9), "y": .int(5)])
 
         assertNoThrow {
             let op = try Expression.call("*", [first, second]).evaluate(context: context)
@@ -132,19 +132,19 @@ class BuiltinFunctionTests: XCTestCase {
 
         assertNoThrow {
             let op = Expression.call("And", [first, second])
-            let result = try op.evaluate(context: ["x": .yes, "y": .no])
+            let result = try op.evaluate(context: extend(context: rootContext, with: ["x": .yes, "y": .no]))
             XCTAssertEqual(Expression.no, result)
         }
 
         assertNoThrow {
             let op = Expression.call("Or", [first, second])
-            let result = try op.evaluate(context: ["x": .no, "y": .yes])
+            let result = try op.evaluate(context: extend(context: rootContext, with: ["x": .no, "y": .yes]))
             XCTAssertEqual(Expression.yes, result)
         }
 
         assertNoThrow {
             let op = Expression.call("Not", [first])
-            let result = try op.evaluate(context: ["x": .no])
+            let result = try op.evaluate(context: extend(context: rootContext, with: ["x": .no]))
             XCTAssertEqual(Expression.yes, result)
         }
     }

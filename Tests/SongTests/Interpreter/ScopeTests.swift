@@ -77,10 +77,11 @@ class ScopeTests: XCTestCase {
 
     func test_matchesAgainstLocalFunctionsLexicallyThenOuterFunctionsLexically() {
 
-        let context = try! declareSubfunctions([
+        var context = try! declareSubfunctions([
             makeFoo(.int(9), .string("N I N E")),
             makeFoo(.name("x"), .name("x"))
         ])
+        context = extend(context: rootContext, with: context)
 
         let inScope = [
             makeFoo(.int(9), .string("nine")),

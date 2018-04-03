@@ -13,7 +13,7 @@ func evaluate(_ code: String) throws -> Expression? {
     let parser = makeParser()
     let transformer = makeTransformer()
     let lines = code.split(separator: "\n")
-    var context = Context()
+    var context = rootContext
     var lastEval: Expression?
     for line in lines {
         let result = parser.parse(String(line))
