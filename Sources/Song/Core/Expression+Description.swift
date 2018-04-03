@@ -30,7 +30,7 @@ extension Expression: CustomStringConvertible {
         case let .assign(name, value):
             return "\(name): \(value)"
 
-        case let .closure(_, function, context):
+        case let .closure(_, function, _):
             return "\(function)"
 
         case let .scope(exprs):
