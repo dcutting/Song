@@ -244,7 +244,16 @@ extension Expression {
     // TODO: this code needs to be merged with the REPL code in main somehow.
     func evaluateScope(statements: [Expression], context: Context) throws -> Expression {
         let (last, scopeContext) = try semiEvaluateScope(statements: statements, context: context)
-        return try last.evaluate(context: scopeContext)
+
+        let result: Expression
+        if case let .call(name, arguments) = last {
+            let evalArgs = try evaluate(arguments: arguments, context: scopeContext)
+            let expr = try evaluateVariable(variable: name, scopeContext)
+            result = try evaluateCallAnonymous(closure: expr, arguments: evalArgs, callingContext: context)
+        } else {
+            result = try last.evaluate(context: scopeContext)
+        }
+        return result
     }
 
     func semiEvaluateScope(statements: [Expression], context: Context) throws -> (Expression, Context) {
