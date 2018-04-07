@@ -66,13 +66,15 @@ func evaluateNumberConstructor(arguments: [Expression], context: Context) throws
     var numbers = arguments
     guard numbers.count == 1 else { throw EvaluationError.signatureMismatch(arguments) }
     let left = numbers.removeFirst()
+    let result: Expression
     do {
         let string = try left.evaluate(context: context).asString()
         let number = try Number.convert(from: string)
-        return Expression.number(number)
+        result = .number(number)
     } catch EvaluationError.numericMismatch {
         throw EvaluationError.notANumber(left)
     }
+    return result
 }
 
 func evaluateStringConstructor(arguments: [Expression], context: Context) throws -> Expression {
@@ -104,16 +106,18 @@ func evaluatePlus(arguments: [Expression], context: Context) throws -> Expressio
 
 func evaluateMinus(arguments: [Expression], context: Context) throws -> Expression {
     var numbers = try toNumbers(arguments: arguments, context: context)
+    let result: Expression
     if numbers.count == 1 {
         let right = numbers.removeFirst()
-        return .number(right.negate())
+        result = .number(right.negate())
     } else if numbers.count == 2 {
         let left = numbers.removeFirst()
         let right = numbers.removeFirst()
-        return .number(left.minus(right))
+        result = .number(left.minus(right))
     } else {
         throw EvaluationError.signatureMismatch(arguments)
     }
+    return result
 }
 
 func evaluateTimes(arguments: [Expression], context: Context) throws -> Expression {
