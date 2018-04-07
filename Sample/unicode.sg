@@ -19,4 +19,4 @@ Cette leçon vaut bien un fromage, sans doute. »
 Le Corbeau, honteux et confus,
 Jura, mais un peu tard, qu’on ne l’y prendrait plus."
 
-text.out
+text.split("\n").join(" --- ").out
