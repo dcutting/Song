@@ -58,6 +58,13 @@ class BuiltinFunctionTests: XCTestCase {
         XCTAssertThrowsError(try Expression.call("Not", [.yes, .yes]).evaluate())
     }
 
+    // Description
+
+    func test_description() {
+        let expr = Expression.builtIn({ _, _ in return .yes })
+        XCTAssertEqual("builtIn", expr.description)
+    }
+
     // Evaluates arguments.
 
     func test_evaluatesArguments() {
