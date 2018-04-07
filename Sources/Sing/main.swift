@@ -54,7 +54,7 @@ func loadLines(from filename: String) throws -> [String] {
 
     var lines = [String]()
     contents.enumerateLines({ (line, stop) -> () in
-        lines.append("\(line)\n")
+        lines.append("\(line)")
     })
     if let line = lines.first, line.hasPrefix("#!") {
         lines.removeFirst()
