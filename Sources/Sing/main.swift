@@ -109,7 +109,7 @@ func log(_ str: Any? = nil) {
 let songArgs = scriptArgs.map { Expression.string($0) }
 var context: Context = extend(context: rootContext, with: ["args": .list(songArgs)])
 
-let interpreter = Interpreter(context: context)
+let interpreter = Interpreter(context: context, interactive: interactive)
 
 for child in Stdlib().children {
     if let file = child as? File {
@@ -117,7 +117,9 @@ for child in Stdlib().children {
             if let line = String(data: data, encoding: String.Encoding.utf8) {
                 let lines = line.split(separator: "\n").map { String($0) }
                 do {
-                    _ = try interpreter.evaluate(lines: lines)
+                    for line in lines {
+                        _ = try interpreter.interpret(line: line)
+                    }
                 } catch {
                     print("Could not load stdlib '\(file.filename)': \(error)")
                     throw error
@@ -136,12 +138,7 @@ log("Song v0.8.0 🎵")
 
 while (true) {
 
-    guard let thisLine = getLine() else {
-        if !interactive && !multilines.isEmpty {
-            print("💥  incomplete expression; do you have a typo?\n\n\(multilines.joined())")
-        }
-        break
-    }
+    guard let thisLine = getLine() else { break }
 
     if thisLine.trimmingCharacters(in: .whitespacesAndNewlines) == "" {
         continue
@@ -253,4 +250,9 @@ while (true) {
         multilines.removeAll()
     }
 }
-log("👏")
+
+if let remainingToParse = interpreter.finish() {
+    print("💥  incomplete expression; do you have a typo?\n\n\(remainingToParse)")
+} else {
+    log("👏")
+}
