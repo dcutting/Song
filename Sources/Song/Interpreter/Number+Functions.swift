@@ -3,9 +3,9 @@ extension Number {
     static func convert(from value: String) throws -> Number {
         let result: Number
         if let int = IntType(value) {
-            result = Number.int(int)
+            result = .int(int)
         } else if let float = FloatType(value) {
-            result = Number.float(float)
+            result = .float(float)
         } else {
             throw EvaluationError.numericMismatch
         }
