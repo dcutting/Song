@@ -39,6 +39,8 @@ class LiteralParserTests: XCTestCase {
         "'\"'".makes(.char("\""))
         "'\\\\'".makes(.char("\\"))
         "'\n'".makes(.char("\n"))
+        "'\r'".makes(.char("\r"))
+        "'\t'".makes(.char("\t"))
         "'AB'".fails()
         "'''".fails()
     }
@@ -56,6 +58,8 @@ world\"
         "\"Hi, I said\"".makes(.string("Hi, I said"))
         "\"\\\"Hi,\\\" I said\"".makes(.string("\"Hi,\" I said"))
         "\"\n\"".makes(.string("\n"))
+        "\"\r\"".makes(.string("\r"))
+        "\"\t\"".makes(.string("\t"))
         "\"a\\\\backslash\"".makes(.string("a\\backslash"))
         " \"hello world\" ".makes(.string("hello world"))
     }
