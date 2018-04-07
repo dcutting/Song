@@ -58,4 +58,11 @@ class ContextTests: XCTestCase {
             XCTAssertEqual(Expression.int(5), try call.evaluate(context: context))
         }
     }
+
+    func test_describeContext() {
+        let context: Context = ["foo": .int(5), "bar": .yes]
+        let actual = describeContext(context)
+        let expected = "bar: Yes, foo: 5"
+        XCTAssertEqual(expected, actual)
+    }
 }
