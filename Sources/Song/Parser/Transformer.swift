@@ -61,6 +61,9 @@ public func makeTransformer() -> Transformer<Expression> {
         string = string.replacingOccurrences(of: "\\\\", with: "\\")
         string = string.replacingOccurrences(of: "\\\"", with: "\"")
         string = string.replacingOccurrences(of: "\\\'", with: "'")
+        string = string.replacingOccurrences(of: "\\n", with: "\n")
+        string = string.replacingOccurrences(of: "\\r", with: "\r")
+        string = string.replacingOccurrences(of: "\\t", with: "\t")
         return string
     }
 

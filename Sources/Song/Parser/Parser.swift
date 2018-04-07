@@ -19,7 +19,7 @@ public func makeParser() -> ParserProtocol {
     let lParen = str("(") >>> skip
     let rParen = str(")")
     let singleQuote = str("'")
-    let quote = str("\"")
+    let doubleQuote = str("\"")
     let backslash = str("\\")
     let underscore = str("_")
     let questionMark = str("?")
@@ -30,12 +30,17 @@ public func makeParser() -> ParserProtocol {
 
     let textAlphanumeric = Parser.char(.alphanumerics)
     let textQuoteChars = CharacterSet(charactersIn: "'\"")
-    let textPunctuation = Parser.char(CharacterSet.punctuationCharacters.subtracting(textQuoteChars))
+    let textBackslashChars = CharacterSet(charactersIn: "\\")
+    let textPunctuation = Parser.char(CharacterSet.punctuationCharacters.subtracting(textQuoteChars).subtracting(textBackslashChars))
     let textSymbol = Parser.char(CharacterSet.symbols.subtracting(textQuoteChars))
     let textWhitespace = Parser.char(.whitespacesAndNewlines)
-    let textCharacter = textAlphanumeric | textPunctuation | textWhitespace | textSymbol
-    let textLiteralCharInChar = backslash >>> (backslash | singleQuote) | textCharacter | quote
-    let textLiteralCharInString = backslash >>> (backslash | quote) | textCharacter | singleQuote
+    let textCharacter = textAlphanumeric | textWhitespace | textSymbol | textPunctuation
+    let textEscapedControl = backslash >>> (backslash | "nrt".match)
+    let textEscapedSingleQuote = backslash >>> singleQuote
+    let textEscapedDoubleQuote = backslash >>> doubleQuote
+    let textLiteralChar = textEscapedControl | textCharacter
+    let textLiteralCharInChar = textEscapedSingleQuote | doubleQuote | textLiteralChar
+    let textLiteralCharInString = textEscapedDoubleQuote | singleQuote | textLiteralChar
 
     let star = str("*")
     let slash = str("/")
@@ -84,7 +89,7 @@ public func makeParser() -> ParserProtocol {
     let floatValue = (digit.some >>> dot >>> digit.some).tag("float")
     let numericValue = floatValue | integerValue
     let characterValue = singleQuote >>> textLiteralCharInChar.tag("character") >>> singleQuote
-    let stringValue = quote >>> textLiteralCharInString.some.maybe.tag("string") >>> quote
+    let stringValue = doubleQuote >>> textLiteralCharInString.some.maybe.tag("string") >>> doubleQuote
 
     let literalValue = stringValue | characterValue | list | listConstructor | numericValue | booleanValue
 
