@@ -1,3 +1,4 @@
+import Foundation
 import Syft
 
 public func makeParser() -> ParserProtocol {
@@ -26,11 +27,16 @@ public func makeParser() -> ParserProtocol {
     let lowercaseLetter = "abcdefghijklmnopqrstuvwxyz".match
     let uppercaseLetter = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".match
     let letter = lowercaseLetter | uppercaseLetter
-    let symbol = dot | pipe | comma | lBracket | rBracket | lParen | rParen | underscore | "!@#$%^&*-=_+`~,.<>/?:;\\|[]{}".match
-    let textualCharacter = letter | digit | space | symbol
-    let literalCharacter = backslash >>> (backslash | singleQuote) | textualCharacter | quote
-    let literalString = Deferred()
-    literalString.parser = backslash >>> (backslash | quote) | textualCharacter | singleQuote
+
+    let textAlphanumeric = Parser.char(.alphanumerics)
+    let textQuoteChars = CharacterSet(charactersIn: "'\"")
+    let textPunctuation = Parser.char(CharacterSet.punctuationCharacters.subtracting(textQuoteChars))
+    let textSymbol = Parser.char(CharacterSet.symbols.subtracting(textQuoteChars))
+    let textWhitespace = Parser.char(.whitespacesAndNewlines)
+    let textCharacter = textAlphanumeric | textPunctuation | textWhitespace | textSymbol
+    let textLiteralCharInChar = backslash >>> (backslash | singleQuote) | textCharacter | quote
+    let textLiteralCharInString = backslash >>> (backslash | quote) | textCharacter | singleQuote
+
     let star = str("*")
     let slash = str("/")
     let div = str("Div")
@@ -77,8 +83,8 @@ public func makeParser() -> ParserProtocol {
     let integerValue = digit.some.tag("integer")
     let floatValue = (digit.some >>> dot >>> digit.some).tag("float")
     let numericValue = floatValue | integerValue
-    let characterValue = singleQuote >>> literalCharacter.tag("character") >>> singleQuote
-    let stringValue = quote >>> literalString.some.maybe.tag("string") >>> quote
+    let characterValue = singleQuote >>> textLiteralCharInChar.tag("character") >>> singleQuote
+    let stringValue = quote >>> textLiteralCharInString.some.maybe.tag("string") >>> quote
 
     let literalValue = stringValue | characterValue | list | listConstructor | numericValue | booleanValue
 

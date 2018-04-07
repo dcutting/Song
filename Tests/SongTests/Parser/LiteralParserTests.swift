@@ -32,6 +32,8 @@ class LiteralParserTests: XCTestCase {
 
     func test_chars() {
         "'A'".makes(.char("A"))
+        "'é'".makes(.char("é"))
+        "'😀'".makes(.char("😀"))
         "' '".makes(.char(" "))
         "'\\''".makes(.char("'"))
         "'\"'".makes(.char("\""))
@@ -44,6 +46,13 @@ class LiteralParserTests: XCTestCase {
         "\"\"".makes(.string(""))
         "\"'\"".makes(.string("'"))
         "\"hello world\"".makes(.string("hello world"))
+"""
+\"hello
+world\"
+""".makes(.string("hello\nworld"))
+        "\"café\"".makes(.string("café"))
+        "\"😀\"".makes(.string("😀"))
+        "\"Hi, I said\"".makes(.string("Hi, I said"))
         "\"\\\"Hi,\\\" I said\"".makes(.string("\"Hi,\" I said"))
         "\"a\\\\backslash\"".makes(.string("a\\backslash"))
         " \"hello world\" ".makes(.string("hello world"))
