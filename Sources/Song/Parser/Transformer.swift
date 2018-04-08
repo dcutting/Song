@@ -118,7 +118,7 @@ public func makeTransformer() -> Transformer<Expression> {
     }
 
     t.rule(["params": .series("params"), "body": .simple("body")]) {
-        .function(Function(name: nil, patterns: try $0.vals("params"), when: .yes, body: try $0.val("body")))
+        .function(Function(name: nil, patterns: try $0.vals("params"), when: .yes, body: try $0.val("body"), type: .Func("Func", [.Bool, .Bool])))
     }
 
     t.rule(["lambda": .simple("lambda")]) {
@@ -241,5 +241,5 @@ private func transformFunction(args: TransformerReducerArguments<Expression>) th
         when = try args.val("guard")
     } catch {}
 
-    return Function(name: name, patterns: params, when: when, body: body)
+    return Function(name: name, patterns: params, when: when, body: body, type: .Func(name, [.Bool, .Bool]))
 }

@@ -182,6 +182,11 @@ while (true) {
         do {
             let ast = try transformer.transform(result)
             do {
+
+                print(ast)
+                let typeCheckResult = ast.verify(context: context)
+                print(typeCheckResult)
+
                 let expression = try ast.evaluate(context: context)
                 if case .closure(let name, _, _) = expression {
                     if let name = name {

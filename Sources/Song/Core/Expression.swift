@@ -48,6 +48,7 @@ public extension Expression {
     }
 
     public static func lambda(_ patterns: [Expression], _ body: Expression) -> Expression {
-        return .function(Function(name: nil, patterns: patterns, when: .yes, body: body))
+        let type = Type.Bool
+        return .function(Function(name: nil, patterns: patterns, when: .yes, body: body, type: type))
     }
 }
