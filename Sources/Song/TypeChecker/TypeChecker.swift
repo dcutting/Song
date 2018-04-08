@@ -50,37 +50,52 @@ public enum TypeCheckerResult {
 
 public class TypeChecker {
 
-    public func verify(expression: Expression, context: Context) -> TypeCheckerResult {
+    private var types = [String: Type]()
+
+    public init() {}
+
+    public func storeType(for expression: Expression) {
+        switch expression {
+        case let .assign(variable, value):
+            if case .name(let name) = variable {
+                types[name] = type(value)
+            }
+        case let .function(f):
+            guard let name = f.name else { return }
+            let paramTypes = f.patterns.map { type($0) }
+            let returnType = type(f.body)
+            types[name] = .Func("Func", paramTypes + [returnType])
+        default:
+            ()
+        }
+    }
+
+    public func verify(expression: Expression) -> TypeCheckerResult {
         switch expression {
         case .bool, .number, .char, .name:
-            return .valid(expression.type(context: context))
+            return .valid(type(expression))
         case let .call(name, args):
-            guard let f = context[name] else { return .error(.unknownName(expression))}
-            let fType = f.type(context: context)
+            guard let fType = types[name] else { return .error(.unknownName(expression))}
             guard args.count == fType.associated.count - 1 else { return .error(.arityMismatch(expression)) }
-            print("expression.type: \(expression.type)")
-            print("f.type: \(f.type)")
+            print("expression.type: \(type(expression))")
+            print("f.type: \(fType)")
             for (a, p) in zip(args, fType.associated) {
-                let aType = a.type(context: context)
+                let aType = type(a)
                 let pName = p.name
                 print("comparing: \(a, p)")
                 guard pName == aType.name else { return .error(.typeMismatch(a, aType, p)) }
             }
-            return .valid(expression.type(context: context))
+            return .valid(type(expression))
         default:
             return .error(.invalid(expression))
         }
     }
-}
 
-public extension Expression {
-
-    public func type(context: Context) -> Type {
-        switch self {
+    private func type(_ expr: Expression) -> Type {
+        
+        switch expr {
         case .bool:
             return .Bool
-        case .char:
-            return .Char
         case let .number(value):
             switch value {
             case .int:
@@ -88,29 +103,16 @@ public extension Expression {
             case .float:
                 return .Float
             }
+        case .char:
+            return .Char
         case let .name(name):
-            let e = context[name]
-            return e?.type(context: context) ?? .Root
-        case let .function(f):
-            let paramTypes = f.patterns.map { $0.type(context: context) }
-            let returnType = f.body.type(context: context)
-            return .Func("Func", paramTypes + [returnType])
-        case let .closure(_, functions, _):
-            guard let first = functions.first else { return .Root }
-            return first.type(context: context)
+            return types[name] ?? .Root
+
         case let .call(_, args):
-            let argTypes = args.map { $0.type(context: context) }
+            let argTypes = args.map { type($0) }
             return .Func("Call", argTypes)
         default:
             return .Root
         }
-    }
-}
-
-public extension Expression {
-
-    public func verify(context: Context) -> TypeCheckerResult {
-        let typeChecker = TypeChecker()
-        return typeChecker.verify(expression: self, context: context)
     }
 }

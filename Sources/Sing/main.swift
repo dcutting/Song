@@ -134,6 +134,8 @@ func dumpContext() {
     print(context as AnyObject)
 }
 
+let typeChecker = TypeChecker()
+
 log("Song v0.9.0 🎵")
 
 while (true) {
@@ -184,7 +186,8 @@ while (true) {
             do {
 
                 print(ast)
-                let typeCheckResult = ast.verify(context: context)
+                typeChecker.storeType(for: ast)
+                let typeCheckResult = typeChecker.verify(expression: ast)
                 print(typeCheckResult)
 
                 let expression = try ast.evaluate(context: context)
