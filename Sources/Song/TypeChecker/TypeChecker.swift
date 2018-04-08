@@ -1,6 +1,6 @@
-public class Type {
+public class Type { // TODO: this shouldn't be a class.
     public let name: String
-    public let parent: Type?
+    public var parent: Type?
     public let associated: [Type]
 
     public init(name: String, parent: Type?, associated: [Type]) {
@@ -24,7 +24,9 @@ public class Type {
 
 extension Type: CustomStringConvertible {
     public var description: String {
-        return name
+        let associatedNames = associated.map { $0.name }
+        let joinedAssociatedNames = associatedNames.joined(separator: ", ")
+        return "\(name)(\(joinedAssociatedNames))"
     }
 }
 
@@ -49,16 +51,15 @@ public class TypeChecker {
         case .bool, .number:
             return .success(expression.type)
         case let .call(name, args):
-            guard let v = context[name] else { return .error(.unknownName(expression))}
-            guard case let .closure(_, functions, _) = v else { return .error(.notAClosure(expression)) }
-            for function in functions {
-                guard case let .function(f) = function else { return .error(.notAFunction(expression)) }
-                guard args.count == f.type.associated.count - 1 else { return .error(.arityMismatch(expression)) }
-                for (a, p) in zip(args, f.type.associated) {
-                    let pName = p.name
-                    let aName = a.type.name
-                    guard pName == aName else { return .error(.typeMismatch(a, a.type, p)) }
-                }
+            guard let f = context[name] else { return .error(.unknownName(expression))}
+            guard args.count == f.type.associated.count - 1 else { return .error(.arityMismatch(expression)) }
+            print("expression.type: \(expression.type)")
+            print("f.type: \(f.type)")
+            for (a, p) in zip(args, f.type.associated) {
+                let aName = a.type.name
+                let pName = p.name
+                print("comparing: \(a, p)")
+                guard pName == aName else { return .error(.typeMismatch(a, a.type, p)) }
             }
             return .success(expression.type)
         default:
@@ -80,6 +81,16 @@ public extension Expression {
             case .float:
                 return .Float
             }
+        case let .function(f):
+            let paramTypes = f.patterns.map { $0.type }
+            let returnType = f.body.type
+            return .Func("Func", paramTypes + [returnType])
+        case let .closure(_, functions, _):
+            guard let first = functions.first else { return .Root }
+            return first.type
+        case let .call(_, args):
+            let argTypes = args.map { $0.type }
+            return .Func("Call", argTypes)
         default:
             return .Root
         }
