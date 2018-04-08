@@ -4,14 +4,12 @@ public struct Function {
     public let patterns: [Expression]
     public let when: Expression
     public let body: Expression
-    public let type: Type
 
-    public init(name: String?, patterns: [Expression], when: Expression, body: Expression, type: Type) {
+    public init(name: String?, patterns: [Expression], when: Expression, body: Expression) {
         self.name = name
         self.patterns = patterns
         self.when = when
         self.body = body
-        self.type = type
     }
 }
 
