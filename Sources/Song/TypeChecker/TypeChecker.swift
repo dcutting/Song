@@ -74,6 +74,12 @@ public class TypeChecker {
         switch expression {
         case .bool, .number, .char, .name:
             return .valid(type(expression))
+        case let .list(items):
+            let itemTypes = items.map { type($0) }
+            for itemType in itemTypes {
+
+            }
+            return .valid(.ListOf(.Bool))
         case let .call(name, args):
             guard let fType = types[name] else { return .error(.unknownName(expression))}
             guard args.count == fType.associated.count - 1 else { return .error(.arityMismatch(expression)) }
@@ -92,7 +98,7 @@ public class TypeChecker {
     }
 
     private func type(_ expr: Expression) -> Type {
-        
+
         switch expr {
         case .bool:
             return .Bool
