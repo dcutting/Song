@@ -34,13 +34,14 @@ extension Type: CustomStringConvertible {
     }
 }
 
-public enum TypeCheckerError {
+public enum TypeCheckerError: Error {
     case invalid(Expression)
     case unknownName(Expression)
     case notAClosure(Expression)
     case notAFunction(Expression)
     case arityMismatch(Expression)
     case typeMismatch(Expression, Type, Type)
+    case ambiguous(Expression)
 }
 
 public enum TypeCheckerResult {
@@ -54,50 +55,48 @@ public class TypeChecker {
 
     public init() {}
 
-    public func storeType(for expression: Expression) {
+    public func storeType(for expression: Expression) throws {
         switch expression {
         case let .assign(variable, value):
             if case .name(let name) = variable {
-                types[name] = type(value)
+                types[name] = try type(value)
             }
         case let .function(f):
             guard let name = f.name else { return }
-            let paramTypes = f.patterns.map { type($0) }
-            let returnType = type(f.body)
+            let paramTypes = try f.patterns.map { try type($0) }
+            let returnType = try type(f.body)
             types[name] = .Func("Func", paramTypes + [returnType])
         default:
             ()
         }
     }
 
-    public func verify(expression: Expression) -> TypeCheckerResult {
+    public func verify(expression: Expression) throws -> TypeCheckerResult {
         switch expression {
-        case .bool, .number, .char, .name:
-            return .valid(type(expression))
-        case let .list(items):
-            let itemTypes = items.map { type($0) }
-            for itemType in itemTypes {
-
+        case .bool, .number, .char, .ignore, .list, .name:
+            do {
+                return try .valid(type(expression))
+            } catch let error as TypeCheckerError {
+                return .error(error)
             }
-            return .valid(.ListOf(.Bool))
         case let .call(name, args):
             guard let fType = types[name] else { return .error(.unknownName(expression))}
             guard args.count == fType.associated.count - 1 else { return .error(.arityMismatch(expression)) }
-            print("expression.type: \(type(expression))")
+            print("expression.type: \(try type(expression))")
             print("f.type: \(fType)")
             for (a, p) in zip(args, fType.associated) {
-                let aType = type(a)
+                let aType = try type(a)
                 let pName = p.name
                 print("comparing: \(a, p)")
                 guard pName == aType.name else { return .error(.typeMismatch(a, aType, p)) }
             }
-            return .valid(type(expression))
+            return .valid(try type(expression))
         default:
             return .error(.invalid(expression))
         }
     }
 
-    private func type(_ expr: Expression) -> Type {
+    private func type(_ expr: Expression) throws -> Type {
 
         switch expr {
         case .bool:
@@ -112,10 +111,19 @@ public class TypeChecker {
         case .char:
             return .Char
         case let .name(name):
-            return types[name] ?? .Root
+            guard let type = types[name] else { throw TypeCheckerError.unknownName(expr) }
+            return type
+        case let .list(items):
+            guard let first = items.first else { throw TypeCheckerError.ambiguous(expr) }
+            let firstType = try type(first)
+            for item in items {
+                let itemType = try type(item)
+                guard firstType.name == itemType.name else { throw TypeCheckerError.typeMismatch(expr, firstType, itemType)}
+            }
+            return .ListOf(firstType)
 
         case let .call(_, args):
-            let argTypes = args.map { type($0) }
+            let argTypes = try args.map { try type($0) }
             return .Func("Call", argTypes)
         default:
             return .Root

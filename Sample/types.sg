@@ -1,0 +1,21 @@
+#!/usr/bin/env song
+
+type Int.fib = Int
+eg 7.fib = 13
+n.fib = n.fib(0, 1)
+
+type Int.fib(Int, Int) = Int
+eg 7.fib(0, 1) = 13
+0.fib(a, _) = a
+n.fib(a, b) When n > 0 = (n-1).fib(b, a+b)
+
+type Int.times(|| _) = _
+eg 1.times(|| "hi") = "hi"
+1.times(f) = f()
+n.times(f) When n > 1 = Do
+  f()
+  (n-1).times(f)
+End
+
+500.times(|| 80.fib)
+80.fib.out

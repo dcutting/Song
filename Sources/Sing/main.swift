@@ -186,8 +186,8 @@ while (true) {
             do {
 
                 print(ast)
-                typeChecker.storeType(for: ast)
-                let typeCheckResult = typeChecker.verify(expression: ast)
+                try typeChecker.storeType(for: ast)
+                let typeCheckResult = try typeChecker.verify(expression: ast)
                 print(typeCheckResult)
 
                 let expression = try ast.evaluate(context: context)

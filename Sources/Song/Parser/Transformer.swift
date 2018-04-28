@@ -1,6 +1,11 @@
 import Foundation
 import Syft
 
+public struct TypedExpression {
+    public let expression: Expression
+    public let type: Type?
+}
+
 public enum SongTransformError: Error {
     case unknown
     case notNumeric(String)
@@ -9,8 +14,8 @@ public enum SongTransformError: Error {
     case notArgs
 }
 
-public func makeTransformer() -> Transformer<Expression> {
-    let t = Transformer<Expression>()
+public func makeTransformer() -> Transformer<TypedExpression> {
+    let t = Transformer<TypedExpression>()
 
     // Lists.
 
