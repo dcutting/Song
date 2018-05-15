@@ -14,3 +14,7 @@ list.join = list.join("")
 [].join(delimiter) = ""
 [x].join(delimiter) = x
 [x|xs].join(delimiter) = x + delimiter + xs.join(delimiter)
+
+anyJoin(a, b) = [a, b].anyJoin
+[].anyJoin = []
+[x|xs].anyJoin = x.string + xs.anyJoin
