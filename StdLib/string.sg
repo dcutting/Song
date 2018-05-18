@@ -4,17 +4,16 @@ str.split(delimiter) = str.split(delimiter, [], "")
 str.split(delimiter, words, word) When str.startsWith?(delimiter) = str.drop(delimiter.length).split(delimiter, words + [word], "")
 str.split(delimiter, words, word) = str.tail.split(delimiter, words, word + [str.head])
 
-"".lstrip = ""
-str.lstrip When str.head Eq ' ' = str.tail.lstrip
-str.lstrip = str
-str.rstrip = str.reverse.lstrip.reverse
-str.strip = str.lstrip.rstrip
+# Eg "".stripLeading = ""
+# Eg " ".stripLeading = ""
+# Eg " hello".stripLeading = "hello"
+[' '|xs].stripLeading = xs.stripLeading
+string.stripLeading = string
+string.stripTrailing = string.reverse.stripLeading.reverse
+string.strip = string.stripLeading.stripTrailing
 
+joinBoth(a, b) = [a, b].join
 list.join = list.join("")
 [].join(delimiter) = ""
-[x].join(delimiter) = x
-[x|xs].join(delimiter) = x + delimiter + xs.join(delimiter)
-
-anyJoin(a, b) = [a, b].anyJoin
-[].anyJoin = []
-[x|xs].anyJoin = x.string + xs.anyJoin
+[x].join(delimiter) = x.string
+[x|xs].join(delimiter) = x.string + delimiter + xs.join(delimiter)
