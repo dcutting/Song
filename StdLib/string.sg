@@ -18,7 +18,9 @@ list.join = list.join("")
 [x].join(delimiter) = x.string
 [x|xs].join(delimiter) = x.string + delimiter + xs.join(delimiter)
 
-string.stripSpaces = string.reject(|x| x Eq ' ')
+string.stripNonLetters = string.select(letter?)
+
+char.letter? = char.lower.scalar.between?('a'.scalar, 'z'.scalar)
 
 _asciiCaseDiff = 'a'.scalar - 'A'.scalar
 

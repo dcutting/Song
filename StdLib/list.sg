@@ -111,6 +111,8 @@ list.partition(f) = list.partition(f, [], [])
 
 list.palindrome? = list Eq list.reverse
 
+list.loosePalindrome? = list.lower.stripNonLetters.palindrome?
+
 _.startsWith?([]) = Yes
 [x|xs].startsWith?([x|ps]) = xs.startsWith?(ps)
 _.startsWith?(_) = No
