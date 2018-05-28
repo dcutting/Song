@@ -82,6 +82,19 @@ func evaluateStringConstructor(arguments: [Expression], context: Context) throws
     return .string(output)
 }
 
+func evaluateCharacterConstructor(arguments: [Expression], context: Context) throws -> Expression {
+    var numbers = try toNumbers(arguments: arguments, context: context)
+    guard numbers.count == 1 else { throw EvaluationError.signatureMismatch(arguments) }
+    let left = numbers.removeFirst()
+    switch left {
+    case .int(let value):
+        guard let scalar = UnicodeScalar(value as Int) else { throw EvaluationError.numericMismatch }
+        return .char(Character(scalar))
+    default:
+        throw EvaluationError.numericMismatch
+    }
+}
+
 func evaluateTruncateConstructor(arguments: [Expression], context: Context) throws -> Expression {
     var numbers = try toNumbers(arguments: arguments, context: context)
     guard numbers.count == 1 else { throw EvaluationError.signatureMismatch(arguments) }

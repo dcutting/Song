@@ -10,6 +10,7 @@ public let rootContext: Context = [
     "Or": .builtIn(evaluateOr),
     "number": .builtIn(evaluateNumberConstructor),
     "string": .builtIn(evaluateStringConstructor),
+    "character": .builtIn(evaluateCharacterConstructor),
     "truncate": .builtIn(evaluateTruncateConstructor),
     "+": .builtIn(evaluatePlus),
     "-": .builtIn(evaluateMinus),

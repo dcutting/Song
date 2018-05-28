@@ -1,4 +1,4 @@
-public typealias IntType = Int64
+public typealias IntType = Int
 public typealias FloatType = Float64
 
 public enum Number {
