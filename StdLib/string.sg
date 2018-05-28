@@ -19,3 +19,11 @@ list.join = list.join("")
 [x|xs].join(delimiter) = x.string + delimiter + xs.join(delimiter)
 
 string.stripSpaces = string.reject(|x| x Eq ' ')
+
+_asciiCaseDiff = 'a'.scalar - 'A'.scalar
+
+char.lower When char.scalar.between?(65, 90) = (char.scalar + _asciiCaseDiff).character
+char.lower = char
+
+char.upper When char.scalar.between?(97, 122) = (char.scalar - _asciiCaseDiff).character
+char.upper = char
