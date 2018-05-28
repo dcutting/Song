@@ -11,6 +11,7 @@ public let rootContext: Context = [
     "number": .builtIn(evaluateNumberConstructor),
     "string": .builtIn(evaluateStringConstructor),
     "character": .builtIn(evaluateCharacterConstructor),
+    "scalar": .builtIn(evaluateScalar),
     "truncate": .builtIn(evaluateTruncateConstructor),
     "+": .builtIn(evaluatePlus),
     "-": .builtIn(evaluateMinus),

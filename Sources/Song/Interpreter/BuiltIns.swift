@@ -95,6 +95,15 @@ func evaluateCharacterConstructor(arguments: [Expression], context: Context) thr
     }
 }
 
+func evaluateScalar(arguments: [Expression], context: Context) throws -> Expression {
+    var chars = try toCharacters(arguments: arguments, context: context)
+    guard chars.count == 1 else { throw EvaluationError.signatureMismatch(arguments) }
+    let left = chars.removeFirst()
+    let string = String(left)
+    guard let value = UnicodeScalar(string)?.value else { throw EvaluationError.notACharacter }
+    return .int(IntType(value))
+}
+
 func evaluateTruncateConstructor(arguments: [Expression], context: Context) throws -> Expression {
     var numbers = try toNumbers(arguments: arguments, context: context)
     guard numbers.count == 1 else { throw EvaluationError.signatureMismatch(arguments) }
@@ -259,6 +268,16 @@ private func toNumbers(arguments: [Expression], context: Context) throws -> [Num
         let evaluatedArg = try arg.evaluate(context: context)
         guard case let .number(n) = evaluatedArg else {
             throw EvaluationError.notANumber(evaluatedArg)
+        }
+        return n
+    }
+}
+
+private func toCharacters(arguments: [Expression], context: Context) throws -> [Character] {
+    return try arguments.map { arg -> Character in
+        let evaluatedArg = try arg.evaluate(context: context)
+        guard case let .char(n) = evaluatedArg else {
+            throw EvaluationError.notACharacter
         }
         return n
     }
