@@ -22,6 +22,9 @@ string.stripSpaces = string.reject(|x| x Eq ' ')
 
 _asciiCaseDiff = 'a'.scalar - 'A'.scalar
 
+[x|xs].lower = [x|xs].map(lower)
+[x|xs].upper = [x|xs].map(upper)
+
 char.lower When char.scalar.between?(65, 90) = (char.scalar + _asciiCaseDiff).character
 char.lower = char
 
