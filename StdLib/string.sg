@@ -17,3 +17,5 @@ list.join = list.join("")
 [].join(delimiter) = ""
 [x].join(delimiter) = x.string
 [x|xs].join(delimiter) = x.string + delimiter + xs.join(delimiter)
+
+string.stripSpaces = string.reject(|x| x Eq ' ')
