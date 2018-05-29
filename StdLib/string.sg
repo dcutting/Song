@@ -18,8 +18,6 @@ list.join = list.join("")
 [x].join(delimiter) = x.string
 [x|xs].join(delimiter) = x.string + delimiter + xs.join(delimiter)
 
-string.stripNonLetters = string.select(letter?)
-
 char.letter? = char.lower.scalar.between?('a'.scalar, 'z'.scalar)
 
 _asciiCaseDiff = 'a'.scalar - 'A'.scalar
@@ -27,8 +25,8 @@ _asciiCaseDiff = 'a'.scalar - 'A'.scalar
 [x|xs].lower = [x|xs].map(lower)
 [x|xs].upper = [x|xs].map(upper)
 
-char.lower When char.scalar.between?(65, 90) = (char.scalar + _asciiCaseDiff).character
+char.lower When char.scalar.between?('A'.scalar, 'Z'.scalar) = (char.scalar + _asciiCaseDiff).character
 char.lower = char
 
-char.upper When char.scalar.between?(97, 122) = (char.scalar - _asciiCaseDiff).character
+char.upper When char.scalar.between?('a'.scalar, 'z'.scalar) = (char.scalar - _asciiCaseDiff).character
 char.upper = char
