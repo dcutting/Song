@@ -1,0 +1,21 @@
+clients.server = @commands.in.parse.handle(clients).server
+
+line.parse = line.split(":")
+
+["WHO"].handle(clients) = Do
+  clients.out
+  clients
+End
+
+["JOIN", from].handle(clients) = clients.append(from)
+
+["LEAVE", from].handle(clients) = clients.remove(from)
+
+["SAY", from, body].handle(clients) = Do
+  others = clients.remove(from)
+  message = from + ": " + body
+  others.each(|client| @client.out(message))
+  clients
+End
+
+server([])
