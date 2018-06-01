@@ -100,13 +100,13 @@ list.partition(f) = list.partition(f, [], [])
 [x|xs].partition(f, selected, rest) When f(x) = xs.partition(f, selected + [x], rest)
 [x|xs].partition(f, selected, rest) = xs.partition(f, selected, rest + [x])
 
-[[], []].zip = []
-[[x|xs], [y|ys]].zip = [[x, y]] + [xs, ys].zip
+a.zip(b) = [a, b].zip
 
-[].zip([]) = []
-[x|xs].zip([y|ys]) = [[x, y]] + xs.zip(ys)
+[a, b].zip = [a, b].zipWith(|x, y| [x, y])
 
 [[], []].zipWith(_) = []
+[[x|xs], []].zipWith(f) = [x] + [xs, []].zipWith(f)
+[[], [y|ys]].zipWith(f) = [y] + [[], ys].zipWith(f)
 [[x|xs], [y|ys]].zipWith(f) = [f(x, y)] + [xs, ys].zipWith(f)
 
 list.palindrome? = list Eq list.reverse

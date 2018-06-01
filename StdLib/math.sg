@@ -31,6 +31,3 @@ x.times(n, result) When x > 0 = (x-1).times(n, result + [n])
 
 x.upTo(x) = [x]
 x.upTo(y) = [x|(x+1).upTo(y)]
-
-x.between?(p, q) When p <= x And x <= q = Yes
-_.between?(_, _) = No
