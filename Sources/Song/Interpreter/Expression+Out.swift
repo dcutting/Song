@@ -1,6 +1,6 @@
 public extension Expression {
 
-    public func out() -> String {
+    func out() -> String {
         switch self {
         case let .char(char):
             return "\(char)"

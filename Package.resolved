@@ -1,43 +1,42 @@
 {
-  "object": {
-    "pins": [
-      {
-        "package": "LineNoise",
-        "repositoryURL": "https://github.com/dcutting/linenoise-swift.git",
-        "state": {
-          "branch": "master",
-          "revision": "afc897c02b030af7333105c4fedcd843a8339238",
-          "version": null
-        }
-      },
-      {
-        "package": "Nimble",
-        "repositoryURL": "https://github.com/Quick/Nimble.git",
-        "state": {
-          "branch": null,
-          "revision": "22800b0954c89344bb8c87f8ab93378076716fb7",
-          "version": "7.0.3"
-        }
-      },
-      {
-        "package": "SwiftPM",
-        "repositoryURL": "https://github.com/apple/swift-package-manager.git",
-        "state": {
-          "branch": null,
-          "revision": "63a01220e93271dc3bf204b9e13dd1aeb2beefee",
-          "version": "0.2.0"
-        }
-      },
-      {
-        "package": "Syft",
-        "repositoryURL": "https://github.com/dcutting/Syft.git",
-        "state": {
-          "branch": "develop",
-          "revision": "601240f46d0591ab01b6071ea9739760a229e947",
-          "version": null
-        }
+  "originHash" : "adf800c604e591c25147cbf0b5c5c2bd08b47fad890fab1a910bcc4be4594d32",
+  "pins" : [
+    {
+      "identity" : "linenoise-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/andybest/linenoise-swift.git",
+      "state" : {
+        "revision" : "afc897c02b030af7333105c4fedcd843a8339238",
+        "version" : "0.0.3"
       }
-    ]
-  },
-  "version": 1
+    },
+    {
+      "identity" : "nimble",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Quick/Nimble.git",
+      "state" : {
+        "revision" : "e9d769113660769a4d9dd3afb855562c0b7ae7b0",
+        "version" : "7.3.4"
+      }
+    },
+    {
+      "identity" : "swift-argument-parser",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-argument-parser",
+      "state" : {
+        "revision" : "41982a3656a71c768319979febd796c6fd111d5c",
+        "version" : "1.5.0"
+      }
+    },
+    {
+      "identity" : "syft",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/dcutting/Syft.git",
+      "state" : {
+        "revision" : "601240f46d0591ab01b6071ea9739760a229e947",
+        "version" : "0.3.0"
+      }
+    }
+  ],
+  "version" : 3
 }

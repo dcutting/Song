@@ -1,4 +1,4 @@
-import Basic
+import Foundation
 
 public protocol StdIn {
     func get() -> String?
@@ -25,7 +25,7 @@ public class DefaultStdOut: StdOut {
 public class DefaultStdErr: StdOut {
     init() {}
     public func put(_ output: String) {
-        stderrStream <<< output
-        stderrStream.flush()
+        guard let data = output.data(using: .utf8) else { return }
+        try? FileHandle.standardError.write(contentsOf: data)
     }
 }

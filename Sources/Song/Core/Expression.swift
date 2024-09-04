@@ -27,27 +27,27 @@ public indirect enum Expression {
 
 public extension Expression {
 
-    public static var yes: Expression {
+    static var yes: Expression {
         return .bool(true)
     }
 
-    public static var no: Expression {
+    static var no: Expression {
         return .bool(false)
     }
 
-    public static func int(_ int: IntType) -> Expression {
+    static func int(_ int: IntType) -> Expression {
         return .number(.int(int))
     }
 
-    public static func float(_ float: FloatType) -> Expression {
+    static func float(_ float: FloatType) -> Expression {
         return .number(.float(float))
     }
 
-    public static func string(_ string: String) -> Expression {
+    static func string(_ string: String) -> Expression {
         return .list(Array(string).map(Expression.char))
     }
 
-    public static func lambda(_ patterns: [Expression], _ body: Expression) -> Expression {
+    static func lambda(_ patterns: [Expression], _ body: Expression) -> Expression {
         return .function(Function(name: nil, patterns: patterns, when: .yes, body: body))
     }
 }

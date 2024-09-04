@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-#mint run zweigraf/FakeBundle "fakebundle --input StdLib --output ./Sources/Sing/StdLib.swift"
-fakebundle --input StdLib --output ./Sources/Sing/StdLib.swift
+mint run zweigraf/FakeBundle fakebundle --input StdLib --output ./Sources/Sing/StdLib.swift
+#fakebundle --input StdLib --output ./Sources/Sing/StdLib.swift
