@@ -123,7 +123,7 @@ struct Song: ParsableCommand {
             print(context as AnyObject)
         }
         
-        log("Song v0.9.0 🎵")
+        log("Song v0.9.1 🎵")
         
         while (true) {
             
