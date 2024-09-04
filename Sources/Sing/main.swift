@@ -77,7 +77,7 @@ struct Song: ParsableCommand {
                     print("^C")
                 } catch {
                     print(error)
-                    preconditionFailure()
+                    return nil
                 }
             }
         }
