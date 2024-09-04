@@ -1,3 +1,5 @@
 .build
 .xcbuild
 *.xcodeproj
+.DS_Store
+xcuserdata

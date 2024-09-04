@@ -1,0 +1,18 @@
+# Geometric sequences
+
+# _.g(_,0) = []
+# s.g(m,k) = [s|]+(k-1).g(s*m,m)
+
+# _.t(0) = []
+# [v,n].t(k) = [v|n().t(k-1)]
+# m.g(s) = [s, || m.g(s*m)]
+# 2.g(3).t(3).out
+
+# 0.g(_,_) = []
+# k.g(s,m) = [s|(k-1).g(s*m,m)]
+# 3.g(3,2).out
+
+0.g(_,_,r) = r
+k.g(s,m,r) = (k-1).g(s*m,m,r+[s])
+k.g(s,m) = k.g(s,m,[])
+3.g(3,2).out

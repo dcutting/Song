@@ -1,9 +1,10 @@
-clients.server = @commands.in.parse.handle(clients).server
+module ?commands
 
-line.parse = line.split(":")
+server() = [].server
+clients.server = commands.handle(clients).server
 
-["WHO"].handle(clients) = Do
-  clients.out
+["WHO", from].handle(clients) = Do
+  from.out(clients)
   clients
 End
 
@@ -12,10 +13,38 @@ End
 ["LEAVE", from].handle(clients) = clients.remove(from)
 
 ["SAY", from, body].handle(clients) = Do
-  others = clients.remove(from)
-  message = from + ": " + body
-  others.each(|client| @client.out(message))
+  clients.remove(from).each(|to| to.out(body))
   clients
 End
 
-server([])
+server()&
+
+module ?stdIn ?chats ?commands stdOut! server!
+
+client() = Do
+  server.out(["JOIN", chats])
+  me.chatIn&
+  me.chatOut&
+  me.loop
+End
+
+client.loop = Do
+  client.in.handle
+  client.loop
+End
+
+["SAY", body].handle = server.out(["SAY", chats, body])
+
+["CHAT", body].handle = stdOut.out(body)
+
+client.chatIn = Do
+  client.out(["SAY", stdIn.in])
+  client.chatIn
+End
+
+client.chatOut = Do
+  client.out(["CHAT", chats.in])
+  client.chatOut
+End
+
+client()

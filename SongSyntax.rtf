@@ -1,0 +1,170 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf100
+{\fonttbl\f0\fnil\fcharset0 Monaco;\f1\fnil\fcharset0 Menlo-Regular;\f2\fswiss\fcharset0 Helvetica;
+}
+{\colortbl;\red255\green255\blue255;\red91\green77\blue171;\red66\green196\blue4;\red21\green152\blue163;
+\red46\green13\blue110;\red255\green255\blue255;\red0\green0\blue0;\red92\green38\blue153;\red170\green13\blue145;
+}
+{\*\expandedcolortbl;;\cssrgb\c43533\c39423\c72743;\cssrgb\c29859\c79295\c0;\cssrgb\c1788\c65635\c69865;
+\csgenericrgb\c18100\c5200\c43100;\csgenericrgb\c100000\c100000\c100000;\csgenericrgb\c0\c0\c0;\csgenericrgb\c35900\c14900\c60100;\csgenericrgb\c66500\c5200\c56900;
+}
+\paperw11900\paperh16840\margl1440\margr1440\vieww16300\viewh16580\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs28 \cf2 # List.sg\cf3 \
+\
+module \cf0 List\
+\
+\cf3   \cf0 [:T].length = Int\
+\cf3   eg\cf0  [2, 3, 2].length = 3\
+\cf3   eg\cf0  [\'91a\'92, \'91b\'92].length = 2\
+\cf3   eg\cf0  [].length = 0\
+\
+  [:T?].flatMap = [:T]\
+\cf3   eg\cf0  [nil, 4, 3, nil].flatMap = [4, 3]\
+\cf3 \
+end\cf0 \
+\
+[].length = 0\
+[_|xs].length = 1 + xs.length\
+\cf3 \
+\cf2 # Math.sg\cf3 \
+\
+module \cf0 Math\
+\cf4 \
+  \cf3 type\cf0  \cf4 Int\cf0 .fibonacci = \cf4 Int\cf0 \
+\cf3   eg\cf0  6.fibonacci = 8\
+\cf3   eg\cf0  0.fibonacci = 0\
+\cf3   eg\cf0  -1.fibonacci = 1\
+\cf3 \
+\cf4   \cf3 type\cf0  \cf4 Int\cf0 .times(:T) = [:T]\
+\cf3   eg\cf0  2.times(\'91hi\'92) = [\'91hi\'92, \'91hi\'92]\
+\cf3   eg\cf0  3.times(4) = [4, 4, 4]\
+\cf3   eg\cf0  0.times(5) = []\
+\cf3   eg\cf0  -1.times(5) = []\
+\
+  \cf3 type\cf0  min(\cf4 Int\cf0 , \cf4 Int\cf0 ) = \cf4 Int\cf0 \
+\cf3   eg\cf0  min(1, 3) = 1\
+\cf3   eg\cf0  min(4, -2) = -2\
+\cf3   eg\cf0  min(5, 5) = 5\
+\cf3 \
+\cf0   \cf3 type\cf0  min(\cf4 Int?\cf0 , \cf4 Int\cf0 ) = \cf4 Int\cf0 \
+\cf3   eg\cf0  min(nil, 3) = 3\
+\cf3   eg\cf0  min(1, 3) = 1\
+\cf3 \
+\cf0   \cf3 type\cf0  min(\cf4 Int\cf0 , \cf4 Int?\cf0 ) = \cf4 Int\cf0 \
+\cf3   eg\cf0  min(3, nil) = 3\
+\cf3 \
+\cf0   \cf3 type\cf0  min(\cf4 Int?\cf0 , \cf4 Int?\cf0 ) = \cf4 Int?\cf0 \
+\cf3   eg\cf0  min(nil, nil) = nil\
+\cf3   eg\cf0  min(3, 1) = 1\
+\cf3 \
+end\
+\
+\cf0 0.fibonacci = 0\
+1.fibonacci = 1\
+n.fibonacci = (n-1).fibonacci + (n-2).fibonacci\
+\
+n.times(t) = n.times(t, [])\
+\
+\cf3 type\cf0  \cf4 Int\cf0 .times(:T, [:T]) = [:T]\
+0.times(t, result) = result\
+n.times(t, result) if n > 0 = (n-1).times(t, result + [t])\
+\
+\pard\tx692\pardeftab692\pardirnatural\partightenfactor0
+
+\f1 \cf5 \cb6 type\cf7  min(\cf8 Int\cf7 ?, \cf8 Int\cf7 ?) = \cf8 Int\cf7 ?
+\f2\fs24 \cf0 \
+
+\f1\fs28 \cf7 min(x!, y!) \cf9 if\cf7  x < y = x
+\f2\fs24 \cf0 \
+
+\f1\fs28 \cf7 min(\cf9 _\cf7 , y!) = y
+\f2\fs24 \cf0 \
+
+\f1\fs28 \cf7 min(x!, \cf9 _\cf7 ) = x
+\f2\fs24 \cf0 \
+
+\f1\fs28 \cf7 min(\cf9 _\cf7 , \cf9 _\cf7 ) = \cf9 nil
+\f2\fs24 \cf0 \
+\
+
+\f1\fs28 \cf7 type min(Int, Int) = Int
+\f2\fs24 \cf0 \
+
+\f1\fs28 \cf7 min(x, y) \cf9 if\cf7  x < y = x
+\f2\fs24 \cf0 \
+
+\f1\fs28 \cf7 min(\cf9 _\cf7 , y) = y
+\f2\fs24 \cf0 \
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs28 \cf0 \cb1 \
+\cf2 # Tree.sg\
+\cf3 \
+module\cf0  Tree\
+\cf3 \
+  type \cf0 Value = :T\cf3 \
+\
+  type\cf0  Tree = [\
+    left: Tree?,\
+    right: Tree?,\
+    value: Value\
+  ]\
+\
+\cf3   type\cf0  Tree.min = Value\
+\cf3   type\cf0  Tree?.preorder = [Value]\
+\cf3   type\cf0  Tree?.postorder = [Value]\
+\cf3   type\cf0  Tree?.inorder = [Value]\
+\
+  \cf3 context do\
+    \cf0 t = [\
+          left\
+            [value: 2],\
+          right\
+            [value: 7],\
+          value [3]\
+        ]\
+    \cf3 eg\cf0  t.min = 2\
+    \cf3 eg\cf0  t.preorder = [3, 2, 7]\
+    \cf3 eg\cf0  t.postorder = [2, 7, 3]\
+    \cf3 eg\cf0  t.inorder = [2, 3, 7]\
+  \cf3 end\
+\cf0 \
+\cf3 end\cf0 \
+\
+\cf3 use \cf0 Math\
+\
+\cf3 type\cf0  Tree.min = Value\
+([left: nil, right: nil, value: v] as t).min = t.value\
+t.min =\
+  t.left\
+end\
+[left: left, right: nil, value: v].min = min(left.min, v)\
+[left: nil, right: nil, value: v].min = v\
+\cf3 \
+type\cf0  Tree?.preorder = [Value]\
+nil.preorder = []\
+t.preorder = [t.value] + t.left?.preorder + t.right?.preorder\
+\cf3 \
+\cf2 # Other.sg\cf3 \
+\cf0 \
+type Error = network | general		# Sum type\
+type Natural = Int >= 0				# constrained types\
+\
+# Modules\
+\
+use Math\
+\
+5.Math:fibonacci\
+Math:min(5, 6)\
+\
+use Math as M\
+\
+5.M:fibonacci\
+\
+min(a, >a) = a\
+min(_, b) = b\
+\
+5.:fibonacci\
+:min(5, 6)\
+}
