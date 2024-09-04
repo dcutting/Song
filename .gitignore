@@ -3,3 +3,4 @@
 *.xcodeproj
 .DS_Store
 xcuserdata
+vendor
