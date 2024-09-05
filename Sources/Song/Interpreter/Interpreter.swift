@@ -32,6 +32,26 @@ public class Interpreter {
     public init(context: Context, interactive: Bool) {
         self.context = context
         self.interactive = interactive
+        readStdLib()
+    }
+    
+    private func readStdLib() {
+        for child in Stdlib().children {
+            if let file = child as? File {
+                if let data = file.contents {
+                    if let line = String(data: data, encoding: String.Encoding.utf8) {
+                        let lines = line.split(separator: "\n").map { String($0) }
+                        do {
+                            for line in lines {
+                                _ = try interpret(line: line)
+                            }
+                        } catch {
+                            preconditionFailure("Could not load stdlib '\(file.filename)': \(error)")
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public func finish() -> String? {

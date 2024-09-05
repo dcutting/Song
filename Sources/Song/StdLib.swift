@@ -44,7 +44,7 @@ extension Directory {
         try children.forEach { try $0.export(to: myUrl.path) }
     }
 }
-class Stdlib: Directory {
+public class Stdlib: Directory {
     var filename: String = "StdLib"
     lazy var children: [FileType] = {
         return [Math_Sg(), String_Sg(), List_Sg()]

@@ -99,24 +99,6 @@ struct Song: ParsableCommand {
         var context: Context = extend(context: rootContext, with: ["args": .list(songArgs)])
         
         let interpreter = Interpreter(context: context, interactive: interactive)
-        
-        for child in Stdlib().children {
-            if let file = child as? File {
-                if let data = file.contents {
-                    if let line = String(data: data, encoding: String.Encoding.utf8) {
-                        let lines = line.split(separator: "\n").map { String($0) }
-                        do {
-                            for line in lines {
-                                _ = try interpreter.interpret(line: line)
-                            }
-                        } catch {
-                            print("Could not load stdlib '\(file.filename)': \(error)")
-                            throw error
-                        }
-                    }
-                }
-            }
-        }
         context = interpreter.context
         
         func dumpContext() {
