@@ -137,6 +137,18 @@ func evaluateArctan(arguments: [Expression], context: Context) throws -> Express
     try evaluateUnaryNumericOp(arguments: arguments, context: context, op: atan)
 }
 
+func evaluateLog10(arguments: [Expression], context: Context) throws -> Expression {
+    try evaluateUnaryNumericOp(arguments: arguments, context: context, op: log10)
+}
+
+func evaluateLog2(arguments: [Expression], context: Context) throws -> Expression {
+    try evaluateUnaryNumericOp(arguments: arguments, context: context, op: log2)
+}
+
+func evaluateLn(arguments: [Expression], context: Context) throws -> Expression {
+    try evaluateUnaryNumericOp(arguments: arguments, context: context, op: log)
+}
+
 private func evaluateUnaryNumericOp(arguments: [Expression], context: Context, op: (FloatType) -> FloatType) throws -> Expression {
     guard arguments.count == 1 else { throw EvaluationError.signatureMismatch(arguments) }
     var numbers = try toNumbers(arguments: arguments, context: context)
