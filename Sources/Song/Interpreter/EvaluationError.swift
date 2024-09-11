@@ -10,6 +10,7 @@ public indirect enum EvaluationError: Error {
     case notAFunction(Expression)
     case patternsCannotBeFloats(Expression)
     case numericMismatch
+    case divisionByZero
     case emptyScope
     case notACharacter
 }
@@ -45,6 +46,8 @@ extension EvaluationError: CustomStringConvertible {
             result = "patterns cannot be floats: \(expr)"
         case .numericMismatch:
             result = "can only use integers here"
+        case .divisionByZero:
+            result = "cannot divide by zero"
         case .emptyScope:
             result = "Do/End must contain at least one expression"
         case .notACharacter:

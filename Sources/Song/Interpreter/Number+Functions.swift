@@ -76,6 +76,7 @@ extension Number {
     func modulo(_ other: Number) throws -> Number {
         switch (self, other) {
         case let (.int(lhsValue), .int(rhsValue)):
+            guard rhsValue != 0 else { throw EvaluationError.divisionByZero }
             return .int(lhsValue % rhsValue)
         default:
             throw EvaluationError.numericMismatch
