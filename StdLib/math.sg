@@ -4,9 +4,8 @@ n.positive? = n > 0
 n.negative? = n < 0
 n.nonNegative? = Not n.negative?
 
-n.power(0) = 1
-n.power(1) = n
-n.power(e) When e > 1 = n * n.power(e - 1)
+n.sqrt = n^0.5
+n.power(e) = n^e
 
 n.squared = n.power(2)
 n.cubed = n.power(3)
