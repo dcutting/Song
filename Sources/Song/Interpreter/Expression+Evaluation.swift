@@ -2,7 +2,7 @@ var _stdIn: StdIn = DefaultStdIn()
 var _stdOut: StdOut = DefaultStdOut()
 var _stdErr: StdOut = DefaultStdErr()
 
-public let rootContext: Context = [
+public let basicContext: Context = [
     "Eq": .builtIn(evaluateEq),
     "Neq": .builtIn(evaluateNeq),
     "Not": .builtIn(evaluateNot),
@@ -23,10 +23,15 @@ public let rootContext: Context = [
     ">": .builtIn(evaluateGreaterThan),
     "<=": .builtIn(evaluateLessThanOrEqual),
     ">=": .builtIn(evaluateGreaterThanOrEqual),
+]
+
+public let ioContext: Context = [
     "in": .builtIn(evaluateIn),
     "out": .builtIn(evaluateOut),
     "err": .builtIn(evaluateErr),
 ]
+
+public let rootContext: Context = basicContext.extend(with: ioContext)
 
 extension Expression {
 

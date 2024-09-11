@@ -25,3 +25,9 @@ func describeContext(_ context: Context) -> String {
     }
     return contextPairs.sorted().joined(separator: ", ")
 }
+
+public extension Context {
+    func extend(with context: Context) -> Context {
+        Song.extend(context: self, with: context)
+    }
+}
