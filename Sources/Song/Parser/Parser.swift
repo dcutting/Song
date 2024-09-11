@@ -44,6 +44,8 @@ public func makeParser() -> ParserProtocol {
 
     let star = str("*")
     let slash = str("/")
+    let carat = str("^")
+    let percent = str("%")
     let div = str("Div")
     let mod = str("Mod")
     let plus = str("+")
@@ -158,17 +160,22 @@ public func makeParser() -> ParserProtocol {
 
     // Expressions.
 
+    let powerative = Deferred()
+    let multiplicative = Deferred()
+    let additive = Deferred()
     let relational = Deferred()
     let equality = Deferred()
     let conjunctive = Deferred()
     let disjunctive = Deferred()
     let term = Deferred()
 
-    let symbolicMultiplicativeOp = skipSpaceAndNewlines >>> (star | slash).tag("op") >>> skipSpaceAndNewlines
+    let powerativeOp = skipSpaceAndNewlines >>> carat.tag("op") >>> skipSpaceAndNewlines
+    powerative.parser = term.tag("left") >>> (powerativeOp >>> powerative.tag("right")).recur.tag("ops")
+    let symbolicMultiplicativeOp = skipSpaceAndNewlines >>> (star | slash | percent).tag("op") >>> skipSpaceAndNewlines
     let wordMultiplicativeOp = spaceOrNewline >>> (mod | div).tag("op") >>> spaceOrNewline
     let multiplicativeOp = symbolicMultiplicativeOp | wordMultiplicativeOp
-    let multiplicative = term.tag("left") >>> (multiplicativeOp >>> term.tag("right")).recur.tag("ops")
-    let additive = multiplicative.tag("left") >>> (skipSpaceAndNewlines >>> (plus | minus).tag("op") >>> skipSpaceAndNewlines >>> multiplicative.tag("right")).recur.tag("ops")
+    multiplicative.parser = powerative.tag("left") >>> (multiplicativeOp >>> multiplicative.tag("right")).recur.tag("ops")
+    additive.parser = multiplicative.tag("left") >>> (skipSpaceAndNewlines >>> (plus | minus).tag("op") >>> skipSpaceAndNewlines >>> multiplicative.tag("right")).recur.tag("ops")
     relational.parser = additive.tag("left") >>> (skipSpaceAndNewlines >>> (lessThanOrEqual | greaterThanOrEqual | lessThan | greaterThan).tag("op") >>> skipSpaceAndNewlines >>> relational.tag("right")).recur.tag("ops")
     equality.parser = relational.tag("left") >>> (spaceOrNewline >>> (equalTo | notEqualTo).tag("op") >>> spaceOrNewline >>> equality.tag("right")).recur.tag("ops")
     conjunctive.parser = equality.tag("left") >>> (spaceOrNewline >>> logicalAnd.tag("op") >>> spaceOrNewline >>> conjunctive.tag("right")).recur.tag("ops")

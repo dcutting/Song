@@ -1,3 +1,5 @@
+import Foundation
+
 extension Number {
 
     static func convert(from value: String) throws -> Number {
@@ -48,6 +50,19 @@ extension Number {
             return .float(lhsValue * FloatType(rhsValue))
         case let (.float(lhsValue), .float(rhsValue)):
             return .float(lhsValue * rhsValue)
+        }
+    }
+
+    func power(_ other: Number) -> Number {
+        switch (self, other) {
+        case let (.int(lhsValue), .int(rhsValue)):
+            return .int(Int(pow(FloatType(lhsValue), FloatType(rhsValue))))
+        case let (.int(lhsValue), .float(rhsValue)):
+            return .float(pow(FloatType(lhsValue), rhsValue))
+        case let (.float(lhsValue), .int(rhsValue)):
+            return .float(pow(lhsValue, FloatType(rhsValue)))
+        case let (.float(lhsValue), .float(rhsValue)):
+            return .float(pow(lhsValue, rhsValue))
         }
     }
 

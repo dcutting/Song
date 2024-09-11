@@ -1,3 +1,5 @@
+import Foundation
+
 func evaluateEq(arguments: [Expression], context: Context) throws -> Expression {
     guard arguments.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
     let result: Expression
@@ -109,6 +111,51 @@ func evaluateTruncateConstructor(arguments: [Expression], context: Context) thro
     guard numbers.count == 1 else { throw EvaluationError.signatureMismatch(arguments) }
     let left = numbers.removeFirst()
     return .number(left.truncate())
+}
+
+func evaluateSin(arguments: [Expression], context: Context) throws -> Expression {
+    try evaluateUnaryNumericOp(arguments: arguments, context: context, op: sin)
+}
+
+func evaluateCos(arguments: [Expression], context: Context) throws -> Expression {
+    try evaluateUnaryNumericOp(arguments: arguments, context: context, op: cos)
+}
+
+func evaluateTan(arguments: [Expression], context: Context) throws -> Expression {
+    try evaluateUnaryNumericOp(arguments: arguments, context: context, op: tan)
+}
+
+func evaluateArcsin(arguments: [Expression], context: Context) throws -> Expression {
+    try evaluateUnaryNumericOp(arguments: arguments, context: context, op: asin)
+}
+
+func evaluateArccos(arguments: [Expression], context: Context) throws -> Expression {
+    try evaluateUnaryNumericOp(arguments: arguments, context: context, op: acos)
+}
+
+func evaluateArctan(arguments: [Expression], context: Context) throws -> Expression {
+    try evaluateUnaryNumericOp(arguments: arguments, context: context, op: atan)
+}
+
+private func evaluateUnaryNumericOp(arguments: [Expression], context: Context, op: (FloatType) -> FloatType) throws -> Expression {
+    guard arguments.count == 1 else { throw EvaluationError.signatureMismatch(arguments) }
+    var numbers = try toNumbers(arguments: arguments, context: context)
+    let argument = numbers.removeFirst()
+    let float = switch argument {
+    case .int(let value):
+        FloatType(value)
+    case .float(let value):
+        value
+    }
+    return .number(.float(op(float)))
+}
+
+func evaluatePower(arguments: [Expression], context: Context) throws -> Expression {
+    var numbers = try toNumbers(arguments: arguments, context: context)
+    guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
+    let left = numbers.removeFirst()
+    let right = numbers.removeFirst()
+    return .number(left.power(right))
 }
 
 func evaluatePlus(arguments: [Expression], context: Context) throws -> Expression {
