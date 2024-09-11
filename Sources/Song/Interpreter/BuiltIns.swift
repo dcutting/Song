@@ -202,7 +202,7 @@ func evaluateDividedBy(arguments: [Expression], context: Context) throws -> Expr
     guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
     let left = numbers.removeFirst()
     let right = numbers.removeFirst()
-    return .number(left.floatDividedBy(right))
+    return .number(try left.floatDividedBy(right))
 }
 
 func evaluateMod(arguments: [Expression], context: Context) throws -> Expression {

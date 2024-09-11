@@ -66,15 +66,19 @@ extension Number {
         }
     }
 
-    func floatDividedBy(_ other: Number) -> Number {
+    func floatDividedBy(_ other: Number) throws -> Number {
         switch (self, other) {
         case let (.int(lhsValue), .int(rhsValue)):
+            guard rhsValue != 0 else { throw EvaluationError.divisionByZero }
             return .float(FloatType(lhsValue) / FloatType(rhsValue))
         case let (.int(lhsValue), .float(rhsValue)):
+            guard rhsValue != 0 else { throw EvaluationError.divisionByZero }
             return .float(FloatType(lhsValue) / rhsValue)
         case let (.float(lhsValue), .int(rhsValue)):
+            guard rhsValue != 0 else { throw EvaluationError.divisionByZero }
             return .float(lhsValue / FloatType(rhsValue))
         case let (.float(lhsValue), .float(rhsValue)):
+            guard rhsValue != 0 else { throw EvaluationError.divisionByZero }
             return .float(lhsValue / rhsValue)
         }
     }
@@ -82,6 +86,7 @@ extension Number {
     func integerDividedBy(_ other: Number) throws -> Number {
         switch (self, other) {
         case let (.int(lhsValue), .int(rhsValue)):
+            guard rhsValue != 0 else { throw EvaluationError.divisionByZero }
             return .int(lhsValue / rhsValue)
         default:
             throw EvaluationError.numericMismatch
