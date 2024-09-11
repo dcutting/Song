@@ -5,8 +5,8 @@ public struct InterpreterError: Error {
 }
 
 public struct InterpreterResult {
-    let output: InterpreterOutput
-    let state: InterpreterState
+    public let output: InterpreterOutput
+    public let state: InterpreterState
 }
 
 public enum InterpreterOutput {
@@ -112,6 +112,7 @@ public class Interpreter {
             }
             return makeResult(.expression(expression))
         } else if !parsedLastCharacter {
+            multilines.removeAll()
             return makeResult(.error(InterpreterError(remainder: remainder.text)))
         }
         return makeResult(.none)
