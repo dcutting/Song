@@ -57,7 +57,11 @@ extension Number {
         switch (self, other) {
         case let (.int(lhsValue), .int(rhsValue)):
             if rhsValue >= 0 {
-                return .int(Int(pow(FloatType(lhsValue), FloatType(rhsValue))))
+                let value = pow(FloatType(lhsValue), FloatType(rhsValue))
+                if let intValue = Int(exactly: value) {
+                    return .int(intValue)
+                }
+                return .float(value)
             } else {
                 return .float(pow(FloatType(lhsValue), FloatType(rhsValue)))
             }
