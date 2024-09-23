@@ -9,7 +9,7 @@ let package = Package(
     ],
     products: [
         .executable(name: "song", targets: ["Sing"]),
-        .library(name: "Song", targets: ["Song"])
+        .library(name: "SongLang", targets: ["SongLang"])
     ],
     dependencies: [
         .package(url: "https://github.com/dcutting/Syft.git", exact: .init(0, 3, 0)),
@@ -20,19 +20,19 @@ let package = Package(
         .executableTarget(
             name: "Sing",
             dependencies: [
-                "Song",
+                "SongLang",
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "LineNoise", package: "linenoise-swift")
             ]
         ),
         .target(
-            name: "Song",
+            name: "SongLang",
             dependencies: ["Syft"]),
         .testTarget(
             name: "SongTests",
-            dependencies: ["Song"]),
+            dependencies: ["SongLang"]),
         .testTarget(
             name: "SongPerformanceTests",
-            dependencies: ["Song"])
+            dependencies: ["SongLang"])
     ]
 )

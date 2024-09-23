@@ -1,6 +1,6 @@
 import Foundation
 import ArgumentParser
-import Song
+import SongLang
 import Syft
 import LineNoise
 

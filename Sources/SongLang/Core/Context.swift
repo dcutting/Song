@@ -28,6 +28,6 @@ func describeContext(_ context: Context) -> String {
 
 public extension Context {
     func extend(with context: Context) -> Context {
-        Song.extend(context: self, with: context)
+        SongLang.extend(context: self, with: context)
     }
 }
