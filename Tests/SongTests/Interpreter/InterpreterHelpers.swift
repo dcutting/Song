@@ -1,4 +1,4 @@
-@testable import Song
+@testable import SongLang
 
 func declareSubfunctions(_ functions: [Function]) throws -> Context {
     let exprs = functions.map { Expression.function($0) }

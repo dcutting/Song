@@ -1,5 +1,5 @@
 import XCTest
-import Song
+import SongLang
 
 class CharTests: XCTestCase {
 

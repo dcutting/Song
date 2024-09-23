@@ -1,5 +1,5 @@
 import XCTest
-@testable import Song
+@testable import SongLang
 
 extension String {
 

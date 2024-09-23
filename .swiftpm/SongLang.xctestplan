@@ -1,0 +1,31 @@
+{
+  "configurations" : [
+    {
+      "id" : "2EA6D4A5-A7B2-4D18-9942-2644D75E944E",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SongPerformanceTests",
+        "name" : "SongPerformanceTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:",
+        "identifier" : "SongTests",
+        "name" : "SongTests"
+      }
+    }
+  ],
+  "version" : 1
+}

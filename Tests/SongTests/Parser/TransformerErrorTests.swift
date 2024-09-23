@@ -1,5 +1,5 @@
 import XCTest
-import Song
+import SongLang
 @testable import Syft
 
 class TransformerErrorTests: XCTestCase {

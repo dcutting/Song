@@ -1,5 +1,5 @@
 import XCTest
-import Song
+import SongLang
 
 func assertNoThrow(file: StaticString = #file, line: UInt = #line, _ closure: () throws -> Void) {
     do {
