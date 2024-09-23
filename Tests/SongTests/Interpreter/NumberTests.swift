@@ -32,10 +32,10 @@ class NumberTests: XCTestCase {
     }
 
     func test_floatDividedBy() {
-        XCTAssertEqual(Number.float(2.0), Number.int(8).floatDividedBy(Number.int(4)))
-        XCTAssertEqual(Number.float(2.0), Number.float(8.0).floatDividedBy(Number.int(4)))
-        XCTAssertEqual(Number.float(2.0), Number.int(8).floatDividedBy(Number.float(4.0)))
-        XCTAssertEqual(Number.float(2.0), Number.float(8.0).floatDividedBy(Number.float(4.0)))
+        XCTAssertEqual(Number.float(2.0), try Number.int(8).floatDividedBy(Number.int(4)))
+        XCTAssertEqual(Number.float(2.0), try Number.float(8.0).floatDividedBy(Number.int(4)))
+        XCTAssertEqual(Number.float(2.0), try Number.int(8).floatDividedBy(Number.float(4.0)))
+        XCTAssertEqual(Number.float(2.0), try Number.float(8.0).floatDividedBy(Number.float(4.0)))
     }
 
     func test_modulo() {
