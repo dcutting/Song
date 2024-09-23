@@ -8,6 +8,24 @@ class ExpressionParserTests: XCTestCase {
         "1*2*3".makes(.call("*", [
             .call("*", [.int(1), .int(2)]),
             .int(3)]))
+        "2*3/4".makes(
+            .call("/", [
+                .call("*", [
+                    .int(2),
+                    .int(3)
+                ]),
+                .int(4)
+            ])
+        )
+        "2^3^2".makes(
+            .call("^", [
+                .int(2),
+                .call("^", [
+                    .int(3),
+                    .int(2)
+                ])
+            ])
+        )
         "1+2*3/4-5".makes(
             .call("-", [
                 .call("+", [
