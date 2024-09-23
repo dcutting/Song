@@ -31,6 +31,30 @@ class NumberTests: XCTestCase {
         XCTAssertThrowsError(try Number.float(9.0).integerDividedBy(Number.float(4.0)))
     }
 
+    func test_powPositiveIntegerBasePositiveIntegerExponent() {
+        XCTAssertEqual(Number.int(8), Number.int(2).power(Number.int(3)))
+    }
+
+    func test_powPositiveIntegerBaseNegativeIntegerExponent() {
+        XCTAssertEqual(Number.float(0.125), Number.int(2).power(Number.int(-3)))
+    }
+
+    func test_powPositiveIntegerBasePositiveFloatExponent() {
+        XCTAssertEqual(Number.float(3.0), Number.int(9).power(Number.float(0.5)))
+    }
+
+    func test_powPositiveIntegerBaseNegativeFloatExponent() {
+        XCTAssertEqual(Number.float(0.5), Number.int(4).power(Number.float(-0.5)))
+    }
+
+    func test_powPositiveFloatBaseIntegerExponent() {
+        XCTAssertEqual(Number.float(0.25), Number.float(0.5).power(Number.int(2)))
+    }
+
+    func test_powNegativeFloatBaseIntegerExponent() {
+        XCTAssertEqual(Number.float(-3.375), Number.float(-1.5).power(Number.int(3)))
+    }
+
     func test_floatDividedBy() {
         XCTAssertEqual(Number.float(2.0), try Number.int(8).floatDividedBy(Number.int(4)))
         XCTAssertEqual(Number.float(2.0), try Number.float(8.0).floatDividedBy(Number.int(4)))

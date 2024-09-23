@@ -56,7 +56,11 @@ extension Number {
     func power(_ other: Number) -> Number {
         switch (self, other) {
         case let (.int(lhsValue), .int(rhsValue)):
-            return .int(Int(pow(FloatType(lhsValue), FloatType(rhsValue))))
+            if rhsValue >= 0 {
+                return .int(Int(pow(FloatType(lhsValue), FloatType(rhsValue))))
+            } else {
+                return .float(pow(FloatType(lhsValue), FloatType(rhsValue)))
+            }
         case let (.int(lhsValue), .float(rhsValue)):
             return .float(pow(FloatType(lhsValue), rhsValue))
         case let (.float(lhsValue), .int(rhsValue)):
