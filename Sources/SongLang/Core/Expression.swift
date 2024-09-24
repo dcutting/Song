@@ -1,6 +1,6 @@
-public typealias BuiltIn = ([Expression], Context) throws -> Expression
+public typealias BuiltIn = @Sendable ([SongLang.Expression], Context) throws -> SongLang.Expression
 
-public indirect enum Expression {
+public indirect enum Expression: Sendable {
 
     case bool(Bool)
     case number(Number)
@@ -25,7 +25,7 @@ public indirect enum Expression {
     case builtIn(BuiltIn)
 }
 
-public extension Expression {
+public extension SongLang.Expression {
 
     static var yes: Expression {
         return .bool(true)

@@ -4,7 +4,6 @@ import SongLang
 import Syft
 import LineNoise
 
-private var interactive = true
 private let prompt = "> "
 private let incompletePrompt = ". "
 
@@ -18,6 +17,8 @@ struct Song: ParsableCommand {
     @Argument(help: "Arguments that will be passed to the Song script.")
     var scriptArgs: [String] = []
     
+    private var interactive = true
+
     mutating func run() throws {
 #if Xcode
         let builtWithXcode = true

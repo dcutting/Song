@@ -22,7 +22,7 @@ class ClosureTests: XCTestCase {
         }
     }
 
-    private func makeNamedFunction() -> Expression {
+    private func makeNamedFunction() -> SongLang.Expression {
         let function = Function(name: "foo",
                                 patterns: [.name("a"), .name("b")],
                                 when: .yes,

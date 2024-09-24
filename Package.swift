@@ -1,4 +1,4 @@
-// swift-tools-version:5.10
+// swift-tools-version:6.0
 
 import PackageDescription
 
@@ -12,8 +12,9 @@ let package = Package(
         .library(name: "SongLang", targets: ["SongLang"])
     ],
     dependencies: [
-        .package(url: "https://github.com/dcutting/Syft.git", exact: .init(0, 3, 0)),
-        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.3.0"),
+        .package(path: "../Syft"),
+//        .package(url: "https://github.com/dcutting/Syft.git", exact: .init(0, 3, 0)),
+        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.5.0"),
         .package(url: "https://github.com/andybest/linenoise-swift.git", exact: .init(0, 0, 3)),
     ],
     targets: [

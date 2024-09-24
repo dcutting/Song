@@ -1,6 +1,6 @@
-var _stdIn: StdIn = DefaultStdIn()
-var _stdOut: StdOut = DefaultStdOut()
-var _stdErr: StdOut = DefaultStdErr()
+@MainActor let _stdIn: StdIn = DefaultStdIn()
+@MainActor let _stdOut: StdOut = DefaultStdOut()
+@MainActor let _stdErr: StdOut = DefaultStdErr()
 
 public let basicContext: Context = [
     "Eq": .builtIn(evaluateEq),
@@ -36,13 +36,13 @@ public let basicContext: Context = [
     ">=": .builtIn(evaluateGreaterThanOrEqual),
 ]
 
-public let ioContext: Context = [
-    "in": .builtIn(evaluateIn),
-    "out": .builtIn(evaluateOut),
-    "err": .builtIn(evaluateErr),
-]
+//public let ioContext: Context = [
+//    "in": .builtIn(evaluateIn),
+//    "out": .builtIn(evaluateOut),
+//    "err": .builtIn(evaluateErr),
+//]
 
-public let rootContext: Context = basicContext.extend(with: ioContext)
+public let rootContext: Context = basicContext//.extend(with: ioContext)
 
 extension Expression {
 

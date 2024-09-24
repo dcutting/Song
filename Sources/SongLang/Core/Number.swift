@@ -1,7 +1,7 @@
 public typealias IntType = Int
 public typealias FloatType = Float64
 
-public enum Number {
+public enum Number: Sendable {
     case int(IntType)
     case float(FloatType)
 }

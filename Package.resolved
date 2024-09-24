@@ -1,5 +1,5 @@
 {
-  "originHash" : "9a38a40e8c43bd5933dea163dd999e388946045e3a84b11471769ef9890f1b72",
+  "originHash" : "f579932b36ba2c9b7ec2599b59e468474a2706b3c16af22ae83607411fa0a60c",
   "pins" : [
     {
       "identity" : "linenoise-swift",
@@ -26,15 +26,6 @@
       "state" : {
         "revision" : "41982a3656a71c768319979febd796c6fd111d5c",
         "version" : "1.5.0"
-      }
-    },
-    {
-      "identity" : "syft",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/dcutting/Syft.git",
-      "state" : {
-        "revision" : "601240f46d0591ab01b6071ea9739760a229e947",
-        "version" : "0.3.0"
       }
     }
   ],

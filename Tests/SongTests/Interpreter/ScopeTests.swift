@@ -109,13 +109,13 @@ class ScopeTests: XCTestCase {
         }
     }
 
-    private func makeFoo(_ pattern: Expression,
-                         when: Expression = .yes,
-                         _ body: Expression) -> Expression {
+    private func makeFoo(_ pattern: SongLang.Expression,
+                         when: SongLang.Expression = .yes,
+                         _ body: SongLang.Expression) -> SongLang.Expression {
         return .function(Function(name: "foo", patterns: [pattern], when: when, body: body))
     }
 
-    private func callFoo(_ argument: Expression) -> Expression {
+    private func callFoo(_ argument: SongLang.Expression) -> SongLang.Expression {
         return .call("foo", [argument])
     }
 }

@@ -3,18 +3,18 @@ import XCTest
 
 extension String {
 
-    func makes(_ expected: Expression, file: StaticString = #file, line: UInt = #line) {
+    func makes(_ expected: SongLang.Expression, file: StaticString = #filePath, line: UInt = #line) {
         assertNoThrow(file: file, line: line) {
             let actual = try parse(self)
             XCTAssertEqual(expected, actual, file: file, line: line)
         }
     }
 
-    func fails(file: StaticString = #file, line: UInt = #line) {
+    func fails(file: StaticString = #filePath, line: UInt = #line) {
         XCTAssertThrowsError(try parse(self), "should not parse", file: file, line: line)
     }
 
-    private func parse(_ line: String) throws -> Expression {
+    private func parse(_ line: String) throws -> SongLang.Expression {
         let parser = makeParser()
         let transformer = makeTransformer()
         let result = parser.parse(line)

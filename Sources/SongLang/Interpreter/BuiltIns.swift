@@ -265,7 +265,7 @@ func evaluateGreaterThanOrEqual(arguments: [Expression], context: Context) throw
     return .bool(left.greaterThanOrEqualTo(right))
 }
 
-func evaluateIn(arguments: [Expression], context: Context) throws -> Expression {
+@MainActor func evaluateIn(arguments: [Expression], context: Context) throws -> Expression {
     let evaluated = try arguments.map { expr -> Expression in try expr.evaluate(context: context) }
     let output = evaluated.map { $0.out() }.joined(separator: " ")
     _stdOut.put(output)
@@ -273,13 +273,13 @@ func evaluateIn(arguments: [Expression], context: Context) throws -> Expression 
     return .string(line)
 }
 
-func evaluateOut(arguments: [Expression], context: Context) throws -> Expression {
+@MainActor func evaluateOut(arguments: [Expression], context: Context) throws -> Expression {
     let output = try prepareOutput(for: arguments, context: context)
     _stdOut.put(output + "\n")
     return .string(output)
 }
 
-func evaluateErr(arguments: [Expression], context: Context) throws -> Expression {
+@MainActor func evaluateErr(arguments: [Expression], context: Context) throws -> Expression {
     let output = try prepareOutput(for: arguments, context: context)
     _stdErr.put(output + "\n")
     return .string(output)

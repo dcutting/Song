@@ -1,4 +1,4 @@
-public indirect enum EvaluationError: Error {
+public indirect enum EvaluationError: Error, Sendable {
 
     case cannotEvaluate(Expression, EvaluationError)
     case symbolNotFound(String)

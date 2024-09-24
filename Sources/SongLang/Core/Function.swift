@@ -1,4 +1,4 @@
-public struct Function {
+public struct Function: Sendable {
 
     public let name: String?
     public let patterns: [Expression]

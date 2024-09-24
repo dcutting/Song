@@ -1,7 +1,7 @@
 import XCTest
 import SongLang
 
-func assertNoThrow(file: StaticString = #file, line: UInt = #line, _ closure: () throws -> Void) {
+func assertNoThrow(file: StaticString = #filePath, line: UInt = #line, _ closure: () throws -> Void) {
     do {
         try closure()
     } catch {
@@ -9,12 +9,12 @@ func assertNoThrow(file: StaticString = #file, line: UInt = #line, _ closure: ()
     }
 }
 
-func evaluate(_ code: String) throws -> Expression? {
+func evaluate(_ code: String) throws -> SongLang.Expression? {
     let parser = makeParser()
     let transformer = makeTransformer()
     let lines = code.split(separator: "\n")
     var context = rootContext
-    var lastEval: Expression?
+    var lastEval: SongLang.Expression?
     for line in lines {
         let result = parser.parse(String(line))
         let expression = try transformer.transform(result)
