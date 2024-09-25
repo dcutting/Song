@@ -1,17 +1,14 @@
 import Foundation
 
 extension Number {
-
     static func convert(from value: String) throws -> Number {
-        let result: Number
         if let int = IntType(value) {
-            result = .int(int)
+            return .int(int)
         } else if let float = FloatType(value) {
-            result = .float(float)
+            return .float(float)
         } else {
             throw EvaluationError.numericMismatch
         }
-        return result
     }
 
     func plus(_ other: Number) -> Number {
@@ -58,7 +55,7 @@ extension Number {
         case let (.int(lhsValue), .int(rhsValue)):
             if rhsValue >= 0 {
                 let value = pow(FloatType(lhsValue), FloatType(rhsValue))
-                if let intValue = Int(exactly: value) {
+                if let intValue = IntType(exactly: value) {
                     return .int(intValue)
                 }
                 return .float(value)

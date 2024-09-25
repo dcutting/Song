@@ -1,5 +1,4 @@
 public indirect enum EvaluationError: Error, Sendable {
-
     case cannotEvaluate(Expression, EvaluationError)
     case cannotCompare(Expression, Expression)
     case symbolNotFound(String)
@@ -17,11 +16,10 @@ public indirect enum EvaluationError: Error, Sendable {
 }
 
 extension EvaluationError: CustomStringConvertible {
-
     private static let tabIndent = 1
 
     public var description: String {
-        return "Evaluation error\n" + format(error: self, indent: EvaluationError.tabIndent)
+        "Evaluation error\n" + format(error: self, indent: EvaluationError.tabIndent)
     }
 
     private func format(error: EvaluationError, indent: Int) -> String {
@@ -67,7 +65,7 @@ extension EvaluationError: CustomStringConvertible {
     }
 
     private func makeNextIndent(indent: Int) -> Int {
-        return indent + EvaluationError.tabIndent
+        indent + EvaluationError.tabIndent
     }
 }
 

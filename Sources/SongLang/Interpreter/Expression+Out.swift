@@ -1,5 +1,4 @@
 public extension Expression {
-
     func out() -> String {
         switch self {
         case let .char(char):

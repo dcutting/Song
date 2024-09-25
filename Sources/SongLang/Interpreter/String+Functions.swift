@@ -1,21 +1,17 @@
 extension Expression {
-
     func asString() throws -> String {
-        let result: String
-        if case .list(let characters) = self {
-            result = try convertToString(characters: characters)
-        } else {
+        guard case .list(let characters) = self else {
             throw EvaluationError.notAList(self)
         }
-        return result
+        return try convertToString(characters: characters)
     }
 
     func convertToString(characters: [Expression]) throws -> String {
         let chars: [Character] = try characters.map { item in
-            if case .char(let c) = item {
-                return c
+            guard case .char(let c) = item else {
+                throw EvaluationError.notACharacter(item)
             }
-            throw EvaluationError.notACharacter(item)
+            return c
         }
         return String(chars)
     }
