@@ -26,6 +26,30 @@ class ExpressionParserTests: XCTestCase {
                 ])
             ])
         )
+        "1+2^3*4".makes(
+            .call("+", [
+                .int(1),
+                .call("*", [
+                    .call("^", [
+                        .int(2),
+                        .int(3)
+                    ]),
+                    .int(4)
+                ])
+            ])
+        )
+        "1+2*3^4".makes(
+            .call("+", [
+                .int(1),
+                .call("*", [
+                    .int(2),
+                    .call("^", [
+                        .int(3),
+                        .int(4)
+                    ])
+                ])
+            ])
+        )
         "1+2*3/4-5".makes(
             .call("-", [
                 .call("+", [
@@ -68,19 +92,19 @@ class ExpressionParserTests: XCTestCase {
         "12Mod 5".fails()
     }
 
-    func test_wrapped() {
+    func test_parentheticalArithmetic() {
         "1+2*3".makes(.call("+", [
             .int(1),
             .call("*", [.int(2), .int(3)])
-            ]))
+        ]))
         "(1+2)*3".makes(.call("*", [
             .call("+", [.int(1), .int(2)]),
             .int(3)
-            ]))
+        ]))
         "(5-+2)*-3".makes(.call("*", [
             .call("-", [.int(5), .int(2)]),
             .call("-", [.int(3)])
-            ]))
+        ]))
     }
 
     func test_negated() {
