@@ -1,5 +1,5 @@
 import XCTest
-import SongLang
+@testable import SongLang
 
 class TailCallTests: XCTestCase {
 
@@ -14,7 +14,7 @@ class TailCallTests: XCTestCase {
             let fb = Function(name: "times", patterns: [.name("n")], when: .call("Eq", [.name("n"), .int(0)]), body: .name("n"))
             let fr = Function(name: "times", patterns: [.name("n")], when: .yes, body: .call("times", [.call("-", [.name("n"), .int(1)])]))
             var context = try! declareSubfunctions([fb, fr])
-            context = extend(context: rootContext, with: context)
+            context = rootContext.extend(with: context)
 
             let e = Expression.call("times", [.int(5000)])
 
@@ -29,7 +29,7 @@ class TailCallTests: XCTestCase {
             let fb = Function(name: "times", patterns: [.name("n")], when: .call("Eq", [.name("n"), .int(0)]), body: .scope([.name("n")]))
             let fr = Function(name: "times", patterns: [.name("n")], when: .yes, body: .scope([.call("times", [.call("-", [.name("n"), .int(1)])])]))
             var context = try! declareSubfunctions([fb, fr])
-            context = extend(context: rootContext, with: context)
+            context = rootContext.extend(with: context)
 
             let e = Expression.call("times", [.int(5000)])
 
@@ -53,7 +53,7 @@ class TailCallTests: XCTestCase {
         assertNoThrow {
             let foo = Function(name: "foo", patterns: [], when: .yes, body: .call("+", [.int(1), .int(2)]))
             var context = try declareSubfunctions([foo])
-            context = extend(context: rootContext, with: context)
+            context = rootContext.extend(with: context)
             let call = Expression.call("foo", [])
             let actual = try call.evaluate(context: context)
             XCTAssertEqual(Expression.int(3), actual)

@@ -1,5 +1,5 @@
 import XCTest
-import SongLang
+@testable import SongLang
 
 class CallTests: XCTestCase {
     

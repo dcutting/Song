@@ -59,7 +59,7 @@ extension Expression {
     private func evaluate(expression: Expression, context: Context) throws -> Expression {
         switch expression {
 
-        case .bool, .number, .char, .ignore, .closure, .tailEval, .builtIn:
+        case .bool, .number, .char, .unnamed, .closure, .tailEval, .builtIn:
             return expression
 
         case let .list(exprs):
@@ -209,7 +209,7 @@ extension Expression {
         var extendedContext = context
         var patternEqualityContext = patternEqualityContext
         switch parameter {
-        case .ignore:
+        case .unnamed:
             () // Do nothing
         case .name(let name):
             if let existingValue = patternEqualityContext[name] {
@@ -223,7 +223,7 @@ extension Expression {
                 }
             }
             patternEqualityContext[name] = value
-            extendedContext = extendContext(context: extendedContext, name: name, value: value)
+            extendedContext = extendedContext.extend(name: name, value: value)
         case .cons(var paramHeads, let paramTail):
             guard case var .list(argItems) = value else { throw EvaluationError.signatureMismatch([value]) }
             guard argItems.count >= paramHeads.count else { throw EvaluationError.signatureMismatch([value]) }
@@ -298,12 +298,12 @@ extension Expression {
 
             if case .closure(let name, _, _) = result {
                 if let name = name {
-                    scopeContext = extendContext(context: scopeContext, name: name, value: result)
+                    scopeContext = scopeContext.extend(name: name, value: result)
                 }
             }
             if case .assign(let variable, let value) = result {
                 if case .name(let name) = variable {
-                    scopeContext = extendContext(context: scopeContext, name: name, value: value)
+                    scopeContext = scopeContext.extend(name: name, value: value)
                 }
             }
         }

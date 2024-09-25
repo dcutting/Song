@@ -96,7 +96,7 @@ public func makeTransformer() -> Transformer<Expression> {
 
     t.rule(["variableName": .simple("v")]) {
         let v = try $0.str("v")
-        return v == "_" ? .ignore : .name(v)
+        return v == "_" ? .unnamed : .name(v)
     }
 
     t.rule(["functionName": .simple("name")]) {

@@ -1,5 +1,5 @@
 import XCTest
-import SongLang
+@testable import SongLang
 
 class CallParserTests: XCTestCase {
 
@@ -82,7 +82,7 @@ class CallParserTests: XCTestCase {
         "x.foo(2)(3).bar".makes(.call("bar", [.eval(.call("foo", [.name("x"), .int(2)]), [.int(3)])]))
         "lessThan(5)(4)".makes(.eval(.call("lessThan", [.int(5)]), [.int(4)]))
         "(1+2).foo".makes(.call("foo", [.call("+", [.int(1), .int(2)])]))
-        "foo(_)".makes(.call("foo", [.ignore]))
+        "foo(_)".makes(.call("foo", [.unnamed]))
         "(1 < 10).negate".makes(.call("negate", [.call("<", [.int(1), .int(10)])]))
         "(Do 5, 8 End).inc".makes(.call("inc", [.scope([.int(5), .int(8)])]))
         "(Do |x| x+1 End)(5)".makes(.eval(.scope([.function(Function(name: nil, patterns: [.name("x")], when: .yes, body: .call("+", [.name("x"), .int(1)])))]), [.int(5)]))

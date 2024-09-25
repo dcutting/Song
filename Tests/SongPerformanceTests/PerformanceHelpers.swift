@@ -21,12 +21,12 @@ func evaluate(_ code: String) throws -> SongLang.Expression? {
         let evaluated = try expression.evaluate(context: context)
         if case .closure(let name, _, _) = evaluated {
             if let name = name {
-                context = extendContext(context: context, name: name, value: evaluated)
+                context = context.extend(name: name, value: evaluated)
             }
         }
         if case .assign(let variable, let value) = evaluated {
             if case .name(let name) = variable {
-                context = extendContext(context: context, name: name, value: value)
+                context = context.extend(name: name, value: value)
             }
         }
         lastEval = evaluated

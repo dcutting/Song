@@ -6,7 +6,7 @@ class VariableTests: XCTestCase {
     let variable = Expression.name("n")
     
     func test_description_ignore() {
-        XCTAssertEqual("_", "\(Expression.ignore)")
+        XCTAssertEqual("_", "\(Expression.unnamed)")
     }
 
     func test_description_variable() {

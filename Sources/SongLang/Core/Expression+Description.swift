@@ -1,67 +1,47 @@
 extension Expression: CustomStringConvertible {
-    
     public var description: String {
         switch self {
-            
         case let .bool(value):
-            return value ? "Yes" : "No"
-            
+            value ? "Yes" : "No"
         case let .number(value):
-            return "\(value)"
-
+            "\(value)"
         case let .char(value):
-            return "'" + "\(value)".replacingOccurrences(of: "\'", with: "\\\'") + "'"
-
+            "'" + "\(value)".replacingOccurrences(of: "\'", with: "\\\'") + "'"
         case let .list(exprs):
-            return describeList(exprs)
-
+            describeList(exprs)
         case let .cons(head, tail):
-            return "[" + head.map(String.init).joined(separator: ", ") + "|\(tail)]"
-
-        case .ignore:
-            return "_"
-
+            "[" + head.map(String.init).joined(separator: ", ") + "|\(tail)]"
+        case .unnamed:
+            "_"
         case let .name(variable):
-            return "\(variable)"
-
+            variable
         case let .function(function):
-            return "\(function)"
-
+            "\(function)"
         case let .assign(name, value):
-            return "\(name): \(value)"
-
+            "\(name): \(value)"
         case let .closure(_, function, _):
-            return "\(function)"
-
+            "\(function)"
         case let .scope(exprs):
-            return "scope (" + exprs.map { "\($0)" }.joined(separator: ", ") + ")"
-
+            "scope (" + exprs.map { "\($0)" }.joined(separator: ", ") + ")"
         case let .call(name, args):
-            return "\(name)(\(describeArgs(args)))"
-
+            "\(name)(\(describeArgs(args)))"
         case let .eval(closure, args):
-            return "\(closure)(\(describeArgs(args)))"
-
+            "\(closure)(\(describeArgs(args)))"
         case let .tailEval(closure, args):
-            return "\(closure)(\(describeArgs(args)))"
-
+            "\(closure)(\(describeArgs(args)))"
         case .builtIn:
-            return "builtIn"
+            "builtIn"
         }
     }
 
     private func describeList(_ exprs: [Expression]) -> String {
-        
         if exprs.isEmpty { return "[]" }
-
-        var result: String
         do {
             let value = try convertToString(characters: exprs)
-            result = "\"" + value.replacingOccurrences(of: "\"", with: "\\\"") + "\""
+            return "\"" + value.replacingOccurrences(of: "\"", with: "\\\"") + "\""
         } catch {
-            result = "[" + exprs.map(String.init).joined(separator: ", ") + "]"
+            return "[" + exprs.map(String.init).joined(separator: ", ") + "]"
         }
-        return result
     }
 
     private func describeArgs(_ args: [Expression]) -> String {

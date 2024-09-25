@@ -77,7 +77,7 @@ public class Interpreter {
         }
 
         if line.trimmingCharacters(in: .whitespacesAndNewlines) == "?" {
-            return makeResult(.output(describeContext(context)))
+            return makeResult(.output(describe(context: context)))
         }
 
         if line.trimmingCharacters(in: .whitespacesAndNewlines).hasPrefix("?del ") {
@@ -102,12 +102,12 @@ public class Interpreter {
             let expression = try ast.evaluate(context: context)
             if case .closure(let name, _, _) = expression {
                 if let name = name {
-                    context = extendContext(context: context, name: name, value: expression)
+                    context = context.extend(name: name, value: expression)
                 }
             }
             if case .assign(let variable, let value) = expression {
                 if case .name(let name) = variable {
-                    context = extendContext(context: context, name: name, value: value)
+                    context = context.extend(name: name, value: value)
                 }
             }
             return makeResult(.expression(expression))

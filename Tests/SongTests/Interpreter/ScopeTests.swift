@@ -1,5 +1,5 @@
 import XCTest
-import SongLang
+@testable import SongLang
 
 class ScopeTests: XCTestCase {
 
@@ -81,7 +81,7 @@ class ScopeTests: XCTestCase {
             makeFoo(.int(9), .string("N I N E")),
             makeFoo(.name("x"), .name("x"))
         ])
-        context = extend(context: rootContext, with: context)
+        context = rootContext.extend(with: context)
 
         let inScope = [
             makeFoo(.int(9), .string("nine")),

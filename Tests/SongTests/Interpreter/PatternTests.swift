@@ -1,10 +1,10 @@
 import XCTest
-import SongLang
+@testable import SongLang
 
 class PatternTests: XCTestCase {
 
     lazy var functions: [Function] = [
-        Function(name: "ignoreVariableFunc", patterns: [.ignore], when: .yes, body: .string("ok")),
+        Function(name: "ignoreVariableFunc", patterns: [.unnamed], when: .yes, body: .string("ok")),
         Function(name: "booleanLiteralFunc", patterns: [.no], when: .yes, body: .string("ok")),
         Function(name: "numberLiteralFunc", patterns: [.int(2)], when: .yes, body: .string("ok")),
         Function(name: "listLiteralFunc", patterns: [.list([.int(1), .int(2)])], when: .yes, body: .string("ok")),
@@ -25,8 +25,8 @@ class PatternTests: XCTestCase {
         Function(name: "variableFunc", patterns: [.name("x")], when: .yes, body: .name("x")),
         Function(name: "repeatedVariableFunc", patterns: [.name("x"), .name("x")], when: .yes, body: .name("x")),
         Function(name: "repeatedNestedVariableFunc",
-                    patterns: [.cons([.name("x")], .ignore),
-                               .cons([.name("x")], .ignore)],
+                    patterns: [.cons([.name("x")], .unnamed),
+                               .cons([.name("x")], .unnamed)],
                     when: .yes,
                     body: .name("x")),
     ]
@@ -34,7 +34,7 @@ class PatternTests: XCTestCase {
     var context = rootContext
 
     override func setUp() {
-        context = extend(context: rootContext, with: try! declareSubfunctions(functions))
+        context = rootContext.extend(with: try! declareSubfunctions(functions))
     }
 
     func test_literal_wrongType_fails() {

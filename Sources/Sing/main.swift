@@ -97,7 +97,7 @@ struct Song: ParsableCommand {
             allArgs.insert(filename, at: 0)
         }
         let songArgs = allArgs.map { Expression.string($0) }
-        var context: Context = extend(context: rootContext, with: ["args": .list(songArgs)])
+        var context = rootContext.extend(name: "args", value: .list(songArgs))
         
         let interpreter = Interpreter(context: context, interactive: interactive)
         context = interpreter.context
@@ -157,12 +157,12 @@ struct Song: ParsableCommand {
                         let expression = try ast.evaluate(context: context)
                         if case .closure(let name, _, _) = expression {
                             if let name = name {
-                                context = extendContext(context: context, name: name, value: expression)
+                                context = context.extend(name: name, value: expression)
                             }
                         }
                         if case .assign(let variable, let value) = expression {
                             if case .name(let name) = variable {
-                                context = extendContext(context: context, name: name, value: value)
+                                context = context.extend(name: name, value: value)
                             }
                         }
                         switch expression {

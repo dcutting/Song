@@ -4,7 +4,7 @@ import SongLang
 class NameParserTests: XCTestCase {
 
     func test_shouldParse() {
-        "_".makes(.ignore)
+        "_".makes(.unnamed)
         "x".makes(.name("x"))
         "_x".makes(.name("_x"))
         "_private".makes(.name("_private"))

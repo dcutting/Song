@@ -35,7 +35,7 @@ class ListTests: XCTestCase {
             .name("x")
             ])
         assertNoThrow {
-            let actual = try list.evaluate(context: extend(context: rootContext, with: ["x": .no]))
+            let actual = try list.evaluate(context: rootContext.extend(name: "x", value: .no))
             let expected = Expression.list([
                 .int(5),
                 .no

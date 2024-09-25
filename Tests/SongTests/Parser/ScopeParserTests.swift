@@ -1,10 +1,10 @@
 import XCTest
-import SongLang
+@testable import SongLang
 
 class ScopeParserTests: XCTestCase {
 
     func test_shouldParse() {
-        "Do _ End".makes(.scope([.ignore]))
+        "Do _ End".makes(.scope([.unnamed]))
         "Do 1 End".makes(.scope([.int(1)]))
         "Do 1, End".makes(.scope([.int(1)]))
         "Do 1, x End".makes(.scope([.int(1), .name("x")]))
