@@ -37,7 +37,7 @@ extension Expression: CustomStringConvertible {
     private func describeList(_ exprs: [Expression]) -> String {
         if exprs.isEmpty { return "[]" }
         do {
-            let value = try convertToString(characters: exprs)
+            let value = try toString(characters: exprs)
             return "\"" + value.replacingOccurrences(of: "\"", with: "\\\"") + "\""
         } catch {
             return "[" + exprs.map(String.init).joined(separator: ", ") + "]"

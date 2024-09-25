@@ -250,7 +250,7 @@ func evaluateNumberConstructor(arguments: [Expression], context: Context) throws
     let left = numbers.removeFirst()
     let result: Expression
     do {
-        let string = try left.evaluate(context: context).asString()
+        let string = try left.evaluate(context: context).toString()
         let number = try Number.convert(from: string)
         result = .number(number)
     } catch EvaluationError.numericMismatch {
@@ -457,7 +457,7 @@ func evaluateGreaterThanOrEqual(arguments: [Expression], context: Context) throw
 
 private func prepareOutput(for arguments: [Expression], context: Context) throws -> String {
     let evaluated = try arguments.map { expr -> Expression in try expr.evaluate(context: context) }
-    return evaluated.map { $0.out() }.joined(separator: " ")
+    return evaluated.map(\.formattedString).joined(separator: " ")
 }
 
 private func evaluateUnaryNumericOp(arguments: [Expression], context: Context, op: (FloatType) -> FloatType) throws -> Expression {
