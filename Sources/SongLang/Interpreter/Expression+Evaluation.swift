@@ -2,39 +2,7 @@
 @MainActor let _stdOut: StdOut = DefaultStdOut()
 @MainActor let _stdErr: StdOut = DefaultStdErr()
 
-public let basicContext: Context = [
-    "Eq": .builtIn(evaluateEq),
-    "Neq": .builtIn(evaluateNeq),
-    "Not": .builtIn(evaluateNot),
-    "And": .builtIn(evaluateAnd),
-    "Or": .builtIn(evaluateOr),
-    "number": .builtIn(evaluateNumberConstructor),
-    "string": .builtIn(evaluateStringConstructor),
-    "character": .builtIn(evaluateCharacterConstructor),
-    "scalar": .builtIn(evaluateScalar),
-    "truncate": .builtIn(evaluateTruncateConstructor),
-    "sin": .builtIn(evaluateSin),
-    "cos": .builtIn(evaluateCos),
-    "tan": .builtIn(evaluateTan),
-    "arcsin": .builtIn(evaluateArcsin),
-    "arccos": .builtIn(evaluateArccos),
-    "arctan": .builtIn(evaluateArctan),
-    "log": .builtIn(evaluateLog10),
-    "log2": .builtIn(evaluateLog2),
-    "ln": .builtIn(evaluateLn),
-    "^": .builtIn(evaluatePower),
-    "+": .builtIn(evaluatePlus),
-    "-": .builtIn(evaluateMinus),
-    "*": .builtIn(evaluateTimes),
-    "/": .builtIn(evaluateDividedBy),
-    "%": .builtIn(evaluateMod),
-    "Mod": .builtIn(evaluateMod),
-    "Div": .builtIn(evaluateDiv),
-    "<": .builtIn(evaluateLessThan),
-    ">": .builtIn(evaluateGreaterThan),
-    "<=": .builtIn(evaluateLessThanOrEqual),
-    ">=": .builtIn(evaluateGreaterThanOrEqual),
-]
+public let basicContext: Context = builtInContext
 
 //public let ioContext: Context = [
 //    "in": .builtIn(evaluateIn),
@@ -152,7 +120,7 @@ extension Expression {
             }
             throw EvaluationError.signatureMismatch(arguments)
         case let .builtIn(builtIn):
-            return try builtIn(arguments, callingContext)
+            return try builtIn.lookup()(arguments, callingContext)
         default:
             throw EvaluationError.notAFunction(closure)
         }

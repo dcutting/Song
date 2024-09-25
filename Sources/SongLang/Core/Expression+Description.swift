@@ -29,8 +29,8 @@ extension Expression: CustomStringConvertible {
             "\(closure)(\(describeArgs(args)))"
         case let .tailEval(closure, args):
             "\(closure)(\(describeArgs(args)))"
-        case .builtIn:
-            "builtIn"
+        case .builtIn(let builtIn):
+            "\(builtIn)"
         }
     }
 

@@ -1,44 +1,224 @@
 import Foundation
 
+public let builtInContext = BuiltInName.allCases.reduce(into: Context()) { context, builtIn in
+    context["\(builtIn)"] = .builtIn(builtIn)
+}
+
+public enum BuiltInName: Sendable, Equatable, CaseIterable {
+    case equal
+    case notEqual
+    case not
+    case and
+    case or
+    case number
+    case string
+    case character
+    case scalar
+    case truncate
+    case sin
+    case cos
+    case tan
+    case arcsin
+    case arccos
+    case arctan
+    case log
+    case log2
+    case ln
+    case power
+    case plus
+    case minus
+    case multiply
+    case divide
+    case modulus
+    case integerDivide
+    case lessThan
+    case greaterThan
+    case lessThanOrEqualTo
+    case greaterThanOrEqualTo
+}
+
+extension BuiltInName: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .equal:
+            "Eq"
+        case .notEqual:
+            "Neq"
+        case .not:
+            "Not"
+        case .and:
+            "And"
+        case .or:
+            "Or"
+        case .number:
+            "number"
+        case .string:
+            "string"
+        case .character:
+            "character"
+        case .scalar:
+            "scalar"
+        case .truncate:
+            "truncate"
+        case .sin:
+            "sin"
+        case .cos:
+            "cos"
+        case .tan:
+            "tan"
+        case .arcsin:
+            "arcsin"
+        case .arccos:
+            "arccos"
+        case .arctan:
+            "arctan"
+        case .log:
+            "log"
+        case .log2:
+            "log2"
+        case .ln:
+            "ln"
+        case .power:
+            "^"
+        case .plus:
+            "+"
+        case .minus:
+            "-"
+        case .multiply:
+            "*"
+        case .divide:
+            "/"
+        case .modulus:
+            "%"
+        case .integerDivide:
+            "Div"
+        case .lessThan:
+            "<"
+        case .greaterThan:
+            ">"
+        case .lessThanOrEqualTo:
+            "<="
+        case .greaterThanOrEqualTo:
+            ">="
+        }
+    }
+}
+
+typealias BuiltInFunction = @Sendable ([SongLang.Expression], Context) throws -> SongLang.Expression
+
+extension BuiltInName {
+    func lookup() -> BuiltInFunction {
+        switch self {
+        case .equal:
+            evaluateEq
+        case .notEqual:
+            evaluateNeq
+        case .not:
+            evaluateNot
+        case .and:
+            evaluateAnd
+        case .or:
+            evaluateOr
+        case .number:
+            evaluateNumberConstructor
+        case .string:
+            evaluateStringConstructor
+        case .character:
+            evaluateCharacterConstructor
+        case .scalar:
+            evaluateScalarConstructor
+        case .truncate:
+            evaluateTruncateConstructor
+        case .sin:
+            evaluateSin
+        case .cos:
+            evaluateCos
+        case .tan:
+            evaluateTan
+        case .arcsin:
+            evaluateArcsin
+        case .arccos:
+            evaluateArccos
+        case .arctan:
+            evaluateArctan
+        case .log:
+            evaluateLog
+        case .log2:
+            evaluateLog2
+        case .ln:
+            evaluateLn
+        case .power:
+            evaluatePower
+        case .plus:
+            evaluatePlus
+        case .minus:
+            evaluateMinus
+        case .multiply:
+            evaluateMultiply
+        case .divide:
+            evaluateDivide
+        case .modulus:
+            evaluateModulus
+        case .integerDivide:
+            evaluateIntegerDivide
+        case .lessThan:
+            evaluateLessThan
+        case .greaterThan:
+            evaluateGreaterThan
+        case .lessThanOrEqualTo:
+            evaluateLessThanOrEqual
+        case .greaterThanOrEqualTo:
+            evaluateGreaterThanOrEqual
+        }
+    }
+}
+
+
+
+/* Built in function implementations. */
+
 func evaluateEq(arguments: [Expression], context: Context) throws -> Expression {
     guard arguments.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
     let result: Expression
     do {
-        result = try booleanOp(arguments: arguments, context: context) {
-            .bool($0 == $1)
-        }
-    } catch EvaluationError.notABoolean {
         do {
-            result = try numberOp(arguments: arguments, context: context) {
-                try .bool($0.equalTo($1))
+            result = try booleanOp(arguments: arguments, context: context) {
+                .bool($0 == $1)
             }
-        } catch EvaluationError.notANumber {
+        } catch EvaluationError.notABoolean {
             do {
-                result = try characterOp(arguments: arguments, context: context) {
-                    .bool($0 == $1)
+                result = try numberOp(arguments: arguments, context: context) {
+                    try .bool($0.equalTo($1))
                 }
-            } catch EvaluationError.notACharacter {
-                result = try listOp(arguments: arguments, context: context) { left, right in
-                    guard left.count == right.count else { return .no }
-                    for (l, r) in zip(left, right) {
-                        let lrEq = try evaluateEq(arguments: [l, r], context: context)
-                        if case .no = lrEq {
-                            return .no
-                        }
+            } catch EvaluationError.notANumber {
+                do {
+                    result = try characterOp(arguments: arguments, context: context) {
+                        .bool($0 == $1)
                     }
-                    return .yes
+                } catch EvaluationError.notACharacter {
+                    result = try listOp(arguments: arguments, context: context) { left, right in
+                        guard left.count == right.count else { return .no }
+                        for (l, r) in zip(left, right) {
+                            let lrEq = try evaluateEq(arguments: [l, r], context: context)
+                            if case .no = lrEq {
+                                return .no
+                            }
+                        }
+                        return .yes
+                    }
+                    // TODO: need proper equality check for listCons too.
                 }
-                // TODO: need propr equality check for listCons too.
             }
         }
+    } catch {
+        throw EvaluationError.cannotCompare(arguments[0], arguments[1])
     }
     return result
 }
 
 func evaluateNeq(arguments: [Expression], context: Context) throws -> Expression {
-    let equalCall = Expression.call("Eq", arguments)
-    let notCall = Expression.call("Not", [equalCall])
-    return try notCall.evaluate(context: context)
+    let equal = try evaluateEq(arguments: arguments, context: context)
+    return try evaluateNot(arguments: [equal], context: context)
 }
 
 func evaluateNot(arguments: [Expression], context: Context) throws -> Expression {
@@ -97,12 +277,12 @@ func evaluateCharacterConstructor(arguments: [Expression], context: Context) thr
     }
 }
 
-func evaluateScalar(arguments: [Expression], context: Context) throws -> Expression {
+func evaluateScalarConstructor(arguments: [Expression], context: Context) throws -> Expression {
+    guard arguments.count == 1 else { throw EvaluationError.signatureMismatch(arguments) }
     var chars = try toCharacters(arguments: arguments, context: context)
-    guard chars.count == 1 else { throw EvaluationError.signatureMismatch(arguments) }
     let left = chars.removeFirst()
     let string = String(left)
-    guard let value = UnicodeScalar(string)?.value else { throw EvaluationError.notACharacter }
+    guard let value = UnicodeScalar(string)?.value else { throw EvaluationError.notACharacter(arguments[0]) }
     return .int(IntType(value))
 }
 
@@ -137,7 +317,7 @@ func evaluateArctan(arguments: [Expression], context: Context) throws -> Express
     try evaluateUnaryNumericOp(arguments: arguments, context: context, op: atan)
 }
 
-func evaluateLog10(arguments: [Expression], context: Context) throws -> Expression {
+func evaluateLog(arguments: [Expression], context: Context) throws -> Expression {
     try evaluateUnaryNumericOp(arguments: arguments, context: context, op: log10)
 }
 
@@ -147,19 +327,6 @@ func evaluateLog2(arguments: [Expression], context: Context) throws -> Expressio
 
 func evaluateLn(arguments: [Expression], context: Context) throws -> Expression {
     try evaluateUnaryNumericOp(arguments: arguments, context: context, op: log)
-}
-
-private func evaluateUnaryNumericOp(arguments: [Expression], context: Context, op: (FloatType) -> FloatType) throws -> Expression {
-    guard arguments.count == 1 else { throw EvaluationError.signatureMismatch(arguments) }
-    var numbers = try toNumbers(arguments: arguments, context: context)
-    let argument = numbers.removeFirst()
-    let float = switch argument {
-    case .int(let value):
-        FloatType(value)
-    case .float(let value):
-        value
-    }
-    return .number(.float(op(float)))
 }
 
 func evaluatePower(arguments: [Expression], context: Context) throws -> Expression {
@@ -201,7 +368,7 @@ func evaluateMinus(arguments: [Expression], context: Context) throws -> Expressi
     return result
 }
 
-func evaluateTimes(arguments: [Expression], context: Context) throws -> Expression {
+func evaluateMultiply(arguments: [Expression], context: Context) throws -> Expression {
     var numbers = try toNumbers(arguments: arguments, context: context)
     guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
     let left = numbers.removeFirst()
@@ -209,7 +376,7 @@ func evaluateTimes(arguments: [Expression], context: Context) throws -> Expressi
     return .number(left.times(right))
 }
 
-func evaluateDividedBy(arguments: [Expression], context: Context) throws -> Expression {
+func evaluateDivide(arguments: [Expression], context: Context) throws -> Expression {
     var numbers = try toNumbers(arguments: arguments, context: context)
     guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
     let left = numbers.removeFirst()
@@ -217,7 +384,7 @@ func evaluateDividedBy(arguments: [Expression], context: Context) throws -> Expr
     return .number(try left.floatDividedBy(right))
 }
 
-func evaluateMod(arguments: [Expression], context: Context) throws -> Expression {
+func evaluateModulus(arguments: [Expression], context: Context) throws -> Expression {
     var numbers = try toNumbers(arguments: arguments, context: context)
     guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
     let left = numbers.removeFirst()
@@ -225,7 +392,7 @@ func evaluateMod(arguments: [Expression], context: Context) throws -> Expression
     return .number(try left.modulo(right))
 }
 
-func evaluateDiv(arguments: [Expression], context: Context) throws -> Expression {
+func evaluateIntegerDivide(arguments: [Expression], context: Context) throws -> Expression {
     var numbers = try toNumbers(arguments: arguments, context: context)
     guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
     let left = numbers.removeFirst()
@@ -294,6 +461,19 @@ private func prepareOutput(for arguments: [Expression], context: Context) throws
     return evaluated.map { $0.out() }.joined(separator: " ")
 }
 
+private func evaluateUnaryNumericOp(arguments: [Expression], context: Context, op: (FloatType) -> FloatType) throws -> Expression {
+    guard arguments.count == 1 else { throw EvaluationError.signatureMismatch(arguments) }
+    var numbers = try toNumbers(arguments: arguments, context: context)
+    let argument = numbers.removeFirst()
+    let float = switch argument {
+    case .int(let value):
+        FloatType(value)
+    case .float(let value):
+        value
+    }
+    return .number(.float(op(float)))
+}
+
 private func extractNumber(_ expression: Expression, context: Context) throws -> Number {
     if case .number(let number) = try expression.evaluate(context: context) {
         return number
@@ -312,7 +492,7 @@ private func extractCharacter(_ expression: Expression, context: Context) throws
     if case .char(let value) = try expression.evaluate(context: context) {
         return value
     }
-    throw EvaluationError.notACharacter
+    throw EvaluationError.notACharacter(expression)
 }
 
 private func extractList(_ expression: Expression, context: Context) throws -> [Expression] {
@@ -336,7 +516,7 @@ private func toCharacters(arguments: [Expression], context: Context) throws -> [
     return try arguments.map { arg -> Character in
         let evaluatedArg = try arg.evaluate(context: context)
         guard case let .char(n) = evaluatedArg else {
-            throw EvaluationError.notACharacter
+            throw EvaluationError.notACharacter(evaluatedArg)
         }
         return n
     }

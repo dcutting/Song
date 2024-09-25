@@ -1,18 +1,19 @@
 public indirect enum EvaluationError: Error, Sendable {
 
     case cannotEvaluate(Expression, EvaluationError)
+    case cannotCompare(Expression, Expression)
     case symbolNotFound(String)
     case signatureMismatch([Expression])
     case notAClosure(Expression)
     case notABoolean(Expression)
     case notANumber(Expression)
+    case notACharacter(Expression)
     case notAList(Expression)
     case notAFunction(Expression)
     case patternsCannotBeFloats(Expression)
     case numericMismatch
     case divisionByZero
     case emptyScope
-    case notACharacter
 }
 
 extension EvaluationError: CustomStringConvertible {
@@ -28,6 +29,8 @@ extension EvaluationError: CustomStringConvertible {
         switch error {
         case let .cannotEvaluate(expr, inner):
             return format(outer: expr, inner: inner, indent: indent)
+        case let .cannotCompare(lhs, rhs):
+            result = "cannot compare \(lhs) and \(rhs)"
         case .symbolNotFound(let symbol):
             result = "unknown symbol: \(symbol)"
         case .signatureMismatch(let arguments):
@@ -38,6 +41,8 @@ extension EvaluationError: CustomStringConvertible {
             result = "need a boolean, not \(expr)"
         case .notANumber(let expr):
             result = "need a number, not \(expr)"
+        case .notACharacter(let expr):
+            result = "need a character, not \(expr)"
         case .notAList(let expr):
             result = "need a list, not \(expr)"
         case .notAFunction(let expr):
@@ -50,8 +55,6 @@ extension EvaluationError: CustomStringConvertible {
             result = "cannot divide by zero"
         case .emptyScope:
             result = "Do/End must contain at least one expression"
-        case .notACharacter:
-            result = "need a character"
         }
         return "💥  \(result)".indented(by: indent)
     }

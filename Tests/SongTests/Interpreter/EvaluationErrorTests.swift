@@ -65,7 +65,7 @@ Evaluation error
     }
 
     func test_notACharacter() {
-        let error = EvaluationError.notACharacter
-        XCTAssertEqual("Evaluation error\n 💥  need a character", "\(error)")
+        let error = EvaluationError.notACharacter(.int(6))
+        XCTAssertEqual("Evaluation error\n 💥  need a character, not 6", "\(error)")
     }
 }

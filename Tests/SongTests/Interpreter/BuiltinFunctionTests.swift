@@ -61,8 +61,8 @@ class BuiltinFunctionTests: XCTestCase {
     // Description
 
     func test_description() {
-        let expr = Expression.builtIn({ _, _ in return .yes })
-        XCTAssertEqual("builtIn", expr.description)
+        let expr = Expression.builtIn(.equal)
+        XCTAssertEqual("Eq", expr.description)
     }
 
     // Evaluates arguments.
@@ -83,7 +83,7 @@ class BuiltinFunctionTests: XCTestCase {
         }
 
         assertNoThrow {
-            let op = try Expression.call("Mod", [first, second]).evaluate(context: context)
+            let op = try Expression.call("%", [first, second]).evaluate(context: context)
             XCTAssertEqual(Expression.int(4), op)
         }
 

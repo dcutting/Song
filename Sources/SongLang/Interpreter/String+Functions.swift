@@ -15,7 +15,7 @@ extension Expression {
             if case .char(let c) = item {
                 return c
             }
-            throw EvaluationError.notACharacter
+            throw EvaluationError.notACharacter(item)
         }
         return String(chars)
     }
