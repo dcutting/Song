@@ -8,6 +8,11 @@ public extension Context {
     func extend(with context: Context) -> Context {
         merging(context) { _, r in r }
     }
+    
+    func lookup(_ name: String) throws -> Expression {
+        guard let value = self[name] else { throw EvaluationError.symbolNotFound(name) }
+        return value
+    }
 }
 
 public func describe(context: Context) -> String {
@@ -21,7 +26,7 @@ public extension Context {
     
     static let script = builtIns.extend(with: io)
 
-    static let builtIns = BuiltInName.allCases.reduce(into: Context()) { context, builtIn in
+    static let builtIns = BuiltInName.allCases.reduce(into: Context.empty) { context, builtIn in
         context[builtIn.keyword] = .builtIn(builtIn)
     }
 

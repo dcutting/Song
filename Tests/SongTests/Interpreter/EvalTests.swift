@@ -36,7 +36,7 @@ class EvalTests: XCTestCase {
     }
 
     func test_evaluate_callingInvalidClosure_throws() {
-        let closure = Expression.closure(nil, [.int(5)], Context())
+        let closure = Expression.closure(nil, [.int(5)], .empty)
         let call = Expression.eval(closure, [])
         XCTAssertThrowsError(try call.evaluate(context: .empty))
     }

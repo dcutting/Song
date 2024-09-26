@@ -5,7 +5,7 @@ func declareSubfunctions(_ functions: [Function]) throws -> Context {
     return try declareSubfunctions(exprs)
 }
 
-func declareSubfunctions(_ functions: [Expression], in context: Context = Context()) throws -> Context {
+func declareSubfunctions(_ functions: [Expression], in context: Context = .empty) throws -> Context {
     var context = context
     for function in functions {
         let result = try function.evaluate(context: context)

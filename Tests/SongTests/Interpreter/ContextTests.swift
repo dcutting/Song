@@ -4,8 +4,8 @@ import XCTest
 class ContextTests: XCTestCase {
 
     func test_isEqual_empty_returnsTrue() {
-        let left = Context()
-        let right = Context()
+        let left = Context.empty
+        let right = Context.empty
         XCTAssertEqual(left, right)
     }
 
