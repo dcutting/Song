@@ -10,23 +10,47 @@ public func makeParser() -> ParserProtocol {
     let whitespace = space | newline
     let skip = space.maybe
     let skipWhitespace = whitespace.some.maybe
-    let dot = str(".")
-    let pipe = str("|") >>> skip
-    let comma = str(",")
-    let delimiter = str(",")
-    let lBracket = str("[")
-    let rBracket = str("]")
-    let lParen = str("(") >>> skip
-    let rParen = str(")")
-    let singleQuote = str("'")
-    let doubleQuote = str("\"")
-    let backslash = str("\\")
-    let underscore = str("_")
-    let questionMark = str("?")
-    let digit = (0...9).match
+    
+    let numeral = (0...9).match
     let lowercaseLetter = "abcdefghijklmnopqrstuvwxyz".match
     let uppercaseLetter = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".match
     let letter = lowercaseLetter | uppercaseLetter
+
+    let dot = str(".")
+    let pipe = str("|")
+    let comma = str(",")
+    let lBracket = str("[")
+    let rBracket = str("]")
+    let lParen = str("(")
+    let rParen = str(")")
+    let singleQuote = str("'")
+    let doubleQuote = str(#"""#)
+    let backslash = str(#"\"#)
+    let underscore = str("_")
+    let questionMark = str("?")
+    let star = str("*")
+    let slash = str("/")
+    let carat = str("^")
+    let percent = str("%")
+    let plus = str("+")
+    let minus = str("-")
+    let equal = str("=")
+    let leq = str("<=")
+    let geq = str(">=")
+    let lt = str("<")
+    let gt = str(">")
+    let div = str("Div")
+    let mod = str("Mod")
+    let eq = str("Eq")
+    let neq = str("Neq")
+    let and = str("And")
+    let or = str("Or")
+    let not = str("Not")
+    let yes = str("Yes")
+    let no = str("No")
+    let when = str("When")
+    let `do` = str("Do")
+    let end = str("End")
 
     let textAlphanumeric = Parser.char(.alphanumerics)
     let textQuoteChars = CharacterSet(charactersIn: "'\"")
@@ -41,30 +65,6 @@ public func makeParser() -> ParserProtocol {
     let textLiteralChar = textEscapedControl | textCharacter
     let textLiteralCharInChar = textEscapedSingleQuote | doubleQuote | textLiteralChar
     let textLiteralCharInString = textEscapedDoubleQuote | singleQuote | textLiteralChar
-
-    let star = str("*")
-    let slash = str("/")
-    let carat = str("^")
-    let percent = str("%")
-    let div = str("Div")
-    let mod = str("Mod")
-    let plus = str("+")
-    let minus = str("-")
-    let lessThanOrEqual = str("<=")
-    let greaterThanOrEqual = str(">=")
-    let lessThan = str("<")
-    let greaterThan = str(">")
-    let equalTo = str("Eq")
-    let notEqualTo = str("Neq")
-    let logicalAnd = str("And")
-    let logicalOr = str("Or")
-    let logicalNot = str("Not")
-    let yes = str("Yes")
-    let no = str("No")
-    let when = whitespace >>> str("When") >>> whitespace
-    let assign = str("=")
-    let start = str("Do")
-    let end = str("End")
 
     let expression = Deferred()
     let wrappedExpression = lParen >>> expression.tag("wrapped") >>> rParen
@@ -87,8 +87,8 @@ public func makeParser() -> ParserProtocol {
     let trueValue = yes.tag("true")
     let falseValue = no.tag("false")
     let booleanValue = trueValue | falseValue
-    let integerValue = digit.some.tag("integer")
-    let floatValue = (digit.some >>> dot >>> digit.some).tag("float")
+    let integerValue = numeral.some.tag("integer")
+    let floatValue = (numeral.some >>> dot >>> numeral.some).tag("float")
     let numericValue = floatValue | integerValue
     let characterValue = singleQuote >>> textLiteralCharInChar.tag("character") >>> singleQuote
     let stringValue = doubleQuote >>> textLiteralCharInString.some.maybe.tag("string") >>> doubleQuote
@@ -98,7 +98,7 @@ public func makeParser() -> ParserProtocol {
     // Names.
 
     let namePrefix = underscore | lowercaseLetter
-    let nameSuffix = letter | digit | underscore | questionMark
+    let nameSuffix = letter | numeral | underscore | questionMark
     let name = namePrefix >>> nameSuffix.some.maybe
     let variableName = name.tag("variableName")
     let functionName = name.tag("functionName")
@@ -151,10 +151,10 @@ public func makeParser() -> ParserProtocol {
     let functionSubject = parameter.tag("subject")
     let functionParameters = skipWhitespace >>> lParen >>> skipWhitespace >>> parameters.recur(0, 1).tag("params") >>> skipWhitespace >>> rParen
     let functionBody = skip >>> expression.tag("body") >>> skip
-    let guardClause = (when >>> expression).maybe.tag("guard") >>> skip
-    let subjectFunctionDecl = functionSubject >>> dot >>> functionName >>> functionParameters.maybe >>> guardClause >>> assign >>> skipWhitespace >>> functionBody
+    let guardClause = (whitespace >>> when >>> whitespace >>> expression).maybe.tag("guard") >>> skip
+    let subjectFunctionDecl = functionSubject >>> dot >>> functionName >>> functionParameters.maybe >>> guardClause >>> equal >>> skipWhitespace >>> functionBody
 
-    let freeFunctionDecl = functionName >>> functionParameters >>> guardClause >>> assign >>> skipWhitespace >>> functionBody
+    let freeFunctionDecl = functionName >>> functionParameters >>> guardClause >>> equal >>> skipWhitespace >>> functionBody
 
     let functionDecl = subjectFunctionDecl | freeFunctionDecl
 
@@ -176,31 +176,31 @@ public func makeParser() -> ParserProtocol {
     let multiplicativeOp = symbolicMultiplicativeOp | wordMultiplicativeOp
     multiplicative.parser = powerative.tag("left") >>> (multiplicativeOp >>> powerative.tag("right")).recur.tag("ops")
     additive.parser = multiplicative.tag("left") >>> (skipWhitespace >>> (plus | minus).tag("op") >>> skipWhitespace >>> multiplicative.tag("right")).recur.tag("ops")
-    relational.parser = additive.tag("left") >>> (skipWhitespace >>> (lessThanOrEqual | greaterThanOrEqual | lessThan | greaterThan).tag("op") >>> skipWhitespace >>> additive.tag("right")).recur.tag("ops")
-    equality.parser = relational.tag("left") >>> (whitespace >>> (equalTo | notEqualTo).tag("op") >>> whitespace >>> equality.tag("right")).recur.tag("ops")
-    conjunctive.parser = equality.tag("left") >>> (whitespace >>> logicalAnd.tag("op") >>> whitespace >>> conjunctive.tag("right")).recur.tag("ops")
-    disjunctive.parser = conjunctive.tag("left") >>> (whitespace >>> logicalOr.tag("op") >>> whitespace >>> disjunctive.tag("right")).recur.tag("ops")
+    relational.parser = additive.tag("left") >>> (skipWhitespace >>> (leq | geq | lt | gt).tag("op") >>> skipWhitespace >>> additive.tag("right")).recur.tag("ops")
+    equality.parser = relational.tag("left") >>> (whitespace >>> (eq | neq).tag("op") >>> whitespace >>> equality.tag("right")).recur.tag("ops")
+    conjunctive.parser = equality.tag("left") >>> (whitespace >>> and.tag("op") >>> whitespace >>> conjunctive.tag("right")).recur.tag("ops")
+    disjunctive.parser = conjunctive.tag("left") >>> (whitespace >>> or.tag("op") >>> whitespace >>> disjunctive.tag("right")).recur.tag("ops")
 
     expression.parser = disjunctive.parser
 
     // Terms.
 
-    let negateOp = (logicalNot.tag("op") >>> whitespace) | minus.tag("op")
+    let negateOp = (not.tag("op") >>> whitespace) | minus.tag("op")
     let negateTerm = negateOp >>> term.tag("right")
     let plusTerm = plus >>> term
     term.parser = negateTerm | plusTerm | scope | call | lambda | variableName | literalValue | wrappedExpression
 
     // Constants.
 
-    let constant = variableName.tag("variable") >>> skipWhitespace >>> assign >>> skipWhitespace >>> expression.tag("constBody")
+    let constant = variableName.tag("variable") >>> skipWhitespace >>> equal >>> skipWhitespace >>> expression.tag("constBody")
 
     // Scopes.
 
     let statement = Deferred()
     let scopeItem = skip >>> statement.tag("scopeStatement")
-    let delimiterOrNewline = skip >>> ((delimiter.maybe >>> skip >>> newline) | delimiter)
-    let scopeItems = (scopeItem >>> (delimiterOrNewline >>> scopeItem).recur).tag("scopeItems") >>> delimiter.maybe
-    scope.parser = start >>> whitespace >>> skipWhitespace >>> scopeItems >>> whitespace >>> skipWhitespace >>> end
+    let delimiterOrNewline = skip >>> ((comma.maybe >>> skip >>> newline) | comma)
+    let scopeItems = (scopeItem >>> (delimiterOrNewline >>> scopeItem).recur).tag("scopeItems") >>> comma.maybe
+    scope.parser = `do` >>> whitespace >>> skipWhitespace >>> scopeItems >>> whitespace >>> skipWhitespace >>> end
     let declaration = functionDecl | constant
     statement.parser = skipWhitespace >>> (declaration | expression)
 
