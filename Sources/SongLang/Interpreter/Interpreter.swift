@@ -24,15 +24,18 @@ public enum InterpreterState {
 public class Interpreter {
 
     public var context: Context
+    private var resetContext: Context
     private let interactive: Bool
     private var multilines = [String]()
     private let parser = makeParser()
     private let transformer = makeTransformer()
 
-    public init(context: Context, interactive: Bool) {
-        self.context = context
+    public init(initialContext: Context, interactive: Bool) {
+        self.context = initialContext
+        self.resetContext = initialContext
         self.interactive = interactive
         readStdLib()
+        self.resetContext = context
     }
     
     private func readStdLib() {
@@ -52,6 +55,11 @@ public class Interpreter {
                 }
             }
         }
+    }
+    
+    public func reset() {
+        context = resetContext
+        multilines = []
     }
 
     public func finish() -> String? {
@@ -101,7 +109,7 @@ public class Interpreter {
             let ast = try transformer.transform(result)
             let expression = try ast.evaluate(context: context)
             if case .closure(let name, _, _) = expression {
-                if let name = name {
+                if let name {
                     context = context.extend(name: name, value: expression)
                 }
             }
