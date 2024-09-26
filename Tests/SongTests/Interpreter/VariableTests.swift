@@ -23,6 +23,6 @@ class VariableTests: XCTestCase {
     }
     
     func test_evaluate_unboundVariable() {
-        XCTAssertThrowsError(try variable.evaluate())
+        XCTAssertThrowsError(try variable.evaluate(context: .empty))
     }
 }

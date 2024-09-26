@@ -6,56 +6,56 @@ class BuiltinFunctionTests: XCTestCase {
     // Invalid types.
 
     func test_invalidArgumentTypes() {
-        XCTAssertThrowsError(try Expression.call("*", [.int(5), .string("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("/", [.int(5), .string("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Mod", [.int(5), .string("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Div", [.int(5), .string("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("+", [.int(5), .string("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("-", [.int(5), .string("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("<", [.int(5), .string("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call(">", [.int(5), .string("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("<=", [.int(5), .string("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call(">=", [.int(5), .string("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Eq", [.int(5), .string("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Neq", [.int(5), .string("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("And", [.yes, .string("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Or", [.yes, .string("hi")]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Not", [.string("hi")]).evaluate())
+        XCTAssertThrowsError(try Expression.call("*", [.int(5), .string("hi")]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("/", [.int(5), .string("hi")]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("Mod", [.int(5), .string("hi")]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("Div", [.int(5), .string("hi")]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("+", [.int(5), .string("hi")]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("-", [.int(5), .string("hi")]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("<", [.int(5), .string("hi")]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call(">", [.int(5), .string("hi")]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("<=", [.int(5), .string("hi")]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call(">=", [.int(5), .string("hi")]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("Eq", [.int(5), .string("hi")]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("Neq", [.int(5), .string("hi")]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("And", [.yes, .string("hi")]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("Or", [.yes, .string("hi")]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("Not", [.string("hi")]).evaluate(context: .empty))
     }
 
     // Invalid number of arguments.
 
     func test_invalidArgumentCount() {
-        XCTAssertThrowsError(try Expression.call("*", [.int(1)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("*", [.int(1), .int(2), .int(3)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("/", [.int(1)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("/", [.int(1), .int(2), .int(3)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Mod", [.int(1)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Mod", [.int(1), .int(2), .int(3)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Div", [.int(1)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Div", [.int(1), .int(2), .int(3)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("+", [.int(1)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("+", [.int(1), .int(2), .int(3)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("-", []).evaluate())
-        XCTAssertThrowsError(try Expression.call("-", [.int(1), .int(2), .int(3)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("<", [.int(1)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("<", [.int(1), .int(2), .int(3)]).evaluate())
-        XCTAssertThrowsError(try Expression.call(">", [.int(1)]).evaluate())
-        XCTAssertThrowsError(try Expression.call(">", [.int(1), .int(2), .int(3)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("<=", [.int(1)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("<=", [.int(1), .int(2), .int(3)]).evaluate())
-        XCTAssertThrowsError(try Expression.call(">=", [.int(1)]).evaluate())
-        XCTAssertThrowsError(try Expression.call(">=", [.int(1), .int(2), .int(3)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Eq", [.int(1)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Eq", [.int(1), .int(2), .int(3)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Neq", [.int(1)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Neq", [.int(1), .int(2), .int(3)]).evaluate())
-        XCTAssertThrowsError(try Expression.call("And", [.yes]).evaluate())
-        XCTAssertThrowsError(try Expression.call("And", [.yes, .yes, .yes]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Or", [.yes]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Or", [.yes, .yes, .yes]).evaluate())
-        XCTAssertThrowsError(try Expression.call("Not", []).evaluate())
-        XCTAssertThrowsError(try Expression.call("Not", [.yes, .yes]).evaluate())
+        XCTAssertThrowsError(try Expression.call("*", [.int(1)]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("*", [.int(1), .int(2), .int(3)]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("/", [.int(1)]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("/", [.int(1), .int(2), .int(3)]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("Mod", [.int(1)]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("Mod", [.int(1), .int(2), .int(3)]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("Div", [.int(1)]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("Div", [.int(1), .int(2), .int(3)]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("+", [.int(1)]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("+", [.int(1), .int(2), .int(3)]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("-", []).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("-", [.int(1), .int(2), .int(3)]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("<", [.int(1)]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("<", [.int(1), .int(2), .int(3)]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call(">", [.int(1)]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call(">", [.int(1), .int(2), .int(3)]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("<=", [.int(1)]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("<=", [.int(1), .int(2), .int(3)]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call(">=", [.int(1)]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call(">=", [.int(1), .int(2), .int(3)]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("Eq", [.int(1)]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("Eq", [.int(1), .int(2), .int(3)]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("Neq", [.int(1)]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("Neq", [.int(1), .int(2), .int(3)]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("And", [.yes]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("And", [.yes, .yes, .yes]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("Or", [.yes]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("Or", [.yes, .yes, .yes]).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("Not", []).evaluate(context: .empty))
+        XCTAssertThrowsError(try Expression.call("Not", [.yes, .yes]).evaluate(context: .empty))
     }
 
     // Description
@@ -70,7 +70,7 @@ class BuiltinFunctionTests: XCTestCase {
     func test_evaluatesArguments() {
         let first = Expression.name("x")
         let second = Expression.name("y")
-        let context: Context = rootContext.extend(with: ["x": .int(9), "y": .int(5)])
+        let context: Context = Context.builtIns.extend(with: ["x": .int(9), "y": .int(5)])
 
         assertNoThrow {
             let op = try Expression.call("*", [first, second]).evaluate(context: context)
@@ -139,19 +139,19 @@ class BuiltinFunctionTests: XCTestCase {
 
         assertNoThrow {
             let op = Expression.call("And", [first, second])
-            let result = try op.evaluate(context: rootContext.extend(with: ["x": .yes, "y": .no]))
+            let result = try op.evaluate(context: context.extend(with: ["x": .yes, "y": .no]))
             XCTAssertEqual(Expression.no, result)
         }
 
         assertNoThrow {
             let op = Expression.call("Or", [first, second])
-            let result = try op.evaluate(context: rootContext.extend(with: ["x": .no, "y": .yes]))
+            let result = try op.evaluate(context: context.extend(with: ["x": .no, "y": .yes]))
             XCTAssertEqual(Expression.yes, result)
         }
 
         assertNoThrow {
             let op = Expression.call("Not", [first])
-            let result = try op.evaluate(context: rootContext.extend(with: ["x": .no]))
+            let result = try op.evaluate(context: context.extend(with: ["x": .no]))
             XCTAssertEqual(Expression.yes, result)
         }
     }

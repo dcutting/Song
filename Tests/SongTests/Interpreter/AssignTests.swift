@@ -12,7 +12,7 @@ class AssignTests: XCTestCase {
         assertNoThrow {
             let assign = Expression.assign(variable: .name("foo"), value: .call("+", [.int(4), .int(2)]))
             let expected = Expression.assign(variable: .name("foo"), value: .int(6))
-            XCTAssertEqual(expected, try assign.evaluate())
+            XCTAssertEqual(expected, try assign.evaluate(context: .builtIns))
         }
     }
 }

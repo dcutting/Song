@@ -18,7 +18,7 @@ class ClosureTests: XCTestCase {
     func test_evaluate() {
         assertNoThrow {
             let closure = try function.evaluate(context: context)
-            XCTAssertEqual(closure, try closure.evaluate())
+            XCTAssertEqual(closure, try closure.evaluate(context: .empty))
         }
     }
 

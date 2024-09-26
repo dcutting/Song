@@ -23,7 +23,7 @@ class ListConsTests: XCTestCase {
     func test_evaluate_simple_constructsList() {
         let cons = Expression.cons([.int(1), .int(2)], .list([.int(3)]))
         assertNoThrow {
-            let actual = try cons.evaluate()
+            let actual = try cons.evaluate(context: .empty)
             XCTAssertEqual(Expression.list([.int(1), .int(2), .int(3)]), actual)
         }
     }
@@ -31,7 +31,7 @@ class ListConsTests: XCTestCase {
     func test_evaluate_emptyHeads_constructsList() {
         assertNoThrow {
             let cons = Expression.cons([], .list([.int(1)]))
-            let actual = try cons.evaluate()
+            let actual = try cons.evaluate(context: .empty)
             XCTAssertEqual(Expression.list([.int(1)]), actual)
         }
     }
@@ -46,6 +46,6 @@ class ListConsTests: XCTestCase {
 
     func test_evaluate_tailNotAList_throws() {
         let cons = Expression.cons([.int(1)], .int(2))
-        XCTAssertThrowsError(try cons.evaluate())
+        XCTAssertThrowsError(try cons.evaluate(context: .empty))
     }
 }

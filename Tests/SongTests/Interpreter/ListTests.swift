@@ -35,7 +35,7 @@ class ListTests: XCTestCase {
             .name("x")
             ])
         assertNoThrow {
-            let actual = try list.evaluate(context: rootContext.extend(name: "x", value: .no))
+            let actual = try list.evaluate(context: Context.builtIns.extend(name: "x", value: .no))
             let expected = Expression.list([
                 .int(5),
                 .no
@@ -49,7 +49,7 @@ class ListTests: XCTestCase {
         let right = Expression.list([.int(3), .int(4)])
         let call = Expression.call("+", [left, right])
         assertNoThrow {
-            let actual = try call.evaluate()
+            let actual = try call.evaluate(context: .builtIns)
             let expected = Expression.list([.int(1), .int(2), .int(3), .int(4)])
             XCTAssertEqual(expected, actual)
         }
@@ -61,11 +61,11 @@ class ListTests: XCTestCase {
 
         assertNoThrow {
             let call = Expression.call("Eq", [left, right])
-            XCTAssertEqual(Expression.yes, try call.evaluate())
+            XCTAssertEqual(Expression.yes, try call.evaluate(context: .builtIns))
         }
         assertNoThrow {
             let call = Expression.call("Neq", [left, right])
-            XCTAssertEqual(Expression.no, try call.evaluate())
+            XCTAssertEqual(Expression.no, try call.evaluate(context: .builtIns))
         }
     }
 
@@ -75,11 +75,11 @@ class ListTests: XCTestCase {
 
         assertNoThrow {
             let call = Expression.call("Eq", [left, right])
-            XCTAssertEqual(Expression.no, try call.evaluate())
+            XCTAssertEqual(Expression.no, try call.evaluate(context: .builtIns))
         }
         assertNoThrow {
             let call = Expression.call("Neq", [left, right])
-            XCTAssertEqual(Expression.yes, try call.evaluate())
+            XCTAssertEqual(Expression.yes, try call.evaluate(context: .builtIns))
         }
     }
 
@@ -87,7 +87,7 @@ class ListTests: XCTestCase {
         let a = Expression.list([.float(5.0)])
         let b = Expression.list([.float(5.0)])
         let eq = Expression.call("Eq", [a, b])
-        XCTAssertThrowsError(try eq.evaluate())
+        XCTAssertThrowsError(try eq.evaluate(context: .empty))
     }
 
     func test_evaluate_equalNestedLists() {
@@ -96,11 +96,11 @@ class ListTests: XCTestCase {
 
         assertNoThrow {
             let call = Expression.call("Eq", [left, right])
-            XCTAssertEqual(Expression.yes, try call.evaluate())
+            XCTAssertEqual(Expression.yes, try call.evaluate(context: .builtIns))
         }
         assertNoThrow {
             let call = Expression.call("Neq", [left, right])
-            XCTAssertEqual(Expression.no, try call.evaluate())
+            XCTAssertEqual(Expression.no, try call.evaluate(context: .builtIns))
         }
     }
 
@@ -110,11 +110,11 @@ class ListTests: XCTestCase {
 
         assertNoThrow {
             let call = Expression.call("Eq", [left, right])
-            XCTAssertEqual(Expression.no, try call.evaluate())
+            XCTAssertEqual(Expression.no, try call.evaluate(context: .builtIns))
         }
         assertNoThrow {
             let call = Expression.call("Neq", [left, right])
-            XCTAssertEqual(Expression.yes, try call.evaluate())
+            XCTAssertEqual(Expression.yes, try call.evaluate(context: .builtIns))
         }
     }
 
@@ -124,11 +124,11 @@ class ListTests: XCTestCase {
 
         assertNoThrow {
             let call = Expression.call("Eq", [left, right])
-            XCTAssertEqual(Expression.no, try call.evaluate())
+            XCTAssertEqual(Expression.no, try call.evaluate(context: .builtIns))
         }
         assertNoThrow {
             let call = Expression.call("Neq", [left, right])
-            XCTAssertEqual(Expression.yes, try call.evaluate())
+            XCTAssertEqual(Expression.yes, try call.evaluate(context: .builtIns))
         }
     }
 }

@@ -33,3 +33,9 @@ extension Expression {
         return String(chars)
     }
 }
+
+extension Array<Expression> {
+    func formattedString(context: Context) throws -> String {
+        try map { expr in try expr.evaluate(context: context) }.map(\.formattedString).joined(separator: " ")
+    }
+}

@@ -11,7 +11,7 @@ class FloatTests: XCTestCase {
     func test_evaluate() {
         assertNoThrow {
             let float = Expression.float(5.3)
-            XCTAssertEqual(float, try float.evaluate())
+            XCTAssertEqual(float, try float.evaluate(context: .empty))
         }
     }
 
@@ -19,6 +19,6 @@ class FloatTests: XCTestCase {
         let a = Expression.float(5.0)
         let b = Expression.float(5.0)
         let call = Expression.call("Eq", [a, b])
-        XCTAssertThrowsError(try call.evaluate())
+        XCTAssertThrowsError(try call.evaluate(context: .empty))
     }
 }

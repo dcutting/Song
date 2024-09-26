@@ -36,7 +36,7 @@ class FunctionTests: XCTestCase {
 
     func test_evaluate_patternIsAFloat_throws() {
         let function = Expression.function(Function(name: "foo", patterns: [.float(1.0)], when: .yes, body: .yes))
-        XCTAssertThrowsError(try function.evaluate())
+        XCTAssertThrowsError(try function.evaluate(context: .empty))
     }
 
     func test_description_anonymousFunction() {

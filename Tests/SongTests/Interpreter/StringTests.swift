@@ -29,7 +29,7 @@ class StringTests: XCTestCase {
     func test_evaluate() {
         assertNoThrow {
             let string = Expression.string("hello")
-            let actual = try string.evaluate()
+            let actual = try string.evaluate(context: .empty)
             XCTAssertEqual(string, actual)
         }
     }
@@ -39,7 +39,7 @@ class StringTests: XCTestCase {
             let left = Expression.string("hello")
             let right = Expression.string(" world")
             let call = Expression.call("+", [left, right])
-            let actual = try call.evaluate()
+            let actual = try call.evaluate(context: .builtIns)
             let expected = Expression.string("hello world")
             XCTAssertEqual(expected, actual)
         }
@@ -51,11 +51,11 @@ class StringTests: XCTestCase {
 
         assertNoThrow {
             let call = Expression.call("Eq", [left, right])
-            XCTAssertEqual(Expression.yes, try call.evaluate())
+            XCTAssertEqual(Expression.yes, try call.evaluate(context: .builtIns))
         }
         assertNoThrow {
             let call = Expression.call("Neq", [left, right])
-            XCTAssertEqual(Expression.no, try call.evaluate())
+            XCTAssertEqual(Expression.no, try call.evaluate(context: .builtIns))
         }
     }
 
@@ -65,11 +65,11 @@ class StringTests: XCTestCase {
 
         assertNoThrow {
             let call = Expression.call("Eq", [left, right])
-            XCTAssertEqual(Expression.no, try call.evaluate())
+            XCTAssertEqual(Expression.no, try call.evaluate(context: .builtIns))
         }
         assertNoThrow {
             let call = Expression.call("Neq", [left, right])
-            XCTAssertEqual(Expression.yes, try call.evaluate())
+            XCTAssertEqual(Expression.yes, try call.evaluate(context: .builtIns))
         }
     }
 }

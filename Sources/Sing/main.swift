@@ -97,7 +97,7 @@ struct Song: ParsableCommand {
             allArgs.insert(filename, at: 0)
         }
         let songArgs = allArgs.map { Expression.string($0) }
-        var context = rootContext.extend(name: "args", value: .list(songArgs))
+        var context: Context = interactive ? .interactive : .script.extend(name: "args", value: .list(songArgs))
         
         let interpreter = Interpreter(context: context, interactive: interactive)
         context = interpreter.context

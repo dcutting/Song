@@ -1,9 +1,5 @@
 import Foundation
 
-public let builtInContext = BuiltInName.allCases.reduce(into: Context()) { context, builtIn in
-    context[builtIn.keyword] = .builtIn(builtIn)
-}
-
 public enum BuiltInName: Sendable, Equatable, CaseIterable {
     case equal
     case notEqual
@@ -264,7 +260,7 @@ func evaluateNumberConstructor(arguments: [Expression], context: Context) throws
 }
 
 func evaluateStringConstructor(arguments: [Expression], context: Context) throws -> Expression {
-    let output = try prepareOutput(for: arguments, context: context)
+    let output = try arguments.formattedString(context: context)
     return .string(output)
 }
 
@@ -436,33 +432,9 @@ func evaluateGreaterThanOrEqual(arguments: [Expression], context: Context) throw
     return .bool(left.greaterThanOrEqualTo(right))
 }
 
-@MainActor func evaluateIn(arguments: [Expression], context: Context) throws -> Expression {
-    let output = try prepareOutput(for: arguments, context: context)
-    _stdOut.put(output)
-    let line = _stdIn.get() ?? ""
-    return .string(line)
-}
-
-@MainActor func evaluateOut(arguments: [Expression], context: Context) throws -> Expression {
-    let output = try prepareOutput(for: arguments, context: context)
-    _stdOut.put(output + "\n")
-    return .string(output)
-}
-
-@MainActor func evaluateErr(arguments: [Expression], context: Context) throws -> Expression {
-    let output = try prepareOutput(for: arguments, context: context)
-    _stdErr.put(output + "\n")
-    return .string(output)
-}
-
 
 
 /* Helpers. */
-
-private func prepareOutput(for arguments: [Expression], context: Context) throws -> String {
-    let evaluated = try arguments.map { expr -> Expression in try expr.evaluate(context: context) }
-    return evaluated.map(\.formattedString).joined(separator: " ")
-}
 
 private func evaluateUnaryNumericOp(arguments: [Expression], context: Context, op: (FloatType) -> FloatType) throws -> Expression {
     guard arguments.count == 1 else { throw EvaluationError.signatureMismatch(arguments) }

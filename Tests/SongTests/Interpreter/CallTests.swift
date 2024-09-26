@@ -29,7 +29,7 @@ class CallTests: XCTestCase {
     func test_evaluate_closure_nonBooleanWhenClause_throws() {
         let function = Expression.function(Function(name: "echo", patterns: [], when: .int(1), body: .yes))
         assertNoThrow {
-            let closure = try function.evaluate()
+            let closure = try function.evaluate(context: .empty)
             let context: Context = ["echo": closure]
             let call = Expression.call("echo", [])
             XCTAssertThrowsError(try call.evaluate(context: context))
@@ -39,7 +39,7 @@ class CallTests: XCTestCase {
     func test_evaluate_closure_falseWhenClause_throws() {
         let function = Expression.function(Function(name: "echo", patterns: [], when: .no, body: .yes))
         assertNoThrow {
-            let closure = try function.evaluate()
+            let closure = try function.evaluate(context: .empty)
             let context: Context = ["echo": closure]
             let call = Expression.call("echo", [])
             XCTAssertThrowsError(try call.evaluate(context: context))
@@ -49,7 +49,7 @@ class CallTests: XCTestCase {
     func test_evaluate_closure_trueWhenClause_succeeds() {
         let function = Expression.function(Function(name: "echo", patterns: [], when: .yes, body: .int(9)))
         assertNoThrow {
-            let closure = try function.evaluate()
+            let closure = try function.evaluate(context: .empty)
             let context: Context = ["echo": closure]
             let call = Expression.call("echo", [])
             let actual = try call.evaluate(context: context)
@@ -59,6 +59,6 @@ class CallTests: XCTestCase {
 
     func test_call_missingSymbol() {
         let call = Expression.call("noSuchFunction", [])
-        XCTAssertThrowsError(try call.evaluate())
+        XCTAssertThrowsError(try call.evaluate(context: .empty))
     }
 }

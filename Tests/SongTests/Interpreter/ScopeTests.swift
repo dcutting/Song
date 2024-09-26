@@ -9,27 +9,27 @@ class ScopeTests: XCTestCase {
     }
 
     func test_noStatements_throws() {
-        XCTAssertThrowsError(try Expression.scope([]).evaluate())
+        XCTAssertThrowsError(try Expression.scope([]).evaluate(context: .empty))
     }
 
     func test_oneLiteralStatement_returnsLiteral() {
         assertNoThrow {
             let scope = Expression.scope([.int(9)])
-            XCTAssertEqual(Expression.int(9), try scope.evaluate())
+            XCTAssertEqual(Expression.int(9), try scope.evaluate(context: .empty))
         }
     }
 
     func test_twoLiteralStatement_returnsLastLiteral() {
         assertNoThrow {
             let scope = Expression.scope([.int(9), .int(5)])
-            XCTAssertEqual(Expression.int(5), try scope.evaluate())
+            XCTAssertEqual(Expression.int(5), try scope.evaluate(context: .empty))
         }
     }
 
     func test_oneCompoundStatement_returnsEvaluatedStatement() {
         assertNoThrow {
             let scope = Expression.scope([.call("+", [.int(9), .int(3)])])
-            XCTAssertEqual(Expression.int(12), try scope.evaluate())
+            XCTAssertEqual(Expression.int(12), try scope.evaluate(context: .builtIns))
         }
     }
 
@@ -71,7 +71,7 @@ class ScopeTests: XCTestCase {
                 makeFoo(.name("x"), .name("x")),
                 callFoo(.int(9))
                 ])
-            XCTAssertEqual(Expression.int(9), try scope.evaluate())
+            XCTAssertEqual(Expression.int(9), try scope.evaluate(context: .empty))
         }
     }
 
@@ -81,7 +81,7 @@ class ScopeTests: XCTestCase {
             makeFoo(.int(9), .string("N I N E")),
             makeFoo(.name("x"), .name("x"))
         ])
-        context = rootContext.extend(with: context)
+        context = Context.builtIns.extend(with: context)
 
         let inScope = [
             makeFoo(.int(9), .string("nine")),

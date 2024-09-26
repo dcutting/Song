@@ -13,7 +13,7 @@ func evaluate(_ code: String) throws -> SongLang.Expression? {
     let parser = makeParser()
     let transformer = makeTransformer()
     let lines = code.split(separator: "\n")
-    var context = rootContext
+    var context = Context.builtIns
     var lastEval: SongLang.Expression?
     for line in lines {
         let result = parser.parse(String(line))

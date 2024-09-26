@@ -11,7 +11,7 @@ class IntTests: XCTestCase {
     func test_evaluate() {
         assertNoThrow {
             let int = Expression.int(5)
-            XCTAssertEqual(int, try int.evaluate())
+            XCTAssertEqual(int, try int.evaluate(context: .empty))
         }
     }
 }

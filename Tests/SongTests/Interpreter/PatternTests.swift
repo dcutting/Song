@@ -31,10 +31,10 @@ class PatternTests: XCTestCase {
                     body: .name("x")),
     ]
 
-    var context = rootContext
+    var context = Context.empty
 
     override func setUp() {
-        context = rootContext.extend(with: try! declareSubfunctions(functions))
+        context = .builtIns.extend(with: try! declareSubfunctions(functions))
     }
 
     func test_literal_wrongType_fails() {
@@ -112,7 +112,6 @@ class PatternTests: XCTestCase {
 
     func test_nestedList_match_evaluates() {
         assertNoThrow {
-
             let call = Expression.call("zip", [
                 .list([
                     .list([.int(1), .int(2)]),

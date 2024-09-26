@@ -1,20 +1,6 @@
-@MainActor let _stdIn: StdIn = DefaultStdIn()
-@MainActor let _stdOut: StdOut = DefaultStdOut()
-@MainActor let _stdErr: StdOut = DefaultStdErr()
-
-public let basicContext: Context = builtInContext
-
-//public let ioContext: Context = [
-//    "in": .builtIn(evaluateIn),
-//    "out": .builtIn(evaluateOut),
-//    "err": .builtIn(evaluateErr),
-//]
-
-public let rootContext: Context = basicContext//.extend(with: ioContext)
-
 extension Expression {
 
-    public func evaluate(context: Context = rootContext) throws -> Expression {
+    public func evaluate(context: Context) throws -> Expression {
         let result: Expression
         do {
             result = try evaluate(expression: self, context: context)
