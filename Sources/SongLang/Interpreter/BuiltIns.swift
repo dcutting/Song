@@ -1,7 +1,7 @@
 import Foundation
 
 public let builtInContext = BuiltInName.allCases.reduce(into: Context()) { context, builtIn in
-    context["\(builtIn)"] = .builtIn(builtIn)
+    context[builtIn.keyword] = .builtIn(builtIn)
 }
 
 public enum BuiltInName: Sendable, Equatable, CaseIterable {
@@ -39,6 +39,14 @@ public enum BuiltInName: Sendable, Equatable, CaseIterable {
 
 extension BuiltInName: CustomStringConvertible {
     public var description: String {
+        keyword
+    }
+}
+
+typealias BuiltInFunction = @Sendable ([SongLang.Expression], Context) throws -> SongLang.Expression
+
+extension BuiltInName {
+    var keyword: String {
         switch self {
         case .equal:
             "Eq"
@@ -102,12 +110,8 @@ extension BuiltInName: CustomStringConvertible {
             ">="
         }
     }
-}
 
-typealias BuiltInFunction = @Sendable ([SongLang.Expression], Context) throws -> SongLang.Expression
-
-extension BuiltInName {
-    func lookup() -> BuiltInFunction {
+    func function() -> BuiltInFunction {
         switch self {
         case .equal:
             evaluateEq

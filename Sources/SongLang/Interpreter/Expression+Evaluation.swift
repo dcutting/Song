@@ -120,7 +120,7 @@ extension Expression {
             }
             throw EvaluationError.signatureMismatch(arguments)
         case let .builtIn(builtIn):
-            return try builtIn.lookup()(arguments, callingContext)
+            return try builtIn.function()(arguments, callingContext)
         default:
             throw EvaluationError.notAFunction(closure)
         }
