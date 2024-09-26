@@ -2,7 +2,6 @@ import XCTest
 @testable import SongLang
 
 extension String {
-
     func makes(_ expected: SongLang.Expression, file: StaticString = #filePath, line: UInt = #line) {
         assertNoThrow(file: file, line: line) {
             let actual = try parse(self)
