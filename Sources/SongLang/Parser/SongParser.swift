@@ -200,7 +200,9 @@ public final class SongParser {
 
         // Variable declaration.
         
-        let variableDeclaration = variable.tag("variable") >>> equal >>> expression.tag("constBody")
+        let variableDeclarationName = variable.tag("variableDeclarationName")
+        let variableDeclarationBody = expression.tag("variableDeclarationBody")
+        let variableDeclaration = variableDeclarationName >>> equal >>> variableDeclarationBody
         
         // Declaration.
         

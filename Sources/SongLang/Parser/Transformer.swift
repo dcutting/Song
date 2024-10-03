@@ -185,10 +185,10 @@ public func makeTransformer() -> Transformer<Expression> {
         .function(try transformFunction(args: $0))
     }
 
-    // Constants.
+    // Variable declaration.
 
-    t.rule(["constBody": .simple("body"), "variable": .simple("var")]) {
-        .assign(variable: try $0.val("var"), value: try $0.val("body"))
+    t.rule(["variableDeclarationName": .simple("name"), "variableDeclarationBody": .simple("body")]) {
+        .assign(variable: try $0.val("name"), value: try $0.val("body"))
     }
 
     // Scopes.
