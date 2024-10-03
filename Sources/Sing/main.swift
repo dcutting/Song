@@ -83,7 +83,7 @@ struct Song: ParsableCommand {
             }
         }
         
-        let parser = makeParser()
+        let parser = SongParser().parser
         let transformer = makeTransformer()
         
         func log(_ str: Any? = nil) {

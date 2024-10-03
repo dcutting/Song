@@ -10,7 +10,7 @@ func assertNoThrow(file: StaticString = #filePath, line: UInt = #line, _ closure
 }
 
 func evaluate(_ code: String) throws -> SongLang.Expression? {
-    let parser = makeParser()
+    let parser = SongParser().parser
     let transformer = makeTransformer()
     let lines = code.split(separator: "\n")
     var context = Context.builtIns

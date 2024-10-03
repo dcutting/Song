@@ -27,7 +27,7 @@ public class Interpreter {
     private var resetContext: Context
     private let interactive: Bool
     private var multilines = [String]()
-    private let parser = makeParser()
+    private let parser = SongParser().parser
     private let transformer = makeTransformer()
 
     public init(initialContext: Context, interactive: Bool) {

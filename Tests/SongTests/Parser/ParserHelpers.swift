@@ -14,7 +14,7 @@ extension String {
     }
 
     private func parse(_ line: String) throws -> SongLang.Expression {
-        let parser = makeParser()
+        let parser = SongParser().parser
         let transformer = makeTransformer()
         let result = parser.parse(line)
         return try transformer.transform(result)
