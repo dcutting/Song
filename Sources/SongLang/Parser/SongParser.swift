@@ -5,14 +5,16 @@ public final class SongParser {
     public init() {}
     
     public var parser: ParserProtocol {
+
+        // Whitespace.
+        
+        let spacesOrTabs = " \t".match
+        let newline = str("\n")
+        let whitespace = spacesOrTabs | newline
+        let skipInline = spacesOrTabs.some.maybe
+        let skip = whitespace.some.maybe
         
         // Punctuation.
-        
-        let newline = str("\n")
-        let space = " \t".match.some
-        let whitespace = space | newline
-        let skip = space.maybe
-        let skipWhitespace = whitespace.some.maybe
         
         let numeral = (0...9).match
         let lowercaseLetter = "abcdefghijklmnopqrstuvwxyz".match
@@ -21,7 +23,7 @@ public final class SongParser {
         
         let dot = str(".")
         let pipe = str("|")
-        let comma = skipWhitespace >>> str(",") >>> skipWhitespace
+        let comma = str(",")
         let lBracket = str("[")
         let rBracket = str("]")
         let lParen = str("(")
@@ -37,7 +39,7 @@ public final class SongParser {
         let percent = str("%")
         let plus = str("+")
         let minus = str("-")
-        let equal = skipWhitespace >>> str("=") >>> skipWhitespace
+        let equal = skip >>> str("=") >>> skip
         let leq = str("<=")
         let geq = str(">=")
         let lt = str("<")
@@ -51,22 +53,24 @@ public final class SongParser {
         let not = str("Not")
         let yes = str("Yes")
         let no = str("No")
-        let when = whitespace >>> str("When") >>> whitespace
+        let when = str("When")
         let `do` = str("Do")
         let end = str("End")
-                
+
         let expression = Deferred()
         let wrappedExpression = lParen >>> expression.tag("wrapped") >>> rParen
         
+        let itemDelimiter = skip >>> comma >>> skip
+
         // Lists.
         
-        let element = skipWhitespace >>> expression.tag("item") >>> skipWhitespace
-        let elements = element >>> (comma >>> element).recur
-        let list = lBracket >>> elements.recur.tag("list") >>> rBracket
+        let listItem = skip >>> expression.tag("item") >>> skip
+        let listItems = listItem >>> (itemDelimiter >>> listItem).recur
+        let list = lBracket >>> listItems.recur(0, 1).tag("list") >>> rBracket
         
-        let heads = elements.tag("heads")
-        let tail = expression.tag("tail")
-        let listConstructor = lBracket >>> skipWhitespace >>> heads >>> skipWhitespace >>> pipe >>> skipWhitespace >>> tail >>> skipWhitespace >>> rBracket
+        let heads = listItems.tag("heads")
+        let tail = skip >>> expression.tag("tail") >>> skip
+        let listConstructor = lBracket >>> heads >>> pipe >>> tail >>> rBracket
         
         // Literals.
         
@@ -107,16 +111,16 @@ public final class SongParser {
         
         let statement = Deferred()
         let scopeItem = skip >>> statement.tag("scopeStatement")
-        let delimiterOrNewline = skip >>> ((comma.maybe >>> skip >>> newline) | comma)
+        let delimiterOrNewline = (skipInline >>> newline) | itemDelimiter
         let scopeItems = scopeItem >>> (delimiterOrNewline >>> scopeItem).recur
         let scope = `do` >>> whitespace >>> scopeItems.tag("scopeItems") >>> whitespace >>> end
         
         // Lambdas.
         
         let lambdaParameter = (list | listConstructor | variable).tag("param")
-        let lambdaParameters = lambdaParameter >>> (comma >>> lambdaParameter).recur
+        let lambdaParameters = lambdaParameter >>> (itemDelimiter >>> lambdaParameter).recur
         
-        let lambda = (pipe >>> skipWhitespace >>> lambdaParameters.recur(0, 1).tag("params") >>> skipWhitespace >>> pipe >>> skipWhitespace >>> (wrappedExpression | expression).tag("body")).tag("lambda")
+        let lambda = (pipe >>> skip >>> lambdaParameters.recur(0, 1).tag("params") >>> skip >>> pipe >>> skip >>> (wrappedExpression | expression).tag("body")).tag("lambda")
         
         // Function calls.
         
@@ -125,9 +129,8 @@ public final class SongParser {
         let argument = Deferred()
         let wrappedArgument = lParen >>> argument >>> rParen
         argument.parser = wrappedArgument | expression
-        let argumentDelimiter = skipWhitespace >>> comma >>> skipWhitespace
-        let arguments = argument >>> (argumentDelimiter >>> argument).recur
-        let wrappedArguments = lParen >>> skipWhitespace >>> arguments.recur.tag("args") >>> skipWhitespace >>> rParen
+        let arguments = argument >>> (itemDelimiter >>> argument).recur
+        let wrappedArguments = lParen >>> skip >>> arguments.recur.tag("args") >>> skip >>> rParen
         
         let callable = Deferred()
         let wrappedCallable = lParen >>> callable >>> rParen
@@ -161,14 +164,14 @@ public final class SongParser {
         let disjunctive = Deferred()
         let term = Deferred()
         
-        let powerativeOp = skipWhitespace >>> carat.tag("op") >>> skipWhitespace
+        let powerativeOp = skip >>> carat.tag("op") >>> skip
         powerative.parser = term.tag("left") >>> (powerativeOp >>> powerative.tag("right")).recur.tag("ops")
-        let symbolicMultiplicativeOp = skipWhitespace >>> (star | slash | percent).tag("op") >>> skipWhitespace
+        let symbolicMultiplicativeOp = skip >>> (star | slash | percent).tag("op") >>> skip
         let wordMultiplicativeOp = whitespace >>> (mod | div).tag("op") >>> whitespace
         let multiplicativeOp = symbolicMultiplicativeOp | wordMultiplicativeOp
         multiplicative.parser = powerative.tag("left") >>> (multiplicativeOp >>> powerative.tag("right")).recur.tag("ops")
-        additive.parser = multiplicative.tag("left") >>> (skipWhitespace >>> (plus | minus).tag("op") >>> skipWhitespace >>> multiplicative.tag("right")).recur.tag("ops")
-        relational.parser = additive.tag("left") >>> (skipWhitespace >>> (leq | geq | lt | gt).tag("op") >>> skipWhitespace >>> additive.tag("right")).recur.tag("ops")
+        additive.parser = multiplicative.tag("left") >>> (skip >>> (plus | minus).tag("op") >>> skip >>> multiplicative.tag("right")).recur.tag("ops")
+        relational.parser = additive.tag("left") >>> (skip >>> (leq | geq | lt | gt).tag("op") >>> skip >>> additive.tag("right")).recur.tag("ops")
         equality.parser = relational.tag("left") >>> (whitespace >>> (eq | neq).tag("op") >>> whitespace >>> equality.tag("right")).recur.tag("ops")
         conjunctive.parser = equality.tag("left") >>> (whitespace >>> and.tag("op") >>> whitespace >>> conjunctive.tag("right")).recur.tag("ops")
         disjunctive.parser = conjunctive.tag("left") >>> (whitespace >>> or.tag("op") >>> whitespace >>> disjunctive.tag("right")).recur.tag("ops")
@@ -184,17 +187,18 @@ public final class SongParser {
         
         // Function declarations.
         
+        let assign = skip >>> equal >>> skip
         let pattern = (literal | variable).tag("param")
-        let patterns = pattern >>> (comma >>> pattern).recur
+        let patterns = pattern >>> (itemDelimiter >>> pattern).recur
         let functionName = name.tag("functionName")
         let functionSubject = pattern.tag("subject")
-        let functionParameters = skipWhitespace >>> lParen >>> skipWhitespace >>> patterns.recur(0, 1).tag("params") >>> skipWhitespace >>> rParen
-        let `guard` = (when >>> expression).maybe.tag("guard")
+        let functionParameters = skip >>> lParen >>> skip >>> patterns.recur(0, 1).tag("params") >>> skip >>> rParen
+        let `guard` = (whitespace >>> when >>> whitespace >>> expression).maybe.tag("guard")
         let functionBody = skip >>> expression.tag("body") >>> skip
         
-        let subjectFunctionDeclaration = functionSubject >>> dot >>> functionName >>> functionParameters.maybe >>> `guard` >>> equal >>> functionBody
+        let subjectFunctionDeclaration = functionSubject >>> dot >>> functionName >>> functionParameters.maybe >>> `guard` >>> assign >>> functionBody
         
-        let freeFunctionDeclaration = functionName >>> functionParameters >>> `guard` >>> equal >>> functionBody
+        let freeFunctionDeclaration = functionName >>> functionParameters >>> `guard` >>> assign >>> functionBody
         
         let functionDeclaration = subjectFunctionDeclaration | freeFunctionDeclaration
 
@@ -202,7 +206,7 @@ public final class SongParser {
         
         let variableDeclarationName = variable.tag("variableDeclarationName")
         let variableDeclarationBody = expression.tag("variableDeclarationBody")
-        let variableDeclaration = variableDeclarationName >>> equal >>> variableDeclarationBody
+        let variableDeclaration = variableDeclarationName >>> assign >>> variableDeclarationBody
         
         // Declaration.
         
@@ -214,7 +218,7 @@ public final class SongParser {
         
         // Root.
         
-        let root = skipWhitespace >>> statement >>> skipWhitespace
+        let root = skip >>> statement >>> skip
         return root
     }
 }
