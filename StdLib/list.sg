@@ -55,6 +55,8 @@ each = map
 [].inject(acc, _) = acc
 [x|xs].inject(acc, f) = xs.inject(acc.f(x), f)
 
+reduce = inject
+
 [].select(_) = []
 [x|xs].select(f) When x.f = [x] + xs.select(f)
 [_|xs].select(f) = xs.select(f)
@@ -123,3 +125,28 @@ _.startsWith?([]) = Yes
 _.startsWith?(_) = No
 
 list.endsWith?(suffix) = list.reverse.startsWith?(suffix.reverse)
+
+[].enumerate = []
+list.enumerate = list.zip(0.upTo(list.count))
+
+[].unique(set) = set
+[e|tail].unique(set) When set.includes?(e) = tail.unique(set)
+[e|tail].unique(set) = tail.unique(set + [e])
+list.unique = list.unique(emptySet)
+
+# Dictionary
+
+[].lookup(_) = No
+[[key, value]|tail].lookup(key) = value
+[_|tail].lookup(key) = tail.lookup(key)
+[].insert(key, value) = [[key, value]]
+[[key, value]|tail].insert(key, newValue) = [[key, newValue]|tail]
+[e|tail].insert(key, value) = [e|tail.insert(key, value)]
+emptyDict = []
+
+# Set
+
+[].insert(value) = [value]
+[e|tail].insert(e) = [e|tail]
+[e|tail].insert(new) = [e|tail.insert(new)]
+emptySet = []

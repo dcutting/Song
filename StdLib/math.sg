@@ -32,8 +32,11 @@ x.times(n) = x.times(n, [])
 0.times(n, result) = result
 x.times(n, result) When x > 0 = (x-1).times(n, result + [n])
 
-x.upTo(x) = [x]
-x.upTo(y) = [x|(x+1).upTo(y)]
+x.upToAndIncluding(x) = [x]
+x.upToAndIncluding(y) When x < y = [x|(x+1).upToAndIncluding(y)]
+
+x.upTo(x) = []
+x.upTo(y) When x < y = [x|(x+1).upTo(y)]
 
 list.mean = list.sum / list.count
 list.median = list.sort.middle
