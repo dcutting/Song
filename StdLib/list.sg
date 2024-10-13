@@ -70,7 +70,7 @@ list.remove(e) = list.reject(|x| x Eq e)
 [x|xs].sort = xs.select(|k| k < x).sort + [x] + xs.select(|k| k >= x).sort
 
 [].sortBy(_) = []
-list.sortBy(f) = list.map(|x| [x.f, x]).sortMapped.map(|[xm,x]| x)
+list.sortBy(f) = list.map(|x| [x.f, x]).sortMapped.map(|[_, x]| x)
 [].sortMapped = []
 [[xm, x]|xs].sortMapped = Do
   left = xs.select(|[ym, y]| ym < xm).sortMapped
