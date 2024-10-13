@@ -5,6 +5,8 @@ metadata:
   lastModified: "2018-03-09"
   distributionURL: "https://github.com/dcutting/Song"
 commands:
+- beginString: "^"
+- beginString: "%"
 - beginString: "*"
 - beginString: "+"
 - beginString: "-"
