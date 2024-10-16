@@ -130,8 +130,8 @@ extension Expression {
                 let (last, scopeContext) = try semiEvaluateScope(statements: statements, context: finalContext)
                 let result: Expression
                 if case let .call(name, arguments) = last {
-                    let evalArgs = try arguments.evaluate(context: finalContext)
-                    let expr = try finalContext.lookup(name)
+                    let evalArgs = try arguments.evaluate(context: scopeContext)
+                    let expr = try scopeContext.lookup(name)
                     result = .tailEval(expr, evalArgs)
                 } else {
                     result = try last.evaluate(context: scopeContext)
