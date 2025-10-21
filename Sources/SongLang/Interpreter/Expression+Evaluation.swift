@@ -1,6 +1,8 @@
 extension Expression {
     public func evaluate(context: Context) throws -> Expression {
         do {
+            guard depthCounter < 1000 else { throw EvaluationError.stackOverflow }
+            depthCounter += 1
             return try evaluate(expression: self, context: context)
         } catch let error as EvaluationError {
             throw EvaluationError.cannotEvaluate(self, error)

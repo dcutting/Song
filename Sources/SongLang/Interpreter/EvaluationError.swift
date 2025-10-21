@@ -13,6 +13,7 @@ public indirect enum EvaluationError: Error, Sendable {
     case numericMismatch
     case divisionByZero
     case emptyScope
+    case stackOverflow
 }
 
 extension EvaluationError: CustomStringConvertible {
@@ -20,6 +21,15 @@ extension EvaluationError: CustomStringConvertible {
 
     public var description: String {
         "Evaluation error\n" + format(error: self, indent: EvaluationError.tabIndent)
+    }
+
+    public var shortDescription: String {
+      switch self {
+      case .cannotEvaluate(_, let inner):
+        inner.shortDescription
+      default:
+        format(error: self, indent: 0)
+      }
     }
 
     private func format(error: EvaluationError, indent: Int) -> String {
@@ -53,8 +63,10 @@ extension EvaluationError: CustomStringConvertible {
             result = "cannot divide by zero"
         case .emptyScope:
             result = "Do/End must contain at least one expression"
+        case .stackOverflow:
+            result = "stack overflow"
         }
-        return "💥  \(result)".indented(by: indent)
+        return "💥 \(result)".indented(by: indent)
     }
 
     private func format(outer: Expression, inner: EvaluationError, indent: Int) -> String {

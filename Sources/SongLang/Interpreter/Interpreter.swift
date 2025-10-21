@@ -107,6 +107,7 @@ public class Interpreter {
         if remainder.text.isEmpty {
             multilines.removeAll()
             let ast = try transformer.transform(result)
+            depthCounter = 0
             let expression = try ast.evaluate(context: context)
             if case .closure(let name, _, _) = expression {
                 if let name {
@@ -126,3 +127,5 @@ public class Interpreter {
         return makeResult(.none)
     }
 }
+
+nonisolated(unsafe) var depthCounter = 0
