@@ -1,0 +1,61 @@
+cipher = emptyDict.insert('D', 6).insert('A', 5).insert('T', 9).insert('O', 2).insert('Y', 0)
+
+allDigits = 0.upToAndIncluding(9)
+
+[cipher, word].startsWithZero? = cipher.lookup(word.first) Eq 0
+Yes Eq [cipher, "YAY"].startsWithZero?
+No Eq [cipher, "ADD"].startsWithZero?
+
+[cipher, word].value = word.reverse.enumerate.inject(0, |a, [x, i]| a + cipher.lookup(x) * 10^i)
+566 Eq [cipher, "ADD"].value
+
+[cipher, words].values = words.map(|word| [cipher, word].value)
+[566, 922] Eq [cipher, ["ADD", "TOO"]].values
+
+cipherWords.sumUp = cipherWords.values.sum
+1488 Eq [cipher, ["ADD", "TOO"]].sumUp
+
+cryptarithm.allLetters = cryptarithm.flatten.unique.sortBy(scalar)
+"ADT" Eq [["DAD", "AD"], "TAD"].allLetters
+
+[cipher, [terms, result]].isValid =
+	Not terms.any?(|t| [cipher, t].startsWithZero?) And [cipher, result].value Eq [cipher, terms].sumUp
+Yes Eq [cipher, [["DAD", "ODD"], "TOO"]].isValid
+No Eq [cipher, [["DAD", "TOO"], "ODD"]].isValid
+
+#[].permutation(r, c, d) = r + emptySet.insert(c, d)
+#cipher.permutation(r, c, d) = r + cipher.map(|m| m.insert(c, d))
+
+#"".permute(_) = []
+#_.permute([]) = []
+#[c|cs].permute(digits) = digits.reduce([], |r, d|
+#	cs.permute(digits.select(|d2| d Neq d2)).permutation(r, c, d)
+#)
+
+permute("", digits) = []
+permute([c|cs], digits) = digits.reduce(emptyDict, |r, d| Do
+  tp = permute(cs, digits.reject(|x| x Eq d))
+  _permute(tp, r, c, d)
+End)
+
+_permute([], r, c, d) = r + emptyDict.insert(c, d)
+_permute(tp, r, c, d) = r + tp.map(|x| x.insert(c, d))
+
+[] Eq "".permute([1, 2])
+[] Eq "AB".permute([])
+#[['A', 1]] Eq 
+"A".permute([1])
+#[['A', 1], ['B', 1]] Eq 
+"AB".permute([1])
+#[['A', 1], ['A', 2]] Eq 
+"A".permute([1, 2])
+#[['A', 1], ['A', 2], ['B', 1], ['B', 2]] Eq 
+"AB".permute([1, 2])
+
+#cryptarithm.allCiphers = cryptarithm.allLetters.permute(allDigits)
+cryptarithm.solve = cryptarithm.allCiphers.select(|cipher| [cipher, cryptarithm].isValid)
+
+terms = ["DAD", "ODD"]
+cryptarithm = [terms, "TOO"]
+#cryptarithm.allCiphers
+cryptarithm.solve
