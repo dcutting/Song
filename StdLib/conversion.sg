@@ -1,0 +1,49 @@
+# Temperature
+
+[x, 'F'].celsius = [(x - 32) / 1.8, 'C']
+[x, 'C'].celsius = [x, 'C']
+[x, 'C'].fahrenheit = [(x * 1.8) + 32, 'F']
+[x, 'F'].fahrenheit = [x, 'F']
+
+# temperatureF = [100, 'F']
+# temperatureC = temperatureF.celsius
+
+amount.percent(pc) = amount * pc / 100
+
+# 500.percent(40)
+
+# Currency
+
+["EUR", "AUD"].rate = 1.8
+["AUD", "EUR"].rate = 1/1.8
+
+[x, currency].convert(currency) = [x, currency]
+[x, currencyA].convert(currencyB) = [x * [currencyA, currencyB].rate, currencyB]
+
+# amount = [400, "EUR"]
+# amount.convert("AUD")
+
+# Length
+
+"m".unit = ["u", "l", "m"]
+"cm".unit = ["u", "l", "cm"]
+
+x.m = [x, "m".unit]
+x.cm = [x, "cm".unit]
+
+[x, ["u", _, u]].pretty = x.string + u
+
+[x, ["u", k, u]].plus([y, ["u", k, u]]) = [x + y, ["u", k, u]]
+[x, ["u", k, u]].plus([y, ["u", k, v]]) = [x, ["u", k, u]].plus([y, ["u", k, v]].in_unit(["u", k, u]))
+
+[x, ["u", k, u]].rounded(d) = [x.round(d), ["u", k, u]]
+u.rounded = u.rounded(0)
+
+[x, ["u", k, u]].in_unit(["u", k, u]) = [x, ["u", k, u]]
+[x, ["u", "l", "m"]].in_unit(["u", "l", "cm"]) = [x * 100, "cm".unit]
+[x, ["u", "l", "cm"]].in_unit(["u", "l", "m"]) = [x / 100, "m".unit]
+
+[x, ["u", "l", u]].in_cm = [x, ["u", "l", u]].in_unit("cm".unit)
+[x, ["u", "l", u]].in_m = [x, ["u", "l", u]].in_unit("m".unit)
+
+# 5.m.plus(3.cm).in_cm.pretty
