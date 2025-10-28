@@ -134,6 +134,9 @@ list.enumerate = list.zip(0.upTo(list.count))
 [e|tail].unique(set) = tail.unique(set + [e])
 list.unique = list.unique(emptySet)
 
+x.repeat(1) = x
+x.repeat(n) = [x|x.repeat(n-1)].flatten
+
 # Dictionary
 
 [].lookup(_) = No
