@@ -28,6 +28,9 @@ public extension Context {
 
     static let builtIns = BuiltInName.allCases.reduce(into: Context.empty) { context, builtIn in
         context[builtIn.keyword] = .builtIn(builtIn)
+        if builtIn == .modulus {
+            context["Mod"] = .builtIn(builtIn)
+        }
     }
 
     static let io: Context = [:]

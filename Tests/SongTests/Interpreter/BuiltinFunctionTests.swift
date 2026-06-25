@@ -88,6 +88,11 @@ class BuiltinFunctionTests: XCTestCase {
         }
 
         assertNoThrow {
+            let op = try Expression.call("Mod", [first, second]).evaluate(context: context)
+            XCTAssertEqual(Expression.int(4), op)
+        }
+
+        assertNoThrow {
             let op = try Expression.call("Div", [first, second]).evaluate(context: context)
             XCTAssertEqual(Expression.int(1), op)
         }
