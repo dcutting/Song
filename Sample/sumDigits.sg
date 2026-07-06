@@ -1,0 +1,15 @@
+"".sumDigits = 0
+[x].sumDigits = x.string.number
+[x, y].sumDigits When [x, y].number Mod 11 Eq 0 = [x, y].number
+[x|xs].sumDigits = (x.string.number + xs.sumDigits).string.sumDigits
+
+"".sumDigits.out
+"1".sumDigits.out
+"123".sumDigits.out
+"11".sumDigits.out
+"22".sumDigits.out
+"9364".sumDigits.out
+"367763".sumDigits.out
+"21022014".sumDigits.out
+"07031977".sumDigits.out
+"21081973".sumDigits.out
