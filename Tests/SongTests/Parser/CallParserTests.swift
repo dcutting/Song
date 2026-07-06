@@ -5,6 +5,14 @@ class CallParserTests: XCTestCase {
 
     func test_shouldParse() {
         "1.inc".makes(.call("inc", [.int(1)]))
+        "5m".makes(.call("m", [.int(5)]))
+        "3.14cm".makes(.call("cm", [.float(3.14)]))
+        "5m.foo".makes(.call("foo", [.call("m", [.int(5)])]))
+        "5m + 3cm".makes(.call("+", [
+            .call("m", [.int(5)]),
+            .call("cm", [.int(3)])
+        ]))
+        "-5m".makes(.call("-", [.call("m", [.int(5)])]))
         "x.inc".makes(.call("inc", [.name("x")]))
         "1.inc()".makes(.call("inc", [.int(1)]))
         "1.inc.foo".makes(.call("foo", [.call("inc", [.int(1)])]))
@@ -109,5 +117,7 @@ foo(
         "4()".fails()
         "4.|x|x".fails()
         "(4)()".fails()
+        "5 m".fails()
+        "5_".fails()
     }
 }

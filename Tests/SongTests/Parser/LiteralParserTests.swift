@@ -17,7 +17,7 @@ class LiteralParserTests: XCTestCase {
         "-0".makes(.call("-", [.int(0)]))
         " 99 ".makes(.int(99))
 
-        "9d".fails()
+        "9d".makes(.call("d", [.int(9)]))
     }
 
     func test_floats() {

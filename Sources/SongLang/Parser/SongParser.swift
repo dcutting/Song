@@ -230,13 +230,13 @@ private struct SongTokenParser {
             guard let integer = IntType(value) else {
                 throw SongParseError.invalidNumber(value)
             }
-            return literal(.int(integer))
+            return parseNumericLiteralSuffixUnit(.int(integer))
         case let .float(value):
             advance()
             guard let float = FloatType(value) else {
                 throw SongParseError.invalidNumber(value)
             }
-            return literal(.float(float))
+            return parseNumericLiteralSuffixUnit(.float(float))
         case let .string(value):
             advance()
             return literal(.string(value))
@@ -370,6 +370,18 @@ private struct SongTokenParser {
         }
 
         throw unexpected(expected: "function name or callable expression")
+    }
+
+    private mutating func parseNumericLiteralSuffixUnit(_ number: Expression) -> ParsedExpression {
+        guard let token = current,
+              token.leadingWhitespace == false,
+              case let .name(name) = token.kind,
+              name != "_"
+        else {
+            return literal(number)
+        }
+        advance()
+        return callable(.call(name, [number]))
     }
 
     private mutating func parseArgumentList() throws -> [Expression] {

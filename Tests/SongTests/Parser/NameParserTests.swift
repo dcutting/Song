@@ -16,6 +16,5 @@ class NameParserTests: XCTestCase {
 
     func test_shouldNotParse() {
         "GoodName".fails()
-        "9bottles".fails()
     }
 }
