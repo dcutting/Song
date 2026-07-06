@@ -1,7 +1,6 @@
 import Foundation
 import ArgumentParser
 import SongLang
-import Syft
 import LineNoise
 
 private let prompt = "> "
@@ -83,8 +82,7 @@ struct Song: ParsableCommand {
             }
         }
         
-        let parser = SongParser().parser
-        let transformer = makeTransformer()
+        let parser = SongParser()
         
         func log(_ str: Any? = nil) {
             if interactive, let str = str {
@@ -144,87 +142,67 @@ struct Song: ParsableCommand {
             
             let line = multilines.joined(separator: "\n")
             
-            let result = parser.parse(line)
-            let (ist, remainder) = result
+            let parseResult = parser.parseResult(line)
             if verbose {
-                print("  \(line), \(remainder), \(multilines), \(parsedLastCharacter)")
+                print("  \(line), \(multilines), \(parseResult)")
             }
-            if remainder.text.isEmpty {
+            switch parseResult {
+            case let .success(ast):
                 multilines.removeAll()
                 do {
-                    let ast = try transformer.transform(result)
-                    do {
-                        let expression = try ast.evaluate(context: context)
-                        if case .closure(let name, _, _) = expression {
-                            if let name = name {
-                                context = context.extend(name: name, value: expression)
-                            }
+                    let expression = try ast.evaluate(context: context)
+                    if case .closure(let name, _, _) = expression {
+                        if let name = name {
+                            context = context.extend(name: name, value: expression)
                         }
-                        if case .assign(let variable, let value) = expression {
-                            if case .name(let name) = variable {
-                                context = context.extend(name: name, value: value)
-                            }
-                        }
-                        switch expression {
-                        case .closure, .assign:
-                            () // Do nothing.
-                        default:
-                            log(expression)
-                        }
-                    } catch let error as EvaluationError {
-                        print(error)
-                        if verbose {
-                            log()
-                            log("Context:")
-                            dumpContext()
-                            log()
-                            log("AST:")
-                            dump(ast)
-                            log()
-                        }
-                        if !interactive {
-                            preconditionFailure()
-                        }
-                    } catch {
-                        print("Fatal error: \(error)")
-                        preconditionFailure()
                     }
-                } catch {
-                    print("Internal transform error:")
-                    dump(error)
-                    log()
-                    log("Input: \(line)")
-                    log()
-                    log("IST:")
-                    log(makeReport(result: ist))
-                    log()
-                    log("\(remainder)")
-                    log()
+                    if case .assign(let variable, let value) = expression {
+                        if case .name(let name) = variable {
+                            context = context.extend(name: name, value: value)
+                        }
+                    }
+                    switch expression {
+                    case .closure, .assign:
+                        () // Do nothing.
+                    default:
+                        log(expression)
+                    }
+                } catch let error as EvaluationError {
+                    print(error)
+                    if verbose {
+                        log()
+                        log("Context:")
+                        dumpContext()
+                        log()
+                        log("AST:")
+                        dump(ast)
+                        log()
+                    }
                     if !interactive {
                         preconditionFailure()
                     }
+                } catch {
+                    print("Fatal error: \(error)")
+                    preconditionFailure()
                 }
-            } else if !parsedLastCharacter {
-                let remainder = remainder.text.trimmingCharacters(in: .whitespacesAndNewlines)
+            case let .failure(error):
+                let message = error.description.trimmingCharacters(in: .whitespacesAndNewlines)
                 if interactive {
-                    print("💥  syntax error: \(remainder)")
+                    print("💥  syntax error: \(message)")
                 } else {
-                    print("💥  syntax error on line \(lineNumber): \(remainder)")
-                }
-                if verbose {
-                    log()
-                    log(makeReport(result: ist))
-                    log()
+                    print("💥  syntax error on line \(lineNumber): \(message)")
                 }
                 if !interactive {
                     preconditionFailure()
                 }
                 multilines.removeAll()
+            case .incomplete:
+                break
             }
         }
         
-        if let remainingToParse = interpreter.finish() {
-            print("💥  incomplete expression; do you have a typo?\n\n\(remainingToParse)")
+        if !multilines.isEmpty {
+            print("💥  incomplete expression; do you have a typo?\n\n\(multilines.joined(separator: "\n"))")
         } else {
             log("👏")
         }

@@ -66,7 +66,7 @@ extension EvaluationError: CustomStringConvertible {
         case .stackOverflow:
             result = "stack overflow"
         }
-        return "💥 \(result)".indented(by: indent)
+        return "💥  \(result)".indented(by: indent)
     }
 
     private func format(outer: Expression, inner: EvaluationError, indent: Int) -> String {

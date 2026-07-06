@@ -12,8 +12,6 @@ let package = Package(
         .library(name: "SongLang", targets: ["SongLang"])
     ],
     dependencies: [
-        .package(path: "../Syft"),
-//        .package(url: "https://github.com/dcutting/Syft.git", exact: .init(0, 3, 0)),
         .package(url: "https://github.com/apple/swift-argument-parser", from: "1.5.0"),
         .package(url: "https://github.com/andybest/linenoise-swift.git", exact: .init(0, 0, 3)),
     ],
@@ -27,8 +25,7 @@ let package = Package(
             ]
         ),
         .target(
-            name: "SongLang",
-            dependencies: ["Syft"]),
+            name: "SongLang"),
         .testTarget(
             name: "SongTests",
             dependencies: ["SongLang"]),

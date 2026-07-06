@@ -1,4 +1,4 @@
-import Syft
+import Foundation
 
 public struct InterpreterError: Error {
     let remainder: String
@@ -27,8 +27,7 @@ public class Interpreter {
     private var resetContext: Context
     private let interactive: Bool
     private var multilines = [String]()
-    private let parser = SongParser().parser
-    private let transformer = makeTransformer()
+    private let parser = SongParser()
 
     public init(initialContext: Context, interactive: Bool) {
         self.context = initialContext
@@ -102,11 +101,9 @@ public class Interpreter {
 
         multilines.append(line)
         let joinedLine = multilines.joined(separator: "\n")
-        let result = parser.parse(joinedLine)
-        let (_, remainder) = result
-        if remainder.text.isEmpty {
+        switch parser.parseResult(joinedLine) {
+        case let .success(ast):
             multilines.removeAll()
-            let ast = try transformer.transform(result)
             depthCounter = 0
             let expression = try ast.evaluate(context: context)
             if case .closure(let name, _, _) = expression {
@@ -120,11 +117,12 @@ public class Interpreter {
                 }
             }
             return makeResult(.expression(expression))
-        } else if !parsedLastCharacter {
+        case let .failure(error):
             multilines.removeAll()
-            return makeResult(.error(InterpreterError(remainder: remainder.text)))
+            return makeResult(.error(error))
+        case .incomplete:
+            return makeResult(.none)
         }
-        return makeResult(.none)
     }
 }
 

@@ -1,224 +1,664 @@
 import Foundation
-import Syft
 
 public final class SongParser {
     public init() {}
-    
-    public var parser: ParserProtocol {
 
-        // Whitespace.
-        
-        let spacesOrTabs = " \t".match
-        let newline = str("\n")
-        let whitespace = spacesOrTabs | newline
-        let skipInline = spacesOrTabs.some.maybe
-        let skip = whitespace.some.maybe
-        
-        // Punctuation.
-        
-        let numeral = (0...9).match
-        let lowercaseLetter = "abcdefghijklmnopqrstuvwxyz".match
-        let uppercaseLetter = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".match
-        let letter = lowercaseLetter | uppercaseLetter
-        
-        let dot = str(".")
-        let pipe = str("|")
-        let comma = str(",")
-        let lBracket = str("[")
-        let rBracket = str("]")
-        let lParen = str("(")
-        let rParen = str(")")
-        let singleQuote = str("'")
-        let doubleQuote = str(#"""#)
-        let backslash = str(#"\"#)
-        let underscore = str("_")
-        let questionMark = str("?")
-        let star = str("*")
-        let slash = str("/")
-        let carat = str("^")
-        let percent = str("%")
-        let plus = str("+")
-        let minus = str("-")
-        let equal = skip >>> str("=") >>> skip
-        let leq = str("<=")
-        let geq = str(">=")
-        let lt = str("<")
-        let gt = str(">")
-        let div = str("Div")
-        let mod = str("Mod")
-        let eq = str("Eq")
-        let neq = str("Neq")
-        let and = str("And")
-        let or = str("Or")
-        let not = str("Not")
-        let yes = str("Yes")
-        let no = str("No")
-        let when = str("When")
-        let `do` = str("Do")
-        let end = str("End")
+    public func parse(_ input: String) throws -> Expression {
+        switch parseResult(input) {
+        case let .success(expression):
+            return expression
+        case let .incomplete(error), let .failure(error):
+            throw error
+        }
+    }
 
-        let expression = Deferred()
-        let wrappedExpression = lParen >>> expression.tag("wrapped") >>> rParen
-        
-        let itemDelimiter = skip >>> comma >>> skip
+    public func parseResult(_ input: String) -> SongParseResult {
+        do {
+            var lexer = Lexer(input: input)
+            let tokens = try lexer.tokenize()
+            var parser = SongTokenParser(tokens: tokens)
+            return .success(try parser.parseRoot())
+        } catch let error as SongParseError {
+            return error.isIncomplete ? .incomplete(error) : .failure(error)
+        } catch {
+            return .failure(.invalidToken("\(error)"))
+        }
+    }
+}
 
-        // Lists.
-        
-        let listItem = skip >>> expression.tag("item") >>> skip
-        let listItems = listItem >>> (itemDelimiter >>> listItem).recur
-        let list = lBracket >>> listItems.recur(0, 1).tag("list") >>> rBracket
-        
-        let heads = listItems.tag("heads")
-        let tail = skip >>> expression.tag("tail") >>> skip
-        let listConstructor = lBracket >>> heads >>> pipe >>> tail >>> rBracket
-        
-        // Literals.
-        
-        let trueLiteral = yes.tag("true")
-        let falseLiteral = no.tag("false")
-        let booleanLiteral = trueLiteral | falseLiteral
-        let integerLiteral = numeral.some.tag("integer")
-        let floatLiteral = (numeral.some >>> dot >>> numeral.some).tag("float")
-        let numericLiteral = floatLiteral | integerLiteral
+private struct ParsedExpression {
+    let expression: Expression
+    let isCallable: Bool
+    let allowsDot: Bool
+    let allowsTrailingCall: Bool
+}
 
-        let textAlphanumeric = Parser.char(.alphanumerics)
-        let textQuoteChars = CharacterSet(charactersIn: #"'""#)
-        let textBackslashChars = CharacterSet(charactersIn: #"\"#)
-        let textPunctuation = Parser.char(.punctuationCharacters.subtracting(textQuoteChars).subtracting(textBackslashChars))
-        let textSymbol = Parser.char(.symbols.subtracting(textQuoteChars))
-        let textWhitespace = Parser.char(.whitespacesAndNewlines)
-        let textCharacter = textAlphanumeric | textWhitespace | textSymbol | textPunctuation
-        let textEscapedControl = backslash >>> (backslash | "nrt".match)
-        let textEscapedSingleQuote = backslash >>> singleQuote
-        let textEscapedDoubleQuote = backslash >>> doubleQuote
-        let textLiteralChar = textEscapedControl | textCharacter
-        let textLiteralCharInChar = textEscapedSingleQuote | doubleQuote | textLiteralChar
-        let textLiteralCharInString = textEscapedDoubleQuote | singleQuote | textLiteralChar
+private struct SongTokenParser {
+    private var tokens: [Token]
+    private var index = 0
 
-        let characterLiteral = singleQuote >>> textLiteralCharInChar.tag("character") >>> singleQuote
-        let stringLiteral = doubleQuote >>> textLiteralCharInString.some.maybe.tag("string") >>> doubleQuote
-        
-        let literal = stringLiteral | characterLiteral | list | listConstructor | numericLiteral | booleanLiteral
-        
-        // Names.
-        
-        let namePrefix = underscore | lowercaseLetter
-        let nameSuffix = letter | numeral | underscore | questionMark
-        let name = namePrefix >>> nameSuffix.some.maybe
-        let variable = name.tag("variableName")
-        
-        // Scopes.
-        
-        let statement = Deferred()
-        let scopeItem = skip >>> statement.tag("scopeStatement")
-        let delimiterOrNewline = (skipInline >>> newline) | itemDelimiter
-        let scopeItems = scopeItem >>> (delimiterOrNewline >>> scopeItem).recur
-        let scope = `do` >>> whitespace >>> scopeItems.tag("scopeItems") >>> whitespace >>> end
-        
-        // Lambdas.
-        
-        let lambdaParameter = (list | listConstructor | variable).tag("param")
-        let lambdaParameters = lambdaParameter >>> (itemDelimiter >>> lambdaParameter).recur
-        
-        let lambda = (pipe >>> skip >>> lambdaParameters.recur(0, 1).tag("params") >>> skip >>> pipe >>> skip >>> (wrappedExpression | expression).tag("body")).tag("lambda")
-        
-        // Function calls.
-        
-        let call = Deferred()
-        
-        let argument = Deferred()
-        let wrappedArgument = lParen >>> argument >>> rParen
-        argument.parser = wrappedArgument | expression
-        let arguments = argument >>> (itemDelimiter >>> argument).recur
-        let wrappedArguments = lParen >>> skip >>> arguments.recur.tag("args") >>> skip >>> rParen
-        
-        let callable = Deferred()
-        let wrappedCallable = lParen >>> callable >>> rParen
-        callable.parser = wrappedCallable | call | variable | lambda | scope
-        
-        let groupName = name.tag("functionName")
-        let groupAnon = lParen >>> callable >>> rParen
-        let groupAnonCall = groupAnon.tag("anonCall") >>> wrappedArguments.maybe
-        let groupAnonCallWithArgs = groupAnon.tag("anonCall") >>> wrappedArguments
-        let groupNameCall = groupName >>> wrappedArguments
-        let trailCalls = (lParen >>> arguments.recur.tag("args") >>> rParen).tag("anonCall").recur
-        let dotGroupCall = groupNameCall.tag("nameCall") | groupAnonCall
-        let headGroupCall = groupNameCall.tag("nameCall") | groupAnonCallWithArgs
-        let group = dotGroupCall | groupName.tag("nameCall") | wrappedExpression
-        let dotHead = (headGroupCall >>> trailCalls).tag("trailCalls") | wrappedExpression | variable | literal
-        let dotGroup = dot >>> group
-        let dotCall = dotHead.tag("head") >>> dotGroup >>> trailCalls >>> (dotGroup >>> trailCalls).recur
-        
-        let freeCall = (dotGroupCall >>> trailCalls).tag("trailCalls")
-        
-        call.parser = dotCall.tag("dotCall") | freeCall
-        
-        // Expressions.
-        
-        let powerative = Deferred()
-        let multiplicative = Deferred()
-        let additive = Deferred()
-        let relational = Deferred()
-        let equality = Deferred()
-        let conjunctive = Deferred()
-        let disjunctive = Deferred()
-        let term = Deferred()
-        
-        let powerativeOp = skip >>> carat.tag("op") >>> skip
-        powerative.parser = term.tag("left") >>> (powerativeOp >>> powerative.tag("right")).recur.tag("ops")
-        let symbolicMultiplicativeOp = skip >>> (star | slash | percent).tag("op") >>> skip
-        let wordMultiplicativeOp = whitespace >>> (mod | div).tag("op") >>> whitespace
-        let multiplicativeOp = symbolicMultiplicativeOp | wordMultiplicativeOp
-        multiplicative.parser = powerative.tag("left") >>> (multiplicativeOp >>> powerative.tag("right")).recur.tag("ops")
-        additive.parser = multiplicative.tag("left") >>> (skip >>> (plus | minus).tag("op") >>> skip >>> multiplicative.tag("right")).recur.tag("ops")
-        relational.parser = additive.tag("left") >>> (skip >>> (leq | geq | lt | gt).tag("op") >>> skip >>> additive.tag("right")).recur.tag("ops")
-        equality.parser = relational.tag("left") >>> (whitespace >>> (eq | neq).tag("op") >>> whitespace >>> equality.tag("right")).recur.tag("ops")
-        conjunctive.parser = equality.tag("left") >>> (whitespace >>> and.tag("op") >>> whitespace >>> conjunctive.tag("right")).recur.tag("ops")
-        disjunctive.parser = conjunctive.tag("left") >>> (whitespace >>> or.tag("op") >>> whitespace >>> disjunctive.tag("right")).recur.tag("ops")
-        
-        expression.parser = disjunctive.parser
-        
-        // Terms.
-        
-        let negateOp = (not.tag("op") >>> whitespace) | minus.tag("op")
-        let negateTerm = negateOp >>> term.tag("right")
-        let plusTerm = plus >>> term
-        term.parser = negateTerm | plusTerm | scope | call | lambda | variable | literal | wrappedExpression
-        
-        // Function declarations.
-        
-        let assign = skip >>> equal >>> skip
-        let pattern = (literal | variable).tag("param")
-        let patterns = pattern >>> (itemDelimiter >>> pattern).recur
-        let functionName = name.tag("functionName")
-        let functionSubject = pattern.tag("subject")
-        let functionParameters = skip >>> lParen >>> skip >>> patterns.recur(0, 1).tag("params") >>> skip >>> rParen
-        let `guard` = (whitespace >>> when >>> whitespace >>> expression).maybe.tag("guard")
-        let functionBody = skip >>> expression.tag("body") >>> skip
-        
-        let subjectFunctionDeclaration = functionSubject >>> dot >>> functionName >>> functionParameters.maybe >>> `guard` >>> assign >>> functionBody
-        
-        let freeFunctionDeclaration = functionName >>> functionParameters >>> `guard` >>> assign >>> functionBody
-        
-        let functionDeclaration = subjectFunctionDeclaration | freeFunctionDeclaration
+    init(tokens: [Token]) {
+        self.tokens = tokens
+    }
 
-        // Variable declaration.
-        
-        let variableDeclarationName = variable.tag("variableDeclarationName")
-        let variableDeclarationBody = expression.tag("variableDeclarationBody")
-        let variableDeclaration = variableDeclarationName >>> assign >>> variableDeclarationBody
-        
-        // Declaration.
-        
-        let declaration = functionDeclaration | variableDeclaration
-        
-        // Statement.
-        
-        statement.parser = declaration | expression
-        
-        // Root.
-        
-        let root = skip >>> statement >>> skip
-        return root
+    mutating func parseRoot() throws -> Expression {
+        let expression = try parseStatement().expression
+        guard isAtEnd else {
+            throw unexpected(expected: "end of input")
+        }
+        return expression
+    }
+
+    private mutating func parseStatement() throws -> ParsedExpression {
+        if hasTopLevelEqual {
+            if isVariableDeclarationShape {
+                return try parseVariableDeclaration()
+            }
+            return try parseFunctionDeclaration()
+        }
+        return try parseExpression()
+    }
+
+    private mutating func parseFunctionDeclaration() throws -> ParsedExpression {
+        if isSubjectFunctionDeclarationShape {
+            return try parseSubjectFunctionDeclaration()
+        }
+        return try parseFreeFunctionDeclaration()
+    }
+
+    private mutating func parseSubjectFunctionDeclaration() throws -> ParsedExpression {
+        let subject = try parseFunctionPattern()
+        try expect(.dot, expected: ".")
+        let name = try parseFunctionName()
+        let patterns = try parseOptionalParameterList() ?? []
+        let when = try parseWhenClause()
+        try expect(.equal, expected: "=")
+        let body = try parseExpression().expression
+        return parsed(.function(Function(
+            name: name,
+            patterns: [subject] + patterns,
+            when: when,
+            body: body
+        )))
+    }
+
+    private mutating func parseFreeFunctionDeclaration() throws -> ParsedExpression {
+        let name = try parseFunctionName()
+        let patterns = try parseParameterList()
+        let when = try parseWhenClause()
+        try expect(.equal, expected: "=")
+        let body = try parseExpression().expression
+        return parsed(.function(Function(name: name, patterns: patterns, when: when, body: body)))
+    }
+
+    private mutating func parseVariableDeclaration() throws -> ParsedExpression {
+        let variable = try parseVariable()
+        try expect(.equal, expected: "=")
+        let value = try parseExpression().expression
+        return parsed(.assign(variable: variable, value: value))
+    }
+
+    private mutating func parseWhenClause() throws -> Expression {
+        guard match(.when) != nil else {
+            return .yes
+        }
+        return try parseExpression().expression
+    }
+
+    private mutating func parseExpression() throws -> ParsedExpression {
+        try parseDisjunctive()
+    }
+
+    private mutating func parseDisjunctive() throws -> ParsedExpression {
+        let left = try parseConjunctive()
+        if let op = try matchWordOperator([.or]) {
+            let right = try parseDisjunctive()
+            return parsed(.call(op.text, [left.expression, right.expression]))
+        }
+        return left
+    }
+
+    private mutating func parseConjunctive() throws -> ParsedExpression {
+        let left = try parseEquality()
+        if let op = try matchWordOperator([.and]) {
+            let right = try parseConjunctive()
+            return parsed(.call(op.text, [left.expression, right.expression]))
+        }
+        return left
+    }
+
+    private mutating func parseEquality() throws -> ParsedExpression {
+        let left = try parseRelational()
+        if let op = try matchWordOperator([.eq, .neq]) {
+            let right = try parseEquality()
+            return parsed(.call(op.text, [left.expression, right.expression]))
+        }
+        return left
+    }
+
+    private mutating func parseRelational() throws -> ParsedExpression {
+        var result = try parseAdditive()
+        while let op = match([.leq, .geq, .lt, .gt]) {
+            let right = try parseAdditive()
+            result = parsed(.call(op.text, [result.expression, right.expression]))
+        }
+        return result
+    }
+
+    private mutating func parseAdditive() throws -> ParsedExpression {
+        var result = try parseMultiplicative()
+        while let op = match([.plus, .minus]) {
+            let right = try parseMultiplicative()
+            result = parsed(.call(op.text, [result.expression, right.expression]))
+        }
+        return result
+    }
+
+    private mutating func parseMultiplicative() throws -> ParsedExpression {
+        var result = try parsePower()
+        while true {
+            if let op = match([.star, .slash, .percent]) {
+                let right = try parsePower()
+                result = parsed(.call(op.text, [result.expression, right.expression]))
+            } else if let op = try matchWordOperator([.div, .mod]) {
+                let right = try parsePower()
+                result = parsed(.call(op.text, [result.expression, right.expression]))
+            } else {
+                return result
+            }
+        }
+    }
+
+    private mutating func parsePower() throws -> ParsedExpression {
+        let left = try parseUnary()
+        guard match(.caret) != nil else {
+            return left
+        }
+        let right = try parsePower()
+        return parsed(.call("^", [left.expression, right.expression]))
+    }
+
+    private mutating func parseUnary() throws -> ParsedExpression {
+        if check(.not) {
+            let op = try matchPrefixWordOperator(.not)
+            let right = try parseUnary()
+            return parsed(.call(op.text, [right.expression]))
+        }
+        if match(.minus) != nil {
+            let right = try parseUnary()
+            return parsed(.call("-", [right.expression]))
+        }
+        if match(.plus) != nil {
+            return try parseUnary()
+        }
+        return try parsePostfix()
+    }
+
+    private mutating func parsePostfix() throws -> ParsedExpression {
+        var result = try parsePrimary()
+        while true {
+            if result.allowsTrailingCall, check(.lParen) {
+                let arguments = try parseArgumentList()
+                result = callable(.eval(result.expression, arguments))
+            } else if result.allowsDot, match(.dot) != nil {
+                result = try parseDotContinuation(head: result.expression)
+            } else {
+                return result
+            }
+        }
+    }
+
+    private mutating func parsePrimary() throws -> ParsedExpression {
+        guard let token = current else {
+            throw SongParseError.unexpectedEnd(expected: "expression")
+        }
+
+        switch token.kind {
+        case let .name(name):
+            advance()
+            if check(.lParen) {
+                return callable(.call(name, try parseArgumentList()))
+            }
+            return ParsedExpression(
+                expression: name == "_" ? .unnamed : .name(name),
+                isCallable: true,
+                allowsDot: true,
+                allowsTrailingCall: false
+            )
+        case let .integer(value):
+            advance()
+            guard let integer = IntType(value) else {
+                throw SongParseError.invalidNumber(value)
+            }
+            return literal(.int(integer))
+        case let .float(value):
+            advance()
+            guard let float = FloatType(value) else {
+                throw SongParseError.invalidNumber(value)
+            }
+            return literal(.float(float))
+        case let .string(value):
+            advance()
+            return literal(.string(value))
+        case let .character(value):
+            advance()
+            return literal(.char(value))
+        case .yes:
+            advance()
+            return literal(.yes)
+        case .no:
+            advance()
+            return literal(.no)
+        case .lBracket:
+            return literal(try parseListOrCons())
+        case .lParen:
+            return try parseWrappedExpression()
+        case .pipe:
+            return try parseLambda()
+        case .do:
+            return try parseScope()
+        default:
+            throw unexpected(expected: "expression")
+        }
+    }
+
+    private mutating func parseWrappedExpression() throws -> ParsedExpression {
+        try expect(.lParen, expected: "(")
+        let expression = try parseExpression()
+        try expect(.rParen, expected: ")")
+        return ParsedExpression(
+            expression: expression.expression,
+            isCallable: expression.isCallable,
+            allowsDot: true,
+            allowsTrailingCall: expression.isCallable
+        )
+    }
+
+    private mutating func parseListOrCons() throws -> Expression {
+        try expect(.lBracket, expected: "[")
+        if match(.rBracket) != nil {
+            return .list([])
+        }
+
+        var items = [try parseExpression().expression]
+        while match(.comma) != nil {
+            items.append(try parseExpression().expression)
+        }
+
+        if match(.pipe) != nil {
+            let tail = try parseExpression().expression
+            try expect(.rBracket, expected: "]")
+            return .cons(items, tail)
+        }
+
+        try expect(.rBracket, expected: "]")
+        return .list(items)
+    }
+
+    private mutating func parseLambda() throws -> ParsedExpression {
+        try expect(.pipe, expected: "|")
+        var patterns = [Expression]()
+        if match(.pipe) == nil {
+            patterns.append(try parseLambdaPattern())
+            while match(.comma) != nil {
+                patterns.append(try parseLambdaPattern())
+            }
+            try expect(.pipe, expected: "|")
+        }
+        let body = try parseExpression().expression
+        return ParsedExpression(
+            expression: .function(Function(name: nil, patterns: patterns, when: .yes, body: body)),
+            isCallable: true,
+            allowsDot: false,
+            allowsTrailingCall: false
+        )
+    }
+
+    private mutating func parseScope() throws -> ParsedExpression {
+        try expect(.do, expected: "Do")
+        guard current?.leadingWhitespace == true else {
+            throw unexpected(expected: "whitespace")
+        }
+
+        var statements = [try parseStatement().expression]
+        while true {
+            if match(.comma) != nil {
+                statements.append(try parseStatement().expression)
+            } else if current?.leadingNewline == true, !check(.end) {
+                statements.append(try parseStatement().expression)
+            } else {
+                break
+            }
+        }
+
+        guard current?.leadingWhitespace == true else {
+            throw unexpected(expected: "whitespace")
+        }
+        try expect(.end, expected: "End")
+        return ParsedExpression(
+            expression: .scope(statements),
+            isCallable: true,
+            allowsDot: false,
+            allowsTrailingCall: false
+        )
+    }
+
+    private mutating func parseDotContinuation(head: Expression) throws -> ParsedExpression {
+        if case let .name(name) = current?.kind {
+            advance()
+            let arguments = check(.lParen) ? try parseArgumentList() : []
+            return callable(.call(name, [head] + arguments))
+        }
+
+        if match(.lParen) != nil {
+            let expression = try parseExpression()
+            try expect(.rParen, expected: ")")
+
+            var result: ParsedExpression
+            if expression.isCallable {
+                result = callable(.eval(expression.expression, [head]))
+            } else if case let .call(name, arguments) = expression.expression {
+                result = callable(.call(name, [head] + arguments))
+            } else {
+                throw unexpected(expected: "callable expression")
+            }
+
+            if check(.lParen) {
+                result = callable(.eval(result.expression, try parseArgumentList()))
+            }
+            return result
+        }
+
+        throw unexpected(expected: "function name or callable expression")
+    }
+
+    private mutating func parseArgumentList() throws -> [Expression] {
+        try expect(.lParen, expected: "(")
+        if match(.rParen) != nil {
+            return []
+        }
+        var arguments = [try parseExpression().expression]
+        while match(.comma) != nil {
+            arguments.append(try parseExpression().expression)
+        }
+        try expect(.rParen, expected: ")")
+        return arguments
+    }
+
+    private mutating func parseParameterList() throws -> [Expression] {
+        try expect(.lParen, expected: "(")
+        if match(.rParen) != nil {
+            return []
+        }
+        var parameters = [try parseFunctionPattern()]
+        while match(.comma) != nil {
+            parameters.append(try parseFunctionPattern())
+        }
+        try expect(.rParen, expected: ")")
+        return parameters
+    }
+
+    private mutating func parseOptionalParameterList() throws -> [Expression]? {
+        guard check(.lParen) else {
+            return nil
+        }
+        return try parseParameterList()
+    }
+
+    private mutating func parseFunctionPattern() throws -> Expression {
+        if let literal = attempt({ try $0.parsePatternLiteral() }) {
+            return literal
+        }
+        return try parseVariable()
+    }
+
+    private mutating func parseLambdaPattern() throws -> Expression {
+        if check(.lBracket) {
+            return try parseListOrCons()
+        }
+        return try parseVariable()
+    }
+
+    private mutating func parsePatternLiteral() throws -> Expression {
+        guard let token = current else {
+            throw SongParseError.unexpectedEnd(expected: "pattern")
+        }
+
+        switch token.kind {
+        case let .integer(value):
+            advance()
+            guard let integer = IntType(value) else {
+                throw SongParseError.invalidNumber(value)
+            }
+            return .int(integer)
+        case let .float(value):
+            advance()
+            guard let float = FloatType(value) else {
+                throw SongParseError.invalidNumber(value)
+            }
+            return .float(float)
+        case let .string(value):
+            advance()
+            return .string(value)
+        case let .character(value):
+            advance()
+            return .char(value)
+        case .yes:
+            advance()
+            return .yes
+        case .no:
+            advance()
+            return .no
+        case .lBracket:
+            return try parseListOrCons()
+        default:
+            throw unexpected(expected: "literal")
+        }
+    }
+
+    private mutating func parseVariable() throws -> Expression {
+        guard case let .name(name) = current?.kind else {
+            throw unexpected(expected: "name")
+        }
+        advance()
+        return name == "_" ? .unnamed : .name(name)
+    }
+
+    private mutating func parseFunctionName() throws -> String {
+        guard case let .name(name) = current?.kind else {
+            throw unexpected(expected: "function name")
+        }
+        advance()
+        return name
+    }
+
+    private func literal(_ expression: Expression) -> ParsedExpression {
+        ParsedExpression(
+            expression: expression,
+            isCallable: false,
+            allowsDot: true,
+            allowsTrailingCall: false
+        )
+    }
+
+    private func callable(_ expression: Expression) -> ParsedExpression {
+        ParsedExpression(
+            expression: expression,
+            isCallable: true,
+            allowsDot: true,
+            allowsTrailingCall: true
+        )
+    }
+
+    private func parsed(_ expression: Expression) -> ParsedExpression {
+        ParsedExpression(
+            expression: expression,
+            isCallable: false,
+            allowsDot: false,
+            allowsTrailingCall: false
+        )
+    }
+
+    private mutating func matchPrefixWordOperator(_ kind: TokenKind) throws -> TokenKind {
+        guard let token = current, token.kind == kind else {
+            throw unexpected(expected: kind.text)
+        }
+        guard let next = peek(), next.leadingWhitespace else {
+            throw unexpected(expected: "whitespace")
+        }
+        advance()
+        return token.kind
+    }
+
+    private mutating func matchWordOperator(_ kinds: [TokenKind]) throws -> TokenKind? {
+        guard let token = current, kinds.contains(token.kind) else {
+            return nil
+        }
+        guard token.leadingWhitespace else {
+            return nil
+        }
+        guard let next = peek(), next.leadingWhitespace else {
+            throw unexpected(expected: "whitespace")
+        }
+        advance()
+        return token.kind
+    }
+
+    private mutating func match(_ kind: TokenKind) -> Token? {
+        guard check(kind) else {
+            return nil
+        }
+        return advance()
+    }
+
+    private mutating func match(_ kinds: [TokenKind]) -> TokenKind? {
+        guard let token = current, kinds.contains(token.kind) else {
+            return nil
+        }
+        advance()
+        return token.kind
+    }
+
+    @discardableResult
+    private mutating func expect(_ kind: TokenKind, expected: String) throws -> Token {
+        guard let token = match(kind) else {
+            throw unexpected(expected: expected)
+        }
+        return token
+    }
+
+    private func check(_ kind: TokenKind) -> Bool {
+        current?.kind == kind
+    }
+
+    private var current: Token? {
+        guard !isAtEnd else {
+            return nil
+        }
+        return tokens[index]
+    }
+
+    private func peek() -> Token? {
+        let next = index + 1
+        guard next < tokens.count else {
+            return nil
+        }
+        return tokens[next]
+    }
+
+    @discardableResult
+    private mutating func advance() -> Token {
+        let token = tokens[index]
+        index += 1
+        return token
+    }
+
+    private var isAtEnd: Bool {
+        index >= tokens.count
+    }
+
+    private var hasTopLevelEqual: Bool {
+        var parenDepth = 0
+        var bracketDepth = 0
+        var scopeDepth = 0
+
+        for token in tokens[index...] {
+            switch token.kind {
+            case .lParen:
+                parenDepth += 1
+            case .rParen:
+                parenDepth -= 1
+            case .lBracket:
+                bracketDepth += 1
+            case .rBracket:
+                bracketDepth -= 1
+            case .do:
+                scopeDepth += 1
+            case .end:
+                scopeDepth -= 1
+            case .equal where parenDepth == 0 && bracketDepth == 0 && scopeDepth == 0:
+                return true
+            default:
+                break
+            }
+        }
+        return false
+    }
+
+    private var isVariableDeclarationShape: Bool {
+        guard index + 1 < tokens.count else {
+            return false
+        }
+        guard case .name = tokens[index].kind else {
+            return false
+        }
+        return tokens[index + 1].kind == .equal
+    }
+
+    private var isSubjectFunctionDeclarationShape: Bool {
+        var parenDepth = 0
+        var bracketDepth = 0
+        var scopeDepth = 0
+
+        for token in tokens[index...] {
+            switch token.kind {
+            case .lParen:
+                parenDepth += 1
+            case .rParen:
+                parenDepth -= 1
+            case .lBracket:
+                bracketDepth += 1
+            case .rBracket:
+                bracketDepth -= 1
+            case .do:
+                scopeDepth += 1
+            case .end:
+                scopeDepth -= 1
+            case .dot where parenDepth == 0 && bracketDepth == 0 && scopeDepth == 0:
+                return true
+            case .equal where parenDepth == 0 && bracketDepth == 0 && scopeDepth == 0:
+                return false
+            default:
+                break
+            }
+        }
+        return false
+    }
+
+    private func unexpected(expected: String) -> SongParseError {
+        guard let token = current else {
+            return .unexpectedEnd(expected: expected)
+        }
+        return .unexpectedToken(token.kind.text, expected: expected)
+    }
+
+    private mutating func attempt<T>(_ parse: (inout SongTokenParser) throws -> T) -> T? {
+        let start = index
+        do {
+            return try parse(&self)
+        } catch {
+            index = start
+            return nil
+        }
     }
 }
