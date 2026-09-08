@@ -14,6 +14,7 @@ public indirect enum EvaluationError: Error, Sendable {
     case divisionByZero
     case emptyScope
     case stackOverflow
+    case arithmeticOverflow
 }
 
 extension EvaluationError: CustomStringConvertible {
@@ -65,6 +66,8 @@ extension EvaluationError: CustomStringConvertible {
             result = "Do/End must contain at least one expression"
         case .stackOverflow:
             result = "stack overflow"
+        case .arithmeticOverflow:
+            result = "arithmetic overflow"
         }
         return "💥  \(result)".indented(by: indent)
     }

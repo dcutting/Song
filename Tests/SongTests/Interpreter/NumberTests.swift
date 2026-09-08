@@ -4,24 +4,24 @@ import XCTest
 class NumberTests: XCTestCase {
 
     func test_plus() {
-        XCTAssertEqual(Number.int(13), Number.int(9).plus(Number.int(4)))
-        XCTAssertEqual(Number.float(13.0), Number.int(9).plus(Number.float(4.0)))
-        XCTAssertEqual(Number.float(13.0), Number.float(9.0).plus(Number.int(4)))
-        XCTAssertEqual(Number.float(13.0), Number.float(9.0).plus(Number.float(4.0)))
+        XCTAssertEqual(Number.int(13), try Number.int(9).plus(Number.int(4)))
+        XCTAssertEqual(Number.float(13.0), try Number.int(9).plus(Number.float(4.0)))
+        XCTAssertEqual(Number.float(13.0), try Number.float(9.0).plus(Number.int(4)))
+        XCTAssertEqual(Number.float(13.0), try Number.float(9.0).plus(Number.float(4.0)))
     }
 
     func test_minus() {
-        XCTAssertEqual(Number.int(5), Number.int(9).minus(Number.int(4)))
-        XCTAssertEqual(Number.float(5.0), Number.int(9).minus(Number.float(4.0)))
-        XCTAssertEqual(Number.float(5.0), Number.float(9.0).minus(Number.int(4)))
-        XCTAssertEqual(Number.float(5.0), Number.float(9.0).minus(Number.float(4.0)))
+        XCTAssertEqual(Number.int(5), try Number.int(9).minus(Number.int(4)))
+        XCTAssertEqual(Number.float(5.0), try Number.int(9).minus(Number.float(4.0)))
+        XCTAssertEqual(Number.float(5.0), try Number.float(9.0).minus(Number.int(4)))
+        XCTAssertEqual(Number.float(5.0), try Number.float(9.0).minus(Number.float(4.0)))
     }
 
     func test_times() {
-        XCTAssertEqual(Number.int(36), Number.int(9).times(Number.int(4)))
-        XCTAssertEqual(Number.float(36.0), Number.int(9).times(Number.float(4.0)))
-        XCTAssertEqual(Number.float(36.0), Number.float(9.0).times(Number.int(4)))
-        XCTAssertEqual(Number.float(36.0), Number.float(9.0).times(Number.float(4.0)))
+        XCTAssertEqual(Number.int(36), try Number.int(9).times(Number.int(4)))
+        XCTAssertEqual(Number.float(36.0), try Number.int(9).times(Number.float(4.0)))
+        XCTAssertEqual(Number.float(36.0), try Number.float(9.0).times(Number.int(4)))
+        XCTAssertEqual(Number.float(36.0), try Number.float(9.0).times(Number.float(4.0)))
     }
 
     func test_integerDividedBy() {
@@ -32,27 +32,27 @@ class NumberTests: XCTestCase {
     }
 
     func test_powPositiveIntegerBasePositiveIntegerExponent() {
-        XCTAssertEqual(Number.int(8), Number.int(2).power(Number.int(3)))
+        XCTAssertEqual(Number.int(8), try Number.int(2).power(Number.int(3)))
     }
 
     func test_powPositiveIntegerBaseNegativeIntegerExponent() {
-        XCTAssertEqual(Number.float(0.125), Number.int(2).power(Number.int(-3)))
+        XCTAssertEqual(Number.float(0.125), try Number.int(2).power(Number.int(-3)))
     }
 
     func test_powPositiveIntegerBasePositiveFloatExponent() {
-        XCTAssertEqual(Number.float(3.0), Number.int(9).power(Number.float(0.5)))
+        XCTAssertEqual(Number.float(3.0), try Number.int(9).power(Number.float(0.5)))
     }
 
     func test_powPositiveIntegerBaseNegativeFloatExponent() {
-        XCTAssertEqual(Number.float(0.5), Number.int(4).power(Number.float(-0.5)))
+        XCTAssertEqual(Number.float(0.5), try Number.int(4).power(Number.float(-0.5)))
     }
 
     func test_powPositiveFloatBaseIntegerExponent() {
-        XCTAssertEqual(Number.float(0.25), Number.float(0.5).power(Number.int(2)))
+        XCTAssertEqual(Number.float(0.25), try Number.float(0.5).power(Number.int(2)))
     }
 
     func test_powNegativeFloatBaseIntegerExponent() {
-        XCTAssertEqual(Number.float(-3.375), Number.float(-1.5).power(Number.int(3)))
+        XCTAssertEqual(Number.float(-3.375), try Number.float(-1.5).power(Number.int(3)))
     }
 
     func test_floatDividedBy() {
@@ -145,12 +145,12 @@ class NumberTests: XCTestCase {
     }
 
     func test_negate_int() {
-        XCTAssertEqual(Number.int(-5), Number.int(5).negate())
-        XCTAssertEqual(Number.int(5), Number.int(-5).negate())
+        XCTAssertEqual(Number.int(-5), try Number.int(5).negate())
+        XCTAssertEqual(Number.int(5), try Number.int(-5).negate())
     }
 
     func test_negate_float() {
-        XCTAssertEqual(Number.float(-5.4), Number.float(5.4).negate())
-        XCTAssertEqual(Number.float(5.4), Number.float(-5.4).negate())
+        XCTAssertEqual(Number.float(-5.4), try Number.float(5.4).negate())
+        XCTAssertEqual(Number.float(5.4), try Number.float(-5.4).negate())
     }
 }

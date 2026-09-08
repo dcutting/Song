@@ -334,7 +334,7 @@ func evaluatePower(arguments: [Expression], context: Context) throws -> Expressi
     guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
     let left = numbers.removeFirst()
     let right = numbers.removeFirst()
-    return .number(left.power(right))
+    return try .number(left.power(right))
 }
 
 func evaluatePlus(arguments: [Expression], context: Context) throws -> Expression {
@@ -342,7 +342,7 @@ func evaluatePlus(arguments: [Expression], context: Context) throws -> Expressio
     let result: Expression
     do {
         result = try numberOp(arguments: arguments, context: context) {
-            .number($0.plus($1))
+            try .number($0.plus($1))
         }
     } catch EvaluationError.notANumber {
         result = try listOp(arguments: arguments, context: context) {
@@ -357,11 +357,11 @@ func evaluateMinus(arguments: [Expression], context: Context) throws -> Expressi
     let result: Expression
     if numbers.count == 1 {
         let right = numbers.removeFirst()
-        result = .number(right.negate())
+        result = try .number(right.negate())
     } else if numbers.count == 2 {
         let left = numbers.removeFirst()
         let right = numbers.removeFirst()
-        result = .number(left.minus(right))
+        result = try .number(left.minus(right))
     } else {
         throw EvaluationError.signatureMismatch(arguments)
     }
@@ -373,7 +373,7 @@ func evaluateMultiply(arguments: [Expression], context: Context) throws -> Expre
     guard numbers.count == 2 else { throw EvaluationError.signatureMismatch(arguments) }
     let left = numbers.removeFirst()
     let right = numbers.removeFirst()
-    return .number(left.times(right))
+    return try .number(left.times(right))
 }
 
 func evaluateDivide(arguments: [Expression], context: Context) throws -> Expression {

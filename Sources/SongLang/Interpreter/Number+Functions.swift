@@ -5,69 +5,104 @@ extension Number {
         if let int = IntType(value) {
             return .int(int)
         } else if let float = FloatType(value) {
-            return .float(float)
+            let result = float
+            guard result.isFinite else { throw EvaluationError.arithmeticOverflow }
+            return .float(result)
         } else {
             throw EvaluationError.numericMismatch
         }
     }
 
-    func plus(_ other: Number) -> Number {
+    func plus(_ other: Number) throws -> Number {
         switch (self, other) {
         case let (.int(lhsValue), .int(rhsValue)):
-            return .int(lhsValue + rhsValue)
+            let (result, overflow) = lhsValue.addingReportingOverflow(rhsValue)
+            guard !overflow else { throw EvaluationError.arithmeticOverflow }
+            return .int(result)
         case let (.int(lhsValue), .float(rhsValue)):
-            return .float(FloatType(lhsValue) + rhsValue)
+            let result = FloatType(lhsValue) + rhsValue
+            guard result.isFinite else { throw EvaluationError.arithmeticOverflow }
+            return .float(result)
         case let (.float(lhsValue), .int(rhsValue)):
-            return .float(lhsValue + FloatType(rhsValue))
+            let result = lhsValue + FloatType(rhsValue)
+            guard result.isFinite else { throw EvaluationError.arithmeticOverflow }
+            return .float(result)
         case let (.float(lhsValue), .float(rhsValue)):
-            return .float(lhsValue + rhsValue)
+            let result = lhsValue + rhsValue
+            guard result.isFinite else { throw EvaluationError.arithmeticOverflow }
+            return .float(result)
         }
     }
 
-    func minus(_ other: Number) -> Number {
+    func minus(_ other: Number) throws -> Number {
         switch (self, other) {
         case let (.int(lhsValue), .int(rhsValue)):
-            return .int(lhsValue - rhsValue)
+            let (result, overflow) = lhsValue.subtractingReportingOverflow(rhsValue)
+            guard !overflow else { throw EvaluationError.arithmeticOverflow }
+            return .int(result)
         case let (.int(lhsValue), .float(rhsValue)):
-            return .float(FloatType(lhsValue) - rhsValue)
+            let result = FloatType(lhsValue) - rhsValue
+            guard result.isFinite else { throw EvaluationError.arithmeticOverflow }
+            return .float(result)
         case let (.float(lhsValue), .int(rhsValue)):
-            return .float(lhsValue - FloatType(rhsValue))
+            let result = lhsValue - FloatType(rhsValue)
+            guard result.isFinite else { throw EvaluationError.arithmeticOverflow }
+            return .float(result)
         case let (.float(lhsValue), .float(rhsValue)):
-            return .float(lhsValue - rhsValue)
+            let result = lhsValue - rhsValue
+            guard result.isFinite else { throw EvaluationError.arithmeticOverflow }
+            return .float(result)
         }
     }
 
-    func times(_ other: Number) -> Number {
+    func times(_ other: Number) throws -> Number {
         switch (self, other) {
         case let (.int(lhsValue), .int(rhsValue)):
-            return .int(lhsValue * rhsValue)
+            let (result, overflow) = lhsValue.multipliedReportingOverflow(by: rhsValue)
+            guard !overflow else { throw EvaluationError.arithmeticOverflow }
+            return .int(result)
         case let (.int(lhsValue), .float(rhsValue)):
-            return .float(FloatType(lhsValue) * rhsValue)
+            let result = FloatType(lhsValue) * rhsValue
+            guard result.isFinite else { throw EvaluationError.arithmeticOverflow }
+            return .float(result)
         case let (.float(lhsValue), .int(rhsValue)):
-            return .float(lhsValue * FloatType(rhsValue))
+            let result = lhsValue * FloatType(rhsValue)
+            guard result.isFinite else { throw EvaluationError.arithmeticOverflow }
+            return .float(result)
         case let (.float(lhsValue), .float(rhsValue)):
-            return .float(lhsValue * rhsValue)
+            let result = lhsValue * rhsValue
+            guard result.isFinite else { throw EvaluationError.arithmeticOverflow }
+            return .float(result)
         }
     }
 
-    func power(_ other: Number) -> Number {
+    func power(_ other: Number) throws -> Number {
         switch (self, other) {
         case let (.int(lhsValue), .int(rhsValue)):
             if rhsValue >= 0 {
                 let value = pow(FloatType(lhsValue), FloatType(rhsValue))
+                guard value.isFinite else { throw EvaluationError.arithmeticOverflow }
                 if let intValue = IntType(exactly: value) {
                     return .int(intValue)
                 }
                 return .float(value)
             } else {
-                return .float(pow(FloatType(lhsValue), FloatType(rhsValue)))
+                let result = pow(FloatType(lhsValue), FloatType(rhsValue))
+                guard result.isFinite else { throw EvaluationError.arithmeticOverflow }
+                return .float(result)
             }
         case let (.int(lhsValue), .float(rhsValue)):
-            return .float(pow(FloatType(lhsValue), rhsValue))
+            let result = pow(FloatType(lhsValue), rhsValue)
+            guard result.isFinite else { throw EvaluationError.arithmeticOverflow }
+            return .float(result)
         case let (.float(lhsValue), .int(rhsValue)):
-            return .float(pow(lhsValue, FloatType(rhsValue)))
+            let result = pow(lhsValue, FloatType(rhsValue))
+            guard result.isFinite else { throw EvaluationError.arithmeticOverflow }
+            return .float(result)
         case let (.float(lhsValue), .float(rhsValue)):
-            return .float(pow(lhsValue, rhsValue))
+            let result = pow(lhsValue, rhsValue)
+            guard result.isFinite else { throw EvaluationError.arithmeticOverflow }
+            return .float(result)
         }
     }
 
@@ -75,16 +110,24 @@ extension Number {
         switch (self, other) {
         case let (.int(lhsValue), .int(rhsValue)):
             guard rhsValue != 0 else { throw EvaluationError.divisionByZero }
-            return .float(FloatType(lhsValue) / FloatType(rhsValue))
+            let result = FloatType(lhsValue) / FloatType(rhsValue)
+            guard result.isFinite else { throw EvaluationError.arithmeticOverflow }
+            return .float(result)
         case let (.int(lhsValue), .float(rhsValue)):
             guard rhsValue != 0 else { throw EvaluationError.divisionByZero }
-            return .float(FloatType(lhsValue) / rhsValue)
+            let result = FloatType(lhsValue) / rhsValue
+            guard result.isFinite else { throw EvaluationError.arithmeticOverflow }
+            return .float(result)
         case let (.float(lhsValue), .int(rhsValue)):
             guard rhsValue != 0 else { throw EvaluationError.divisionByZero }
-            return .float(lhsValue / FloatType(rhsValue))
+            let result = lhsValue / FloatType(rhsValue)
+            guard result.isFinite else { throw EvaluationError.arithmeticOverflow }
+            return .float(result)
         case let (.float(lhsValue), .float(rhsValue)):
             guard rhsValue != 0 else { throw EvaluationError.divisionByZero }
-            return .float(lhsValue / rhsValue)
+            let result = lhsValue / rhsValue
+            guard result.isFinite else { throw EvaluationError.arithmeticOverflow }
+            return .float(result)
         }
     }
 
@@ -92,7 +135,9 @@ extension Number {
         switch (self, other) {
         case let (.int(lhsValue), .int(rhsValue)):
             guard rhsValue != 0 else { throw EvaluationError.divisionByZero }
-            return .int(lhsValue / rhsValue)
+            let (result, overflow) = lhsValue.dividedReportingOverflow(by: rhsValue)
+            guard !overflow else { throw EvaluationError.arithmeticOverflow }
+            return .int(result)
         default:
             throw EvaluationError.numericMismatch
         }
@@ -102,7 +147,9 @@ extension Number {
         switch (self, other) {
         case let (.int(lhsValue), .int(rhsValue)):
             guard rhsValue != 0 else { throw EvaluationError.divisionByZero }
-            return .int(lhsValue % rhsValue)
+            let (result, overflow) = lhsValue.remainderReportingOverflow(dividingBy: rhsValue)
+            guard !overflow else { throw EvaluationError.arithmeticOverflow }
+            return .int(result)
         default:
             throw EvaluationError.numericMismatch
         }
@@ -169,12 +216,16 @@ extension Number {
         }
     }
 
-    func negate() -> Number {
+    func negate() throws -> Number {
         switch self {
         case .int(let value):
-            return .int(-value)
+            let (result, overflow) = IntType.zero.subtractingReportingOverflow(value)
+            guard !overflow else { throw EvaluationError.arithmeticOverflow }
+            return .int(result)
         case .float(let value):
-            return .float(-value)
+            let result = -value
+            guard result.isFinite else { throw EvaluationError.arithmeticOverflow }
+            return .float(result)
         }
     }
 
