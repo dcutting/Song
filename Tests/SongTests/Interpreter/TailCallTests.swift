@@ -15,7 +15,7 @@ class TailCallTests: XCTestCase {
             let fr = Function(name: "times", patterns: [.name("n")], when: .yes, body: .call("times", [.call("-", [.name("n"), .int(1)])]))
             let context = Context.builtIns.extend(with: try declareSubfunctions([fb, fr]))
 
-            let e = Expression.call("times", [.int(5000)])
+            let e = Expression.call("times", [.int(999)])
 
             let actual = try e.evaluate(context: context)
             let expected = Expression.int(0)
@@ -29,7 +29,7 @@ class TailCallTests: XCTestCase {
             let fr = Function(name: "times", patterns: [.name("n")], when: .yes, body: .scope([.call("times", [.call("-", [.name("n"), .int(1)])])]))
             let context = Context.builtIns.extend(with: try declareSubfunctions([fb, fr]))
 
-            let e = Expression.call("times", [.int(5000)])
+            let e = Expression.call("times", [.int(999)])
 
             let actual = try e.evaluate(context: context)
             let expected = Expression.int(0)

@@ -1,7 +1,9 @@
+private let maxCallDepth = 1000
+
 extension Expression {
     public func evaluate(context: Context) throws -> Expression {
         do {
-            guard depthCounter < 10000 else { throw EvaluationError.stackOverflow }
+            guard depthCounter < maxCallDepth else { throw EvaluationError.stackOverflow }
             depthCounter += 1
             defer { depthCounter -= 1 }
             return try evaluate(expression: self, context: context)
@@ -40,8 +42,11 @@ extension Expression {
             let evaluatedArgs = try arguments.evaluate(context: context)
             var intermediate = try evaluateCall(name: name, arguments: evaluatedArgs, context: context)
             // Trampoline tail calls.
+            var tailCallCounter = 0
             while case let .tailEval(tailExpr, tailArgs) = intermediate {
-                intermediate = try evaluateCallAnonymous(closure: tailExpr, arguments: tailArgs, callingContext: context)
+              guard tailCallCounter < maxCallDepth else { throw EvaluationError.stackOverflow }
+              tailCallCounter += 1
+              intermediate = try evaluateCallAnonymous(closure: tailExpr, arguments: tailArgs, callingContext: context)
             }
             return intermediate
 
