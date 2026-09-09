@@ -41,8 +41,16 @@ x.upTo(x) = []
 x.upTo(y) When x < y = [x|(x+1).upTo(y)]
 
 list.mean = list.sum / list.count
-list.median = list.sort.middle
+list.median When list.count.odd? = list.sort.middle
+list.median = Do
+  index = list.count Div 2
+  sorted = list.sort
+  [sorted.at(index), sorted.at(index - 1)].mean
+End
 average = mean
 
 x.round(d) = (0.5 + (x * 10^d)).truncate / 10^d
 x.round = x.round(0)
+
+x.absoluteValue = [-x, x].max
+abs = absoluteValue
