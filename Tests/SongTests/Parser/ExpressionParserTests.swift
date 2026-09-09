@@ -116,5 +116,8 @@ class ExpressionParserTests: XCTestCase {
         "Not x".makes(.call("Not", [.name("x")]))
         "Not Not x".makes(.call("Not", [.call("Not", [.name("x")])]))
         "9--5".makes(.call("-", [.int(9), .call("-", [.int(5)])]))
+        "9--1.inc()".makes(.call("-", [.int(9), .call("inc", [.call("-", [.int(1)])])]))
+        "9- -1.inc()".makes(.call("-", [.int(9), .call("inc", [.call("-", [.int(1)])])]))
+        "9 - -1.inc()".makes(.call("-", [.int(9), .call("inc", [.call("-", [.int(1)])])]))
     }
 }

@@ -184,18 +184,22 @@ private struct SongTokenParser {
             let right = try parseUnary()
             return parsed(.call(op.text, [right.expression]))
         }
-        if match(.minus) != nil {
-            let right = try parseUnary()
-            return parsed(.call("-", [right.expression]))
-        }
-        if match(.plus) != nil {
-            return try parseUnary()
-        }
         return try parsePostfix()
     }
 
+    private mutating func parseSigned() throws -> ParsedExpression {
+        if match(.minus) != nil {
+            let right = try parseSigned()
+            return literal(.call("-", [right.expression]))
+        }
+        if match(.plus) != nil {
+            return try parseSigned()
+        }
+        return try parsePrimary()
+    }
+
     private mutating func parsePostfix() throws -> ParsedExpression {
-        var result = try parsePrimary()
+        var result = try parseSigned()
         while true {
             if result.allowsTrailingCall, check(.lParen) {
                 let arguments = try parseArgumentList()
